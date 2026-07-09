@@ -1,11 +1,5 @@
 # AI SDLC Skill Library
 
-[![Release](https://img.shields.io/github/v/tag/mikegorelikoff/ai-sdlc-harness?label=release)](https://github.com/mikegorelikoff/ai-sdlc-harness/tags)
-![Skills](https://img.shields.io/badge/skills-26-blue)
-![Lifecycle](https://img.shields.io/badge/lifecycle-PM%20%7C%20BA%20%7C%20QA%20%7C%20Dev%20%7C%20Delivery-6f42c1)
-![State](https://img.shields.io/badge/state-TOON%20indexed-0f766e)
-![Flow](https://img.shields.io/badge/flow-quick%20%2F%20full-f59e0b)
-
 Agent-agnostic, domain-agnostic AI SDLC skills for traceable software delivery.
 
 This repository gives AI assistants a practical operating layer for PM, BA, QA,
