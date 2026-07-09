@@ -22,6 +22,47 @@ Use this progressively. Do not ask every question in one turn.
   - main risks;
   - key dependencies.
 
+## When To Load This Reference
+
+Load this reference when the user asks to discover, clarify, shape, pressure-test,
+or turn a rough idea into a usable initiative package. Use it progressively; do
+not dump the whole interview at once.
+
+## Quick Flow Guidance
+
+In `--quick-flow`:
+
+- ask only the smallest set of questions needed to avoid a bad direction;
+- infer non-critical details as assumptions;
+- produce a compact discovery summary quickly;
+- record assumptions and decisions.
+
+## Full Flow Guidance
+
+In `--full-flow`:
+
+- proceed stage by stage;
+- verify contradictions before moving on;
+- ask follow-up questions whenever core scope, value, role, metric, or MVP is
+  unclear;
+- produce a more rigorous discovery package with traceability.
+
+## Decision Capture During Discovery
+
+After each stage, classify notes into:
+
+| Type | Meaning | Example |
+|---|---|---|
+| Fact | Confirmed by user/source | "Admins approve refunds" |
+| Assumption | Used temporarily | "Refund approval uses existing roles" |
+| Hypothesis | Needs validation | "Manual review is the bottleneck" |
+| Decision | Chosen direction | "MVP excludes automated payouts" |
+| Open Question | Needs owner/input | "Who can override a rejection?" |
+| Risk | Could affect success | "Third-party API has rate limits" |
+| Dependency | External prerequisite | "Legal must approve retention policy" |
+
+Material decisions should be copied into `specs-refiniment/<feature>/decision-log.md`.
+
 ## Stage 1. Initiative Context
 
 Start with:

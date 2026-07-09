@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Validate an AI SDLC sandbox approval request draft."""
+"""Validate an AI SDLC sandbox approval request draft.
+
+The approval skill uses this script before requesting escalated execution. It
+keeps common safety checks deterministic: no secrets in the prompt, no reusable
+prefix for destructive commands, and no overly broad prefix rules.
+"""
 
 from __future__ import annotations
 
@@ -7,6 +12,10 @@ import argparse
 import re
 import shlex
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_state_machine import add_state_arguments, run_state_action
 
 
 DESTRUCTIVE = {
@@ -18,6 +27,8 @@ DESTRUCTIVE = {
     "git push -f",
 }
 
+# Prefix rules matching only a generic interpreter or shell are too reusable and
+# can accidentally authorize unrelated future commands.
 BROAD_PREFIXES = {
     "python",
     "python3",
@@ -30,6 +41,8 @@ BROAD_PREFIXES = {
     "/bin/sh",
 }
 
+# Secret-like patterns are intentionally broad. False positives are cheaper than
+# sending real credentials into an approval prompt.
 SECRET_PATTERNS = [
     re.compile(r"bearer\s+[A-Za-z0-9._~+/=-]{12,}", re.IGNORECASE),
     re.compile(r"api[_-]?key\s*[:=]\s*['\"]?[A-Za-z0-9._~+/=-]{12,}", re.IGNORECASE),
@@ -37,23 +50,29 @@ SECRET_PATTERNS = [
     re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
 ]
 
+# Shell features make command segmentation and prefix-rule reuse harder to reason
+# about, so they are warned or rejected depending on where they appear.
 SHELL_FEATURES = ["&&", "||", ";", "|", ">", "<", "$(", "`", "*", "?"]
 
 
 def has_secret(text: str) -> bool:
+    """Return true when text appears to contain credential material."""
     return any(pattern.search(text) for pattern in SECRET_PATTERNS)
 
 
 def starts_with_destructive(command: str) -> bool:
+    """Detect commands that can delete data or rewrite remote history."""
     normalized = " ".join(command.strip().split())
     return any(normalized == item or normalized.startswith(f"{item} ") for item in DESTRUCTIVE)
 
 
 def has_shell_feature(command: str) -> bool:
+    """Detect shell syntax that should not be baked into reusable approvals."""
     return any(feature in command for feature in SHELL_FEATURES)
 
 
 def prefix_first_token(prefix_rule: str) -> str:
+    """Parse the first prefix token safely; invalid shell quoting returns empty."""
     try:
         parts = shlex.split(prefix_rule)
     except ValueError:
@@ -62,9 +81,11 @@ def prefix_first_token(prefix_rule: str) -> str:
 
 
 def validate(command: str, justification: str, prefix_rule: str | None) -> tuple[list[str], list[str]]:
+    """Return blocking errors and non-blocking warnings for an approval draft."""
     errors: list[str] = []
     warnings: list[str] = []
 
+    # Basic prompt quality checks keep approval requests actionable and auditable.
     if not command.strip():
         errors.append("command is required")
     if len(justification.strip()) < 20:
@@ -76,12 +97,16 @@ def validate(command: str, justification: str, prefix_rule: str | None) -> tuple
     if has_secret(combined):
         errors.append("approval request appears to contain secret material")
 
+    # Destructive commands may still be legitimate, but never with a reusable
+    # prefix rule because future commands could match the same dangerous prefix.
     if starts_with_destructive(command):
         warnings.append("destructive command detected; require explicit user confirmation and do not use prefix_rule")
         if prefix_rule:
             errors.append("prefix_rule must not be provided for destructive commands")
 
     if prefix_rule:
+        # Prefix rules should be narrow reusable capabilities, not generic shells
+        # or scripts with redirection/wildcards embedded in them.
         first = prefix_first_token(prefix_rule)
         if first in BROAD_PREFIXES:
             errors.append(f"prefix_rule is too broad: {first}")
@@ -97,13 +122,26 @@ def validate(command: str, justification: str, prefix_rule: str | None) -> tuple
 
 
 def main() -> int:
+    """Validate CLI input and print approval guidance for the agent."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--command", required=True)
     parser.add_argument("--justification", required=True)
     parser.add_argument("--prefix-rule")
+    parser.add_argument("--quick-flow", action="store_true", help="Emit only blocking approval errors and high-risk warnings")
+    parser.add_argument("--full-flow", action="store_true", help="Keep all warnings and strict approval guidance")
+    parser.add_argument("--feature", default="<feature-name>")
+    add_state_arguments(parser)
     args = parser.parse_args()
 
+    state_rc = run_state_action(args, "ai-sdlc-approvals-sandbox", "refinement")
+    if state_rc:
+        return state_rc
+
     errors, warnings = validate(args.command, args.justification, args.prefix_rule)
+    if args.quick_flow and not args.full_flow:
+        # Quick flow keeps only warnings that change whether the agent should ask
+        # for approval now or rewrite the request first.
+        warnings = [warning for warning in warnings if "destructive" in warning or "secret" in warning or "too broad" in warning]
     for warning in warnings:
         print(f"WARN: {warning}")
     if errors:

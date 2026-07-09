@@ -1,259 +1,412 @@
-# AI-Ready QA/BA Workflow
+# AI-Ready Delivery Workflow
 
 ## Purpose
 
-Modern AI coding assistants increase engineering productivity only when they operate inside a well-structured engineering environment. Most software projects distribute critical context across tickets, chats, meetings, documentation, source code, and undocumented implementation decisions. As a result, AI systems often spend effort reconstructing context instead of solving engineering problems.
+This guide explains the end-to-end role workflow for the AI SDLC skill library.
+It shows how PM, BA, QA, Dev, Delivery, and the AI assistant cooperate to turn
+fragmented context into traceable delivery artifacts and validated software.
 
-This workflow defines an AI-ready QA/BA operating model. It restructures QA and Business Analysis activities around the continuous creation, validation, and maintenance of engineering context.
+The workflow is not a replacement for team ownership. It is a structured way for
+the AI assistant to read context, produce artifacts, preserve decisions, and keep
+work reusable across the software lifecycle.
 
-Engineering context is progressively transformed into structured engineering artifacts that become the primary source of information for developers, AI systems, QA, BA, and future project changes.
+## Workflow Mandate
 
-The model is technology-independent and can be applied regardless of business domain, architecture, delivery methodology, or AI platform.
+The workflow exists to make AI-assisted software delivery reliable.
 
-## Goals
+The AI assistant participates across the lifecycle by:
 
-The workflow is designed to:
+- reading the smallest relevant context set;
+- selecting the current role skill;
+- producing structured artifacts;
+- maintaining decision traceability;
+- updating lifecycle state;
+- refreshing indexes for future agents;
+- surfacing blockers instead of hiding them;
+- keeping PM, BA, QA, and Dev outputs separated by workspace.
 
-- establish an AI-ready QA/BA process;
-- standardize the transformation of business information into engineering context;
-- improve requirement quality before implementation begins;
-- integrate AI into everyday QA/BA activities;
-- establish specification-driven development;
-- maintain engineering artifacts throughout the software lifecycle;
-- reduce dependency on undocumented engineering decisions;
-- improve consistency between business intent, implementation, and validation.
+Humans remain accountable for decisions, approvals, implementation quality, and
+release readiness.
 
-## Scope
+## Role Model
 
-This workflow defines how QA and Business Analysis activities should support AI-assisted software delivery.
+Each role owns a different slice of context.
 
-It covers:
+| Role | Owns | AI-produced support |
+| --- | --- | --- |
+| PM | Product intent, value, audience, MVP, priority, release scope | Discovery notes, PRFAQ package, goal/capability map, backlog slices, release readiness notes |
+| BA | Business behavior, workflows, rules, assumptions, acceptance criteria | Business context, requirements readiness, stories, delivery specs, handoff reviews |
+| QA | Testability, risk, coverage, scenarios, validation readiness | QA plans, gap reviews, test strategy, test cases, suites, traceability review |
+| Dev | Implementation correctness, design, code, validation, review, commits | SDD package, branch plan, validation plan, code review, security review, commit readiness |
+| Delivery | Sequencing, ownership, handoff quality, readiness | Delivery gap reviews, handoff reviews, rollout and blocker visibility |
 
-- information analysis;
-- context engineering;
-- engineering artifact generation;
-- collaboration with development;
-- test engineering;
-- feature validation;
-- engineering artifact maintenance.
+The AI assistant does not merge these roles into one generic output. It produces
+role-specific artifacts and connects them through shared traceability records.
 
-It does not define software architecture, development practices, project management methodologies, release management, DevOps processes, or AI platform selection. Those areas should be governed by separate engineering standards.
+## Context Lifecycle
 
-## Operating Principles
-
-### QA First
-
-QA/BA participates from the earliest stage of every functional change. The objective is to validate and refine business intent before implementation begins instead of validating completed functionality only after development.
-
-### Context Before Development
-
-Every functional change must be transformed into complete and validated engineering context before implementation begins. Engineering artifacts are the primary mechanism for capturing and communicating this context.
-
-### AI Augmentation
-
-AI is integrated into activities where information is analyzed, engineering context is refined, or engineering artifacts are produced. AI accelerates engineering work but does not replace engineering judgment.
-
-### Human Ownership
-
-QA/BA remains responsible for engineering decisions, artifact quality, and engineering context. AI-generated outputs require human review and approval before they become part of the project.
-
-### Specification-Driven Development
-
-Development begins from approved engineering artifacts, not fragmented communication or undocumented assumptions. Engineering artifacts provide a consistent implementation reference for both developers and AI systems.
-
-### Continuously Maintained Artifacts
-
-Engineering artifacts evolve together with the software throughout its lifecycle. Every approved functional change should be reflected in the corresponding artifacts so they remain accurate, consistent, and useful for future AI-assisted development.
-
-### Continuous Context Refinement
-
-Engineering context is continuously refined throughout the feature lifecycle. Questions raised during development, testing, and bug fixing are treated as opportunities to improve context, not as isolated implementation issues.
-
-## Operating Model
-
-Within this model, QA/BA owns engineering context throughout the lifecycle of every functional change.
-
-QA/BA is not limited to requirement documentation or feature validation. The primary responsibility is to transform fragmented business information into implementation-ready engineering context and maintain that context throughout delivery.
-
-The model has four fundamental responsibilities:
-
-1. **Context engineering**: analyze business requests, identify missing information, resolve ambiguities, define implementation boundaries, identify dependencies, and establish complete engineering context before development begins.
-2. **Engineering artifact generation**: transform validated context into standardized artifacts suitable for implementation, validation, and future maintenance.
-3. **Development and validation support**: clarify requirements, refine context when new information appears, validate completed functionality against approved artifacts, and document implementation gaps.
-4. **Engineering artifact maintenance**: update artifacts so they accurately reflect implemented functionality and remain useful for future project changes.
-
-## Context Flow
-
-This workflow is built around continuous evolution of engineering context rather than sequential project phases.
+The workflow is continuous, not a one-way document pipeline.
 
 ```mermaid
 flowchart LR
-    A["Business information<br/>tickets, chats, meetings,<br/>support requests, designs,<br/>existing functionality"] --> B["Context engineering<br/>analysis, clarification,<br/>dependency review,<br/>edge cases"]
-    B --> C["Engineering artifacts<br/>user stories, acceptance criteria,<br/>business rules, test cases,<br/>checklists, API assets"]
-    C --> D["Development<br/>implementation from<br/>approved artifacts"]
-    C --> E["Validation<br/>functional, API, regression,<br/>business rule, exploratory"]
-    D --> B
-    E --> B
-    B --> F["Artifact maintenance<br/>approved updates,<br/>obsolete information removal,<br/>context preservation"]
-    F --> C
+    A["Raw signals<br/>customers, stakeholders,<br/>support, analytics, designs"] --> B["PM product shaping"]
+    B --> C["BA context engineering"]
+    C --> D["QA testability and risk shaping"]
+    C --> E["Delivery specification"]
+    D --> E
+    E --> F["Dev SDD and implementation"]
+    F --> G["Validation and review"]
+    G --> H{"Ready?"}
+    H -->|"No: context gap"| C
+    H -->|"No: product decision"| B
+    H -->|"No: test gap"| D
+    H -->|"No: code gap"| F
+    H -->|"Yes"| I["Commit / handoff / release evidence"]
+    I --> J["Artifact maintenance"]
+    J --> B
 ```
 
-Key flow rules:
+## AI Operating Pattern
 
-- business information may originate from any source;
-- context engineering is a continuous QA/BA activity throughout the feature lifecycle;
-- engineering artifacts represent the current state of engineering context;
-- development and validation continuously refine both the context and its artifacts;
-- AI augments each stage while engineering ownership remains with QA/BA.
+For any durable delivery task, the AI assistant follows the same high-level
+pattern:
 
-## Skill Flow
+1. Identifies the active role and skill from the user's request.
+2. Reads the relevant role guide when the workflow context is unclear.
+3. Reads `concepts/` only for the mechanics needed by the task.
+4. Checks the workspace specs index before opening broad feature files.
+5. Checks feature lifecycle state when durable feature work is involved.
+6. Runs the skill-specific helper script when it can reduce token usage or
+   enforce structure.
+7. Produces the routed artifact under `specs-refiniment/` or `specs/`.
+8. Updates artifact metadata, decision log, lifecycle state, and specs index
+   when durable files change.
+9. Reports blockers, assumptions, validation evidence, and residual risk.
 
-Use the repository skills as the execution layer for this workflow. The skills should be selected by lifecycle stage, not loaded all at once.
+This pattern keeps the AI from re-reading unnecessary files and keeps generated
+outputs traceable for the next role.
+
+## End-To-End Flow
+
+### 1. Product Shaping
+
+PM provides product signals: customer problem, audience, value, constraints,
+goals, priorities, MVP boundaries, or release pressure.
+
+The AI assistant produces PM-oriented refinement artifacts:
+
+- discovery notes;
+- PRFAQ / product package;
+- goal and capability map;
+- backlog decomposition;
+- release slicing or readiness notes.
+
+The output lives in `specs-refiniment/<feature-name>/` and becomes upstream
+context for BA and QA.
+
+### 2. Business Context Engineering
+
+BA turns product direction into implementation-ready business context.
+
+The AI assistant produces or reviews:
+
+- business context;
+- business rules;
+- actors and workflows;
+- assumptions and open questions;
+- acceptance criteria;
+- delivery specification;
+- handoff readiness.
+
+BA artifacts make expected behavior explicit enough for QA to test and Dev to
+implement.
+
+### 3. QA Testability And Coverage
+
+QA validates whether the available context can support reliable testing.
+
+The AI assistant produces or reviews:
+
+- QA plan;
+- requirements gap review;
+- test strategy;
+- test cases;
+- test suites;
+- QA traceability and readiness review;
+- security testing notes when relevant.
+
+QA outputs connect requirements, risks, and validation expectations before and
+after implementation.
+
+### 4. Delivery Handoff
+
+Delivery checks whether the package is ready for engineering or cross-functional
+execution.
+
+The AI assistant identifies:
+
+- missing ownership;
+- incomplete acceptance criteria;
+- unresolved decisions;
+- sequencing risks;
+- QA or Dev blockers;
+- artifacts that must be updated before handoff.
+
+This step prevents incomplete context from becoming implementation debt.
+
+### 5. Spec-Driven Development
+
+Dev converts approved refinement context into implementation artifacts under
+`specs/<feature-name>/`.
+
+The AI assistant produces or updates:
+
+- `requirements.md`;
+- `design.md`;
+- `test-cases.md`;
+- `qa.md`;
+- `tasks.md`;
+- `plan.toon`;
+- `plan.md`;
+- validation plans;
+- code-review artifacts;
+- security-review artifacts;
+- commit readiness notes.
+
+The AI uses `plan.toon` as the compact machine plan for task state,
+dependencies, trace IDs, and validation order. It produces `plan.md` as the
+human-readable view and refreshes it when TOON task status changes. Implementation
+should stay within the accepted SDD scope. If implementation discovers missing
+behavior, the workflow loops back to PM, BA, or QA depending on the gap.
+
+### 6. Validation, Review, And Commit
+
+The AI assistant supports Dev and QA by selecting validation commands, reviewing
+diffs, checking traceability, and preparing commit metadata.
+
+Validation output should explain:
+
+- what was checked;
+- which requirement, acceptance, or test IDs were covered;
+- which checks failed or were skipped;
+- what residual risk remains;
+- whether artifacts need updates.
+
+### 7. Artifact Maintenance
+
+After implementation, approved changes are reflected back into artifacts.
+
+The AI assistant updates or recommends updates when:
+
+- product scope changes;
+- business behavior changes;
+- validation exposes missing scenarios;
+- implementation differs from the original plan;
+- decisions are accepted, superseded, or rejected;
+- artifacts become stale.
+
+Maintained artifacts describe the current accepted system behavior, not only the
+historical request.
+
+## Skill Flow Map
+
+The diagram below shows every skill in the library and the role that primarily
+uses it. Some skills can support more than one role, but each node is placed in
+the role lane that usually owns the output.
 
 ```mermaid
 flowchart TB
-    A["Discovery and intake"] --> B["Business framing"]
-    B --> C["Requirements readiness"]
-    C --> D["Backlog and story shaping"]
-    D --> E["Delivery specification"]
-    E --> F["QA strategy and test assets"]
-    F --> G["Implementation support"]
-    G --> H["Validation and review"]
-    H --> I["Handoff and commit"]
-    H --> C
+    subgraph PM["PM / Product"]
+        PM1["ai-sdlc-working-backwards-discovery<br/>discovery-notes.md"]
+        PM2["ai-sdlc-prfaq-package-synthesis<br/>prfaq.md"]
+        PM3["ai-sdlc-goal-capability-and-epic-mapping<br/>goal-capability-map.md"]
+        PM4["ai-sdlc-backlog-decomposition-and-task-planning<br/>backlog.md"]
+        PM5["ai-sdlc-release-slicing-and-backlog-readiness-review<br/>release-slicing.md"]
+    end
 
-    A -.->|"ai-sdlc-working-backwards-discovery"| A1["Clarify problem, audience, value, MVP, risks"]
-    B -.->|"ai-sdlc-prfaq-package-synthesis"| B1["Synthesize PRFAQ, FAQ, BRD"]
-    C -.->|"ai-sdlc-requirements-readiness-review"| C1["Score readiness before design or development"]
-    D -.->|"ai-sdlc-user-story-decomposition"| D1["Create epics, stories, acceptance criteria"]
-    E -.->|"ai-sdlc-delivery-spec-synthesis"| E1["Produce implementation-ready delivery spec"]
-    F -.->|"ai-sdlc-test-scope-and-strategy-design"| F1["Define risk-based QA strategy"]
-    G -.->|"ai-sdlc-sdd"| G1["Run spec-driven implementation workflow"]
-    H -.->|"ai-sdlc-validation"| H1["Run focused deterministic validation"]
-    I -.->|"ai-sdlc-delivery-handoff-review"| I1["Review handoff readiness"]
+    subgraph BA["BA / Delivery Refinement"]
+        BA1["ai-sdlc-delivery-package-gap-review<br/>delivery-gap-review.md"]
+        BA2["ai-sdlc-requirements-readiness-review<br/>requirements-readiness.md"]
+        BA3["ai-sdlc-backlog-requirements-gap-review<br/>backlog-gap-review.md"]
+        BA4["ai-sdlc-user-story-decomposition<br/>user-stories.md"]
+        BA5["ai-sdlc-ba<br/>business-context.md"]
+        BA6["ai-sdlc-delivery-spec-synthesis<br/>delivery-spec.md"]
+        BA7["ai-sdlc-delivery-handoff-review<br/>delivery-handoff-review.md"]
+    end
+
+    subgraph QA["QA / Test Engineering"]
+        QA1["ai-sdlc-qa<br/>qa.md"]
+        QA2["ai-sdlc-qa-requirements-gap-review<br/>qa-gap-review.md"]
+        QA3["ai-sdlc-test-scope-and-strategy-design<br/>qa-strategy.md"]
+        QA4["ai-sdlc-test-cases<br/>test-cases.md"]
+        QA5["ai-sdlc-test-case-and-suite-synthesis<br/>test-suite.md"]
+        QA6["ai-sdlc-qa-traceability-and-readiness-review<br/>qa-readiness.md"]
+    end
+
+    subgraph DEV["Dev / Implementation / Governance"]
+        D1["ai-sdlc-sdd<br/>requirements/design/tests/tasks"]
+        D2["ai-sdlc-branching<br/>branch-plan.md"]
+        D3["ai-sdlc-validation<br/>validation.md"]
+        D4["ai-sdlc-code-review<br/>code-review.md"]
+        D5["ai-sdlc-security-testing<br/>security-review.md"]
+        D6["ai-sdlc-commit-prep<br/>commit-readiness.md"]
+        D7["ai-sdlc-conventional-commit<br/>commit-message.md"]
+        D8["ai-sdlc-approvals-sandbox<br/>approval-plan.md"]
+    end
+
+    PM1 -->|"validated discovery"| PM2
+    PM2 -->|"product package ready"| BA1
+    BA1 -->|"package gaps addressed"| BA2
+    BA2 -->|"requirements ready for product mapping"| PM3
+    PM3 -->|"goals and epics mapped"| BA3
+    BA3 -->|"planning gaps addressed"| PM4
+    PM4 -->|"story candidates"| BA4
+    PM4 -->|"release scope"| PM5
+    PM5 -->|"release readiness signal"| BA7
+
+    BA4 -->|"stories and acceptance criteria"| BA5
+    BA5 -->|"business context"| BA6
+    BA6 -->|"delivery spec ready"| BA7
+
+    BA2 -->|"testable requirements baseline"| QA1
+    QA1 -->|"QA plan"| QA2
+    QA2 -->|"testability gaps resolved"| QA3
+    QA3 -->|"strategy ready"| QA4
+    QA4 -->|"scenario matrix"| QA5
+    QA5 -->|"suite coverage"| QA6
+    QA6 -->|"QA readiness"| BA7
+
+    BA6 -->|"implementation context"| D1
+    QA6 -->|"validated coverage context"| D1
+    BA7 -->|"handoff accepted"| D1
+    D1 -->|"SDD package"| D2
+    D1 -->|"security-sensitive scope"| D5
+    D2 -->|"branch aligned to spec"| D3
+    D3 -->|"validation evidence"| D4
+    D5 -->|"security findings"| D4
+    D4 -->|"review accepted"| D6
+    D6 -->|"commit ready"| D7
+
+    D8 -. "approval support" .-> D2
+    D8 -. "approval support" .-> D3
+    D8 -. "approval support" .-> D5
+
+    D3 -. "validation gap" .-> QA2
+    D4 -. "requirement or scope gap" .-> BA2
+    D4 -. "product decision gap" .-> PM3
+    D5 -. "security requirement gap" .-> BA2
+    QA6 -. "coverage gap" .-> QA3
+    BA7 -. "handoff blocker" .-> BA6
 ```
+
+## Skill Ownership Map
+
+| Role lane | Skills |
+| --- | --- |
+| PM / Product | `ai-sdlc-working-backwards-discovery`, `ai-sdlc-prfaq-package-synthesis`, `ai-sdlc-goal-capability-and-epic-mapping`, `ai-sdlc-backlog-decomposition-and-task-planning`, `ai-sdlc-release-slicing-and-backlog-readiness-review` |
+| BA / Delivery Refinement | `ai-sdlc-delivery-package-gap-review`, `ai-sdlc-requirements-readiness-review`, `ai-sdlc-backlog-requirements-gap-review`, `ai-sdlc-user-story-decomposition`, `ai-sdlc-ba`, `ai-sdlc-delivery-spec-synthesis`, `ai-sdlc-delivery-handoff-review` |
+| QA / Test Engineering | `ai-sdlc-qa`, `ai-sdlc-qa-requirements-gap-review`, `ai-sdlc-test-scope-and-strategy-design`, `ai-sdlc-test-cases`, `ai-sdlc-test-case-and-suite-synthesis`, `ai-sdlc-qa-traceability-and-readiness-review` |
+| Dev / Implementation / Governance | `ai-sdlc-sdd`, `ai-sdlc-branching`, `ai-sdlc-validation`, `ai-sdlc-code-review`, `ai-sdlc-security-testing`, `ai-sdlc-commit-prep`, `ai-sdlc-conventional-commit`, `ai-sdlc-approvals-sandbox` |
 
 ## Skill Selection Map
 
-Use these skills by skill name when executing this operating model:
-
-| Workflow stage | Primary skills | Use when |
+| Workflow stage | Primary skills | AI-produced output |
 | --- | --- | --- |
-| Discovery | `ai-sdlc-working-backwards-discovery` | The customer problem, audience, value proposition, MVP, risks, or success metrics are not yet clear. |
-| PRFAQ and requirements package | `ai-sdlc-prfaq-package-synthesis` | Working-backwards discovery is complete and a PRFAQ, FAQ package, or BRD is needed. |
-| Delivery package review | `ai-sdlc-delivery-package-gap-review` | A PRFAQ, BRD, or discovery package exists and needs review for contradictions, missing business rules, or insufficient handoff detail. |
-| Requirements readiness | `ai-sdlc-requirements-readiness-review` | PRFAQ and BRD are ready for strict quality review before design or development starts. |
-| Goal and epic mapping | `ai-sdlc-goal-capability-and-epic-mapping` | Business goals, roles, capabilities, and outcome-oriented epics need to be mapped before detailed backlog work. |
-| Backlog readiness | `ai-sdlc-backlog-requirements-gap-review` | Initiative artifacts need review for planning gaps, weak priorities, missing actors, or backlog-blocking ambiguity. |
-| Backlog decomposition | `ai-sdlc-backlog-decomposition-and-task-planning` | Goals, capabilities, and epics need to become features, stories, acceptance summaries, and delivery tasks. |
-| Story decomposition | `ai-sdlc-user-story-decomposition` | A clarified initiative package needs epics, user stories, acceptance criteria, scenario coverage, and priority signals. |
-| Release slicing | `ai-sdlc-release-slicing-and-backlog-readiness-review` | Backlog needs MVP/release slices, sequencing, traceability, and planning readiness scoring. |
-| BA context engineering | `ai-sdlc-ba` | A feature or change needs actors, workflows, business rules, assumptions, acceptance criteria, and richer spec context. |
-| Delivery spec | `ai-sdlc-delivery-spec-synthesis` | Stories and clarified delivery context are ready for implementation-ready specification synthesis. |
-| Spec-driven development | `ai-sdlc-sdd` | A medium or large feature, refactor, API change, architecture change, or provider integration must follow requirements, design, tests, tasks, implementation, and validation. |
-| QA planning | `ai-sdlc-qa` | QA planning, acceptance validation, regression scope, exploratory checks, smoke tests, or release verification are needed. |
-| QA gap review | `ai-sdlc-qa-requirements-gap-review` | Stories, specs, BRDs, APIs, or workflows need review for testability and QA-blocking gaps before tests are generated. |
-| Test strategy | `ai-sdlc-test-scope-and-strategy-design` | Requirements are testable enough to define QA scope, priorities, strategy, data, environments, and risk focus. |
-| Test cases | `ai-sdlc-test-cases` and `ai-sdlc-test-case-and-suite-synthesis` | Test cases, smoke suites, regression suites, or UAT suites need to be generated from explicit scenarios and requirements. |
-| QA traceability | `ai-sdlc-qa-traceability-and-readiness-review` | Requirements-to-test traceability, missing coverage, blockers, and QA execution readiness need review. |
-| Security validation | `ai-sdlc-security-testing` | Auth, authorization, input validation, secret exposure, abuse cases, endpoints, or workflows need security-focused testing. |
-| Implementation branch discipline | `ai-sdlc-branching` | Implementation work starts, a task branch must be created or verified, or branch/spec alignment must be checked. |
-| Validation | `ai-sdlc-validation` | Go, SQL, API, provider integration, SDD, or documentation changes need focused deterministic checks. |
-| Code review | `ai-sdlc-code-review` | A diff, PR, branch, commit, staged change, or completed implementation needs review against requirements, tests, API contracts, security, and scope. |
-| Delivery handoff | `ai-sdlc-delivery-handoff-review` | Story and spec synthesis are complete and strict handoff readiness must be scored. |
-| Commit preparation | `ai-sdlc-commit-prep` and `ai-sdlc-conventional-commit` | Repository changes need staging, auditable commit message preparation, SDD traceability, or Conventional Commit validation. |
-| Sandbox and approvals | `ai-sdlc-approvals-sandbox` | Escalated permissions, sandbox failures, command approval rules, or command safety decisions need to be handled. |
+| Product discovery | `ai-sdlc-working-backwards-discovery` | Discovery notes with problem, audience, value, MVP, risks, and success metrics. |
+| PRFAQ / product package | `ai-sdlc-prfaq-package-synthesis` | PRFAQ, FAQ package, or BRD-style product package. |
+| Delivery package gap review | `ai-sdlc-delivery-package-gap-review` | Gap review before stories, specs, or handoff. |
+| Requirements readiness | `ai-sdlc-requirements-readiness-review` | Readiness score, blockers, and missing context. |
+| Goal / capability / epic map | `ai-sdlc-goal-capability-and-epic-mapping` | Business goals, capabilities, roles, and epics. |
+| Backlog review | `ai-sdlc-backlog-requirements-gap-review` | Backlog-planning gap review. |
+| Backlog decomposition | `ai-sdlc-backlog-decomposition-and-task-planning` | Features, story candidates, acceptance summary, delivery tasks. |
+| Story decomposition | `ai-sdlc-user-story-decomposition` | Epics, stories, acceptance criteria, scenario coverage. |
+| Release slicing | `ai-sdlc-release-slicing-and-backlog-readiness-review` | MVP/release slices, sequencing, readiness risks. |
+| BA context | `ai-sdlc-ba` | Business context, rules, actors, workflows, assumptions, acceptance criteria. |
+| Delivery spec | `ai-sdlc-delivery-spec-synthesis` | Implementation-ready delivery specification. |
+| QA planning | `ai-sdlc-qa` | QA plan, regression scope, validation notes. |
+| QA gap review | `ai-sdlc-qa-requirements-gap-review` | Testability gaps and QA blockers. |
+| Test strategy | `ai-sdlc-test-scope-and-strategy-design` | QA strategy, suite intent, data and environment needs. |
+| Test cases | `ai-sdlc-test-cases` | Scenario matrix and test cases. |
+| Test suite | `ai-sdlc-test-case-and-suite-synthesis` | Smoke, regression, UAT, and detailed test suites. |
+| QA traceability | `ai-sdlc-qa-traceability-and-readiness-review` | Coverage gaps, traceability matrix, readiness review. |
+| Delivery handoff | `ai-sdlc-delivery-handoff-review` | Final handoff readiness review. |
+| SDD | `ai-sdlc-sdd` | Requirements, design, tests, QA notes, and tasks under `specs/`. |
+| Branching | `ai-sdlc-branching` | Branch plan and branch/spec alignment. |
+| Validation | `ai-sdlc-validation` | Focused validation command plan and evidence summary. |
+| Code review | `ai-sdlc-code-review` | Findings-first review against specs, tests, contracts, security, and scope. |
+| Security testing | `ai-sdlc-security-testing` | Security review, abuse cases, trust-boundary and validation gaps. |
+| Commit readiness | `ai-sdlc-commit-prep` | Staging, validation, and commit-readiness summary. |
+| Commit message | `ai-sdlc-conventional-commit` | Conventional Commit message with traceability metadata when needed. |
+| Sandbox approvals | `ai-sdlc-approvals-sandbox` | Approval plan for escalated commands or sandbox limitations. |
 
-## End-to-End Lifecycle
+## Quick Flow In The Workflow
 
-1. **Intake information**: collect raw business, product, support, design, and implementation signals.
-2. **Analyze context**: identify gaps, ambiguities, dependencies, business rules, implementation boundaries, and edge cases.
-3. **Clarify open questions**: resolve missing or conflicting information with stakeholders, developers, and existing artifacts.
-4. **Generate artifacts**: create the artifacts needed for implementation and validation.
-5. **Review and approve**: QA/BA reviews AI-generated or manually drafted artifacts before publication.
-6. **Implement from artifacts**: development uses approved artifacts as the primary implementation reference.
-7. **Validate behavior**: QA validates implementation against approved artifacts and identifies context gaps.
-8. **Refine context**: approved changes, defects, and developer questions update the shared engineering context.
-9. **Maintain artifacts**: artifacts are updated so they describe the implemented system, not only historical intent.
+In quick flow, the AI assistant keeps the workflow moving with available
+evidence.
 
-## Engineering Artifacts
+Quick flow produces:
 
-Engineering artifacts are the primary representation of engineering context. They are not documentation for documentation's sake. Their objective is to provide a consistent, reusable source of information for developers, QA/BA, AI systems, and future project changes.
+- draft artifacts;
+- visible assumptions;
+- decision-log rows for material assumptions;
+- focused validation;
+- residual-risk notes;
+- refreshed indexes when files change.
 
-Typical artifacts include:
+Quick flow is appropriate for early shaping, low-risk updates, small changes, or
+drafting before human review.
 
-- user stories;
-- acceptance criteria;
-- business rules;
-- test cases;
-- checklists;
-- API collections and validation assets;
-- bug reports;
-- supporting documentation.
+## Full Flow In The Workflow
 
-Each artifact should have:
+In full flow, the AI assistant prioritizes verification and handoff confidence.
 
-- a clearly defined purpose;
-- a standardized structure;
-- an owner responsible for quality;
-- a maintenance process;
-- traceability to the originating business request.
+Full flow produces:
 
-Projects should adopt only the artifacts that provide measurable value while maintaining consistency across the engineering process.
+- blocker lists for missing material context;
+- verified artifact references;
+- decision-log coverage;
+- lifecycle-state checks;
+- validation evidence;
+- refreshed TOON and Markdown specs indexes;
+- explicit readiness or non-readiness.
 
-## AI Integration Model
+Full flow is appropriate before signoff, handoff, implementation, merge, release,
+or any decision-sensitive work.
 
-AI is embedded throughout the QA/BA workflow rather than introduced as a standalone tool.
+## Human Review Model
 
-AI assists with:
-
-- context analysis;
-- inconsistency and missing-information detection;
-- clarification question generation;
-- engineering artifact generation;
-- testing asset generation;
-- defect analysis;
-- artifact maintenance.
-
-The standard interaction pattern is:
+The AI assistant can produce drafts, checks, summaries, and recommendations.
+Humans accept or reject product direction, business decisions, QA readiness,
+implementation choices, and release decisions.
 
 ```mermaid
 sequenceDiagram
-    participant Human as Human owner
+    participant Human as Role owner
     participant AI as AI assistant
-    participant Context as Project context
-    Human->>AI: Provide analyzed context and constraints
-    AI-->>Human: Generate draft artifact or analysis
-    Human->>Human: Review, correct, and approve
-    Human->>Context: Publish approved artifact
+    participant Artifacts as Feature artifacts
+    participant Evidence as Validation evidence
+    Human->>AI: Provide request, constraints, role context
+    AI->>Artifacts: Read indexes, state, decisions, selected artifacts
+    AI-->>Human: Produce artifact, review, validation, or blocker report
+    Human->>Human: Review and decide
+    Human->>Artifacts: Accept, correct, or request update
+    AI->>Evidence: Preserve validation and traceability when work changes
 ```
 
-AI-generated content must never become part of the project without QA/BA review and approval.
+## Workflow Quality Bar
 
-## Artifact Quality Standards
+A feature is AI-ready when:
 
-Every engineering artifact should be:
+- product intent is clear;
+- business behavior is explicit;
+- acceptance criteria are testable;
+- QA coverage is traceable;
+- implementation scope is defined;
+- decisions are recorded;
+- lifecycle state is current;
+- generated artifacts have metadata;
+- specs indexes point to the latest artifacts;
+- validation evidence exists or blockers are explicit.
 
-- **Complete**: contains enough information to support implementation and validation without undocumented assumptions.
-- **Consistent**: does not contradict related artifacts, existing functionality, or approved business rules.
-- **Traceable**: maintains a clear relationship with the originating business request and related artifacts.
-- **Maintainable**: can be updated without complete recreation.
-- **AI-consumable**: uses consistent structure and terminology that engineers and AI systems can interpret.
-
-Artifacts that fail these standards should be refined before becoming part of the project's engineering context.
-
-## Adoption Guidelines
-
-Introduce the workflow incrementally. Process consistency should come before expanding AI capabilities.
-
-Recommended adoption sequence:
-
-1. Introduce QA First principles.
-2. Standardize context engineering activities.
-3. Standardize engineering artifact templates.
-4. Introduce AI-assisted artifact generation.
-5. Introduce AI-assisted testing workflows.
-6. Establish continuous artifact maintenance.
-7. Expand AI participation across the complete QA/BA lifecycle.
-
-Successful adoption depends primarily on engineering context maturity and process consistency, not on AI tooling alone.
+When any of these are missing, the workflow loops back to the role that owns the
+missing context.

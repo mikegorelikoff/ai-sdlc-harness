@@ -1,299 +1,221 @@
 # AI SDLC Skill Library
 
-This repository contains reusable, tool-agnostic AI SDLC skills for AI-ready software delivery workflows.
+AI SDLC Skill Library is a set of reusable AI skills for software delivery.
 
-The library is generic: skills here are not tied to one client, account, project, or technology stack. They provide repeatable Markdown output patterns for product discovery, BA refinement, QA planning, test design, delivery handoff, developer implementation, validation, review, and commit preparation.
+It helps AI assistants work with PM, BA, QA, Delivery, and Dev context in a
+structured way: clarify intent, produce delivery artifacts, keep decisions
+traceable, generate tests and validation plans, support implementation, and
+prepare reviews or commits.
 
-The skills are plain Markdown instruction folders. They are not tied to Codex, Claude, Cursor, or any other specific tool. Any AI assistant, agent runner, internal automation, or workflow engine that can read `SKILL.md` files can use them.
+> Positioning: this library is built from real team experience delivering
+> software with AI assistants, not from copying another framework. It is not
+> external delivery framework, not a external delivery framework-compatible preset, and not yet another external delivery framework, OpenSpec, or
+> Spec Kit clone. It is an AI-first SDLC harness for teams that need more than a
+> planning prompt or a feature-spec loop: flexible entry from any delivery
+> signal, enterprise-grade traceability, decision history, validation evidence,
+> and continuity across PM, BA, QA, Delivery, and Dev workflows. Based on our
+> experience, this model is the better fit for serious AI-assisted delivery.
 
-## Purpose
+## Who It Is For
 
-Use this repository as a shared AI SDLC skill library for turning fragmented delivery context into structured artifacts that humans and AI tools can use consistently.
+This repository is for teams that want AI assistants to support real delivery
+work instead of only answering ad hoc questions.
 
-The package helps teams:
+It is useful for:
 
-- clarify product and business intent before implementation
-- turn discovery notes into PRFAQ, BRD, backlog, and story artifacts
-- review requirements for BA, PM, QA, and delivery readiness
-- generate QA strategy, test cases, suites, and traceability matrices
-- convert approved refinement artifacts into developer implementation specs
-- enforce implementation discipline through SDD, validation, review, branching, and commit workflows
-- keep PM, BA, QA, Dev, and Delivery outputs separated by the right artifact workspace
+- PMs shaping product intent, PRFAQ, goals, backlog, and release slices;
+- BAs turning business context into rules, workflows, assumptions, and
+  acceptance criteria;
+- QAs planning test scope, test cases, suites, validation, and traceability;
+- Developers creating SDD specs, validation plans, reviews, and commit
+  readiness;
+- Delivery leads keeping handoff, ownership, blockers, and decisions visible.
 
-## Artifact Routing
+## What It Contains
 
-This library separates refinement work from developer implementation work.
+- `skills/` - executable skill folders for AI assistants.
+- `guides/` - role and workflow guides for PM, BA, QA, and Dev.
+- `concepts/` - explanations of the system concepts: artifact routing, flow
+  modes, decision logs, state machine, metadata, specs index, scripts, and
+  traceability.
 
-Use `specs-refiniment/` for PM, BA, QA, Delivery, discovery, planning, refinement, and readiness artifacts:
+Generated project artifacts are expected to live in:
 
-```text
-specs-refiniment/
-  <feature-name>/
-    prfaq.md
-    requirements-readiness.md
-    backlog.md
-    user-stories.md
-    delivery-spec.md
-    qa-strategy.md
-    test-cases.md
-    qa-readiness.md
+- `specs-refiniment/` for PM, BA, QA, Delivery, and refinement work;
+- `specs/` for developer implementation SDD work.
+
+## Why Not external delivery framework, OpenSpec, Or Spec Kit
+
+external delivery framework, OpenSpec, and Spec Kit are useful patterns. This repository is not trying
+to prove that they are wrong. It makes a different tradeoff: it optimizes for AI
+assistants that repeatedly enter a repository, produce delivery artifacts, read
+their own prior context, and continue work across PM, BA, QA, Delivery, and Dev
+roles.
+
+This comparison is based on the public project docs:
+
+- [external delivery framework Method docs](https://example.invalid/removed-framework-reference) and
+  [workflow map](https://example.invalid/removed-framework-referencereference/workflow-map/);
+- [OpenSpec site](https://openspec.dev/);
+- [GitHub Spec Kit README](https://github.com/github/spec-kit).
+
+The main differences are about entry point, expected input, artifact model,
+repository layout, strictness controls, and how much process state is
+machine-readable. The important positioning is flexibility: this library can act
+like a lightweight single-skill helper in quick flow, or like an enterprise
+traceability and governance harness in full flow.
+
+| Area | external delivery framework Method | OpenSpec | GitHub Spec Kit | AI SDLC Skill Library |
+| --- | --- | --- | --- | --- |
+| Stated focus | AI-driven agile development with specialized agents, guided workflows, and planning that adapts from bug fixes to enterprise work. | Lightweight spec-driven framework where specs live in the repo and changes produce proposal/design/tasks/spec deltas. | Toolkit for Spec-Driven Development where specs become executable inputs for implementation. | AI-native SDLC skill library for repeated artifact production and consumption across PM, BA, QA, Delivery, and Dev. |
+| First user input | Usually a workflow/agent trigger or planning request such as product brief, PRD, architecture, story, or quick-dev intent. | A change intent, commonly via `/openspec:proposal`, which searches existing specs/code and creates a change workspace. | A feature/product prompt via `/speckit.specify`, after project principles are established with `/speckit.constitution`. | Any lifecycle signal: raw notes, PRFAQ, backlog, BA context, QA plan, implementation request, diff, validation output, or commit intent. |
+| First repository setup | `npx external delivery framework-method install`, then agents/skills/workflows are available in the target AI tool. | `npm install -g @fission-ai/openspec@latest`; specs and changes are stored under `openspec/`. | `specify init <project>` or `specify init .`, selecting an AI coding agent integration. | `npx skills add mikegorelikoff/ai-sdlc-harness -g --all` or install individual skill folders. |
+| Main workflow shape | Four phases: optional analysis, planning, solutioning, implementation, plus quick flow for small work. | Capability specs plus per-change proposal workspace before code. | Constitution -> specify -> plan -> tasks -> implement. | Role workflow: PM shaping -> BA refinement -> QA readiness -> Delivery handoff -> Dev SDD -> validation/review/commit. |
+| Main artifacts | PRD, UX/design, architecture spine, stories, sprint/story status, quick-dev specs, project context. | `openspec/specs/<capability>/spec.md` plus `openspec/changes/<change>/proposal.md`, `design.md`, `tasks.md`, and spec deltas. | `.specify/memory/constitution.md`, `specs/<feature>/spec.md`, `plan.md`, `tasks.md`, research/contracts/data model/quickstart depending on phase. | `specs-refiniment/<feature>/...` for upstream PM/BA/QA/Delivery artifacts; `specs/<feature>/...` for Dev SDD, including `plan.toon` and `plan.md`. |
+| Artifact routing model | Agent/workflow outputs feed the next phase; context management emphasizes documents becoming context for later agents. | Functional specs are organized by capability; changes are organized separately as reviewable deltas. | Feature folders under `specs/`, with `.specify/` holding templates, scripts, and project memory. | Explicit split between refinement and implementation workspaces, with indexes and decision logs in each workspace. |
+| AI context strategy | Structured documents and project context guide later agents; `external delivery framework-help` guides what to do next. | Agent reads capability specs and code to create proposal/design/tasks/deltas; specs persist across sessions. | Agent reads constitution/spec/plan/tasks and uses setup scripts/templates to move through phases. | Agent reads compact TOON first (`specs-index.toon`, `state.toon`, `plan.toon`), then opens selected Markdown only when needed. |
+| Sequencing control | Workflow phases, agent triggers, story/sprint flow, and quick-dev/auto-dev options. | Proposal review before code; spec deltas show requirement changes. | Slash commands enforce phase order and prerequisites such as constitution, spec, plan, and tasks. | State-machine gates plus deterministic scripts enforce predecessor stages, quick/full behavior, plan links, validation, and readiness. |
+| Strictness control | Workflow choice and quick-dev/auto-dev paths adjust depth. | Lightweight process by default; review depth comes from proposal/spec practice. | Structured command sequence with generated prerequisites. | Explicit `--quick-flow` for fast progress and `--full-flow` for strict questions, upstream checks, validation, and traceability gates. |
+| Machine-readable state | Uses workflow/status files where relevant, such as sprint/story status and project context, but the main public docs emphasize workflow documents. | Mostly Markdown specs/change workspaces; public docs emphasize lightweight repo-resident specs and deltas. | `.specify` scripts/templates and generated Markdown artifacts; public docs emphasize command phases and task parsing. | TOON state machines, TOON specs indexes, TOON execution plans, metadata, metatags, and decision-log links are first-class. |
+| Traceability model | Phase outputs feed downstream agents; stories and context documents focus implementation. | Spec deltas make requirement changes reviewable and tie proposal/design/tasks to changed capabilities. | Spec, plan, and tasks connect feature intent to implementation; tasks include dependencies, paths, TDD order, and checkpoints. | Cross-role traceability: decisions, metadata, metatags, AC/TC/task links, upstream refinement links, validation sequence, and review/commit gates. |
+| Team/process weight | Broad and comprehensive; good when teams want an AI agile operating method with specialized agents. | Lightweight; good when teams want minimal process and living capability specs in repo. | Structured SDD; good when teams want feature specs, plans, tasks, and implementation commands. | Scale-adaptive: one skill can be used independently, while full-flow enables enterprise-grade lifecycle state, handoffs, decisions, and validation across roles. |
+
+Use this library when the problem is not only "write a feature spec", but "let
+AI enter from any delivery signal and still preserve lifecycle context". The
+design assumes the AI is both producing and consuming the artifacts, so Markdown
+is kept for people and TOON is used for compact machine-readable continuity.
+The same repository can support quick one-step assistance, strict enterprise
+handoff gates, or anything in between.
+
+Use a lighter approach when the team only needs a single feature spec, a small
+change proposal, or a one-off planning conversation. external delivery framework is a stronger fit when
+the team wants a broad agile agent-method. OpenSpec is a stronger fit when the
+team wants lightweight repo-resident capability specs and change deltas. Spec Kit
+is a stronger fit when the team wants a focused spec -> plan -> tasks ->
+implementation loop. AI SDLC Skill Library is the stronger fit when the team
+needs both flexibility and governance: the same feature may enter through PM,
+BA, QA, Dev, Delivery, validation, review, or commit prep, and the AI still
+needs to preserve state, decisions, links, and validation evidence across
+multiple sessions.
+
+## Skill Workflow
+
+```mermaid
+flowchart TB
+    subgraph PM["PM / Product"]
+        PM1["ai-sdlc-working-backwards-discovery"]
+        PM2["ai-sdlc-prfaq-package-synthesis"]
+        PM3["ai-sdlc-goal-capability-and-epic-mapping"]
+        PM4["ai-sdlc-backlog-decomposition-and-task-planning"]
+        PM5["ai-sdlc-release-slicing-and-backlog-readiness-review"]
+    end
+
+    subgraph BA["BA / Delivery Refinement"]
+        BA1["ai-sdlc-delivery-package-gap-review"]
+        BA2["ai-sdlc-requirements-readiness-review"]
+        BA3["ai-sdlc-backlog-requirements-gap-review"]
+        BA4["ai-sdlc-user-story-decomposition"]
+        BA5["ai-sdlc-ba"]
+        BA6["ai-sdlc-delivery-spec-synthesis"]
+        BA7["ai-sdlc-delivery-handoff-review"]
+    end
+
+    subgraph QA["QA / Test Engineering"]
+        QA1["ai-sdlc-qa"]
+        QA2["ai-sdlc-qa-requirements-gap-review"]
+        QA3["ai-sdlc-test-scope-and-strategy-design"]
+        QA4["ai-sdlc-test-cases"]
+        QA5["ai-sdlc-test-case-and-suite-synthesis"]
+        QA6["ai-sdlc-qa-traceability-and-readiness-review"]
+    end
+
+    subgraph DEV["Dev / Governance"]
+        D1["ai-sdlc-sdd"]
+        D2["ai-sdlc-branching"]
+        D3["ai-sdlc-validation"]
+        D4["ai-sdlc-code-review"]
+        D5["ai-sdlc-security-testing"]
+        D6["ai-sdlc-commit-prep"]
+        D7["ai-sdlc-conventional-commit"]
+        D8["ai-sdlc-approvals-sandbox"]
+    end
+
+    PM1 --> PM2
+    PM2 --> BA1
+    BA1 --> BA2
+    BA2 --> PM3
+    PM3 --> BA3
+    BA3 --> PM4
+    PM4 --> BA4
+    PM4 --> PM5
+    PM5 --> BA7
+
+    BA4 --> BA5
+    BA5 --> BA6
+    BA6 --> BA7
+
+    BA2 --> QA1
+    QA1 --> QA2
+    QA2 --> QA3
+    QA3 --> QA4
+    QA4 --> QA5
+    QA5 --> QA6
+    QA6 --> BA7
+
+    BA6 --> D1
+    QA6 --> D1
+    BA7 --> D1
+    D1 --> D2
+    D1 --> D5
+    D2 --> D3
+    D3 --> D4
+    D5 --> D4
+    D4 --> D6
+    D6 --> D7
+
+    D8 -. "approval support" .-> D2
+    D8 -. "approval support" .-> D3
+    D8 -. "approval support" .-> D5
+
+    D3 -. "validation gap" .-> QA2
+    D4 -. "requirement or scope gap" .-> BA2
+    D4 -. "product decision gap" .-> PM3
+    D5 -. "security requirement gap" .-> BA2
+    QA6 -. "coverage gap" .-> QA3
+    BA7 -. "handoff blocker" .-> BA6
 ```
 
-Use `specs/` only for developer implementation SDD packages:
+## Install With Skills CLI
 
-```text
-specs/
-  <feature-name>/
-    requirements.md
-    design.md
-    test-cases.md
-    qa.md
-    tasks.md
-```
-
-Rule of thumb:
-
-- PM / BA / QA / Delivery output goes to `specs-refiniment/<feature-name>/<file.md>`
-- Dev implementation SDD output goes to `specs/<feature-name>/<file.md>`
-- `specs-refiniment/` is upstream context for Dev work
-- `specs/` should not be used for discovery, planning, QA refinement, or readiness outputs
-
-## Guides
-
-The `guides/` folder explains the operating model behind the skills.
-
-- `guides/workflow.md` — end-to-end AI-ready QA/BA operating model and skill selection map
-- `guides/ba.md` — BA responsibilities, context engineering, artifact generation, and BA skill usage
-- `guides/qa.md` — QA responsibilities, QA-first workflow, validation artifacts, and QA skill usage
-
-Read the guides when you need to understand how the skills fit together. Use individual skills when you need to execute a specific workflow step.
-
-## Skill Folders
-
-### PM / Product / Planning
-
-- `skills/ai-sdlc-working-backwards-discovery/` — staged discovery interview for customer problem, audience, MVP, risks, and success metrics
-- `skills/ai-sdlc-prfaq-package-synthesis/` — PRFAQ, FAQ package, and BRD synthesis from validated discovery notes
-- `skills/ai-sdlc-goal-capability-and-epic-mapping/` — business goals, capabilities, roles, and outcome-oriented epic mapping
-- `skills/ai-sdlc-backlog-decomposition-and-task-planning/` — feature, story, acceptance summary, and cross-functional task decomposition
-- `skills/ai-sdlc-release-slicing-and-backlog-readiness-review/` — MVP/release slicing, sequencing, backlog readiness, and planning risk review
-
-### BA / Requirements / Delivery Refinement
-
-- `skills/ai-sdlc-ba/` — business context, actors, workflows, rules, assumptions, acceptance criteria, and open questions
-- `skills/ai-sdlc-requirements-readiness-review/` — strict readiness review for PRFAQ, BRD, or requirements packages
-- `skills/ai-sdlc-backlog-requirements-gap-review/` — backlog-planning gap review before decomposition
-- `skills/ai-sdlc-delivery-package-gap-review/` — delivery gap review for discovery packages before stories or specs
-- `skills/ai-sdlc-user-story-decomposition/` — epics, user stories, acceptance criteria, scenario coverage, and priority signals
-- `skills/ai-sdlc-delivery-spec-synthesis/` — structured delivery specification for engineering and cross-functional planning
-- `skills/ai-sdlc-delivery-handoff-review/` — final delivery handoff readiness review
-
-### QA / Test Engineering
-
-- `skills/ai-sdlc-qa/` — QA planning, acceptance validation, regression scope, manual checks, and validation evidence
-- `skills/ai-sdlc-qa-requirements-gap-review/` — QA-blocking requirements and testability gap review
-- `skills/ai-sdlc-test-scope-and-strategy-design/` — QA scope, strategy, suite intent, data needs, and risk focus
-- `skills/ai-sdlc-test-cases/` — scenario matrix and implementation-oriented test case planning
-- `skills/ai-sdlc-test-case-and-suite-synthesis/` — detailed test cases plus smoke, regression, and UAT suites
-- `skills/ai-sdlc-qa-traceability-and-readiness-review/` — requirements-to-test traceability, coverage gaps, blockers, and QA readiness
-
-### Dev / Implementation / Governance
-
-- `skills/ai-sdlc-sdd/` — developer spec-driven development workflow using the five-file SDD package under `specs/`
-- `skills/ai-sdlc-branching/` — task branch creation and branch/spec alignment
-- `skills/ai-sdlc-validation/` — focused deterministic validation command selection and reporting
-- `skills/ai-sdlc-code-review/` — findings-first code review against specs, tests, contracts, security, and scope
-- `skills/ai-sdlc-security-testing/` — security review, abuse-case analysis, trust-boundary review, and validation gaps
-- `skills/ai-sdlc-commit-prep/` — safe staging, commit readiness, validation evidence, and post-commit traceability
-- `skills/ai-sdlc-conventional-commit/` — Conventional Commit message drafting and validation
-- `skills/ai-sdlc-approvals-sandbox/` — sandbox escalation, command approval, and prefix-rule guidance
-
-## Output Rules
-
-Skills in this repository should generate Markdown artifacts unless a user explicitly requests another format.
-
-Every skill is self-contained through its `SKILL.md` plus optional local resources:
-
-- `references/` — templates, checklists, structures, and domain-specific guidance loaded only when needed
-- `scripts/` — deterministic helper scripts for validation, planning, or formatting
-
-General output rules:
-
-- use concise, structured Markdown
-- ask clarification questions when required inputs are missing
-- mark unknown optional fields as `TBD`, `Not provided`, or `Assumption`
-- separate confirmed facts from assumptions and open questions
-- make gaps, risks, blockers, and ownership explicit
-- do not invent requirements, business rules, budgets, scope, timelines, rates, or technical constraints
-- route PM/BA/QA/Delivery artifacts to `specs-refiniment/<feature-name>/<file.md>`
-- route developer implementation SDD artifacts to `specs/<feature-name>/<file.md>`
-
-## Naming
-
-Use lowercase kebab-case for generated folders and files.
-
-Feature names should be stable and human-readable:
-
-```text
-specs-refiniment/payment-retry-policy/qa-strategy.md
-specs-refiniment/payment-retry-policy/test-cases.md
-specs-refiniment/payment-retry-policy/delivery-handoff-review.md
-
-specs/payment-retry-policy/requirements.md
-specs/payment-retry-policy/design.md
-specs/payment-retry-policy/tasks.md
-```
-
-When the feature name is not known, use a temporary slug:
-
-```text
-specs-refiniment/tbd-checkout-risk-review/requirements-readiness.md
-```
-
-## Usage
-
-Each skill folder is intended to be consumed by any AI tool or automation layer that can load Markdown instructions. The skills define how to turn raw notes, requirements, delivery updates, QA concerns, implementation requests, or repository diffs into structured AI SDLC Markdown.
-
-Use one skill at a time by lifecycle stage. Do not load the whole library unless the task is repository setup or skill maintenance.
-
-## Use From GitHub
-
-This repository is intended to work with the Skills CLI:
+Install all skills globally:
 
 ```bash
-npx skills
+npx skills add mikegorelikoff/ai-sdlc-harness -g --all
 ```
 
-For one-off usage without installing a skill permanently, use:
+Install one skill:
+
+```bash
+npx skills add mikegorelikoff/ai-sdlc-harness/skills/<skill-name> -g
+```
+
+Run a skill without installing it permanently:
 
 ```bash
 npx skills use mikegorelikoff/ai-sdlc-harness@<skill-name>
 ```
 
-Example:
+Open the Skills CLI:
 
 ```bash
-npx skills use mikegorelikoff/ai-sdlc-harness@ai-sdlc-qa
+npx skills
 ```
 
-## Install Skills
+## Start Here
 
-Install all skills from the repository:
-
-```bash
-npx skills add mikegorelikoff/ai-sdlc-harness --all
-```
-
-Install selected skills only:
-
-```bash
-npx skills add mikegorelikoff/ai-sdlc-harness --skill ai-sdlc-ba ai-sdlc-qa ai-sdlc-sdd
-```
-
-Install globally:
-
-```bash
-npx skills add mikegorelikoff/ai-sdlc-harness -g --all
-```
-
-List available skills without installing:
-
-```bash
-npx skills add mikegorelikoff/ai-sdlc-harness --list
-```
-
-Use `--full-depth` if the CLI does not discover all skill folders under `skills/`:
-
-```bash
-npx skills add mikegorelikoff/ai-sdlc-harness --list --full-depth
-```
-
-## Tool-Agnostic Setup
-
-These skills are plain `SKILL.md` folders with optional `references/` and `scripts/` subfolders. The Skills CLI is only a convenient distribution mechanism. The skills themselves are portable.
-
-Use with any AI tool in one of three ways:
-
-- install through the Skills CLI if the tool supports it
-- run `npx skills use ...` and paste or pipe the produced instruction prompt into the tool
-- copy the needed `SKILL.md` and `references/` files into the tool's native rules, memory, prompt, or workflow system
-
-### Skills CLI
-
-```bash
-npx skills add mikegorelikoff/ai-sdlc-harness --all
-```
-
-Use one skill without installing it:
-
-```bash
-npx skills use mikegorelikoff/ai-sdlc-harness@ai-sdlc-working-backwards-discovery
-```
-
-Install globally when the consuming tool reads user-level skills:
-
-```bash
-npx skills add mikegorelikoff/ai-sdlc-harness -g --all
-```
-
-### Optional Tool-Specific Install Examples
-
-If your tool supports Skills CLI tool targeting, you can pass the relevant `--agent` value:
-
-```bash
-npx skills add mikegorelikoff/ai-sdlc-harness --agent codex --all
-npx skills add mikegorelikoff/ai-sdlc-harness --agent claude-code --all
-npx skills add mikegorelikoff/ai-sdlc-harness --agent cursor --all
-```
-
-You can also use a skill as a prompt for tools that do not install skills directly:
-
-```bash
-npx skills use mikegorelikoff/ai-sdlc-harness@ai-sdlc-delivery-spec-synthesis --agent claude-code
-```
-
-### Manual Or Internal Tooling
-
-For Windsurf, Continue, Aider, custom internal workflows, CI workflows, or any tool without native Skills CLI support, use one of two approaches:
-
-```bash
-npx skills use mikegorelikoff/ai-sdlc-harness@ai-sdlc-requirements-readiness-review
-```
-
-Pipe or paste the generated prompt into the tool session.
-
-Or install/copy manually:
-
-```bash
-npx skills add mikegorelikoff/ai-sdlc-harness --all --copy
-```
-
-Then point the tool to the needed skill folder under its installed skills directory, or paste the contents of:
-
-```text
-skills/<skill-name>/SKILL.md
-skills/<skill-name>/references/
-```
-
-## Private Repo Access
-
-If this repository is private, each machine or tool environment must have GitHub access configured before running `npx skills`.
-
-Recommended options:
-
-- SSH key with access to `mikegorelikoff/ai-sdlc-harness`
-- GitHub CLI login with `gh auth login`
-- HTTPS credential helper with a token that can read the repo
-
-## Maintenance
-
-When creating or updating AI SDLC knowledge, preserve refinement and implementation state separately:
-
-- PM/BA/QA/Delivery refinement artifacts belong in `specs-refiniment/<feature-name>/<file.md>`
-- developer implementation SDD artifacts belong in `specs/<feature-name>/<file.md>`
-- guide-level operating model docs belong in `guides/`
-- reusable skill behavior belongs in `skills/<skill-name>/SKILL.md`
-- detailed templates and checklists belong in `skills/<skill-name>/references/`
-- deterministic helper logic belongs in `skills/<skill-name>/scripts/`
-
-Do not move refinement artifacts into `specs/` just because they are useful for developers. Treat `specs-refiniment/` as upstream context and convert it into `specs/` only when implementation work is explicitly in scope.
+- [guides/workflow.md](guides/workflow.md) - end-to-end AI-ready delivery
+  workflow.
+- [guides/pm.md](guides/pm.md), [guides/ba.md](guides/ba.md),
+  [guides/qa.md](guides/qa.md), [guides/dev.md](guides/dev.md) -
+  role-specific guides.
+- [concepts/README.md](concepts/README.md) - how the underlying system works.

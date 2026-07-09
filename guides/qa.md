@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The QA component defines how Quality Assurance operates inside the AI-ready QA/BA workflow.
+The QA component defines how Quality Assurance operates inside the AI-ready delivery workflow.
 
 QA is responsible for validating that implemented functionality conforms to approved engineering artifacts and for continuously improving engineering context when testing reveals missing assumptions, unclear behavior, or coverage gaps.
 

@@ -43,3 +43,53 @@ is warranted.
 - Is the risky path covered by unit, service, transport, or integration tests?
 - Are negative-path and abuse-path checks present?
 - If checks are missing, can the reviewer explain the highest-value test to add?
+
+## When To Load This Reference
+
+Load when reviewing auth, permissions, inputs, state transitions, integrations,
+secrets, webhooks, provider calls, data exposure, or security-sensitive diffs.
+
+## Security Review Matrix
+
+| Area | Threat | Evidence | Finding? | Test/Validation |
+|---|---|---|---|---|
+| Identity | spoofed or missing caller | auth context |  |  |
+| Authorization | cross-tenant or role bypass | permission checks |  |  |
+| Input | malformed or hostile input | validation code |  |  |
+| State | invalid transition or replay | state machine |  |  |
+| Secret | leaked credential | logs/config/output |  |  |
+| Integration | untrusted provider/webhook | signature/nonce |  |  |
+| Data | overexposure or retention issue | response/log/storage |  |  |
+
+## Abuse Case Prompts
+
+- What can a low-privilege user try that should fail?
+- What can a different tenant or account try that should fail?
+- What happens if the same request/event arrives twice?
+- What happens if provider response is delayed, malformed, or replayed?
+- What sensitive value could appear in logs, errors, emails, or metrics?
+
+## Quick Flow Guidance
+
+In `--quick-flow`, focus on the highest-risk boundary touched by the change and
+recommend the smallest meaningful validation.
+
+## Full Flow Guidance
+
+In `--full-flow`, inspect identity, authorization, input validation, state,
+secrets, integration trust, logging, data exposure, and negative-path tests.
+
+## Decision Log Guidance
+
+Record accepted security risk, deferred security tests, scope decisions, and
+security-sensitive assumptions.
+
+## Output Discipline
+
+Security findings should include:
+
+- impact;
+- exploit or failure scenario;
+- affected boundary;
+- concrete fix direction;
+- validation that would prove the fix.

@@ -1,6 +1,6 @@
 ---
 name: ai-sdlc-validation
-description: AI SDLC backend validation workflow. Use when Codex needs to validate Go, SQL, API, provider integration, SDD, or documentation changes in this repository and choose focused deterministic checks without running unrelated expensive tests by default.
+description: AI SDLC backend validation workflow. Use when an AI assistant needs to validate Go, SQL, API, provider integration, SDD, or documentation changes in this repository and choose focused deterministic checks without running unrelated expensive tests by default. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
 ---
 
 # ai-sdlc-validation: Validation Command Selection
@@ -17,7 +17,7 @@ description: AI SDLC backend validation workflow. Use when Codex needs to valida
 - Supporting audience: QA, BA
 - Audience tags: Dev, QA, BA
 - SDLC stage: Implementation validation
-- Purpose: Select, run, and report focused deterministic validation checks for AI SDLC code, SQL, API, provider, SDD, documentation, and Codex-governance changes.
+- Purpose: Select, run, and report focused deterministic validation checks for AI SDLC code, SQL, API, provider, SDD, documentation, and tool-governance changes.
 - Output: Focused validation commands, outcomes, coverage notes, and residual risk
 
 ### 0.1 Required Inputs
@@ -33,6 +33,18 @@ description: AI SDLC backend validation workflow. Use when Codex needs to valida
 - Separate confirmed facts from assumptions and open questions.
 - Do not proceed to downstream synthesis when a required upstream artifact or decision is missing.
 
+### 0.2.1 Flow Mode Flags
+
+- Support two explicit execution flags: `--quick-flow` and `--full-flow`.
+- If both flags are supplied, `--full-flow` takes precedence because it is the stricter mode.
+- `--quick-flow`: move fast, make high-quality progress with available context, avoid clarification questions unless continuing would create material product, security, compliance, data-loss, or irreversible implementation risk.
+- In `--quick-flow`, use documented assumptions, recommended defaults, existing repository patterns, and the nearest available artifact evidence; record important assumptions and decisions in `decision-log.md`.
+- In `--quick-flow`, run only focused checks that are directly relevant, cheap, and likely to catch regressions for the requested work; report any skipped broader checks as residual risk.
+- `--full-flow`: ask concise clarification questions when inputs, scope, ownership, acceptance criteria, or decisions are unclear; do not silently assume material requirements.
+- In `--full-flow`, verify upstream and downstream artifacts, decision-log entries, traceability links, acceptance criteria, and validation evidence before finalizing.
+- In `--full-flow`, run or recommend the skill-appropriate gates, reviews, scripts, and validation commands needed for end-to-end confidence; document any blocked verification explicitly.
+- When neither flag is supplied, follow the skill default rules and choose the least risky behavior for the request size and domain.
+
 ### 0.3 Output Rules
 
 - Keep output structured with headings and bullets.
@@ -42,18 +54,68 @@ description: AI SDLC backend validation workflow. Use when Codex needs to valida
 
 ### 0.4 Artifact Routing
 
+- Maintain a feature decision log whenever this skill records, resolves, changes, or depends on a product, delivery, QA, security, validation, branching, implementation, or rollout decision.
+- For PM, BA, QA, Delivery, discovery, planning, refinement, and readiness work, write decisions to `specs-refiniment/<feature-name>/decision-log.md`.
+- For developer implementation SDD work, write decisions to `specs/<feature-name>/decision-log.md`.
+- Each decision-log entry must include date, decision, context or evidence, options considered when relevant, owner, status, and links to affected artifacts, tasks, tests, or validation evidence.
+- Use this exact decision-log structure:
+
+  ```markdown
+  # Decision Log
+
+  | ID | Date | Status | Owner | Decision | Context/Evidence | Options Considered | Affected Artifacts | Validation/Trace Links |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | DEC-001 | YYYY-MM-DD | proposed / accepted / superseded / rejected | role or name | concise decision | source facts, artifact links, or evidence | option A; option B; recommended default | affected docs, tasks, code, tests, or rollout notes | requirement IDs, test IDs, validation commands, PRs, commits, or tickets |
+  ```
+
 - Use `specs/` only for developer implementation SDD packages and repo-governance artifacts.
 - Do not place PM, BA, QA, Delivery, discovery, planning, refinement, or readiness outputs in `specs/`; those belong at `specs-refiniment/<feature-name>/<file.md>`.
 - When consuming `specs-refiniment/<feature-name>/<file.md>`, treat it as upstream refinement context and create or update `specs/` only when implementation work is explicitly in scope.
 
+## 0.5 Feature State Machine
+
+- Maintain feature lifecycle state in TOON at `specs-refiniment/<feature-name>/state.toon` for refinement work and `specs/<feature-name>/state.toon` for implementation work.
+- Before executing this skill for a feature, check the state machine with `python3 skills/_shared/state_machine.py check --feature <feature-name> --skill <this-skill-name> --workspace <refinement|implementation> --quick-flow|--full-flow`.
+- When this skill starts durable work, mark it in progress with `begin`; when the skill's required artifact or review is complete, mark it done with `complete` and include `--artifacts <path>` plus `--decision-ref DEC-###` when a decision was involved.
+- In `--full-flow`, do not proceed when predecessor stages are incomplete, another lifecycle skill is active, or the state file reports a blocker.
+- In `--quick-flow`, a predecessor skip is allowed only when continuing is low risk and the command includes `--assumption "..."` or `--decision-ref DEC-###`; record the same assumption or decision in `decision-log.md`.
+- Use `python3 skills/_shared/state_machine.py status --feature <feature-name> --workspace <refinement|implementation> --format toon` to emit compact LLM-readable state before choosing the next skill.
+- The state machine is feature-scoped: do not reuse a `state.toon` across unrelated feature folders.
+
+## 0.6 Artifact Metadata And Metatags
+
+- Every Markdown artifact generated or updated by this skill must start with an `artifact_metadata` YAML frontmatter block before the first visible heading.
+- Use schema `ai-sdlc-artifact-metadata/v1` and keep these fields current: `feature`, `artifact`, `path`, `workspace`, `skill`, `flow_mode`, `state_file`, `decision_log`, `status`, `owner`, `created_at`, `updated_at`, `trace_ids`, `related_artifacts`, `validation`, and `metatags`.
+- `metatags` must include at minimum `ai-sdlc`, the workspace (`refinement` or `implementation`), this skill name, the artifact type or filename stem, and a lifecycle/status tag such as `draft`, `review`, `approved`, or `validated`.
+- When `--quick-flow` is active, set `flow_mode: quick`, keep assumptions visible in the body, and add tags for major defaults or unresolved risk only when they help retrieval.
+- When `--full-flow` is active, set `flow_mode: full`, keep blockers and validation evidence reflected in `status`, `validation`, `trace_ids`, and `related_artifacts`.
+- Update metadata whenever the artifact path, status, owner, trace links, validation evidence, related artifacts, or decision references change.
+- Metadata is an index for routing, retrieval, and traceability; it does not replace the artifact body, `decision-log.md`, or `state.toon`.
+
+## 0.7 Specs Index
+
+- Before searching across feature folders, inspect the compact LLM index first: `specs-refiniment/specs-index.toon` for refinement work or `specs/specs-index.toon` for implementation work.
+- Use the human-readable index at `specs-refiniment/specs-index.md` or `specs/specs-index.md` when reporting feature coverage, artifact inventory, or handoff status to people.
+- After this skill creates or materially updates an artifact, refresh the matching workspace index with `python3 skills/_shared/ai_sdlc_specs_index.py --workspace <refinement|implementation> --quick-flow|--full-flow`.
+- In `--quick-flow`, rely on `specs-index.toon` to choose the smallest relevant artifact set before opening files.
+- In `--full-flow`, verify the updated artifact appears in both `specs-index.toon` and `specs-index.md` before final handoff.
+- The specs index summarizes artifact metadata and state; it does not replace reading the selected source artifacts when details, approvals, or validation evidence matter.
+
 ## References
 
-- Use `scripts/test_validation_helpers.py` only for validating helper behavior; do not load it for ordinary task execution.
-- Use `scripts/validation_plan.py` when deterministic validation, planning, or formatting is required by the workflow.
+- Use `scripts/validation_plan.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
+
+## Script Usage
+
+- Run validation planning after identifying changed files and before choosing commands manually.
+- Quick flow: `python3 skills/ai-sdlc-validation/scripts/validation_plan.py --quick-flow <changed-file>...`
+- Full flow: `python3 skills/ai-sdlc-validation/scripts/validation_plan.py --full-flow <changed-file>...`
+- If no files are supplied, the script inspects the current git worktree.
+- Execute the suggested commands that match the requested risk level; document skipped broader commands as residual risk.
 
 ## Purpose
 
-Select, run, and report focused deterministic validation checks for AI SDLC code, SQL, API, provider, SDD, documentation, and Codex-governance changes.
+Select, run, and report focused deterministic validation checks for AI SDLC code, SQL, API, provider, SDD, documentation, and tool-governance changes.
 
 ## Inputs
 
@@ -64,16 +126,16 @@ Select, run, and report focused deterministic validation checks for AI SDLC code
 - Run the validation planner when changed files are not trivial:
 
   ```bash
-  python3 .codex/skills/ai-sdlc-validation/scripts/validation_plan.py
+  python3 skills/ai-sdlc-validation/scripts/validation_plan.py
   ```
 
 ## Steps
 
-1. Classify changed files by surface: Go package, SQL/sqlc, API contract, provider integration, frontend/docs, SDD/spec, Codex governance, or mixed.
+1. Classify changed files by surface: Go package, SQL/sqlc, API contract, provider integration, frontend/docs, SDD/spec, tool governance, or mixed.
 2. Select the narrowest command set that proves the changed behavior.
 3. Prefer focused tests before broad suites when the risk is localized.
 4. Use `GOCACHE=/tmp/ai-sdlc-go-cache` for Go tests to avoid sandbox cache write failures.
-5. Run spec and skill validators for SDD, `.codex`, hook, or skill changes.
+5. Run spec and skill validators for SDD, skill, helper script, or spec changes.
 6. For active feature specs, run structural SDD validation plus clarify,
    checklist, analyze, and workflow-status commands when the spec changed or is
    the main subject of the work.
@@ -123,17 +185,17 @@ Residual risk:
 - none
 ```
 
-Codex setup change:
+Tool setup change:
 
 ```text
 Validation:
-- command: python3 .codex/scripts/quick_validate_skill.py .codex/skills/ai-sdlc-workflow
+- command: PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-harness-pycache python3 -m py_compile skills/ai-sdlc-validation/scripts/validation_plan.py
   outcome: passed
   reason: validates changed skill metadata.
-- command: python3 .codex/skills/ai-sdlc-sdd/scripts/sdd_status.py --spec specs/185-spec-kit-sdd-quality-gates
+- command: python3 skills/ai-sdlc-sdd/scripts/sdd_status.py --spec specs/185-spec-kit-sdd-quality-gates
   outcome: passed
   reason: confirms the active governance spec is structurally valid and ready for implementation.
-- command: python3 .codex/scripts/codex_governance_audit.py --limit 3
+- command: find skills -name SKILL.md -maxdepth 2
   outcome: passed
   reason: validates SDD governance shape.
 ```

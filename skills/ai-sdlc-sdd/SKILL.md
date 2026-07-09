@@ -1,6 +1,6 @@
 ---
 name: ai-sdlc-sdd
-description: AI SDLC repository spec-driven development workflow. Use when Codex receives a medium or large feature, refactor, API change, architecture change, provider integration change, or any request that must follow requirements, design, test cases, QA planning, tasks, implementation, and validation.
+description: AI SDLC repository spec-driven development workflow. Use when an AI assistant receives a medium or large feature, refactor, API change, architecture change, provider integration change, or any request that must follow requirements, design, test cases, QA planning, tasks, implementation, and validation. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
 ---
 
 # ai-sdlc-sdd: Spec Driven Development
@@ -17,8 +17,8 @@ description: AI SDLC repository spec-driven development workflow. Use when Codex
 - Supporting audience: BA, QA, PM
 - Audience tags: Dev, BA, QA, PM
 - SDLC stage: Repository SDD workflow
-- Purpose: Create, update, validate, and enforce the AI SDLC five-file SDD package for medium and large changes before implementation expands.
-- Output: Five-file SDD package, validation status, task alignment, and implementation handoff
+- Purpose: Create, update, validate, and enforce the AI SDLC SDD package for medium and large changes before implementation expands.
+- Output: SDD package, Markdown execution plan, TOON machine plan, validation status, task alignment, and implementation handoff
 
 ### 0.1 Required Inputs
 
@@ -33,6 +33,19 @@ description: AI SDLC repository spec-driven development workflow. Use when Codex
 - Separate confirmed facts from assumptions and open questions.
 - Do not proceed to downstream synthesis when a required upstream artifact or decision is missing.
 
+### 0.2.1 Flow Mode Flags
+
+- Support two explicit execution flags: `--quick-flow` and `--full-flow`.
+- If both flags are supplied, `--full-flow` takes precedence because it is the stricter mode.
+- `--quick-flow`: move fast, make high-quality progress with available context, avoid clarification questions unless continuing would create material product, security, compliance, data-loss, or irreversible implementation risk.
+- In `--quick-flow`, use documented assumptions, recommended defaults, existing repository patterns, and the nearest available artifact evidence; record important assumptions and decisions in `decision-log.md`.
+- In `--quick-flow`, run only focused checks that are directly relevant, cheap, and likely to catch regressions for the requested work; report any skipped broader checks as residual risk.
+- `--full-flow`: ask concise clarification questions when inputs, scope, ownership, acceptance criteria, or decisions are unclear; do not silently assume material requirements.
+- In `--full-flow`, verify upstream and downstream artifacts, decision-log entries, traceability links, acceptance criteria, and validation evidence before finalizing.
+- In `--full-flow`, SDD must consume upstream refinement context from `specs-refiniment/<feature-name>/`; missing or incomplete delivery-spec or QA-readiness context blocks implementation SDD handoff.
+- In `--full-flow`, run or recommend the skill-appropriate gates, reviews, scripts, and validation commands needed for end-to-end confidence; document any blocked verification explicitly.
+- When neither flag is supplied, follow the skill default rules and choose the least risky behavior for the request size and domain.
+
 ### 0.3 Output Rules
 
 - Keep output structured with headings and bullets.
@@ -42,25 +55,81 @@ description: AI SDLC repository spec-driven development workflow. Use when Codex
 
 ### 0.4 Artifact Routing
 
+- Maintain a feature decision log whenever this skill records, resolves, changes, or depends on a product, delivery, QA, security, validation, branching, implementation, or rollout decision.
+- For PM, BA, QA, Delivery, discovery, planning, refinement, and readiness work, write decisions to `specs-refiniment/<feature-name>/decision-log.md`.
+- For developer implementation SDD work, write decisions to `specs/<feature-name>/decision-log.md`.
+- Each decision-log entry must include date, decision, context or evidence, options considered when relevant, owner, status, and links to affected artifacts, tasks, tests, or validation evidence.
+- Use this exact decision-log structure:
+
+  ```markdown
+  # Decision Log
+
+  | ID | Date | Status | Owner | Decision | Context/Evidence | Options Considered | Affected Artifacts | Validation/Trace Links |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | DEC-001 | YYYY-MM-DD | proposed / accepted / superseded / rejected | role or name | concise decision | source facts, artifact links, or evidence | option A; option B; recommended default | affected docs, tasks, code, tests, or rollout notes | requirement IDs, test IDs, validation commands, PRs, commits, or tickets |
+  ```
+
 - Use `specs/` only for developer implementation SDD packages and repo-governance artifacts.
 - Do not place PM, BA, QA, Delivery, discovery, planning, refinement, or readiness outputs in `specs/`; those belong at `specs-refiniment/<feature-name>/<file.md>`.
 - When consuming `specs-refiniment/<feature-name>/<file.md>`, treat it as upstream refinement context and create or update `specs/` only when implementation work is explicitly in scope.
 
+## 0.5 Feature State Machine
+
+- Maintain feature lifecycle state in TOON at `specs-refiniment/<feature-name>/state.toon` for refinement work and `specs/<feature-name>/state.toon` for implementation work.
+- Before executing this skill for a feature, check the state machine with `python3 skills/_shared/state_machine.py check --feature <feature-name> --skill <this-skill-name> --workspace <refinement|implementation> --quick-flow|--full-flow`.
+- When this skill starts durable work, mark it in progress with `begin`; when the skill's required artifact or review is complete, mark it done with `complete` and include `--artifacts <path>` plus `--decision-ref DEC-###` when a decision was involved.
+- In `--full-flow`, do not proceed when predecessor stages are incomplete, another lifecycle skill is active, or the state file reports a blocker.
+- In `--quick-flow`, a predecessor skip is allowed only when continuing is low risk and the command includes `--assumption "..."` or `--decision-ref DEC-###`; record the same assumption or decision in `decision-log.md`.
+- Use `python3 skills/_shared/state_machine.py status --feature <feature-name> --workspace <refinement|implementation> --format toon` to emit compact LLM-readable state before choosing the next skill.
+- The state machine is feature-scoped: do not reuse a `state.toon` across unrelated feature folders.
+
+## 0.6 Artifact Metadata And Metatags
+
+- Every Markdown artifact generated or updated by this skill must start with an `artifact_metadata` YAML frontmatter block before the first visible heading.
+- Use schema `ai-sdlc-artifact-metadata/v1` and keep these fields current: `feature`, `artifact`, `path`, `workspace`, `skill`, `flow_mode`, `state_file`, `decision_log`, `status`, `owner`, `created_at`, `updated_at`, `trace_ids`, `related_artifacts`, `validation`, and `metatags`.
+- `metatags` must include at minimum `ai-sdlc`, the workspace (`refinement` or `implementation`), this skill name, the artifact type or filename stem, and a lifecycle/status tag such as `draft`, `review`, `approved`, or `validated`.
+- When `--quick-flow` is active, set `flow_mode: quick`, keep assumptions visible in the body, and add tags for major defaults or unresolved risk only when they help retrieval.
+- When `--full-flow` is active, set `flow_mode: full`, keep blockers and validation evidence reflected in `status`, `validation`, `trace_ids`, and `related_artifacts`.
+- Update metadata whenever the artifact path, status, owner, trace links, validation evidence, related artifacts, or decision references change.
+- Metadata is an index for routing, retrieval, and traceability; it does not replace the artifact body, `decision-log.md`, or `state.toon`.
+
+## 0.7 Specs Index
+
+- Before searching across feature folders, inspect the compact LLM index first: `specs-refiniment/specs-index.toon` for refinement work or `specs/specs-index.toon` for implementation work.
+- Use the human-readable index at `specs-refiniment/specs-index.md` or `specs/specs-index.md` when reporting feature coverage, artifact inventory, or handoff status to people.
+- After this skill creates or materially updates an artifact, refresh the matching workspace index with `python3 skills/_shared/ai_sdlc_specs_index.py --workspace <refinement|implementation> --quick-flow|--full-flow`.
+- In `--quick-flow`, rely on `specs-index.toon` to choose the smallest relevant artifact set before opening files.
+- In `--full-flow`, verify the updated artifact appears in both `specs-index.toon` and `specs-index.md` before final handoff.
+- The specs index summarizes artifact metadata and state; it does not replace reading the selected source artifacts when details, approvals, or validation evidence matter.
+
 ## References
 
-- Use `scripts/analyze_spec.py` when deterministic validation, planning, or formatting is required by the workflow.
-- Use `scripts/check_checklist.py` when deterministic validation, planning, or formatting is required by the workflow.
-- Use `scripts/check_clarify.py` when deterministic validation, planning, or formatting is required by the workflow.
-- Use `scripts/resolve_active_spec.py` when deterministic validation, planning, or formatting is required by the workflow.
-- Use `scripts/sdd_status.py` when deterministic validation, planning, or formatting is required by the workflow.
-- Use `scripts/spec_helpers.py` when deterministic validation, planning, or formatting is required by the workflow.
-- Use `scripts/test_sdd_workflow.py` only for validating helper behavior; do not load it for ordinary task execution.
-- Use `scripts/test_validate_spec.py` only for validating helper behavior; do not load it for ordinary task execution.
-- Use `scripts/validate_spec.py` when deterministic validation, planning, or formatting is required by the workflow.
+- Use `scripts/analyze_spec.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
+- Use `scripts/check_checklist.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
+- Use `scripts/check_clarify.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
+- Use `scripts/resolve_active_spec.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
+- Use `scripts/sdd_status.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
+- Use `scripts/spec_helpers.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
+- Use `scripts/validate_spec.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
+- Use `scripts/plan_links.py` to emit, write, or validate the required `plan.toon` machine plan plus `plan.md` execution plan and cross-artifact trace map.
+- Use `scripts/check_refinement_context.py` in `--full-flow` before SDD handoff to ensure upstream refinement delivery and QA readiness are complete.
+
+## Script Usage
+
+- Use SDD scripts as ordered gates for implementation work; pass the same flow flag supplied to the skill.
+- Resolve active spec when the target is unclear: `python3 skills/ai-sdlc-sdd/scripts/resolve_active_spec.py --quick-flow --files <changed-file>...` or `python3 skills/ai-sdlc-sdd/scripts/resolve_active_spec.py --full-flow <spec-or-folder>`.
+- Check workflow state: `python3 skills/ai-sdlc-sdd/scripts/sdd_status.py --spec specs/<feature-name> --quick-flow` for concise status, or `--full-flow` before handoff.
+- Validate structure: `python3 skills/ai-sdlc-sdd/scripts/validate_spec.py specs/<feature-name> --quick-flow`.
+- Create or refresh the execution plan pair: `python3 skills/ai-sdlc-sdd/scripts/plan_links.py specs/<feature-name> --write --quick-flow|--full-flow`.
+- Emit compact machine plan only: `python3 skills/ai-sdlc-sdd/scripts/plan_links.py specs/<feature-name> --emit-toon --quick-flow|--full-flow`.
+- Validate the execution plan links: `python3 skills/ai-sdlc-sdd/scripts/plan_links.py specs/<feature-name> --check --quick-flow|--full-flow`.
+- Full-flow upstream gate: `python3 skills/ai-sdlc-sdd/scripts/check_refinement_context.py specs/<feature-name> --full-flow`.
+- Full-flow pre-implementation gates, in order: `check_refinement_context.py`, `check_clarify.py`, `check_checklist.py`, `plan_links.py --check`, `analyze_spec.py`, then `validate_spec.py`, each with `specs/<feature-name> --full-flow`.
+- Use quick flow for fast structural confidence; use full flow before expanding implementation tasks, handoff, review, or commit prep.
 
 ## Purpose
 
-Create, update, validate, and enforce the AI SDLC five-file SDD package for medium and large changes before implementation expands.
+Create, update, validate, and enforce the AI SDLC SDD package for medium and large changes before implementation expands.
 
 ## Inputs
 
@@ -68,6 +137,7 @@ Create, update, validate, and enforce the AI SDLC five-file SDD package for medi
 - Collect the user request, affected systems, and likely spec name.
 - Search existing `specs/` folders for a matching active or historical spec.
 - Use `$ai-sdlc-ba`, `$ai-sdlc-test-cases`, and `$ai-sdlc-qa` when those phases are incomplete.
+- In `--full-flow`, read `specs-refiniment/specs-index.toon`, upstream `state.toon`, `delivery-spec.md`, `qa-readiness.md`, and `decision-log.md` before finalizing implementation SDD.
 - Read existing code only after the spec intent and affected surface are clear enough to avoid scope drift.
 
 ## Steps
@@ -83,44 +153,48 @@ Create, update, validate, and enforce the AI SDLC five-file SDD package for medi
    - `test-cases.md`
    - `qa.md`
    - `tasks.md`
+   - `plan.toon`
+   - `plan.md`
 7. Write requirements before design; write design before implementation tasks.
 8. Run the clarify gate after requirements are current:
 
    ```bash
-   python3 .codex/skills/ai-sdlc-sdd/scripts/check_clarify.py specs/NNN-feature-name
+   python3 skills/ai-sdlc-sdd/scripts/check_clarify.py specs/NNN-feature-name
    ```
 
 9. Record implementation traceability, source artifact links, or documented no-ticket exceptions in `requirements.md`.
 10. Derive test cases before writing tests.
 11. Derive QA acceptance and regression scope before final validation.
 12. Write task entries with explicit `Output:` and `Refs:` metadata for new or updated active specs.
-13. Run the checklist gate before implementation tasks expand:
+13. Write `plan.toon` as the required compact machine plan linking SDD artifacts, AC IDs, TC IDs, task IDs, dependencies, decisions, task status, and validation order.
+14. Write `plan.md` as the required human-readable execution plan and cross-artifact trace map generated from the same links; when `plan.toon` marks a task `done`, `closed`, `complete`, `completed`, or `validated`, mark that task closed in `plan.md`.
+15. Run the checklist gate before implementation tasks expand:
 
    ```bash
-   python3 .codex/skills/ai-sdlc-sdd/scripts/check_checklist.py specs/NNN-feature-name
+   python3 skills/ai-sdlc-sdd/scripts/check_checklist.py specs/NNN-feature-name
    ```
 
-14. Implement only tasks described in `tasks.md`.
-15. Mark task checkboxes complete only after code, docs, or validation actually satisfy the task.
-16. Run the analyze gate before implementation handoff or commit prep:
+16. Implement only tasks described in `tasks.md` and sequenced in `plan.toon` / `plan.md`.
+17. Mark task status complete in `plan.toon` and task checkboxes complete only after code, docs, or validation actually satisfy the task; then refresh `plan.md`.
+18. Run the analyze gate before implementation handoff or commit prep:
 
    ```bash
-   python3 .codex/skills/ai-sdlc-sdd/scripts/analyze_spec.py specs/NNN-feature-name
+   python3 skills/ai-sdlc-sdd/scripts/analyze_spec.py specs/NNN-feature-name
    ```
 
-17. Validate the active spec:
+19. Validate the active spec:
 
    ```bash
-   python3 .codex/skills/ai-sdlc-sdd/scripts/validate_spec.py specs/NNN-feature-name
+   python3 skills/ai-sdlc-sdd/scripts/validate_spec.py specs/NNN-feature-name
    ```
 
-18. Use workflow-state status when the next phase is unclear:
+20. Use workflow-state status when the next phase is unclear:
 
    ```bash
-   python3 .codex/skills/ai-sdlc-sdd/scripts/sdd_status.py --spec specs/NNN-feature-name
+   python3 skills/ai-sdlc-sdd/scripts/sdd_status.py --spec specs/NNN-feature-name
    ```
 
-19. Report compliance, completed tasks, validation, and open risks.
+21. Report compliance, completed tasks, validation, and open risks.
 
 ## Output Spec
 
@@ -135,6 +209,7 @@ SDD compliance:
 - Test cases: updated | unchanged with reason
 - QA: updated | unchanged with reason
 - Tasks: completed task numbers and remaining task numbers
+- Plan: `plan.toon` and `plan.md` updated | unchanged with reason
 - Validation: command -> outcome
 - Scope control: no drift | drift and spec update
 - Residual risk: none | concrete issue
@@ -142,7 +217,7 @@ SDD compliance:
 
 Quality gate:
 
-- Pass when the five-file package exists, required sections are populated, tasks match implementation, and the validator passes.
+- Pass when the SDD package exists, required sections are populated, `plan.toon` links AC/TC/TASK/DEC status and dependencies, `plan.md` reflects those links for humans, tasks match implementation, and the validator passes.
 - Fail when code starts before missing spec artifacts are created, when implementation exceeds `tasks.md`, when the clarify/checklist/analyze gates fail, or when task checkboxes are marked complete without evidence.
 
 ## Examples
@@ -150,26 +225,29 @@ Quality gate:
 Spec folder shape:
 
 ```text
-specs/177-codex-skill-instruction-upgrade/
+specs/177-skill-instruction-upgrade/
   requirements.md
   design.md
   test-cases.md
   qa.md
   tasks.md
+  plan.toon
+  plan.md
 ```
 
 Completion report sample:
 
 ```text
 SDD compliance:
-- Spec: specs/177-codex-skill-instruction-upgrade
+- Spec: specs/177-skill-instruction-upgrade
 - Change size: medium
 - Requirements: updated
 - Design: updated
 - Test cases: updated
 - QA: updated
 - Tasks: 1-10 completed
-- Validation: python3 .codex/skills/ai-sdlc-sdd/scripts/validate_spec.py specs/177-codex-skill-instruction-upgrade -> passed
+- Plan: plan.toon and plan.md updated
+- Validation: python3 skills/ai-sdlc-sdd/scripts/validate_spec.py specs/177-skill-instruction-upgrade -> passed
 - Scope control: no drift
 - Residual risk: none
 ```
@@ -191,9 +269,12 @@ Reject this for medium and large work because the spec is the source of truth.
 - Update the spec first when code and spec conflict during an active change.
 - Treat unlisted historical numbered specs as `unclassified` until `specs/spec-registry.md` says otherwise.
 - Do not treat scaffolded historical `qa.md` or `test-cases.md` files with unresolved TODOs as validated evidence.
+- Treat missing `plan.toon` or `plan.md` as a structural SDD failure, even in quick flow.
+- When `plan.toon` and `plan.md` disagree, trust `plan.toon` for machine task status and regenerate `plan.md` with `plan_links.py --write`.
+- In full flow, treat missing upstream refinement delivery or QA readiness as a blocker unless the predecessor is explicitly skipped with a decision reference.
 
 ## Scope Boundary
 
 - Do not replace BA, test-case, QA, review, security, validation, or commit-prep skills; route to them when their phase is needed.
-- Do not implement major features without requirements, design, test cases, QA, and tasks.
+- Do not implement major features without requirements, design, test cases, QA, tasks, and plan.
 - Do not run broad validation by default; use `$ai-sdlc-validation` for command selection.

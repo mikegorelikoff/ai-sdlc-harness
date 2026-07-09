@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The BA component defines how Business Analysis operates inside the AI-ready QA/BA workflow.
+The BA component defines how Business Analysis operates inside the AI-ready delivery workflow.
 
 BA is responsible for transforming fragmented business information into validated engineering context. That context is then represented through implementation-ready artifacts used by developers, QA, AI systems, and future project changes.
 

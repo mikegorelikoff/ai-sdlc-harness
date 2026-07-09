@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Check AI SDLC code-review readiness signals."""
+"""Check AI SDLC code-review readiness signals.
+
+This script prepares the agent for a code-review pass by collecting the review
+surface, checking whitespace/diff hygiene, warning about missing spec context,
+and flagging obvious test-coverage risks before the model spends tokens reading
+files.
+"""
 
 from __future__ import annotations
 
@@ -8,12 +14,19 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_state_machine import add_state_arguments, run_state_action
+
 
 def run(args: list[str]) -> subprocess.CompletedProcess[str]:
+    """Run a git command and capture output without raising."""
     return subprocess.run(args, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
 
 
 def changed_files(base: str | None, full_repo: bool) -> list[str]:
+    """Return files in scope for review based on full-repo, branch, or worktree mode."""
+    # Full-repo review should include every tracked file because there is no diff
+    # boundary to derive from.
     if full_repo:
         result = run(["git", "ls-files"])
         if result.returncode != 0:
@@ -21,6 +34,8 @@ def changed_files(base: str | None, full_repo: bool) -> list[str]:
             raise RuntimeError(detail or "unable to list repository files")
         return [line.strip() for line in result.stdout.splitlines() if line.strip()]
 
+    # Branch review uses a symmetric range so the review surface matches what a
+    # pull request would normally show.
     if base:
         result = run(["git", "diff", "--name-only", f"{base}...HEAD"])
         if result.returncode != 0:
@@ -28,6 +43,8 @@ def changed_files(base: str | None, full_repo: bool) -> list[str]:
             raise RuntimeError(detail or "unable to list changed files")
         return [line.strip() for line in result.stdout.splitlines() if line.strip()]
 
+    # Default mode reviews local tracked changes plus untracked files, since both
+    # can affect the user's pending work even before staging.
     result = run(["git", "diff", "--name-only", "HEAD"])
     if result.returncode != 0:
         detail = result.stderr.strip() or result.stdout.strip()
@@ -52,14 +69,17 @@ def changed_files(base: str | None, full_repo: bool) -> list[str]:
 
 
 def spec_errors(spec_dir: Path) -> list[str]:
+    """Validate minimum SDD evidence needed for a review-ready feature."""
     errors: list[str] = []
-    required = ["requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md"]
+    required = ["requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md", "plan.md", "plan.toon"]
     for name in required:
         if not (spec_dir / name).is_file():
             errors.append(f"missing {spec_dir / name}")
 
     tasks = spec_dir / "tasks.md"
     if tasks.is_file():
+        # Review readiness expects implementation tasks to be completed or at
+        # least explicitly represented in the spec.
         task_text = tasks.read_text(encoding="utf-8")
         if "- [ ]" in task_text:
             errors.append(f"{tasks} has incomplete tasks")
@@ -69,6 +89,7 @@ def spec_errors(spec_dir: Path) -> list[str]:
 
 
 def collect_diff_check_errors(base: str | None, full_repo: bool) -> list[str]:
+    """Run `git diff --check` against the same surface selected for review."""
     checks: list[tuple[str, list[str]]] = []
     if full_repo:
         checks.extend(
@@ -100,33 +121,35 @@ def collect_diff_check_errors(base: str | None, full_repo: bool) -> list[str]:
 
 
 def skill_metadata_warnings(files: list[str], full_repo: bool) -> list[str]:
+    """Warn when skill changes need metadata/script validation beyond code review."""
     if full_repo:
         return []
 
     warnings: list[str] = []
     changed_skills = sorted(
         {
-            Path(file).parts[2]
+            Path(file).parts[1]
             for file in files
-            if file.startswith(".codex/skills/") and len(Path(file).parts) > 2
+            if file.startswith("skills/") and len(Path(file).parts) > 1
         }
     )
     for skill in changed_skills:
-        skill_dir = Path(".codex/skills") / skill
+        skill_dir = Path("skills") / skill
         if not (skill_dir / "SKILL.md").is_file():
             warnings.append(f"skill change detected but {skill_dir / 'SKILL.md'} is missing")
-        if not (skill_dir / "agents" / "openai.yaml").is_file():
-            warnings.append(f"skill change detected but {skill_dir / 'agents/openai.yaml'} is missing")
         warnings.append(
             "skill change detected; run "
-            f"python3 .codex/scripts/quick_validate_skill.py {skill_dir}"
+            f"python3 -m py_compile {skill_dir}/scripts/*.py and inspect {skill_dir}/SKILL.md"
         )
     return warnings
 
 
 def surface_warnings(files: list[str], spec_provided: bool, full_repo: bool) -> list[str]:
+    """Produce risk hints from changed file categories."""
     warnings: list[str] = []
 
+    # These file buckets are intentionally simple path heuristics. They are cheap
+    # enough to run on every review and point the agent toward likely blind spots.
     go_files = [file for file in files if file.endswith(".go") and not file.endswith("_test.go")]
     test_files = [file for file in files if file.endswith("_test.go")]
     transport_surface = [
@@ -169,17 +192,28 @@ def surface_warnings(files: list[str], spec_provided: bool, full_repo: bool) -> 
 
 
 def main() -> int:
+    """Parse review-scope flags, collect readiness errors, and print warnings."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base", help="Base branch or commit for branch review")
     parser.add_argument("--full-repo", action="store_true", help="Prepare for a broader repository review instead of a diff-scoped review")
     parser.add_argument("--spec", type=Path, help="Relevant SDD spec folder")
+    parser.add_argument("--quick-flow", action="store_true", help="Keep readiness checks diff-scoped and warning-oriented")
+    parser.add_argument("--full-flow", action="store_true", help="Require stronger spec and coverage signals")
+    parser.add_argument("--feature", default="<feature-name>")
+    add_state_arguments(parser)
     args = parser.parse_args()
+
+    state_rc = run_state_action(args, "ai-sdlc-code-review", "implementation")
+    if state_rc:
+        return state_rc
 
     errors: list[str] = []
     warnings: list[str] = []
     if args.base and args.full_repo:
         errors.append("--base and --full-repo cannot be used together")
 
+    # Diff hygiene is a blocker because whitespace errors are deterministic and
+    # cheap to catch before semantic review starts.
     errors.extend(collect_diff_check_errors(args.base, args.full_repo))
 
     try:
@@ -191,11 +225,18 @@ def main() -> int:
     if not files:
         warnings.append("no files detected for the selected review target")
 
+    if args.full_flow and not args.spec and not args.full_repo:
+        warnings.append("full flow requested without --spec; provide the relevant SDD folder or document why review is spec-free")
+
     if args.spec:
         errors.extend(spec_errors(args.spec))
 
     warnings.extend(surface_warnings(files, spec_provided=args.spec is not None, full_repo=args.full_repo))
     warnings.extend(skill_metadata_warnings(files, args.full_repo))
+    if args.quick_flow:
+        # Quick flow keeps review moving by suppressing broad audit guidance while
+        # preserving risk warnings tied to the selected diff surface.
+        warnings = [warning for warning in warnings if "full-repo audit mode" not in warning]
 
     if errors:
         for error in errors:

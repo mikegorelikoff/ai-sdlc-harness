@@ -1,0 +1,288 @@
+#!/usr/bin/env python3
+"""Create and validate SDD `plan.md` and `plan.toon` execution links.
+
+`plan.toon` is the compact machine plan. `plan.md` is the human-readable view
+generated from the same links, with completed tasks reflected from TOON status.
+"""
+
+from __future__ import annotations
+
+import argparse
+import sys
+from datetime import date
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_artifact_helper import artifact_metadata_lines
+from ai_sdlc_state_machine import add_state_arguments, flow_mode_from_args, run_state_action
+from ai_sdlc_specs_index import write_indexes_for_roots
+from spec_helpers import (
+    ROOT,
+    completed_plan_task_ids,
+    parse_acceptance_ids,
+    parse_plan_toon_rows,
+    parse_task_entries,
+    parse_test_case_ids,
+    plan_required_sections,
+)
+
+
+def read(path: Path) -> str:
+    """Read a spec artifact if present, otherwise return empty text."""
+    return path.read_text(encoding="utf-8") if path.is_file() else ""
+
+
+def csv_list(values: list[str]) -> str:
+    """Return a TOON-safe slash-delimited value or `none` for empty lists."""
+    return "/".join(values) if values else "none"
+
+
+def toon_value(value: str) -> str:
+    """Normalize one compact TOON cell so row parsing remains deterministic."""
+    cleaned = " ".join(value.split()).replace(",", ";")
+    return cleaned or "TBD"
+
+
+def build_plan_toon(spec_dir: Path, args: argparse.Namespace) -> str:
+    """Build canonical plan.toon from SDD artifacts and existing task status."""
+    feature = args.feature if args.feature != "<feature-name>" else spec_dir.name
+    flow = flow_mode_from_args(args)
+    requirements_md = read(spec_dir / "requirements.md")
+    test_cases_md = read(spec_dir / "test-cases.md")
+    tasks_md = read(spec_dir / "tasks.md")
+    acceptance_ids = parse_acceptance_ids(requirements_md)
+    test_case_ids = parse_test_case_ids(test_cases_md)
+    task_entries = parse_task_entries(tasks_md)
+    existing = parse_plan_toon_rows(read(spec_dir / "plan.toon"))
+
+    lines = [
+        f"feature: {feature}",
+        "workspace: implementation",
+        f"flow_mode: {flow}",
+        f"updated_at: {date.today().isoformat()}",
+        "source_artifacts[6]{artifact,path}:",
+        "  requirements,requirements.md",
+        "  design,design.md",
+        "  test_cases,test-cases.md",
+        "  qa,qa.md",
+        "  tasks,tasks.md",
+        "  decisions,decision-log.md",
+        f"trace[{len(acceptance_ids)}]{{acceptance_id,test_cases,tasks}}:",
+    ]
+
+    for acceptance_id in acceptance_ids:
+        linked_tests = [test_id for test_id in test_case_ids if test_id in test_cases_md]
+        linked_tasks = [entry.task_id for entry in task_entries if acceptance_id in entry.refs]
+        lines.append(f"  {acceptance_id},{csv_list(linked_tests)},{csv_list(linked_tasks)}")
+
+    lines.append(f"tasks[{len(task_entries)}]{{id,status,refs,tests,depends_on,artifact,decision_ref}}:")
+    for entry in task_entries:
+        previous = existing.get(entry.task_id, {})
+        status = previous.get("status") or ("done" if "[x]" in entry.line.lower() else "pending")
+        refs = csv_list(entry.refs)
+        tests = csv_list(test_case_ids)
+        depends_on = csv_list(entry.depends_on)
+        artifact = toon_value(previous.get("artifact") or entry.output or "TBD")
+        decision_ref = toon_value(previous.get("decision_ref") or "TBD")
+        lines.append(f"  {entry.task_id},{status},{refs},{tests},{depends_on},{artifact},{decision_ref}")
+
+    lines.extend(
+        [
+            "validation_sequence[5]{step,command}:",
+            "  1,check_refinement_context.py --full-flow",
+            "  2,check_clarify.py --full-flow",
+            "  3,check_checklist.py --full-flow",
+            "  4,plan_links.py --check --full-flow",
+            "  5,analyze_spec.py --full-flow && validate_spec.py --full-flow",
+        ]
+    )
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
+    """Build canonical plan.md content from SDD artifacts and plan.toon."""
+    feature = args.feature if args.feature != "<feature-name>" else spec_dir.name
+    flow = flow_mode_from_args(args)
+    artifact_path = spec_dir / "plan.md"
+    decision_log = spec_dir / "decision-log.md"
+    state_file = spec_dir / "state.toon"
+
+    metadata = artifact_metadata_lines(
+        feature=feature,
+        artifact_name="plan.md",
+        artifact_path=artifact_path.as_posix(),
+        workspace="implementation",
+        skill_name="ai-sdlc-sdd",
+        flow_mode=flow,
+        decision_log_path=decision_log.as_posix(),
+        state_file_path=state_file.as_posix(),
+        state_args=args,
+    )
+
+    requirements_md = read(spec_dir / "requirements.md")
+    test_cases_md = read(spec_dir / "test-cases.md")
+    tasks_md = read(spec_dir / "tasks.md")
+    plan_toon = read(spec_dir / "plan.toon")
+    acceptance_ids = parse_acceptance_ids(requirements_md)
+    test_case_ids = parse_test_case_ids(test_cases_md)
+    task_entries = parse_task_entries(tasks_md)
+    closed_task_ids = completed_plan_task_ids(plan_toon)
+
+    lines = metadata + [
+        "# plan.md",
+        "",
+        "## Upstream Refinement Sources",
+        "- Refinement index: `specs-refiniment/specs-index.toon`",
+        "- Refinement state: `specs-refiniment/<feature-name>/state.toon`",
+        "- Delivery spec: `specs-refiniment/<feature-name>/delivery-spec.md`",
+        "- QA readiness: `specs-refiniment/<feature-name>/qa-readiness.md`",
+        "- Decision trace: `decision-log.md`",
+        "",
+        "## SDD Artifact Links",
+        "- Requirements: `requirements.md`",
+        "- Design: `design.md`",
+        "- Test cases: `test-cases.md`",
+        "- QA: `qa.md`",
+        "- Tasks: `tasks.md`",
+        "- Machine plan: `plan.toon`",
+        "- Decision log: `decision-log.md`",
+        "",
+        "## Cross-Artifact Trace Map",
+    ]
+    if acceptance_ids:
+        for acceptance_id in acceptance_ids:
+            matching_tests = [test_id for test_id in test_case_ids if test_id in test_cases_md]
+            matching_tasks = [entry.task_id for entry in task_entries if acceptance_id in entry.refs]
+            lines.append(
+                f"- {acceptance_id}: requirements.md -> test-cases.md ({', '.join(matching_tests) or 'TBD'}) -> "
+                f"tasks.md ({', '.join(matching_tasks) or 'TBD'}) -> qa.md -> decision-log.md"
+            )
+    else:
+        lines.append("- AC-TBD: requirements.md -> test-cases.md -> tasks.md -> qa.md -> decision-log.md")
+
+    lines.extend(["", "## Task Execution Plan"])
+    if task_entries:
+        for entry in task_entries:
+            checkbox = "[x]" if entry.task_id in closed_task_ids else "[ ]"
+            lines.append(
+                f"- {checkbox} {entry.task_id}: {entry.line}; refs: {', '.join(entry.refs) or 'TBD'}; "
+                f"output: {entry.output or 'TBD'}"
+            )
+    else:
+        lines.append("- T000: TBD")
+
+    lines.extend(["", "## Task Dependencies"])
+    if task_entries:
+        for entry in task_entries:
+            lines.append(f"- {entry.task_id}: depends on {', '.join(entry.depends_on) or 'previous applicable task / none'}")
+    else:
+        lines.append("- T000: TBD")
+
+    lines.extend(
+        [
+            "",
+            "## Validation Sequence",
+            "- 1. `python3 skills/ai-sdlc-sdd/scripts/check_clarify.py <spec-dir> --full-flow`",
+            "- 2. `python3 skills/ai-sdlc-sdd/scripts/check_checklist.py <spec-dir> --full-flow`",
+            "- 3. `python3 skills/ai-sdlc-sdd/scripts/analyze_spec.py <spec-dir> --full-flow`",
+            "- 4. `python3 skills/ai-sdlc-sdd/scripts/validate_spec.py <spec-dir> --full-flow`",
+            f"- Generated: {date.today().isoformat()}",
+            "",
+            "## Open Links And Blockers",
+            "- TBD until every AC/TC/TASK/DEC link is confirmed.",
+        ]
+    )
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def check_plan(spec_dir: Path) -> list[str]:
+    """Return plan.md/plan.toon link and coverage errors."""
+    plan = spec_dir / "plan.md"
+    plan_toon = spec_dir / "plan.toon"
+    if not plan.is_file():
+        return [f"missing {plan}"]
+    if not plan_toon.is_file():
+        return [f"missing {plan_toon}"]
+
+    text = plan.read_text(encoding="utf-8")
+    toon_text = plan_toon.read_text(encoding="utf-8")
+    toon_tasks = parse_plan_toon_rows(toon_text)
+    errors: list[str] = []
+    for section in plan_required_sections():
+        if f"## {section}" not in text:
+            errors.append(f"plan.md missing section: {section}")
+
+    requirements_md = read(spec_dir / "requirements.md")
+    test_cases_md = read(spec_dir / "test-cases.md")
+    tasks_md = read(spec_dir / "tasks.md")
+    for acceptance_id in parse_acceptance_ids(requirements_md):
+        if acceptance_id not in text:
+            errors.append(f"plan.md missing acceptance link: {acceptance_id}")
+    for test_case_id in parse_test_case_ids(test_cases_md):
+        if test_case_id not in text:
+            errors.append(f"plan.md missing test-case link: {test_case_id}")
+    for entry in parse_task_entries(tasks_md):
+        if entry.task_id not in text:
+            errors.append(f"plan.md missing task link: {entry.task_id}")
+        if entry.task_id not in toon_tasks:
+            errors.append(f"plan.toon missing task row: {entry.task_id}")
+    for required_link in ("requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md", "plan.toon", "decision-log.md"):
+        if required_link not in text:
+            errors.append(f"plan.md missing SDD artifact link: {required_link}")
+    for required_toon_key in ("source_artifacts", "trace", "tasks", "validation_sequence"):
+        if f"{required_toon_key}[" not in toon_text:
+            errors.append(f"plan.toon missing block: {required_toon_key}")
+    return errors
+
+
+def main() -> int:
+    """Parse CLI flags and emit, write, or check plan.toon/plan.md."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("spec_dir", type=Path)
+    parser.add_argument("--check", action="store_true", help="Validate existing plan.toon and plan.md")
+    parser.add_argument("--emit-template", action="store_true", help="Print canonical plan.md content")
+    parser.add_argument("--emit-toon", action="store_true", help="Print canonical plan.toon content")
+    parser.add_argument("--write", action="store_true", help="Write plan.toon and plan.md, then refresh specs indexes")
+    parser.add_argument("--quick-flow", action="store_true")
+    parser.add_argument("--full-flow", action="store_true")
+    parser.add_argument("--feature", default="<feature-name>")
+    parser.add_argument("--artifact-status", default="draft")
+    parser.add_argument("--artifact-owner", default="TBD")
+    parser.add_argument("--artifact-tag", action="append", default=[])
+    add_state_arguments(parser)
+    args = parser.parse_args()
+
+    spec_dir = args.spec_dir if args.spec_dir.is_absolute() else ROOT / args.spec_dir
+    state_rc = run_state_action(args, "ai-sdlc-sdd", "implementation", str(spec_dir))
+    if state_rc:
+        return state_rc
+
+    if args.write:
+        spec_dir.mkdir(parents=True, exist_ok=True)
+        (spec_dir / "plan.toon").write_text(build_plan_toon(spec_dir, args), encoding="utf-8")
+        (spec_dir / "plan.md").write_text(build_plan(spec_dir, args), encoding="utf-8")
+        write_indexes_for_roots([ROOT / "specs"])
+        print(f"Wrote {spec_dir / 'plan.toon'}")
+        print(f"Wrote {spec_dir / 'plan.md'}")
+
+    if args.emit_template:
+        print(build_plan(spec_dir, args), end="")
+
+    if args.emit_toon:
+        print(build_plan_toon(spec_dir, args), end="")
+
+    if args.check:
+        errors = check_plan(spec_dir)
+        if errors:
+            for error in errors:
+                print(f"ERROR: {error}", file=sys.stderr)
+            return 1
+        print(f"Plan links valid: {spec_dir / 'plan.toon'} and {spec_dir / 'plan.md'}")
+
+    if not (args.write or args.emit_template or args.emit_toon or args.check):
+        parser.print_help()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
