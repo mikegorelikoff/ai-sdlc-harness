@@ -73,7 +73,8 @@ pattern:
 
 1. Identifies the active role and skill from the user's request.
 2. Reads the relevant role guide when the workflow context is unclear.
-3. Reads `concepts/` only for the mechanics needed by the task.
+3. Uses the selected skill instructions and helper scripts as the operational
+   source of truth.
 4. Checks the workspace specs index before opening broad feature files.
 5. Checks feature lifecycle state when durable feature work is involved.
 6. Runs the skill-specific helper script when it can reduce token usage or
@@ -82,6 +83,10 @@ pattern:
 8. Updates artifact metadata, decision log, lifecycle state, and specs index
    when durable files change.
 9. Reports blockers, assumptions, validation evidence, and residual risk.
+
+The `concepts/` folder explains how the system works for maintainers and teams.
+It is documentation for understanding the harness, not a required runtime input
+for every AI task.
 
 This pattern keeps the AI from re-reading unnecessary files and keeps generated
 outputs traceable for the next role.
