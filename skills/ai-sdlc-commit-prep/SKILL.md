@@ -1,9 +1,55 @@
 ---
 name: ai-sdlc-commit-prep
-description: AI SDLC commit preparation workflow. Use when Codex is asked to commit repository changes, prepare an auditable commit message, stage files safely, include SDD and Asana traceability, verify branch/spec alignment, or verify the working tree before committing.
+description: AI SDLC commit preparation workflow. Use when Codex is asked to commit repository changes, prepare an auditable commit message, stage files safely, include SDD traceability, verify branch/spec alignment, or verify the working tree before committing.
 ---
 
-# AI SDLC Commit Prep
+# ai-sdlc-commit-prep: Commit Preparation
+
+> Internal AI SDLC skill, not client-facing by default.
+> Every rule below is important to follow. None of it can be skipped.
+> Before producing the final artifact, confirm required inputs, target audience, missing facts, output format, and constraints when they are unclear.
+> Do not invent missing information. Ask concise clarification questions when required inputs are absent.
+
+## 0. Skill Card
+
+- Skill name: `ai-sdlc-commit-prep`
+- Primary audience: Dev
+- Supporting audience: QA, BA, PM
+- Audience tags: Dev, QA, BA, PM
+- SDLC stage: Commit readiness / traceability
+- Purpose: Prepare and create a safe AI SDLC commit by reviewing the branch and working tree, staging only related files, validating SDD evidence, using a valid Conventional Commit message, and reporting post-commit traceability.
+- Output: Safe staged set, validated commit readiness, conventional commit message, and post-commit traceability
+
+### 0.1 Required Inputs
+
+- Explicit commit request or completed workflow state.
+- Current branch, dirty tree, staged files, and diff.
+- Validation results plus spec traceability when applicable.
+
+### 0.2 Clarification Rules
+
+- Ask concise questions before finalizing when role, artifact, requirements, scope, audience, or constraints are unclear.
+- If optional information is missing, mark it as `TBD`, `Not provided`, or `Assumption` instead of inventing it.
+- Separate confirmed facts from assumptions and open questions.
+- Do not proceed to downstream synthesis when a required upstream artifact or decision is missing.
+
+### 0.3 Output Rules
+
+- Keep output structured with headings and bullets.
+- Make findings, gaps, risks, and blockers explicit.
+- Tie recommendations to evidence from the provided artifact, repository, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
+- Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
+
+### 0.4 Artifact Routing
+
+- Use `specs/` only for developer implementation SDD packages and repo-governance artifacts.
+- Do not place PM, BA, QA, Delivery, discovery, planning, refinement, or readiness outputs in `specs/`; those belong at `specs-refiniment/<feature-name>/<file.md>`.
+- When consuming `specs-refiniment/<feature-name>/<file.md>`, treat it as upstream refinement context and create or update `specs/` only when implementation work is explicitly in scope.
+
+## References
+
+- Use `scripts/check_commit_ready.py` when deterministic validation, planning, or formatting is required by the workflow.
+- Use `scripts/test_check_commit_ready.py` only for validating helper behavior; do not load it for ordinary task execution.
 
 ## Purpose
 
@@ -14,7 +60,6 @@ Prepare and create a safe AI SDLC commit by reviewing the branch and working tre
 - Collect the user’s explicit commit request or workflow state showing commit prep is justified.
 - Collect the active spec folder for medium or large work.
 - Collect validation commands and outcomes that are current for the active diff.
-- Collect the related Asana task from the spec or commit body when one exists.
 - Collect the current branch and dirty tree from `git status --short --branch`.
 
 ## Steps
@@ -39,7 +84,6 @@ Prepare and create a safe AI SDLC commit by reviewing the branch and working tre
 12. Use `$ai-sdlc-conventional-commit` to draft and validate the message.
 13. Commit with a non-interactive command, for example `git commit -F /tmp/message.txt`.
 14. Run `git status --short --branch` after committing.
-15. Use `$ai-sdlc-asana-commit-comment` for Asana-linked work after the commit succeeds.
 
 ## Output Spec
 
@@ -51,7 +95,6 @@ Commit:
 - Subject: conventional subject
 - Branch: branch-name
 - Spec: specs/NNN-feature-name | none
-- Asana: task_gid URL | none
 
 Staging:
 - Included: path groups and why they belong.
@@ -62,7 +105,6 @@ Validation:
 
 Post-commit:
 - Working tree: clean | dirty with listed paths.
-- Asana comment: posted comment_gid | skipped: reason.
 - Residual risk: none | concrete issue.
 ```
 
@@ -98,11 +140,9 @@ Reject this when the working tree contains files not inspected for scope.
 - Do not amend an existing commit unless the user explicitly requests amend.
 - Do not run destructive cleanup commands unless the user requested or approved them.
 - Report failed commit hooks with the hook output and do not claim a commit exists.
-- Do not move an Asana task that is already `Done` or `Released` unless the user explicitly requests it.
 
 ## Scope Boundary
 
 - Do not draft commit message content without `$ai-sdlc-conventional-commit`.
 - Do not decide test coverage; use `$ai-sdlc-test-cases`, `$ai-sdlc-qa`, and `$ai-sdlc-validation`.
-- Do not create Asana task traceability; use `$ai-sdlc-asana-traceability`.
 - Do not revert user changes to make staging easier.

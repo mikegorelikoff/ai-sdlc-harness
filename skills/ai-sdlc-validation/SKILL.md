@@ -3,7 +3,53 @@ name: ai-sdlc-validation
 description: AI SDLC backend validation workflow. Use when Codex needs to validate Go, SQL, API, provider integration, SDD, or documentation changes in this repository and choose focused deterministic checks without running unrelated expensive tests by default.
 ---
 
-# AI SDLC Validation
+# ai-sdlc-validation: Validation Command Selection
+
+> Internal AI SDLC skill, not client-facing by default.
+> Every rule below is important to follow. None of it can be skipped.
+> Before producing the final artifact, confirm required inputs, target audience, missing facts, output format, and constraints when they are unclear.
+> Do not invent missing information. Ask concise clarification questions when required inputs are absent.
+
+## 0. Skill Card
+
+- Skill name: `ai-sdlc-validation`
+- Primary audience: Dev
+- Supporting audience: QA, BA
+- Audience tags: Dev, QA, BA
+- SDLC stage: Implementation validation
+- Purpose: Select, run, and report focused deterministic validation checks for AI SDLC code, SQL, API, provider, SDD, documentation, and Codex-governance changes.
+- Output: Focused validation commands, outcomes, coverage notes, and residual risk
+
+### 0.1 Required Inputs
+
+- Changed files, diff, or explicit validation target.
+- Active spec and QA context when user-visible or release-sensitive.
+- Sandbox constraints and previous validation output if relevant.
+
+### 0.2 Clarification Rules
+
+- Ask concise questions before finalizing when role, artifact, requirements, scope, audience, or constraints are unclear.
+- If optional information is missing, mark it as `TBD`, `Not provided`, or `Assumption` instead of inventing it.
+- Separate confirmed facts from assumptions and open questions.
+- Do not proceed to downstream synthesis when a required upstream artifact or decision is missing.
+
+### 0.3 Output Rules
+
+- Keep output structured with headings and bullets.
+- Make findings, gaps, risks, and blockers explicit.
+- Tie recommendations to evidence from the provided artifact, repository, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
+- Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
+
+### 0.4 Artifact Routing
+
+- Use `specs/` only for developer implementation SDD packages and repo-governance artifacts.
+- Do not place PM, BA, QA, Delivery, discovery, planning, refinement, or readiness outputs in `specs/`; those belong at `specs-refiniment/<feature-name>/<file.md>`.
+- When consuming `specs-refiniment/<feature-name>/<file.md>`, treat it as upstream refinement context and create or update `specs/` only when implementation work is explicitly in scope.
+
+## References
+
+- Use `scripts/test_validation_helpers.py` only for validating helper behavior; do not load it for ordinary task execution.
+- Use `scripts/validation_plan.py` when deterministic validation, planning, or formatting is required by the workflow.
 
 ## Purpose
 

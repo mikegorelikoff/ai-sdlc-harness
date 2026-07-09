@@ -3,7 +3,52 @@ name: ai-sdlc-security-testing
 description: AI SDLC security testing workflow. Use when Codex is asked for OWASP review, security testing, abuse-case analysis, authz/authn review, input validation review, secret exposure review, or security-focused validation of a diff, endpoint, workflow, or subsystem.
 ---
 
-# AI SDLC Security Testing
+# ai-sdlc-security-testing: Security Testing
+
+> Internal AI SDLC skill, not client-facing by default.
+> Every rule below is important to follow. None of it can be skipped.
+> Before producing the final artifact, confirm required inputs, target audience, missing facts, output format, and constraints when they are unclear.
+> Do not invent missing information. Ask concise clarification questions when required inputs are absent.
+
+## 0. Skill Card
+
+- Skill name: `ai-sdlc-security-testing`
+- Primary audience: Dev
+- Supporting audience: QA, Security, BA
+- Audience tags: Dev, QA, BA
+- SDLC stage: Security review / abuse-case validation
+- Purpose: Review AI SDLC diffs, endpoints, workflows, provider integrations, and configs for concrete security findings, abuse paths, trust-boundary failures, and missing security validation. When the output makes OWASP- or standards-based claims, verify them against current primary sources before presenting them as authoritative guidance.
+- Output: Security findings, trust-boundary analysis, standards-backed notes, validation gaps, and fixes
+
+### 0.1 Required Inputs
+
+- Security review target: diff, endpoint, workflow, commit, branch, or subsystem.
+- Identity, trust-boundary, data, provider, and state context.
+- Relevant specs and validation evidence when available.
+
+### 0.2 Clarification Rules
+
+- Ask concise questions before finalizing when role, artifact, requirements, scope, audience, or constraints are unclear.
+- If optional information is missing, mark it as `TBD`, `Not provided`, or `Assumption` instead of inventing it.
+- Separate confirmed facts from assumptions and open questions.
+- Do not proceed to downstream synthesis when a required upstream artifact or decision is missing.
+
+### 0.3 Output Rules
+
+- Keep output structured with headings and bullets.
+- Make findings, gaps, risks, and blockers explicit.
+- Tie recommendations to evidence from the provided artifact, repository, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
+- Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
+
+### 0.4 Artifact Routing
+
+- Use `specs/` only for developer implementation SDD packages and repo-governance artifacts.
+- Do not place PM, BA, QA, Delivery, discovery, planning, refinement, or readiness outputs in `specs/`; those belong at `specs-refiniment/<feature-name>/<file.md>`.
+- When consuming `specs-refiniment/<feature-name>/<file.md>`, treat it as upstream refinement context and create or update `specs/` only when implementation work is explicitly in scope.
+
+## References
+
+- Read `references/owasp-backend-checklist.md` when the task needs the detailed structure, checklist, or examples for this skill.
 
 ## Purpose
 
@@ -106,6 +151,6 @@ Reject this because it omits reviewed boundaries, findings status, and validatio
 
 - Do not perform general code review unless security is the primary question.
 - Do not run production attacks, live exploitation, or credentialed provider actions.
-- Do not expose sensitive values in findings, tests, comments, or Asana.
+- Do not expose sensitive values in findings, tests, comments.
 - Do not decide business acceptance; use `$ai-sdlc-ba` and `$ai-sdlc-qa`.
 - Do not cite OWASP categories, ASVS controls, or standards versions from memory when current-source verification is required.

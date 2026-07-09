@@ -183,7 +183,6 @@ class GovernanceAuditTests(unittest.TestCase):
                 """
                 # Spec Registry
 
-                | Canonical ID | Prefix | Title | Status | Owner | Related Asana | Release State | Updated |
                 | --- | --- | --- | --- | --- | --- | --- | --- |
                 """,
             )

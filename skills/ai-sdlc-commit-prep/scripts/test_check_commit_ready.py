@@ -25,8 +25,6 @@ def full_spec(task_block: str) -> str:
         # Requirements
         ## Goal
         Goal.
-        ## Related Asana Tickets
-        - `1215120493851958`
         ## Problem Statement
         Problem.
         ## Scope
@@ -70,8 +68,6 @@ class CheckCommitReadyTests(unittest.TestCase):
                 # Requirements
                 ## Goal
                 Goal.
-                ## Related Asana Tickets
-                - `1215120493851958`
                 ## Problem Statement
                 Problem.
                 ## Scope

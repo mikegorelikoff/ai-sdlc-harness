@@ -3,16 +3,62 @@ name: ai-sdlc-test-cases
 description: AI SDLC test-case-driven testing workflow. Use when Codex is asked to derive test cases, create a test plan, expand coverage, or write tests from explicit scenarios before implementing unit, service, transport, or integration tests.
 ---
 
-# AI SDLC Test Cases
+# ai-sdlc-test-cases: Test Cases For Implementation
+
+> Internal AI SDLC skill, not client-facing by default.
+> Every rule below is important to follow. None of it can be skipped.
+> Before producing the final artifact, confirm required inputs, target audience, missing facts, output format, and constraints when they are unclear.
+> Do not invent missing information. Ask concise clarification questions when required inputs are absent.
+
+## 0. Skill Card
+
+- Skill name: `ai-sdlc-test-cases`
+- Primary audience: QA
+- Supporting audience: Dev, BA
+- Audience tags: QA, Dev, BA
+- SDLC stage: Implementation test design
+- Purpose: Derive executable AI SDLC test scenarios from requirements or delivery context and place QA refinement artifacts under `specs-refiniment/<feature-name>/<file.md>` when writing files.
+- Output: Scenario matrix with requirement refs, verifiable outcomes, automation paths, and execution order
+
+### 0.1 Required Inputs
+
+- Requirements, design, and behavior under test.
+- Affected package, endpoint, provider, workflow, or contract.
+- Known fixtures, mocks, and unavailable dependencies.
+
+### 0.2 Clarification Rules
+
+- Ask concise questions before finalizing when role, artifact, requirements, scope, audience, or constraints are unclear.
+- If optional information is missing, mark it as `TBD`, `Not provided`, or `Assumption` instead of inventing it.
+- Separate confirmed facts from assumptions and open questions.
+- Do not proceed to downstream synthesis when a required upstream artifact or decision is missing.
+
+### 0.3 Output Rules
+
+- Keep output structured with headings and bullets.
+- Make findings, gaps, risks, and blockers explicit.
+- Tie recommendations to evidence from the provided artifact, `specs-refiniment/<feature-name>/<file.md>` workspace, stakeholder context, or user-provided source material.
+- Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
+
+### 0.4 Artifact Routing
+
+- When writing or updating files, place PM, BA, QA, Delivery, discovery, planning, refinement, and readiness artifacts at `specs-refiniment/<feature-name>/<file.md>`.
+- Use the path pattern `specs-refiniment/<feature-name>/<file.md>`; choose a stable feature slug when known, otherwise use `tbd-<short-topic>` for `<feature-name>`.
+- Do not write this skill's output into `specs/`; that folder is reserved for developer implementation SDD artifacts.
+- If the user explicitly asks to convert a refined artifact into developer implementation work, hand off to `$ai-sdlc-sdd`.
+
+## References
+
+- Read `references/test-case-template.md` when the task needs the detailed structure, checklist, or examples for this skill.
 
 ## Purpose
 
-Derive executable AI SDLC test scenarios before implementation, link each scenario to the spec, and define verifiable outcomes, automation commands, execution order, and human decisions without leaving open TODOs.
+Derive executable AI SDLC test scenarios from requirements or delivery context. Link each scenario to a requirement, story, workflow, risk, or acceptance criterion and define verifiable outcomes, automation commands, execution order, and human decisions without leaving open TODOs.
 
 ## Inputs
 
-- Read the active `requirements.md`, `design.md`, and existing `test-cases.md` for medium or large work.
-- Read `qa.md` when acceptance or manual validation already exists.
+- Read the provided requirements, delivery spec, stories, workflows, risks, and existing test cases.
+- Read existing QA notes from `specs-refiniment/<feature-name>/<file.md>` when acceptance or manual validation already exists.
 - Collect the changed behavior, contract, bug, regression risk, endpoint, provider, asset, or workflow under test.
 - Collect existing test files for the affected package when implementing tests.
 - Read `references/test-case-template.md` when the scenario matrix needs reusable wording.
@@ -23,7 +69,7 @@ Derive executable AI SDLC test scenarios before implementation, link each scenar
 1. Write `In scope` and `Out of scope` before generating scenarios.
 2. Check every proposed test case against `Out of scope`; delete any test case that tests excluded behavior.
 3. Define the behavior under test in one sentence.
-4. Identify the spec reference each scenario proves using an acceptance-criteria ID, requirement ID, or Markdown section anchor.
+4. Identify the requirement, story, workflow, risk, or acceptance criterion each scenario proves.
 5. Create scenario IDs using `TC-001`, `TC-002`, and continuing sequence.
 6. Include happy path, boundary values, null or missing inputs, negative validation, authorization, state-transition, retry, idempotency, concurrency, and provider-failure cases when relevant.
 7. Map each scenario to exactly one primary layer: unit, service, transport, integration, QA/manual, or not automated.
@@ -37,8 +83,8 @@ Derive executable AI SDLC test scenarios before implementation, link each scenar
    - `Manual — automate by YYYY-MM-DD — blocker: concrete blocker`
 10. Replace open TODOs with `Decisions required`; each decision must include Question, Options A/B/C, Recommended default, Owner, and Blocking yes/no.
 11. Replace decorative layer descriptions with `Execution order`; each layer must include run condition, what it blocks, and failure action.
-12. Update `specs/NNN-feature-name/test-cases.md` for medium or large work.
-13. Implement tests only after the scenario matrix contains spec refs, verifiable outcomes, automation paths, execution order, and structured decisions.
+12. Write or update the scenario matrix under `specs-refiniment/<feature-name>/<file.md>` when file output is requested.
+13. Implement tests only after the scenario matrix contains requirement refs, verifiable outcomes, automation paths, execution order, and structured decisions.
 14. Name tests so a reviewer can trace each test back to a scenario ID or spec reference.
 
 ## Output Spec
@@ -53,9 +99,9 @@ Scope:
   - Behavior, contract, endpoint, workflow, or artifact deliberately excluded.
 
 Scenario matrix:
-| ID | Spec ref | Scenario | Setup | Trigger | Verifiable outcome | Layer | Automation |
+| ID | Requirement ref | Scenario | Setup | Trigger | Verifiable outcome | Layer | Automation |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-001 | AC-001 or `requirements.md#acceptance-criteria` | Scenario name | Fixture/state | Action | Command, checklist, or before/after pair | unit/service/transport/integration/QA/manual | script path + invocation, CI step, or manual blocker |
+| TC-001 | AC-001, story ID, workflow, risk, or artifact section | Scenario name | Fixture/state | Action | Command, checklist, or before/after pair | unit/service/transport/integration/QA/manual | script path + invocation, CI step, or manual blocker |
 
 Automation plan:
 - TC-001: exact command or CI step, target file if new, expected pass condition.
@@ -76,7 +122,7 @@ Decisions required:
 
 Quality gate:
 
-- Pass when every scenario has scope fit, spec ref, setup, trigger, verifiable outcome, layer, concrete automation path, and execution-order placement.
+- Pass when every scenario has scope fit, requirement ref, setup, trigger, verifiable outcome, layer, concrete automation path, and execution-order placement.
 - Pass when every manual scenario uses `Manual — automate by YYYY-MM-DD — blocker: reason`.
 - Pass when every unresolved item is a structured decision with options and recommended default.
 - Fail when any scenario lacks a spec ref, uses prose-only expected outcomes, says only `Manual review`, contains `TODO`, or leaves layer mapping as descriptive text instead of execution order.
@@ -87,9 +133,9 @@ Valid executable scenario:
 
 ```text
 Scenario matrix:
-| ID | Spec ref | Scenario | Setup | Trigger | Verifiable outcome | Layer | Automation |
+| ID | Requirement ref | Scenario | Setup | Trigger | Verifiable outcome | Layer | Automation |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-003 | `requirements.md#acceptance-criteria` | Reject unsupported provider asset | BitGo wallet fixture contains BTC only | Submit a USDC transfer request | `GOCACHE=/tmp/ai-sdlc-go-cache go test ./internal/service -run TestRejectUnsupportedProviderAsset -count=1` exits 0 and asserts no transfer row is created | service | `.codex/skills/ai-sdlc-validation/scripts/validation_plan.py internal/service/transfer_service.go`; implement `TestRejectUnsupportedProviderAsset` |
+| TC-003 | AC-003 | Reject unsupported provider asset | BitGo wallet fixture contains BTC only | Submit a USDC transfer request | `GOCACHE=/tmp/ai-sdlc-go-cache go test ./internal/service -run TestRejectUnsupportedProviderAsset -count=1` exits 0 and asserts no transfer row is created | service | `.codex/skills/ai-sdlc-validation/scripts/validation_plan.py internal/service/transfer_service.go`; implement `TestRejectUnsupportedProviderAsset` |
 
 Execution order:
 1. Service tests: run after scenario matrix is approved; blocks transport tests; failure action: fix service validation and rerun focused service test.

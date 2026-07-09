@@ -11,7 +11,6 @@ from pathlib import Path
 
 REQUIRED_REQUIREMENTS = [
     "Goal",
-    "Related Asana Tickets",
     "Problem Statement",
     "Scope",
     "Actors",
@@ -97,17 +96,6 @@ def validate_qa(markdown: str) -> list[str]:
     return validate_sections("qa.md", markdown, REQUIRED_QA)
 
 
-def validate_asana(markdown: str) -> list[str]:
-    if "## Related Asana Tickets" not in markdown:
-        return ["requirements.md missing Related Asana Tickets section"]
-    section = markdown.split("## Related Asana Tickets", 1)[1].split("\n## ", 1)[0]
-    has_link = "app.asana.com" in section or re.search(r"`\d{10,}`", section)
-    no_ticket = "No related Asana ticket found" in section
-    if has_link or no_ticket:
-        return []
-    return ["Related Asana Tickets must include an Asana link/GID or say no related ticket was found"]
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("spec_dir", type=Path)
@@ -132,7 +120,6 @@ def main() -> int:
 
     if requirements:
         errors.extend(validate_sections("requirements.md", requirements, REQUIRED_REQUIREMENTS))
-        errors.extend(validate_asana(requirements))
     if design:
         errors.extend(validate_sections("design.md", design, REQUIRED_DESIGN))
     if tasks:

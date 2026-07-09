@@ -3,7 +3,52 @@ name: ai-sdlc-approvals-sandbox
 description: AI SDLC approvals, sandbox, and command rule workflow. Use when Codex needs to decide whether to request escalated permissions, explain sandbox failures, propose prefix_rule approvals, avoid unsafe command patterns, or document why a command was or was not rerun outside the sandbox.
 ---
 
-# AI SDLC Approvals Sandbox
+# ai-sdlc-approvals-sandbox: Approvals And Sandbox
+
+> Internal AI SDLC skill, not client-facing by default.
+> Every rule below is important to follow. None of it can be skipped.
+> Before producing the final artifact, confirm required inputs, target audience, missing facts, output format, and constraints when they are unclear.
+> Do not invent missing information. Ask concise clarification questions when required inputs are absent.
+
+## 0. Skill Card
+
+- Skill name: `ai-sdlc-approvals-sandbox`
+- Primary audience: Dev
+- Supporting audience: QA
+- Audience tags: Dev, QA
+- SDLC stage: Sandbox escalation decision
+- Purpose: Decide, request, and report sandbox escalation for AI SDLC commands only when the sandbox blocks a required action or the task explicitly requires approved external access.
+- Output: Sandbox escalation decision record with prefix_rule guidance and residual risk
+
+### 0.1 Required Inputs
+
+- Exact command that failed or requires external access.
+- Task reason for the command.
+- Sandbox error, expected restriction, and risk profile.
+
+### 0.2 Clarification Rules
+
+- Ask concise questions before finalizing when role, artifact, requirements, scope, audience, or constraints are unclear.
+- If optional information is missing, mark it as `TBD`, `Not provided`, or `Assumption` instead of inventing it.
+- Separate confirmed facts from assumptions and open questions.
+- Do not proceed to downstream synthesis when a required upstream artifact or decision is missing.
+
+### 0.3 Output Rules
+
+- Keep output structured with headings and bullets.
+- Make findings, gaps, risks, and blockers explicit.
+- Tie recommendations to evidence from the provided artifact, repository, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
+- Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
+
+### 0.4 Artifact Routing
+
+- Use `specs/` only for developer implementation SDD packages and repo-governance artifacts.
+- Do not place PM, BA, QA, Delivery, discovery, planning, refinement, or readiness outputs in `specs/`; those belong at `specs-refiniment/<feature-name>/<file.md>`.
+- When consuming `specs-refiniment/<feature-name>/<file.md>`, treat it as upstream refinement context and create or update `specs/` only when implementation work is explicitly in scope.
+
+## References
+
+- Use `scripts/approval_plan.py` when deterministic validation, planning, or formatting is required by the workflow.
 
 ## Purpose
 
@@ -93,5 +138,5 @@ Reject this because the justification is vague and the prefix allows arbitrary s
 
 - Do not decide which validation commands are required; use `$ai-sdlc-validation`.
 - Do not approve destructive commands on the user's behalf.
-- Do not weaken repository SDD, review, or validation requirements because sandbox permissions are inconvenient.
+- Do not weaken developer SDD, review, or validation requirements because sandbox permissions are inconvenient.
 - Do not replace the active runtime’s higher-priority sandbox and approval policies.

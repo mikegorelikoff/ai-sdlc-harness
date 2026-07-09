@@ -3,7 +3,52 @@ name: ai-sdlc-branching
 description: AI SDLC Git-flow branching workflow. Use when Codex starts implementation work, needs to create or verify a task branch, checks branch/spec alignment, or prepares to hand off a completed user-visible task to validation and commit prep.
 ---
 
-# AI SDLC Branching
+# ai-sdlc-branching: Branching
+
+> Internal AI SDLC skill, not client-facing by default.
+> Every rule below is important to follow. None of it can be skipped.
+> Before producing the final artifact, confirm required inputs, target audience, missing facts, output format, and constraints when they are unclear.
+> Do not invent missing information. Ask concise clarification questions when required inputs are absent.
+
+## 0. Skill Card
+
+- Skill name: `ai-sdlc-branching`
+- Primary audience: Dev
+- Supporting audience: PM, BA
+- Audience tags: Dev, PM, BA
+- SDLC stage: Git workflow setup
+- Purpose: Create or verify the correct Git-flow task branch before repo-tracked file mutation, keep branch names aligned with active specs, and hand completed work to validation and commit prep without mixing unrelated changes.
+- Output: Branching decision, branch name, base branch, dirty-tree assessment, and next handoff
+
+### 0.1 Required Inputs
+
+- User-visible task name and change type.
+- Current branch and dirty tree state.
+- Active spec folder for medium or large work.
+
+### 0.2 Clarification Rules
+
+- Ask concise questions before finalizing when role, artifact, requirements, scope, audience, or constraints are unclear.
+- If optional information is missing, mark it as `TBD`, `Not provided`, or `Assumption` instead of inventing it.
+- Separate confirmed facts from assumptions and open questions.
+- Do not proceed to downstream synthesis when a required upstream artifact or decision is missing.
+
+### 0.3 Output Rules
+
+- Keep output structured with headings and bullets.
+- Make findings, gaps, risks, and blockers explicit.
+- Tie recommendations to evidence from the provided artifact, repository, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
+- Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
+
+### 0.4 Artifact Routing
+
+- Use `specs/` only for developer implementation SDD packages and repo-governance artifacts.
+- Do not place PM, BA, QA, Delivery, discovery, planning, refinement, or readiness outputs in `specs/`; those belong at `specs-refiniment/<feature-name>/<file.md>`.
+- When consuming `specs-refiniment/<feature-name>/<file.md>`, treat it as upstream refinement context and create or update `specs/` only when implementation work is explicitly in scope.
+
+## References
+
+- No external reference files are required for this skill.
 
 ## Purpose
 
@@ -166,4 +211,3 @@ mutation for implementation work.
 - Do not decide validation commands; use `$ai-sdlc-validation`.
 - Do not stage files or create commits; use `$ai-sdlc-commit-prep`.
 - Do not draft commit messages; use `$ai-sdlc-conventional-commit`.
-- Do not post Asana comments; use `$ai-sdlc-asana-commit-comment`.

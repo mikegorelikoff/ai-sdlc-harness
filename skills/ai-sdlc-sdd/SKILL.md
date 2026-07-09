@@ -3,7 +3,60 @@ name: ai-sdlc-sdd
 description: AI SDLC repository spec-driven development workflow. Use when Codex receives a medium or large feature, refactor, API change, architecture change, provider integration change, or any request that must follow requirements, design, test cases, QA planning, tasks, implementation, and validation.
 ---
 
-# AI SDLC SDD
+# ai-sdlc-sdd: Spec Driven Development
+
+> Internal AI SDLC skill, not client-facing by default.
+> Every rule below is important to follow. None of it can be skipped.
+> Before producing the final artifact, confirm required inputs, target audience, missing facts, output format, and constraints when they are unclear.
+> Do not invent missing information. Ask concise clarification questions when required inputs are absent.
+
+## 0. Skill Card
+
+- Skill name: `ai-sdlc-sdd`
+- Primary audience: Dev
+- Supporting audience: BA, QA, PM
+- Audience tags: Dev, BA, QA, PM
+- SDLC stage: Repository SDD workflow
+- Purpose: Create, update, validate, and enforce the AI SDLC five-file SDD package for medium and large changes before implementation expands.
+- Output: Five-file SDD package, validation status, task alignment, and implementation handoff
+
+### 0.1 Required Inputs
+
+- Medium or large change request.
+- Affected systems, APIs, packages, or artifacts.
+- Existing spec folder or proposed feature name if available.
+
+### 0.2 Clarification Rules
+
+- Ask concise questions before finalizing when role, artifact, requirements, scope, audience, or constraints are unclear.
+- If optional information is missing, mark it as `TBD`, `Not provided`, or `Assumption` instead of inventing it.
+- Separate confirmed facts from assumptions and open questions.
+- Do not proceed to downstream synthesis when a required upstream artifact or decision is missing.
+
+### 0.3 Output Rules
+
+- Keep output structured with headings and bullets.
+- Make findings, gaps, risks, and blockers explicit.
+- Tie recommendations to evidence from the provided artifact, repository, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
+- Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
+
+### 0.4 Artifact Routing
+
+- Use `specs/` only for developer implementation SDD packages and repo-governance artifacts.
+- Do not place PM, BA, QA, Delivery, discovery, planning, refinement, or readiness outputs in `specs/`; those belong at `specs-refiniment/<feature-name>/<file.md>`.
+- When consuming `specs-refiniment/<feature-name>/<file.md>`, treat it as upstream refinement context and create or update `specs/` only when implementation work is explicitly in scope.
+
+## References
+
+- Use `scripts/analyze_spec.py` when deterministic validation, planning, or formatting is required by the workflow.
+- Use `scripts/check_checklist.py` when deterministic validation, planning, or formatting is required by the workflow.
+- Use `scripts/check_clarify.py` when deterministic validation, planning, or formatting is required by the workflow.
+- Use `scripts/resolve_active_spec.py` when deterministic validation, planning, or formatting is required by the workflow.
+- Use `scripts/sdd_status.py` when deterministic validation, planning, or formatting is required by the workflow.
+- Use `scripts/spec_helpers.py` when deterministic validation, planning, or formatting is required by the workflow.
+- Use `scripts/test_sdd_workflow.py` only for validating helper behavior; do not load it for ordinary task execution.
+- Use `scripts/test_validate_spec.py` only for validating helper behavior; do not load it for ordinary task execution.
+- Use `scripts/validate_spec.py` when deterministic validation, planning, or formatting is required by the workflow.
 
 ## Purpose
 
@@ -14,7 +67,6 @@ Create, update, validate, and enforce the AI SDLC five-file SDD package for medi
 - Read `AGENTS.md` for change classification and repository workflow rules.
 - Collect the user request, affected systems, and likely spec name.
 - Search existing `specs/` folders for a matching active or historical spec.
-- Use `$ai-sdlc-asana-traceability` to find or create related Asana traceability before implementation.
 - Use `$ai-sdlc-ba`, `$ai-sdlc-test-cases`, and `$ai-sdlc-qa` when those phases are incomplete.
 - Read existing code only after the spec intent and affected surface are clear enough to avoid scope drift.
 
@@ -38,7 +90,7 @@ Create, update, validate, and enforce the AI SDLC five-file SDD package for medi
    python3 .codex/skills/ai-sdlc-sdd/scripts/check_clarify.py specs/NNN-feature-name
    ```
 
-9. Record Asana traceability or a documented no-ticket exception in `requirements.md`.
+9. Record implementation traceability, source artifact links, or documented no-ticket exceptions in `requirements.md`.
 10. Derive test cases before writing tests.
 11. Derive QA acceptance and regression scope before final validation.
 12. Write task entries with explicit `Output:` and `Refs:` metadata for new or updated active specs.
@@ -78,7 +130,6 @@ Use this completion report:
 SDD compliance:
 - Spec: specs/NNN-feature-name
 - Change size: small | medium | large
-- Asana: task_gid URL | documented no-ticket exception
 - Requirements: updated | unchanged with reason
 - Design: updated | unchanged with reason
 - Test cases: updated | unchanged with reason
@@ -91,7 +142,7 @@ SDD compliance:
 
 Quality gate:
 
-- Pass when the five-file package exists, required sections are populated, Asana traceability is recorded, tasks match implementation, and the validator passes.
+- Pass when the five-file package exists, required sections are populated, tasks match implementation, and the validator passes.
 - Fail when code starts before missing spec artifacts are created, when implementation exceeds `tasks.md`, when the clarify/checklist/analyze gates fail, or when task checkboxes are marked complete without evidence.
 
 ## Examples
@@ -113,7 +164,6 @@ Completion report sample:
 SDD compliance:
 - Spec: specs/177-codex-skill-instruction-upgrade
 - Change size: medium
-- Asana: 1215001164529861 https://app.asana.com/...
 - Requirements: updated
 - Design: updated
 - Test cases: updated
@@ -146,5 +196,4 @@ Reject this for medium and large work because the spec is the source of truth.
 
 - Do not replace BA, test-case, QA, review, security, validation, or commit-prep skills; route to them when their phase is needed.
 - Do not implement major features without requirements, design, test cases, QA, and tasks.
-- Do not create Asana tasks directly from this skill; use `$ai-sdlc-asana-traceability`.
 - Do not run broad validation by default; use `$ai-sdlc-validation` for command selection.

@@ -1,20 +1,64 @@
 ---
 name: ai-sdlc-conventional-commit
-description: AI SDLC Conventional Commit workflow. Use when Codex drafts, validates, reviews, or fixes commit messages in this repository, especially when commits must include SDD spec references, Asana links, validation summaries, or safe conventional commit subjects.
+description: AI SDLC Conventional Commit workflow. Use when Codex drafts, validates, reviews, or fixes commit messages in this repository, especially when commits must include SDD spec references, validation summaries, or safe conventional commit subjects.
 ---
 
-# AI SDLC Conventional Commit
+# ai-sdlc-conventional-commit: Conventional Commit Message
+
+> Internal AI SDLC skill, not client-facing by default.
+> Every rule below is important to follow. None of it can be skipped.
+> Before producing the final artifact, confirm required inputs, target audience, missing facts, output format, and constraints when they are unclear.
+> Do not invent missing information. Ask concise clarification questions when required inputs are absent.
+
+## 0. Skill Card
+
+- Skill name: `ai-sdlc-conventional-commit`
+- Primary audience: Dev
+- Supporting audience: PM, BA, QA
+- Audience tags: Dev, PM, BA, QA
+- SDLC stage: Commit message drafting
+- Purpose: Draft, validate, or repair an AI SDLC commit message that uses Conventional Commit syntax and includes SDD, business, implementation, testing, and validation traceability when the change is medium or large.
+- Output: Conventional Commit subject/body with traceability and validation summary
+
+### 0.1 Required Inputs
+
+- Change type, scope, and implementation summary.
+- Spec, validation, and test evidence when applicable.
+- Breaking-change or migration details if any.
+
+### 0.2 Clarification Rules
+
+- Ask concise questions before finalizing when role, artifact, requirements, scope, audience, or constraints are unclear.
+- If optional information is missing, mark it as `TBD`, `Not provided`, or `Assumption` instead of inventing it.
+- Separate confirmed facts from assumptions and open questions.
+- Do not proceed to downstream synthesis when a required upstream artifact or decision is missing.
+
+### 0.3 Output Rules
+
+- Keep output structured with headings and bullets.
+- Make findings, gaps, risks, and blockers explicit.
+- Tie recommendations to evidence from the provided artifact, repository, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
+- Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
+
+### 0.4 Artifact Routing
+
+- Use `specs/` only for developer implementation SDD packages and repo-governance artifacts.
+- Do not place PM, BA, QA, Delivery, discovery, planning, refinement, or readiness outputs in `specs/`; those belong at `specs-refiniment/<feature-name>/<file.md>`.
+- When consuming `specs-refiniment/<feature-name>/<file.md>`, treat it as upstream refinement context and create or update `specs/` only when implementation work is explicitly in scope.
+
+## References
+
+- Use `scripts/validate_commit_msg.py` when deterministic validation, planning, or formatting is required by the workflow.
 
 ## Purpose
 
-Draft, validate, or repair an AI SDLC commit message that uses Conventional Commit syntax and includes SDD, Asana, business, implementation, testing, and validation traceability when the change is medium, large, or Asana-linked.
+Draft, validate, or repair an AI SDLC commit message that uses Conventional Commit syntax and includes SDD, business, implementation, testing, and validation traceability when the change is medium or large.
 
 ## Inputs
 
 - Collect the intended change type: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `ci`, `build`, `perf`, or `revert`.
 - Collect the optional scope when it adds useful precision, for example `api`, `bitgo`, `sdd`, `codex`, or `docs`.
 - Collect the active spec folder for medium or large work, for example `specs/177-codex-skill-instruction-upgrade`.
-- Collect the related Asana task GID and URL when one exists.
 - Collect the implementation summary, reviewer-visible test path, and exact validation commands with outcomes.
 - Collect breaking-change details when behavior, schema, API contract, migration requirements, or compatibility changes are not backward compatible.
 
@@ -24,9 +68,8 @@ Draft, validate, or repair an AI SDLC commit message that uses Conventional Comm
 2. Keep the subject under 72 characters unless a longer subject prevents ambiguity.
 3. Use a lowercase type and lowercase kebab-case scope.
 4. Use an imperative summary, for example `fix bitgo wallet routing`, not `fixed bitgo wallet routing`.
-5. Add `Asana: task_gid URL` when the work is linked to Asana.
 6. Add `Spec: specs/NNN-feature-name` for medium or large work.
-7. Add `Business context`, `Implementation details`, `Mermaid diagram`, `How to test`, and `Validation` sections for medium, large, or Asana-linked work.
+6. Add `Business context`, `Implementation details`, `Mermaid diagram`, `How to test`, and `Validation` sections for medium or large work.
 8. Add `BREAKING CHANGE:` when the change requires a migration, client update, data backfill, or operator action.
 9. Validate the message before committing:
 
@@ -43,7 +86,6 @@ Return a complete commit message, not a paragraph about the message:
 ````text
 type(scope): imperative summary
 
-Asana: task_gid https://app.asana.com/...
 
 Spec: specs/NNN-feature-name
 
@@ -81,7 +123,6 @@ Valid medium-change message:
 ````text
 docs(codex): upgrade repo-local skill instructions
 
-Asana: 1215001164529861 https://app.asana.com/1/1203386629993561/project/1213092419088959/task/1215001164529861
 
 Spec: specs/177-codex-skill-instruction-upgrade
 
@@ -120,8 +161,6 @@ Reject this because the subject is not Conventional Commit syntax, traceability 
 
 ## Edge Cases
 
-- Write `Asana: none found` only when the spec documents the searches performed and why task creation was skipped.
-- Omit the Asana line for small local-only changes with no ticket and no traceability requirement.
 - Include `BREAKING CHANGE:` even for documentation-only commits when the documented workflow intentionally retires a previously required control.
 - Use `revert: ...` only when the commit actually reverts a previous commit; include the reverted hash in the body.
 - Stop and fix the message when the validator fails; do not commit with an invalid message.
@@ -130,6 +169,5 @@ Reject this because the subject is not Conventional Commit syntax, traceability 
 ## Scope Boundary
 
 - Do not stage files or create commits; use `$ai-sdlc-commit-prep` for staging and commit execution.
-- Do not search, create, or move Asana tasks; use `$ai-sdlc-asana-traceability`.
 - Do not invent validation results; use `$ai-sdlc-validation` to choose and run checks.
 - Do not use this skill to summarize a diff unless the output is a commit message.

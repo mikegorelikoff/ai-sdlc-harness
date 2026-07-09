@@ -147,7 +147,6 @@ def write_requirements(
         "# Requirements",
         "## Goal",
         "Goal.",
-        "## Related Asana Tickets",
         "- `1215120493851958`",
         "## Problem Statement",
         "Problem.",

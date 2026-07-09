@@ -43,8 +43,6 @@ def validate(message: str, require_traceability: bool) -> list[str]:
 
     body = "\n".join(lines[2:]) if len(lines) > 2 else ""
     if require_traceability:
-        if "Asana:" not in body:
-            errors.append("body must include Asana traceability")
         if "Spec:" not in body:
             errors.append("body must include Spec traceability")
         if "Validation:" not in body:

@@ -28,8 +28,6 @@ class ValidateSpecTests(unittest.TestCase):
                 """
                 # Requirements
                 ## Goal
-                ## Related Asana Tickets
-                - `1214994958132850`
                 ## Problem Statement
                 ## Scope
                 ## Actors
@@ -113,8 +111,6 @@ class ValidateSpecTests(unittest.TestCase):
                 """
                 # Requirements
                 ## Goal
-                ## Related Asana Tickets
-                - `1214994958132850`
                 ## Problem Statement
                 ## Scope
                 ## Actors
@@ -204,8 +200,6 @@ class ValidateSpecTests(unittest.TestCase):
                 """
                 # Requirements
                 ## Goal
-                ## Related Asana Tickets
-                - `1214994958132850`
                 ## Problem Statement
                 ## Scope
                 ## Actors

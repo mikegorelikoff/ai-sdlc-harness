@@ -11,7 +11,7 @@ from analyze_spec import validate as analyze_validate
 from check_checklist import validate as checklist_validate
 from check_clarify import validate as clarify_validate
 from spec_helpers import ROOT, resolve_active_spec
-from validate_spec import require_file, validate_asana, validate_sections, validate_tasks
+from validate_spec import require_file, validate_sections, validate_tasks
 from validate_spec import validate_qa, validate_test_cases, REQUIRED_DESIGN, REQUIRED_REQUIREMENTS
 
 
@@ -30,7 +30,6 @@ def structural_errors(spec_dir: Path) -> list[str]:
 
     if requirements:
         errors.extend(validate_sections("requirements.md", requirements, REQUIRED_REQUIREMENTS))
-        errors.extend(validate_asana(requirements))
     if design:
         errors.extend(validate_sections("design.md", design, REQUIRED_DESIGN))
     if tasks:
