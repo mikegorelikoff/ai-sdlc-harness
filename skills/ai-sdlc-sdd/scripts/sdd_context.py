@@ -38,7 +38,7 @@ def main() -> int:
     feature = args.feature if args.feature != "<feature-name>" else spec_dir.name
     args.feature = feature
     flow = "full" if args.full_flow else "quick" if args.quick_flow else "default"
-    budget = args.budget_tokens or (2500 if flow == "full" else 1200 if flow == "quick" else 1800)
+    budget = args.budget_tokens or (4000 if flow == "quick" else 24000)
 
     state_rc = run_state_action(args, "ai-sdlc-sdd", "implementation", str(spec_dir))
     if state_rc:
@@ -68,6 +68,7 @@ def main() -> int:
         cache=args.cache_context or args.refresh_context,
         refresh=args.refresh_context,
         root=ROOT,
+        persist_dossier=spec_dir.parent.name == "specs",
     )
     print(output, end="")
     return 0

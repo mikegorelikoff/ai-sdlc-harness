@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 import py_compile
+import re
 import subprocess
 import sys
 import tempfile
@@ -17,7 +18,10 @@ import textwrap
 import unittest
 from pathlib import Path
 
+from ai_sdlc_artifact_helper import artifact_quality_errors
+from ai_sdlc_artifact_profiles import COMMON_CONTEXT_SECTIONS, PROFILE_BY_SKILL, required_tables
 from ai_sdlc_context import emit_context_pack, estimate_tokens, toon_row
+from ai_sdlc_paths import feature_context_path
 from ai_sdlc_specs_index import write_indexes_for_roots
 from ai_sdlc_state_machine import STAGES, initial_state, to_toon
 
@@ -353,6 +357,180 @@ class ScriptContractTests(unittest.TestCase):
             self.assertIn("cache_status: refreshed", changed)
             self.assertIn("REQ-002", changed)
 
+    def test_default_context_unions_explicit_input_with_whole_feature_package(self) -> None:
+        """Explicit evidence must not suppress other feature artifacts outside quick flow."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            cwd = Path(temp_dir)
+            feature = "whole-context"
+            explicit = cwd / "incoming.md"
+            discovery = cwd / f"specs-refiniment/{feature}/discovery.md"
+            backlog = cwd / f"specs-refiniment/{feature}/backlog.md"
+            write(explicit, "# Input\n\n## Request\nExternal customer evidence without a keyword marker.")
+            repeated = "The accepted feature context must survive every downstream stage unchanged."
+            write(discovery, f"# Discovery\n\n## Problem\n{repeated}\n\nDetailed current workflow evidence.")
+            write(backlog, f"# Backlog\n\n## Context\n{repeated}\n\nDetailed backlog sequencing evidence.")
+
+            output = emit_context_pack(
+                files=[explicit],
+                feature=feature,
+                skill="ai-sdlc-ba",
+                workspace="refinement",
+                flow_mode="default",
+                budget_tokens=24000,
+                required_sections=["Feature Summary"],
+                keywords=["workflow"],
+                root=cwd,
+            )
+            for source in ("incoming.md", "discovery.md", "backlog.md"):
+                self.assertIn(source, output)
+            self.assertIn("Detailed current workflow evidence", output)
+            self.assertIn("Detailed backlog sequencing evidence", output)
+            self.assertEqual(output.count(repeated), 1)
+            dossier = feature_context_path(cwd / "specs-refiniment", feature)
+            self.assertTrue(dossier.is_file())
+            self.assertIn("sources[3]", dossier.read_text(encoding="utf-8"))
+
+            quick = emit_context_pack(
+                files=[explicit],
+                feature=feature,
+                skill="ai-sdlc-ba",
+                workspace="refinement",
+                flow_mode="quick",
+                budget_tokens=4000,
+                required_sections=[],
+                keywords=[],
+                root=cwd,
+            )
+            self.assertIn("incoming.md", quick)
+            self.assertNotIn("discovery.md", quick)
+
+    def test_self_contained_quality_gate_rejects_shallow_artifacts(self) -> None:
+        """Default/full artifacts need context depth, source coverage, and bounded size."""
+        profile = PROFILE_BY_SKILL["ai-sdlc-ba"]
+        sections = [*COMMON_CONTEXT_SECTIONS, *profile.stage_sections]
+        table_requirements = required_tables(profile)
+
+        shallow = "# Artifact\n\n" + "\n\n".join(
+            f"## {section}\nTBD" for section in sections
+        )
+        shallow_errors = artifact_quality_errors(
+            text=shallow,
+            required_sections=sections,
+            flow_mode="default",
+            source_paths=["specs-refiniment/demo/discovery.md"],
+            artifact_path="specs-refiniment/demo/business-context.md",
+            max_tokens=24000,
+            required_tables=table_requirements,
+        )
+        self.assertTrue(any("placeholder-only" in error for error in shallow_errors))
+        self.assertTrue(any("Source Coverage missing" in error for error in shallow_errors))
+
+        detailed_sections = []
+        for section in sections:
+            if section in table_requirements:
+                headers = table_requirements[section]
+                header = "| " + " | ".join(headers) + " |"
+                separator = "| " + " | ".join("---" for _ in headers) + " |"
+                row = "| " + " | ".join(f"Detailed {header_name}" for header_name in headers) + " |"
+                body = "\n".join((header, separator, row))
+            elif section == "Source Coverage":
+                body = (
+                    "- specs-refiniment/demo/discovery.md — customer, problem, workflow, and scope evidence.\n"
+                    "- Coverage status: reviewed completely for this artifact."
+                )
+            else:
+                body = (
+                    f"- {section} preserves confirmed feature facts, relevant constraints, concrete behavior, "
+                    "and stage-specific implications for downstream roles.\n"
+                    "- Evidence and uncertainty are separated explicitly so another agent can continue without rereading chat history."
+                )
+            detailed_sections.append(f"## {section}\n{body}")
+        detailed = "# Artifact\n\n" + "\n\n".join(detailed_sections)
+        self.assertEqual(
+            artifact_quality_errors(
+                text=detailed,
+                required_sections=sections,
+                flow_mode="default",
+                source_paths=["specs-refiniment/demo/discovery.md"],
+                artifact_path="specs-refiniment/demo/business-context.md",
+                max_tokens=24000,
+                required_tables=table_requirements,
+            ),
+            [],
+        )
+        oversized_errors = artifact_quality_errors(
+            text=detailed + (" context" * 1000),
+            required_sections=sections,
+            flow_mode="default",
+            source_paths=["specs-refiniment/demo/discovery.md"],
+            artifact_path="specs-refiniment/demo/business-context.md",
+            max_tokens=100,
+            required_tables=table_requirements,
+        )
+        self.assertTrue(any("max-artifact-tokens" in error for error in oversized_errors))
+
+    def test_refinement_profiles_match_lifecycle_and_default_templates(self) -> None:
+        """Lifecycle state, wrapper outputs, and rich templates must share one contract."""
+        refinement_stages = [stage for stage in STAGES if stage.workspace == "refinement"]
+        self.assertEqual(len(refinement_stages), 18)
+        for stage in refinement_stages:
+            profile = PROFILE_BY_SKILL[stage.skill]
+            self.assertEqual(profile.stage_id, stage.stage_id)
+            self.assertEqual(profile.artifact_name, stage.artifacts)
+            wrapper_names = []
+            for script in (ROOT / "skills" / stage.skill / "scripts").glob("*.py"):
+                match = re.search(r'artifact_name="([^"]+)"', script.read_text(encoding="utf-8"))
+                if match:
+                    wrapper_names.append(match.group(1))
+            self.assertEqual(wrapper_names, [stage.artifacts])
+
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            cwd = Path(temp_dir)
+            script = ROOT / "skills/ai-sdlc-ba/scripts/ba_context_scaffold.py"
+            default_template = run_script(script, "--feature", "template-demo", "--emit-template", cwd=cwd)
+            self.assertEqual(default_template.returncode, 0, default_template.stderr)
+            self.assertIn("## Feature Summary", default_template.stdout)
+            self.assertIn("## Source Coverage", default_template.stdout)
+            self.assertIn("## Workflow Detail", default_template.stdout)
+            quick_template = run_script(
+                script, "--feature", "template-demo", "--quick-flow", "--emit-template", cwd=cwd
+            )
+            self.assertEqual(quick_template.returncode, 0, quick_template.stderr)
+            self.assertNotIn("## Feature Summary", quick_template.stdout)
+            self.assertIn("## Goal", quick_template.stdout)
+
+            notes = cwd / "notes.md"
+            write(notes, "# Notes\n\n## Goal\nDetailed feature input.")
+            context = run_script(
+                script,
+                "--feature",
+                "template-demo",
+                "--format",
+                "toon",
+                str(notes),
+                cwd=cwd,
+            )
+            self.assertEqual(context.returncode, 0, context.stderr)
+            self.assertIn("budget_tokens: 24000", context.stdout)
+            written = run_script(
+                script,
+                "--feature",
+                "template-demo",
+                "--write",
+                str(notes),
+                cwd=cwd,
+            )
+            self.assertEqual(written.returncode, 0, written.stderr)
+            shallow_finalize = run_script(
+                script,
+                "--feature",
+                "template-demo",
+                "--finalize",
+                cwd=cwd,
+            )
+            self.assertEqual(shallow_finalize.returncode, 2)
+            self.assertIn("cannot finalize quality gate", shallow_finalize.stderr)
+
     def test_profile_analysis_keeps_markdown_default_and_offers_compact_toon(self) -> None:
         """People get Markdown by default while agents can request compact TOON."""
         script = ROOT / "skills/ai-sdlc-ba/scripts/ba_context_scaffold.py"
@@ -378,7 +556,7 @@ class ScriptContractTests(unittest.TestCase):
             result = run_script(
                 ROOT / "skills/_shared/ai_sdlc_context_benchmark.py",
                 str(source), "--feature", "benchmark-demo", "--skill", "ai-sdlc-ba",
-                "--quick-flow", "--required-section", "Goal",
+                "--quick-flow", "--budget-tokens", "1200", "--required-section", "Goal",
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("quality_gate: informational", result.stdout)
@@ -418,6 +596,7 @@ class ScriptContractTests(unittest.TestCase):
                 self.assertIn("--artifact-status", result.stdout)
                 self.assertIn("--artifact-owner", result.stdout)
                 self.assertIn("--artifact-tag", result.stdout)
+                self.assertIn("--max-artifact-tokens", result.stdout)
                 self.assertIn("--section", result.stdout)
                 self.assertIn("--finalize", result.stdout)
                 self.assertIn("--decision-row", result.stdout)
@@ -539,6 +718,29 @@ class ScriptContractTests(unittest.TestCase):
             self.assertIn("`18/18`", complete.stdout)
             self.assertFalse(any(cwd.rglob("*summary*.txt")))
             self.assertTrue(all("_ai_sdlc" in path.parts for path in cwd.rglob("*.toon")))
+
+            discovery_artifact = feature_root / "discovery.md"
+            discovery_text = discovery_artifact.read_text(encoding="utf-8")
+            discovery_artifact.write_text(
+                discovery_text.replace(
+                    'workspace: "refinement"',
+                    'workspace: "refinement"\n  flow_mode: "quick"',
+                ),
+                encoding="utf-8",
+            )
+            compact = run_script(
+                script,
+                "--feature",
+                feature,
+                "--root",
+                str(cwd),
+                "--format",
+                "toon",
+                cwd=cwd,
+            )
+            self.assertEqual(compact.returncode, 1)
+            self.assertIn("compact_artifact", compact.stdout)
+            discovery_artifact.write_text(discovery_text, encoding="utf-8")
 
             (feature_root / "release-slicing.md").unlink()
             incomplete = run_script(
@@ -789,6 +991,8 @@ class ScriptContractTests(unittest.TestCase):
                 self.assertIn("all 18 canonical Markdown artifacts", text)
                 self.assertIn("normal `--full-flow` call for one skill remains single-stage", text)
                 self.assertIn("refinement_status.py", text)
+                self.assertIn("--budget-tokens 24000", text)
+                self.assertIn("all ten shared feature-context sections", text)
         self.assertEqual(len(cascade_docs), 18)
 
 

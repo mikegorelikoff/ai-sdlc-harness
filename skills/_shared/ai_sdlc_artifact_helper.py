@@ -28,16 +28,31 @@ import tempfile
 from datetime import date
 from pathlib import Path
 
+from ai_sdlc_artifact_profiles import (
+    COMMON_CONTEXT_SECTIONS,
+    profile_for_skill,
+    required_sections as profile_sections,
+    required_tables as profile_tables,
+)
+from ai_sdlc_context import (
+    emit_context_pack,
+    estimate_tokens,
+    feature_context_path,
+    positive_int,
+    source_paths_from_context,
+)
 from ai_sdlc_specs_index import parse_artifact_metadata
 from ai_sdlc_specs_index import write_indexes_for_roots
 from ai_sdlc_paths import state_path
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
-from ai_sdlc_context import emit_context_pack, positive_int
 
 
 # Common traceability IDs that should survive compression and remain visible to
 # the agent after large source artifacts have been summarized.
-ID_PATTERN = re.compile(r"\b(?:REQ|AC|US|TC|DEC|TASK|RISK|EPIC)-\d{2,4}\b", re.IGNORECASE)
+ID_PATTERN = re.compile(
+    r"\b(?:REQ|AC|US|TC|DEC|TASK|RISK|EPIC|GOAL|CAP|WF|BR|SC|NFR|DEP)-\d{2,4}\b",
+    re.IGNORECASE,
+)
 
 # Open-work markers that usually require either a question, an assumption, or a
 # decision-log entry depending on the active flow mode.
@@ -263,6 +278,7 @@ def refreshed_artifact_metadata(
     state_file_path: str,
     state_args: argparse.Namespace | None,
     status: str,
+    related_artifacts: list[str] | None = None,
 ) -> str:
     """Refresh generated metadata while retaining durable user annotations."""
     existing = parse_artifact_metadata(text)
@@ -288,7 +304,12 @@ def refreshed_artifact_metadata(
         or str(existing.get("owner") or "TBD"),
         status=status,
         trace_ids=trace_ids,
-        related_artifacts=[str(value) for value in existing.get("related_artifacts", ())],
+        related_artifacts=sorted(
+            {
+                *[str(value) for value in existing.get("related_artifacts", ())],
+                *(related_artifacts or []),
+            }
+        ),
         validation=[str(value) for value in existing.get("validation", ())],
         metatags=existing_tags,
     )
@@ -386,6 +407,118 @@ def unfinished_sections(text: str, required_sections: list[str]) -> list[str]:
         if not body:
             missing.append(section)
     return missing
+
+
+def section_body(text: str, section: str, required_sections: list[str]) -> str:
+    """Return one canonical section body without generated empty markers."""
+    spans = canonical_section_map(text, required_sections)
+    if section not in spans:
+        return ""
+    _, body_start, end = spans[section]
+    return text[body_start:end].replace(EMPTY_SECTION_MARKER, "").strip()
+
+
+def meaningful_content_lines(content: str) -> list[str]:
+    """Return non-empty prose, list, and populated table rows."""
+    lines: list[str] = []
+    for raw in content.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("<!--"):
+            continue
+        if re.fullmatch(r"\|?[\s:|-]+\|?", line):
+            continue
+        lines.append(line)
+    return lines
+
+
+def placeholder_only(content: str) -> bool:
+    """Return true when a section contains only unresolved scaffold markers."""
+    normalized = re.sub(r"[`*_#|:-]", " ", content).lower()
+    normalized = re.sub(r"\b(?:assumption/default|evidence|confirmed facts|open questions/blockers)\b", " ", normalized)
+    normalized = re.sub(r"\b(?:tbd|todo|not provided|unknown|n/a|none)\b", " ", normalized)
+    return not re.sub(r"\s+", "", normalized)
+
+
+def artifact_quality_errors(
+    *,
+    text: str,
+    required_sections: list[str],
+    flow_mode: str,
+    source_paths: list[str],
+    artifact_path: str,
+    max_tokens: int,
+    required_tables: dict[str, tuple[str, ...]] | None = None,
+) -> list[str]:
+    """Validate self-contained context depth, source coverage, and size."""
+    errors: list[str] = []
+    estimated = estimate_tokens(text)
+    if estimated > max_tokens:
+        errors.append(f"artifact exceeds --max-artifact-tokens: {estimated}>{max_tokens}")
+    if flow_mode == "quick":
+        return errors
+
+    for section in required_sections:
+        content = section_body(text, section, required_sections)
+        lines = meaningful_content_lines(content)
+        words = len(re.findall(r"\S+", content))
+        if placeholder_only(content):
+            errors.append(f"placeholder-only section: {section}")
+            continue
+        minimum_words = 8 if section == "Source Coverage" else 20 if section in COMMON_CONTEXT_SECTIONS else 12
+        if len(lines) < 2 and words < minimum_words:
+            errors.append(
+                f"section lacks meaningful detail: {section} ({words} words, {len(lines)} content lines)"
+            )
+
+    if "Source Coverage" in required_sections:
+        source_coverage = section_body(text, "Source Coverage", required_sections)
+        for source in source_paths:
+            if source == artifact_path or source.endswith("/state.toon"):
+                continue
+            if source not in source_coverage:
+                errors.append(f"Source Coverage missing: {source}")
+
+    for section, headers in (required_tables or {}).items():
+        content = section_body(text, section, required_sections)
+        table_lines = [line.strip() for line in content.splitlines() if line.strip().startswith("|")]
+        header_line = next(
+            (
+                line
+                for line in table_lines
+                if all(header.lower() in line.lower() for header in headers)
+            ),
+            None,
+        )
+        if header_line is None:
+            errors.append(
+                f"section {section} missing required table columns: {', '.join(headers)}"
+            )
+            continue
+        data_rows = [
+            line
+            for line in table_lines
+            if line != header_line and not re.fullmatch(r"\|?[\s:|-]+\|?", line)
+        ]
+        if not data_rows or all(placeholder_only(line) for line in data_rows):
+            errors.append(f"section {section} has no populated table rows")
+
+    visible_text = text
+    if visible_text.startswith("---\n"):
+        frontmatter_end = visible_text.find("\n---", 4)
+        if frontmatter_end != -1:
+            visible_text = visible_text[frontmatter_end + len("\n---") :]
+    unresolved = re.search(
+        r"\b(?:TBD|TODO|OPEN QUESTION|BLOCKED)\b", visible_text, re.IGNORECASE
+    )
+    if flow_mode == "full" and unresolved:
+        lowered = visible_text.lower()
+        if not all(marker in lowered for marker in ("owner", "impact")) or not (
+            "resolution" in lowered or "next step" in lowered
+        ):
+            errors.append(
+                "full-flow unresolved markers require owner, impact, and resolution/next step"
+            )
+    return errors
 
 
 def ensure_decision_log(
@@ -504,12 +637,39 @@ def emit_profile_report(
     document_title: str | None = None,
 ) -> int:
     """Emit and optionally write the standardized artifact-profile report."""
+    profile = profile_for_skill(skill_name)
+    legacy_artifact_names: tuple[str, ...] = ()
+    table_requirements: dict[str, tuple[str, ...]] = {}
+    if profile is not None:
+        artifact_name = profile.artifact_name
+        legacy_artifact_names = profile.legacy_names
+        table_requirements = profile_tables(profile)
+        if flow_mode != "quick":
+            required_sections = profile_sections(profile, flow_mode)
+
     # Route outputs according to the SDLC phase: implementation artifacts go to
     # `specs/`, while refinement/planning/QA artifacts go to `specs-refiniment/`.
     base_path = namespace_from_workspace(workspace)
     artifact_path = f"{base_path}/{feature}/{artifact_name}"
     decision_log_path = f"{base_path}/{feature}/decision-log.md"
     state_file_path = state_path(feature, workspace).as_posix()
+    feature_root = Path(base_path) / feature
+    context_dossier = feature_context_path(Path.cwd(), workspace, feature)
+    if context_dossier.is_file():
+        source_paths = source_paths_from_context(read_text(context_dossier))
+    else:
+        source_paths = [path.as_posix() for path in sorted(feature_root.glob("*.md"))]
+        if Path(state_file_path).is_file():
+            source_paths.append(state_file_path)
+    local_related = sorted(
+        {
+            path
+            for path in source_paths
+            if path.startswith(f"{base_path}/{feature}/")
+            and path.endswith(".md")
+            and path != artifact_path
+        }
+    )
 
     section = getattr(state_args, "section", None) if state_args is not None else None
     finalize = bool(getattr(state_args, "finalize", False)) if state_args is not None else False
@@ -518,6 +678,14 @@ def emit_profile_report(
 
     if stdin_action:
         artifact_file = Path(artifact_path)
+        legacy_artifact_file = next(
+            (
+                feature_root / name
+                for name in legacy_artifact_names
+                if (feature_root / name).is_file()
+            ),
+            None,
+        )
         decision_file = Path(decision_log_path)
         decision_metadata = artifact_metadata_lines(
             feature=feature,
@@ -537,8 +705,9 @@ def emit_profile_report(
                     choices = ", ".join(required_sections)
                     raise ValueError(f"unknown section {section!r}; expected one of: {choices}")
                 content = validate_section_content(sys.stdin.read())
-                if artifact_file.exists():
-                    artifact_text = read_text(artifact_file)
+                readable_artifact = artifact_file if artifact_file.exists() else legacy_artifact_file
+                if readable_artifact is not None and readable_artifact.exists():
+                    artifact_text = read_text(readable_artifact)
                 else:
                     metadata = artifact_metadata_lines(
                         feature=feature,
@@ -568,6 +737,7 @@ def emit_profile_report(
                     state_file_path=state_file_path,
                     state_args=state_args,
                     status="draft",
+                    related_artifacts=local_related,
                 )
                 state_rc = preflight_state_action(state_args, skill_name, workspace, artifact_path)
                 if state_rc:
@@ -609,13 +779,26 @@ def emit_profile_report(
                 print(f"Wrote decision row: {decision_file}")
                 return 0
 
-            if not artifact_file.exists():
+            readable_artifact = artifact_file if artifact_file.exists() else legacy_artifact_file
+            if readable_artifact is None or not readable_artifact.exists():
                 raise ValueError(f"cannot finalize missing artifact: {artifact_file}")
-            artifact_text = read_text(artifact_file)
+            artifact_text = read_text(readable_artifact)
             remaining = unfinished_sections(artifact_text, required_sections)
             if remaining:
                 raise ValueError("cannot finalize; unfinished sections: " + ", ".join(remaining))
             updated = artifact_text.replace(EMPTY_SECTION_MARKER, "")
+            max_artifact_tokens = getattr(state_args, "max_artifact_tokens", 24000)
+            quality_errors = artifact_quality_errors(
+                text=updated,
+                required_sections=required_sections,
+                flow_mode=flow_mode,
+                source_paths=source_paths,
+                artifact_path=artifact_path,
+                max_tokens=max_artifact_tokens,
+                required_tables=table_requirements,
+            )
+            if quality_errors:
+                raise ValueError("cannot finalize quality gate; " + "; ".join(quality_errors))
             updated = refreshed_artifact_metadata(
                 text=updated,
                 feature=feature,
@@ -628,7 +811,14 @@ def emit_profile_report(
                 state_file_path=state_file_path,
                 state_args=state_args,
                 status=getattr(state_args, "artifact_status", None) or "review",
+                related_artifacts=local_related,
             )
+            final_tokens = estimate_tokens(updated)
+            if final_tokens > max_artifact_tokens:
+                raise ValueError(
+                    f"cannot finalize; artifact with metadata exceeds --max-artifact-tokens: "
+                    f"{final_tokens}>{max_artifact_tokens}"
+                )
             state_rc = preflight_state_action(state_args, skill_name, workspace, artifact_path)
             if state_rc:
                 return state_rc
@@ -662,7 +852,7 @@ def emit_profile_report(
     legacy_operation = bool(emit_template or emit_decision_log_entry or write)
     if output_format == "toon" and not legacy_operation:
         configured_budget = getattr(state_args, "budget_tokens", None) if state_args is not None else None
-        budget = configured_budget or (1200 if flow_mode == "quick" else 2500 if flow_mode == "full" else 1800)
+        budget = configured_budget or (4000 if flow_mode == "quick" else 24000)
         print(
             emit_context_pack(
                 files=files,
@@ -816,7 +1006,12 @@ def emit_profile_report(
         # Artifact skeleton contents differ by flow so quick outputs capture
         # assumptions, while full outputs explicitly track blockers.
         template_lines.append(f"## {section}")
-        if flow_mode == "quick":
+        if section in table_requirements:
+            headers = table_requirements[section]
+            template_lines.append("| " + " | ".join(headers) + " |")
+            template_lines.append("| " + " | ".join("---" for _ in headers) + " |")
+            template_lines.append("| " + " | ".join("TBD" for _ in headers) + " |")
+        elif flow_mode == "quick":
             template_lines.extend(["- Assumption/default: TBD", "- Evidence: TBD"])
         elif flow_mode == "full":
             template_lines.extend(["- Confirmed facts: TBD", "- Evidence: TBD", "- Open questions/blockers: TBD"])
@@ -869,7 +1064,17 @@ def build_parser(description: str) -> argparse.ArgumentParser:
     parser.add_argument("--feature", default="<feature-name>")
     parser.add_argument("--summary-limit", type=int, default=5)
     parser.add_argument("--format", choices=["toon", "markdown"], default="markdown", help="Human-readable Markdown by default; use TOON for compact agent context")
-    parser.add_argument("--budget-tokens", type=positive_int, help="Approximate context budget; defaults depend on flow mode")
+    parser.add_argument(
+        "--budget-tokens",
+        type=positive_int,
+        help="Approximate context budget; defaults to 24000 for default/full and 4000 for quick flow",
+    )
+    parser.add_argument(
+        "--max-artifact-tokens",
+        type=positive_int,
+        default=24000,
+        help="Maximum finalized artifact size; defaults to 24000 tokens",
+    )
     parser.add_argument("--cache-context", action="store_true", help="Reuse or write the feature-local derived context cache")
     parser.add_argument("--refresh-context", action="store_true", help="Force refresh of the feature-local context cache")
     parser.add_argument("--quick-flow", action="store_true", help="Compress aggressively and minimize questions")

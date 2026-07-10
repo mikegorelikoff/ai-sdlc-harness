@@ -7,6 +7,8 @@ import argparse
 from dataclasses import dataclass
 from pathlib import Path
 
+from ai_sdlc_artifact_helper import artifact_quality_errors
+from ai_sdlc_artifact_profiles import PROFILE_BY_STAGE, required_sections, required_tables
 from ai_sdlc_context import toon_row, toon_scalar
 from ai_sdlc_paths import (
     first_existing,
@@ -59,7 +61,12 @@ def inspect_package(root: Path, feature: str) -> tuple[list[Issue], Path, Path]:
     expected_paths: list[str] = []
     for stage in REFINEMENT_STAGES:
         artifact = feature_root / stage.artifacts
-        expected_paths.append(artifact.relative_to(root).as_posix())
+        profile = PROFILE_BY_STAGE[stage.stage_id]
+        readable_artifact = first_existing(
+            artifact,
+            *(feature_root / name for name in profile.legacy_names),
+        )
+        expected_paths.append(readable_artifact.relative_to(root).as_posix())
         row = stage_rows.get(stage.stage_id)
         status = str(row.get("status", "")) if row else "missing"
         if status != "done":
@@ -72,7 +79,7 @@ def inspect_package(root: Path, feature: str) -> tuple[list[Issue], Path, Path]:
                     f"status={status}",
                 )
             )
-        if not artifact.is_file():
+        if not readable_artifact.is_file():
             issues.append(
                 Issue(
                     "missing_artifact",
@@ -83,17 +90,53 @@ def inspect_package(root: Path, feature: str) -> tuple[list[Issue], Path, Path]:
                 )
             )
             continue
-        metadata = parse_artifact_metadata(artifact.read_text(encoding="utf-8", errors="replace"))
+        metadata = parse_artifact_metadata(
+            readable_artifact.read_text(encoding="utf-8", errors="replace")
+        )
         if not metadata:
             issues.append(
                 Issue(
                     "missing_metadata",
                     stage.stage_id,
                     stage.skill,
-                    artifact.relative_to(root).as_posix(),
+                    readable_artifact.relative_to(root).as_posix(),
                     "artifact_metadata is missing",
                 )
             )
+            continue
+        artifact_flow = str(metadata.get("flow_mode") or "")
+        if artifact_flow == "quick":
+            issues.append(
+                Issue(
+                    "compact_artifact",
+                    stage.stage_id,
+                    stage.skill,
+                    readable_artifact.relative_to(root).as_posix(),
+                    "complete refinement requires default/full self-contained context",
+                )
+            )
+        elif artifact_flow in {"default", "full"}:
+            artifact_text = readable_artifact.read_text(encoding="utf-8", errors="replace")
+            relative_path = readable_artifact.relative_to(root).as_posix()
+            quality_errors = artifact_quality_errors(
+                text=artifact_text,
+                required_sections=required_sections(profile, artifact_flow),
+                flow_mode=artifact_flow,
+                source_paths=[str(value) for value in metadata.get("related_artifacts", ())],
+                artifact_path=relative_path,
+                max_tokens=24000,
+                required_tables=required_tables(profile),
+            )
+            for detail in quality_errors:
+                issues.append(
+                    Issue(
+                        "weak_artifact",
+                        stage.stage_id,
+                        stage.skill,
+                        relative_path,
+                        detail,
+                    )
+                )
 
     decision_log = feature_root / "decision-log.md"
     if not decision_log.is_file():

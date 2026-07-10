@@ -61,6 +61,11 @@ def context_cache_path(workspace_root: Path, feature: str, skill: str) -> Path:
     return workspace_root / feature / INTERNAL_DIR / "context" / f"{skill}.toon"
 
 
+def feature_context_path(workspace_root: Path, feature: str) -> Path:
+    """Return the canonical feature-wide context dossier path."""
+    return workspace_root / feature / INTERNAL_DIR / "feature-context.toon"
+
+
 def legacy_context_cache_path(workspace_root: Path, feature: str, skill: str) -> Path:
     """Return the pre-_ai_sdlc feature-local context-cache path."""
     return workspace_root / feature / ".ai-sdlc" / "context" / f"{skill}.toon"

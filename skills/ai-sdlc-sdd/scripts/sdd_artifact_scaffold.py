@@ -10,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
 from ai_sdlc_artifact_helper import emit_profile_report
+from ai_sdlc_context import positive_int
 from ai_sdlc_state_machine import add_state_arguments
 from spec_helpers import SDD_ARTIFACT_SECTIONS, SDD_ARTIFACT_TITLES, is_feature_spec_name
 
@@ -28,6 +29,7 @@ def main() -> int:
     parser.add_argument("--artifact-status")
     parser.add_argument("--artifact-owner")
     parser.add_argument("--artifact-tag", action="append", default=[])
+    parser.add_argument("--max-artifact-tokens", type=positive_int, default=24000)
     add_state_arguments(parser)
     args = parser.parse_args()
 

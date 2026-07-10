@@ -22,6 +22,7 @@ from pathlib import Path
 from ai_sdlc_paths import (
     INTERNAL_DIR,
     context_cache_path as canonical_context_cache_path,
+    feature_context_path as canonical_feature_context_path,
     first_existing,
     index_toon_path,
     legacy_context_cache_path,
@@ -35,7 +36,7 @@ from ai_sdlc_paths import (
 
 CONTEXT_SCHEMA = "ai-sdlc-context/v1"
 ID_RE = re.compile(
-    r"\b(?:(?:REQ|AC|US|TC|TASK|RISK|DEC|EPIC)-\d{2,4}|T\d{3,4})\b",
+    r"\b(?:(?:REQ|AC|US|TC|TASK|RISK|DEC|EPIC|GOAL|CAP|WF|BR|SC|NFR|DEP)-\d{2,4}|T\d{3,4})\b",
     re.IGNORECASE,
 )
 OPEN_RE = re.compile(r"\b(?:TODO|TBD|FIXME|OPEN QUESTION|DECISION REQUIRED|BLOCKED|BLOCKER)\b", re.IGNORECASE)
@@ -166,28 +167,30 @@ def _index_artifact_paths(index: Path, features: set[str], root: Path) -> list[P
 
 
 def resolve_sources(
-    files: list[Path], *, feature: str, workspace: str, root: Path
+    files: list[Path], *, feature: str, workspace: str, flow_mode: str, root: Path
 ) -> list[SourceDocument]:
-    """Resolve explicit inputs first, otherwise use indexes and feature folders."""
+    """Resolve explicit inputs plus the whole feature package outside quick flow."""
     candidates: list[Path] = []
     if files:
         candidates.extend(path if path.is_absolute() else root / path for path in files)
-    else:
-        aliases = _feature_aliases(feature)
-        roots = [root / ("specs" if workspace == "implementation" else "specs-refiniment")]
-        if workspace == "implementation":
-            roots.append(root / "specs-refiniment")
+    aliases = _feature_aliases(feature)
+    roots = [root / ("specs" if workspace == "implementation" else "specs-refiniment")]
+    if workspace == "implementation":
+        roots.append(root / "specs-refiniment")
+    include_feature_package = flow_mode != "quick" or not files
+    if include_feature_package:
         for workspace_root in roots:
             index = first_existing(
                 index_toon_path(workspace_root), legacy_index_toon_path(workspace_root)
             )
             candidates.extend(_index_artifact_paths(index, aliases, root))
-        if not candidates:
-            for workspace_root in roots:
-                for alias in aliases:
-                    feature_dir = workspace_root / alias
-                    if feature_dir.is_dir():
-                        candidates.extend(sorted(feature_dir.glob("*.md")))
+        # Indexes can be stale during an active cascade. Union the visible
+        # feature folder so explicit inputs never suppress newer artifacts.
+        for workspace_root in roots:
+            for alias in aliases:
+                feature_dir = workspace_root / alias
+                if feature_dir.is_dir():
+                    candidates.extend(sorted(feature_dir.glob("*.md")))
 
     # State and decisions are cheap, high-value context even when body inputs
     # were supplied explicitly. Add only feature-local paths that exist.
@@ -276,24 +279,15 @@ def extract_context(
     gaps: list[Gap] = []
     all_ids: set[str] = set()
     seen_evidence: set[tuple[str, int, str]] = set()
+    seen_signal_text: set[str] = set()
+    all_sections: set[str] = set()
     for source in sources:
         if source.status != "current":
             gaps.append(Gap("missing_source", source.display_path, "document", "yes", "source file is missing"))
             continue
         rows = _line_sections(source.text)
         sections = {section.lower() for _, section, _ in rows}
-        if source.path.suffix.lower() == ".md" and source.path.name != "decision-log.md":
-            missing = [required for required in required_sections if required.lower() not in sections]
-            if missing:
-                gaps.append(
-                    Gap(
-                        "missing_sections",
-                        source.display_path,
-                        "document",
-                        "no",
-                        "headings not present: " + "/".join(missing),
-                    )
-                )
+        all_sections.update(sections)
         for number, section, line in rows:
             identifiers = sorted({match.group(0).upper() for match in ID_RE.finditer(line)})
             all_ids.update(identifiers)
@@ -302,25 +296,65 @@ def extract_context(
                 continue
             kind, priority = signal
             excerpt = line[:240]
+            normalized_excerpt = re.sub(r"\s+", " ", excerpt).strip().lower()
+            if normalized_excerpt in seen_signal_text:
+                continue
             key = (source.display_path, number, kind)
             if key in seen_evidence:
                 continue
             seen_evidence.add(key)
+            seen_signal_text.add(normalized_excerpt)
             evidence.append(
                 Evidence(kind, "/".join(identifiers), source.display_path, section, number, priority, excerpt)
             )
 
-        # Preserve one exact narrative entry per relevant section after strong
-        # evidence has been collected. These are lowest priority and disappear
-        # first when the budget is tight.
-        seen_sections: set[str] = set()
+        # Preserve connected section chunks, not just isolated keyword lines.
+        # Exact duplicate chunks are omitted because self-contained upstream
+        # artifacts intentionally repeat the same feature-context snapshot.
+        by_section: dict[str, list[tuple[int, str]]] = {}
         for number, section, line in rows:
-            if section in seen_sections or section == "document":
+            normalized_line = re.sub(r"\s+", " ", line).strip().lower()
+            if normalized_line in seen_signal_text:
                 continue
-            if required_sections and section.lower() not in {value.lower() for value in required_sections}:
-                continue
-            seen_sections.add(section)
-            evidence.append(Evidence("section_context", "", source.display_path, section, number, 5, line[:240]))
+            seen_signal_text.add(normalized_line)
+            by_section.setdefault(section, []).append((number, line))
+        for section, section_rows in by_section.items():
+            chunk_lines: list[str] = []
+            chunk_start = section_rows[0][0]
+            for number, line in section_rows:
+                candidate = " ".join([*chunk_lines, line])
+                if chunk_lines and len(candidate) > 900:
+                    chunk = " ".join(chunk_lines)
+                    normalized = re.sub(r"\s+", " ", chunk).strip().lower()
+                    if normalized and normalized not in seen_signal_text:
+                        seen_signal_text.add(normalized)
+                        ids = sorted({match.group(0).upper() for match in ID_RE.finditer(chunk)})
+                        evidence.append(
+                            Evidence("section_context", "/".join(ids), source.display_path, section, chunk_start, 5, chunk)
+                        )
+                    chunk_lines = []
+                    chunk_start = number
+                chunk_lines.append(line)
+            chunk = " ".join(chunk_lines)
+            normalized = re.sub(r"\s+", " ", chunk).strip().lower()
+            if normalized and normalized not in seen_signal_text:
+                seen_signal_text.add(normalized)
+                ids = sorted({match.group(0).upper() for match in ID_RE.finditer(chunk)})
+                evidence.append(
+                    Evidence("section_context", "/".join(ids), source.display_path, section, chunk_start, 5, chunk)
+                )
+
+    missing = [required for required in required_sections if required.lower() not in all_sections]
+    if missing:
+        gaps.append(
+            Gap(
+                "missing_output_context",
+                "feature-package",
+                "document",
+                "no",
+                "headings not represented yet: " + "/".join(missing),
+            )
+        )
     # Round-robin sources inside each priority tier. This prevents a long first
     # artifact from consuming the whole budget before another source appears.
     ordered: list[Evidence] = []
@@ -421,7 +455,9 @@ def build_context_pack(
 ) -> tuple[str, str, list[SourceDocument]]:
     """Build one bounded TOON pack and return text, fingerprint, and sources."""
     root = (root or Path.cwd()).resolve()
-    sources = resolve_sources(files, feature=feature, workspace=workspace, root=root)
+    sources = resolve_sources(
+        files, feature=feature, workspace=workspace, flow_mode=flow_mode, root=root
+    )
     evidence, gaps, trace_ids = extract_context(sources, required_sections=required_sections, keywords=keywords)
     fingerprint = _fingerprint(
         sources, skill=skill, flow_mode=flow_mode, budget_tokens=budget_tokens,
@@ -473,11 +509,53 @@ def context_cache_path(root: Path, workspace: str, feature: str, skill: str) -> 
     return canonical_context_cache_path(root / base, feature, skill)
 
 
+def feature_context_path(root: Path, workspace: str, feature: str) -> Path:
+    """Return the feature-wide derived context dossier path."""
+    base = "specs" if workspace == "implementation" else "specs-refiniment"
+    return canonical_feature_context_path(root / base, feature)
+
+
+def source_paths_from_context(text: str) -> list[str]:
+    """Extract the complete source inventory from a rendered context pack."""
+    paths: list[str] = []
+    in_sources = False
+    for raw_line in text.splitlines():
+        line = raw_line.rstrip()
+        if line.startswith("sources["):
+            in_sources = True
+            continue
+        if in_sources and not line.startswith("  "):
+            break
+        if not in_sources or not line.startswith("  "):
+            continue
+        values = next(csv.reader([line.strip()]))
+        if values:
+            paths.append(values[0])
+    return paths
+
+
+def _write_derived_context(path: Path, text: str) -> None:
+    """Atomically write a derived context file inside `_ai_sdlc`."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", dir=path.parent,
+            prefix=f".{path.name}.", suffix=".tmp", delete=False,
+        ) as handle:
+            handle.write(text)
+            temp_path = Path(handle.name)
+        os.replace(temp_path, path)
+    finally:
+        if temp_path is not None and temp_path.exists():
+            temp_path.unlink()
+
+
 def emit_context_pack(
     *, files: list[Path], feature: str, skill: str, workspace: str,
     flow_mode: str, budget_tokens: int, required_sections: list[str],
     keywords: list[str], cache: bool = False, refresh: bool = False,
-    root: Path | None = None,
+    root: Path | None = None, persist_dossier: bool = True,
 ) -> str:
     """Return a context pack, reusing a fresh explicit cache when requested."""
     root = (root or Path.cwd()).resolve()
@@ -487,6 +565,8 @@ def emit_context_pack(
         required_sections=required_sections, keywords=keywords, root=root,
         cache_status="miss" if cache else "off",
     )
+    if persist_dossier and flow_mode != "quick" and feature != "<feature-name>":
+        _write_derived_context(feature_context_path(root, workspace, feature), text)
     if not cache:
         return text
 
@@ -500,20 +580,8 @@ def emit_context_pack(
         if f"schema: {CONTEXT_SCHEMA}" in cached and f"fingerprint: {fingerprint}" in cached:
             return re.sub(r"^cache_status: .*?$", "cache_status: hit", cached, count=1, flags=re.MULTILINE)
 
-    path.parent.mkdir(parents=True, exist_ok=True)
     refreshed = re.sub(
         r"^cache_status: .*?$", "cache_status: refreshed", text, count=1, flags=re.MULTILINE
     )
-    temp_path: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w", encoding="utf-8", dir=path.parent,
-            prefix=f".{path.name}.", suffix=".tmp", delete=False,
-        ) as handle:
-            handle.write(refreshed)
-            temp_path = Path(handle.name)
-        os.replace(temp_path, path)
-    finally:
-        if temp_path is not None and temp_path.exists():
-            temp_path.unlink()
+    _write_derived_context(path, refreshed)
     return refreshed

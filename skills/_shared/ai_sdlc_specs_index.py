@@ -124,7 +124,10 @@ def parse_artifact_metadata(text: str) -> dict[str, object]:
 
 def trace_ids_from_text(text: str) -> tuple[str, ...]:
     """Fallback trace ID extraction when metadata has not been filled yet."""
-    pattern = re.compile(r"\b(?:REQ|AC|US|TC|DEC|TASK|RISK|EPIC)-\d{2,4}\b", re.IGNORECASE)
+    pattern = re.compile(
+        r"\b(?:REQ|AC|US|TC|DEC|TASK|RISK|EPIC|GOAL|CAP|WF|BR|SC|NFR|DEP)-\d{2,4}\b",
+        re.IGNORECASE,
+    )
     return tuple(sorted({match.group(0).upper() for match in pattern.finditer(text)}))
 
 

@@ -30,7 +30,7 @@ def main() -> int:
         summary_limit=args.summary_limit,
         flow_mode=flow_mode(args),
         feature=args.feature,
-        artifact_name="discovery-notes.md",
+        artifact_name="discovery.md",
         workspace="refinement",
         emit_template=args.emit_template,
         emit_decision_log_entry=args.emit_decision_log_entry,

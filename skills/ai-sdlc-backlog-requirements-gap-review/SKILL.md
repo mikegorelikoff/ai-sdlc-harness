@@ -122,6 +122,13 @@ description: Use when PRFAQ, BRD, PRD, product brief, workflow, or equivalent in
 
 ## Script Usage
 
+- In default and full flow, always run this skill's primary analysis script with `--format toon --budget-tokens 24000` before drafting; explicit inputs are priority evidence but do not replace the rest of the feature package.
+- Read this skill's reference file before writing sections. Use its detailed tables and quality bar, not only the compact scaffold headings.
+- Run the primary script with `--emit-template` in the active flow mode to obtain the exact shared context headings and required stage table columns before section writes.
+- Make every default/full artifact self-contained by completing all ten shared feature-context sections plus the stage-specific profile sections. Quick flow may use the compact stage-only draft.
+- Follow every `next_reads` entry before finalization and list every consumed source in `Source Coverage`; do not claim whole-feature context from a partial source set.
+- Keep the final artifact within `--max-artifact-tokens 24000`; condense repetition instead of dropping feature dimensions or source traceability.
+
 - Run `scripts/backlog_gap_scan.py` before drafting or updating this skill's artifact when inputs are longer than a few bullets, when traceability matters, or when a flow flag is supplied. For agent analysis, pass `--format toon`, read `anchors` first, and open only `next_reads`; without that flag the script keeps its human-readable Markdown output.
 - Quick flow analysis: `python3 skills/ai-sdlc-backlog-requirements-gap-review/scripts/backlog_gap_scan.py --feature <feature-name> --quick-flow <input.md>...`
 - Full flow analysis: `python3 skills/ai-sdlc-backlog-requirements-gap-review/scripts/backlog_gap_scan.py --feature <feature-name> --full-flow <input.md>...`

@@ -85,7 +85,7 @@ def run_skill_script_contract(skill_dir: Path) -> None:
 
         if _is_artifact_profile_script(script):
             help_result = _run_script(script, "--help")
-            for flag in ("--section", "--finalize", "--decision-row"):
+            for flag in ("--section", "--finalize", "--decision-row", "--max-artifact-tokens"):
                 if flag not in help_result.stdout:
                     raise AssertionError(f"{script.relative_to(ROOT)} --help missing {flag}")
             # Artifact-profile scripts must honor both flow modes and emit the

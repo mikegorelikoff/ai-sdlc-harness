@@ -55,7 +55,7 @@ def main() -> int:
     args = parser.parse_args()
 
     flow = "full" if args.full_flow else "quick" if args.quick_flow else "default"
-    budget = args.budget_tokens or (2500 if flow == "full" else 1200 if flow == "quick" else 1800)
+    budget = args.budget_tokens or (4000 if flow == "quick" else 24000)
     pack, _, sources = build_context_pack(
         files=args.files, feature=args.feature, skill=args.skill,
         workspace=args.workspace, flow_mode=flow, budget_tokens=budget,
