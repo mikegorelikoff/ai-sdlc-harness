@@ -109,7 +109,9 @@ class SddArtifactScaffoldTests(unittest.TestCase):
                 artifact_owner="TBD",
                 artifact_tag=[],
             )
-            (spec_dir / "plan.toon").write_text(PLAN_LINKS.build_plan_toon(spec_dir, args), encoding="utf-8")
+            machine_plan = spec_dir / "_ai_sdlc/plan.toon"
+            machine_plan.parent.mkdir(parents=True, exist_ok=True)
+            machine_plan.write_text(PLAN_LINKS.build_plan_toon(spec_dir, args), encoding="utf-8")
             (spec_dir / "plan.md").write_text(PLAN_LINKS.build_plan(spec_dir, args), encoding="utf-8")
 
             self.assertEqual(CHECK_CLARIFY.validate(spec_dir), [])

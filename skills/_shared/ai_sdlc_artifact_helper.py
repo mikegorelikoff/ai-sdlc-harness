@@ -30,6 +30,7 @@ from pathlib import Path
 
 from ai_sdlc_specs_index import parse_artifact_metadata
 from ai_sdlc_specs_index import write_indexes_for_roots
+from ai_sdlc_paths import state_path
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
 from ai_sdlc_context import emit_context_pack, positive_int
 
@@ -508,7 +509,7 @@ def emit_profile_report(
     base_path = namespace_from_workspace(workspace)
     artifact_path = f"{base_path}/{feature}/{artifact_name}"
     decision_log_path = f"{base_path}/{feature}/decision-log.md"
-    state_file_path = f"{base_path}/{feature}/state.toon"
+    state_file_path = state_path(feature, workspace).as_posix()
 
     section = getattr(state_args, "section", None) if state_args is not None else None
     finalize = bool(getattr(state_args, "finalize", False)) if state_args is not None else False

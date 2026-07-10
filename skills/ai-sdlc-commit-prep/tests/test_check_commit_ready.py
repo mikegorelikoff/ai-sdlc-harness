@@ -147,7 +147,7 @@ def write_spec(spec_dir: Path, *, bad_acceptance: bool = False, decision_log: bo
         ## Upstream Refinement Sources
         - Quick-flow fixture.
         ## SDD Artifact Links
-        - requirements.md, design.md, test-cases.md, qa.md, tasks.md, plan.toon, decision-log.md
+        - requirements.md, design.md, test-cases.md, qa.md, tasks.md, _ai_sdlc/plan.toon, decision-log.md
         ## Cross-Artifact Trace Map
         - AC-001 -> TC-001 -> T001, T002, T003
         ## Task Execution Plan
@@ -165,7 +165,7 @@ def write_spec(spec_dir: Path, *, bad_acceptance: bool = False, decision_log: bo
         """,
     )
     write(
-        spec_dir / "plan.toon",
+        spec_dir / "_ai_sdlc/plan.toon",
         """
         feature: example
         workspace: implementation

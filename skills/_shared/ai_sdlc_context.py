@@ -19,6 +19,19 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
+from ai_sdlc_paths import (
+    INTERNAL_DIR,
+    context_cache_path as canonical_context_cache_path,
+    first_existing,
+    index_toon_path,
+    legacy_context_cache_path,
+    legacy_index_toon_path,
+    legacy_plan_toon_path,
+    legacy_state_path,
+    plan_toon_path,
+    state_path,
+)
+
 
 CONTEXT_SCHEMA = "ai-sdlc-context/v1"
 ID_RE = re.compile(
@@ -165,7 +178,10 @@ def resolve_sources(
         if workspace == "implementation":
             roots.append(root / "specs-refiniment")
         for workspace_root in roots:
-            candidates.extend(_index_artifact_paths(workspace_root / "specs-index.toon", aliases, root))
+            index = first_existing(
+                index_toon_path(workspace_root), legacy_index_toon_path(workspace_root)
+            )
+            candidates.extend(_index_artifact_paths(index, aliases, root))
         if not candidates:
             for workspace_root in roots:
                 for alias in aliases:
@@ -175,24 +191,36 @@ def resolve_sources(
 
     # State and decisions are cheap, high-value context even when body inputs
     # were supplied explicitly. Add only feature-local paths that exist.
-    for base in ("specs" if workspace == "implementation" else "specs-refiniment",):
-        for alias in _feature_aliases(feature):
-            for name in ("state.toon", "decision-log.md", "plan.toon"):
-                auxiliary = root / base / alias / name
-                if auxiliary.is_file():
-                    candidates.append(auxiliary)
+    for alias in _feature_aliases(feature):
+        feature_root = root / ("specs" if workspace == "implementation" else "specs-refiniment") / alias
+        auxiliaries = (
+            first_existing(
+                state_path(alias, workspace, root), legacy_state_path(alias, workspace, root)
+            ),
+            feature_root / "decision-log.md",
+            first_existing(plan_toon_path(feature_root), legacy_plan_toon_path(feature_root)),
+        )
+        candidates.extend(path for path in auxiliaries if path.is_file())
     if workspace == "implementation":
         for alias in _feature_aliases(feature):
-            for name in ("state.toon", "decision-log.md"):
-                auxiliary = root / "specs-refiniment" / alias / name
-                if auxiliary.is_file():
-                    candidates.append(auxiliary)
+            refinement_root = root / "specs-refiniment" / alias
+            auxiliaries = (
+                first_existing(
+                    state_path(alias, "refinement", root),
+                    legacy_state_path(alias, "refinement", root),
+                ),
+                refinement_root / "decision-log.md",
+            )
+            candidates.extend(path for path in auxiliaries if path.is_file())
 
     unique: list[Path] = []
     seen: set[str] = set()
     for path in candidates:
         key = str(path.resolve())
-        if key not in seen and ".ai-sdlc" not in path.parts:
+        derived_cache = ".ai-sdlc" in path.parts or (
+            INTERNAL_DIR in path.parts and "context" in path.parts
+        )
+        if key not in seen and not derived_cache:
             seen.add(key)
             unique.append(path)
     return [_source(path, root) for path in unique]
@@ -442,7 +470,7 @@ def build_context_pack(
 def context_cache_path(root: Path, workspace: str, feature: str, skill: str) -> Path:
     """Return the derived feature-local context cache path."""
     base = "specs" if workspace == "implementation" else "specs-refiniment"
-    return root / base / feature / ".ai-sdlc" / "context" / f"{skill}.toon"
+    return canonical_context_cache_path(root / base, feature, skill)
 
 
 def emit_context_pack(
@@ -463,8 +491,12 @@ def emit_context_pack(
         return text
 
     path = context_cache_path(root, workspace, feature, skill)
-    if not refresh and path.is_file():
-        cached = path.read_text(encoding="utf-8", errors="replace")
+    base = "specs" if workspace == "implementation" else "specs-refiniment"
+    read_path = first_existing(
+        path, legacy_context_cache_path(root / base, feature, skill)
+    )
+    if not refresh and read_path.is_file():
+        cached = read_path.read_text(encoding="utf-8", errors="replace")
         if f"schema: {CONTEXT_SCHEMA}" in cached and f"fingerprint: {fingerprint}" in cached:
             return re.sub(r"^cache_status: .*?$", "cache_status: hit", cached, count=1, flags=re.MULTILINE)
 

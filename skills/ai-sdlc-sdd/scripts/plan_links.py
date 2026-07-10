@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Create and validate SDD `plan.md` and `plan.toon` execution links.
+"""Create and validate SDD `plan.md` and `_ai_sdlc/plan.toon` execution links.
 
-`plan.toon` is the compact machine plan. `plan.md` is the human-readable view
+`_ai_sdlc/plan.toon` is the compact machine plan. `plan.md` is the human-readable view
 generated from the same links, with completed tasks reflected from TOON status.
 """
 
@@ -14,6 +14,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
 from ai_sdlc_artifact_helper import artifact_metadata_lines
+from ai_sdlc_paths import (
+    first_existing,
+    internal_dir,
+    legacy_plan_toon_path,
+    plan_toon_path,
+)
 from ai_sdlc_state_machine import add_state_arguments, flow_mode_from_args, run_state_action
 from ai_sdlc_specs_index import write_indexes_for_roots
 from spec_helpers import (
@@ -53,7 +59,8 @@ def build_plan_toon(spec_dir: Path, args: argparse.Namespace) -> str:
     acceptance_ids = parse_acceptance_ids(requirements_md)
     test_case_ids = parse_test_case_ids(test_cases_md)
     task_entries = parse_task_entries(tasks_md)
-    existing = parse_plan_toon_rows(read(spec_dir / "plan.toon"))
+    existing_plan = first_existing(plan_toon_path(spec_dir), legacy_plan_toon_path(spec_dir))
+    existing = parse_plan_toon_rows(read(existing_plan))
 
     lines = [
         f"feature: {feature}",
@@ -105,7 +112,7 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
     flow = flow_mode_from_args(args)
     artifact_path = spec_dir / "plan.md"
     decision_log = spec_dir / "decision-log.md"
-    state_file = spec_dir / "state.toon"
+    state_file = internal_dir(spec_dir) / "state.toon"
 
     metadata = artifact_metadata_lines(
         feature=feature,
@@ -122,7 +129,7 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
     requirements_md = read(spec_dir / "requirements.md")
     test_cases_md = read(spec_dir / "test-cases.md")
     tasks_md = read(spec_dir / "tasks.md")
-    plan_toon = read(spec_dir / "plan.toon")
+    plan_toon = read(first_existing(plan_toon_path(spec_dir), legacy_plan_toon_path(spec_dir)))
     acceptance_ids = parse_acceptance_ids(requirements_md)
     test_case_ids = parse_test_case_ids(test_cases_md)
     task_entries = parse_task_entries(tasks_md)
@@ -132,8 +139,8 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
         "# plan.md",
         "",
         "## Upstream Refinement Sources",
-        "- Refinement index: `specs-refiniment/specs-index.toon`",
-        "- Refinement state: `specs-refiniment/<feature-name>/state.toon`",
+        "- Refinement index: `specs-refiniment/_ai_sdlc/specs-index.toon`",
+        "- Refinement state: `specs-refiniment/<feature-name>/_ai_sdlc/state.toon`",
         "- Delivery spec: `specs-refiniment/<feature-name>/delivery-spec.md`",
         "- QA readiness: `specs-refiniment/<feature-name>/qa-readiness.md`",
         "- Decision trace: `decision-log.md`",
@@ -144,7 +151,7 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
         "- Test cases: `test-cases.md`",
         "- QA: `qa.md`",
         "- Tasks: `tasks.md`",
-        "- Machine plan: `plan.toon`",
+        "- Machine plan: `_ai_sdlc/plan.toon`",
         "- Decision log: `decision-log.md`",
         "",
         "## Cross-Artifact Trace Map",
@@ -196,13 +203,14 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
 
 
 def check_plan(spec_dir: Path) -> list[str]:
-    """Return plan.md/plan.toon link and coverage errors."""
+    """Return plan.md/machine-plan link and coverage errors."""
     plan = spec_dir / "plan.md"
-    plan_toon = spec_dir / "plan.toon"
+    canonical_plan_toon = plan_toon_path(spec_dir)
+    plan_toon = first_existing(canonical_plan_toon, legacy_plan_toon_path(spec_dir))
     if not plan.is_file():
         return [f"missing {plan}"]
     if not plan_toon.is_file():
-        return [f"missing {plan_toon}"]
+        return [f"missing {canonical_plan_toon}"]
 
     text = plan.read_text(encoding="utf-8")
     toon_text = plan_toon.read_text(encoding="utf-8")
@@ -226,7 +234,7 @@ def check_plan(spec_dir: Path) -> list[str]:
             errors.append(f"plan.md missing task link: {entry.task_id}")
         if entry.task_id not in toon_tasks:
             errors.append(f"plan.toon missing task row: {entry.task_id}")
-    for required_link in ("requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md", "plan.toon", "decision-log.md"):
+    for required_link in ("requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md", "_ai_sdlc/plan.toon", "decision-log.md"):
         if required_link not in text:
             errors.append(f"plan.md missing SDD artifact link: {required_link}")
     for required_toon_key in ("source_artifacts", "trace", "tasks", "validation_sequence"):
@@ -259,10 +267,12 @@ def main() -> int:
 
     if args.write:
         spec_dir.mkdir(parents=True, exist_ok=True)
-        (spec_dir / "plan.toon").write_text(build_plan_toon(spec_dir, args), encoding="utf-8")
+        machine_plan = plan_toon_path(spec_dir)
+        machine_plan.parent.mkdir(parents=True, exist_ok=True)
+        machine_plan.write_text(build_plan_toon(spec_dir, args), encoding="utf-8")
         (spec_dir / "plan.md").write_text(build_plan(spec_dir, args), encoding="utf-8")
         write_indexes_for_roots([ROOT / "specs"])
-        print(f"Wrote {spec_dir / 'plan.toon'}")
+        print(f"Wrote {machine_plan}")
         print(f"Wrote {spec_dir / 'plan.md'}")
 
     if args.emit_template:
@@ -277,7 +287,7 @@ def main() -> int:
             for error in errors:
                 print(f"ERROR: {error}", file=sys.stderr)
             return 1
-        print(f"Plan links valid: {spec_dir / 'plan.toon'} and {spec_dir / 'plan.md'}")
+        print(f"Plan links valid: {plan_toon_path(spec_dir)} and {spec_dir / 'plan.md'}")
 
     if not (args.write or args.emit_template or args.emit_toon or args.check):
         parser.print_help()

@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_paths import first_existing, legacy_plan_toon_path, plan_toon_path
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
 from spec_helpers import ROOT, parse_acceptance_ids, parse_task_entries, parse_test_case_ids
 
@@ -23,7 +24,7 @@ def validate(spec_dir: Path) -> list[str]:
     tasks = spec_dir / "tasks.md"
     qa = spec_dir / "qa.md"
     plan = spec_dir / "plan.md"
-    plan_toon = spec_dir / "plan.toon"
+    plan_toon = first_existing(plan_toon_path(spec_dir), legacy_plan_toon_path(spec_dir))
 
     missing = [path for path in (requirements, test_cases, tasks, qa, plan, plan_toon) if not path.is_file()]
     if missing:
@@ -75,7 +76,7 @@ def validate(spec_dir: Path) -> list[str]:
     if "## Validation Commands" not in qa_md:
         errors.append("qa.md missing Validation Commands section")
 
-    for required_link in ("requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md", "plan.toon", "decision-log.md"):
+    for required_link in ("requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md", "_ai_sdlc/plan.toon", "decision-log.md"):
         if required_link not in plan_md:
             errors.append(f"plan.md missing SDD artifact link: {required_link}")
 

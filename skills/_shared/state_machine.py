@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import sys
 
+from ai_sdlc_paths import first_existing, legacy_state_path
 from ai_sdlc_state_machine import (
     STAGE_BY_SKILL,
     begin_stage,
@@ -23,7 +24,8 @@ from ai_sdlc_state_machine import (
 def load_or_init(feature: str, workspace: str) -> tuple[object, object]:
     """Load existing state or create an in-memory initial state."""
     path = state_path(feature, workspace)
-    state = load_state(path) if path.exists() else initial_state(feature, workspace)
+    read_path = first_existing(path, legacy_state_path(feature, workspace))
+    state = load_state(read_path) if read_path.exists() else initial_state(feature, workspace)
     return path, state
 
 

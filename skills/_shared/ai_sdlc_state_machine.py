@@ -13,6 +13,8 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+from ai_sdlc_paths import first_existing, legacy_state_path, state_path, workspace_base
+
 
 STATUSES = {"not_started", "in_progress", "blocked", "done", "skipped", "not_applicable"}
 COMPLETE_STATUSES = {"done", "skipped", "not_applicable"}
@@ -64,16 +66,6 @@ STAGE_BY_ID = {stage.stage_id: stage for stage in STAGES}
 STAGE_BY_SKILL = {stage.skill: stage for stage in STAGES}
 
 
-def workspace_base(workspace: str) -> str:
-    """Return the artifact root folder for a state workspace."""
-    return "specs" if workspace == "implementation" else "specs-refiniment"
-
-
-def state_path(feature: str, workspace: str) -> Path:
-    """Return the persisted TOON state path for a feature/workspace pair."""
-    return Path(workspace_base(workspace)) / feature / "state.toon"
-
-
 def initial_state(feature: str, workspace: str, entrypoint: str | None = None) -> dict[str, object]:
     """Create a complete state dictionary with all lifecycle stages."""
     current_stage = entrypoint or ("sdd" if workspace == "implementation" else "discovery")
@@ -100,7 +92,7 @@ def initial_state(feature: str, workspace: str, entrypoint: str | None = None) -
         "flow_mode": "default",
         "updated_at": date.today().isoformat(),
         "decision_log": f"{workspace_base(workspace)}/{feature}/decision-log.md",
-        "upstream_state": f"specs-refiniment/{feature}/state.toon" if workspace == "implementation" else "",
+        "upstream_state": state_path(feature, "refinement").as_posix() if workspace == "implementation" else "",
         "stages": stages,
         "skips": [],
     }
@@ -334,7 +326,8 @@ def run_state_action(args: argparse.Namespace, skill: str, workspace: str, artif
         return 1
     resolved_workspace = getattr(args, "state_workspace", None) or workspace
     path = state_path(feature, resolved_workspace)
-    state = load_state(path) if path.exists() else initial_state(feature, resolved_workspace)
+    read_path = first_existing(path, legacy_state_path(feature, resolved_workspace))
+    state = load_state(read_path) if read_path.exists() else initial_state(feature, resolved_workspace)
     flow = flow_mode_from_args(args)
     decision_ref = getattr(args, "decision_ref", "")
     assumption = getattr(args, "assumption", "")

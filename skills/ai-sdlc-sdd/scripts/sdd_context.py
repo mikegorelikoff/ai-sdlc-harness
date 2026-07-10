@@ -9,6 +9,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
 from ai_sdlc_context import emit_context_pack, positive_int
+from ai_sdlc_paths import (
+    first_existing,
+    internal_dir,
+    legacy_plan_toon_path,
+    plan_toon_path,
+)
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
 from spec_helpers import ROOT, is_feature_spec_name
 
@@ -37,12 +43,21 @@ def main() -> int:
     state_rc = run_state_action(args, "ai-sdlc-sdd", "implementation", str(spec_dir))
     if state_rc:
         return state_rc
-    names = (
-        "requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md",
-        "plan.toon", "decision-log.md", "state.toon",
+    files = (
+        spec_dir / "requirements.md",
+        spec_dir / "design.md",
+        spec_dir / "test-cases.md",
+        spec_dir / "qa.md",
+        spec_dir / "tasks.md",
+        first_existing(plan_toon_path(spec_dir), legacy_plan_toon_path(spec_dir)),
+        spec_dir / "decision-log.md",
+        first_existing(
+            internal_dir(spec_dir) / "state.toon",
+            spec_dir / "state.toon",
+        ),
     )
     output = emit_context_pack(
-        files=[spec_dir / name for name in names],
+        files=list(files),
         feature=feature,
         skill="ai-sdlc-sdd",
         workspace="implementation",

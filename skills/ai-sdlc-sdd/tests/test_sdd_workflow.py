@@ -162,7 +162,7 @@ def write_full_plan(spec_dir: Path, include_ac: bool = True, include_tc: bool = 
         - test-cases.md
         - qa.md
         - tasks.md
-        - plan.toon
+        - _ai_sdlc/plan.toon
         - decision-log.md
         ## Cross-Artifact Trace Map
         - {ac}: requirements.md -> test-cases.md ({tc}) -> tasks.md ({task_refs}) -> qa.md -> decision-log.md
@@ -183,9 +183,9 @@ def write_full_plan(spec_dir: Path, include_ac: bool = True, include_tc: bool = 
 
 
 def write_full_plan_toon(spec_dir: Path, status: str = "pending") -> None:
-    """Create plan.toon linking task status and trace rows for gates."""
+    """Create _ai_sdlc/plan.toon linking task status and trace rows for gates."""
     write(
-        spec_dir / "plan.toon",
+        spec_dir / "_ai_sdlc/plan.toon",
         f"""
         feature: example
         workspace: implementation
@@ -379,12 +379,12 @@ class GateTests(unittest.TestCase):
                     "artifact_tag": [],
                 },
             )()
-            (spec_dir / "plan.toon").write_text(PLAN_LINKS.build_plan_toon(spec_dir, args), encoding="utf-8")
+            write(spec_dir / "_ai_sdlc/plan.toon", PLAN_LINKS.build_plan_toon(spec_dir, args))
             (spec_dir / "plan.md").write_text(PLAN_LINKS.build_plan(spec_dir, args), encoding="utf-8")
             self.assertEqual(PLAN_LINKS.check_plan(spec_dir), [])
 
     def test_plan_links_marks_done_tasks_from_plan_toon(self) -> None:
-        """Plan helper should close plan.md tasks when plan.toon status is done."""
+        """Plan helper should close plan.md tasks when _ai_sdlc/plan.toon status is done."""
         with tempfile.TemporaryDirectory() as temp_dir:
             spec_dir = Path(temp_dir) / "185-example"
             spec_dir.mkdir()
@@ -427,7 +427,7 @@ class GateTests(unittest.TestCase):
             spec_dir.mkdir()
             refinement_dir = root / "specs-refiniment" / "example"
             write(
-                refinement_dir / "state.toon",
+                refinement_dir / "_ai_sdlc/state.toon",
                 """
                 feature: example
                 workspace: refinement

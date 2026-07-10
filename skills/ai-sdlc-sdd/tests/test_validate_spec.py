@@ -16,6 +16,7 @@ VALIDATOR = ROOT / "skills" / "ai-sdlc-sdd" / "scripts" / "validate_spec.py"
 
 def write(path: Path, text: str) -> None:
     """Write dedented fixture text to a spec artifact."""
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(textwrap.dedent(text).strip() + "\n", encoding="utf-8")
 
 
@@ -111,7 +112,7 @@ class ValidateSpecTests(unittest.TestCase):
                 """,
             )
             write(
-                spec_dir / "plan.toon",
+                spec_dir / "_ai_sdlc/plan.toon",
                 """
                 feature: example
                 workspace: implementation
@@ -234,7 +235,7 @@ class ValidateSpecTests(unittest.TestCase):
                 """,
             )
             write(
-                spec_dir / "plan.toon",
+                spec_dir / "_ai_sdlc/plan.toon",
                 """
                 feature: example
                 workspace: implementation
@@ -329,7 +330,7 @@ class ValidateSpecTests(unittest.TestCase):
             self.assertIn("test-cases.md", result.stderr)
             self.assertIn("qa.md", result.stderr)
             self.assertIn("plan.md", result.stderr)
-            self.assertIn("plan.toon", result.stderr)
+            self.assertIn("_ai_sdlc/plan.toon", result.stderr)
 
 
 if __name__ == "__main__":

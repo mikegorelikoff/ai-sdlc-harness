@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_paths import first_existing, legacy_plan_toon_path, plan_toon_path
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
 
 
@@ -71,10 +72,13 @@ def changed_files(base: str | None, full_repo: bool) -> list[str]:
 def spec_errors(spec_dir: Path) -> list[str]:
     """Validate minimum SDD evidence needed for a review-ready feature."""
     errors: list[str] = []
-    required = ["requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md", "plan.md", "plan.toon"]
+    required = ["requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md", "plan.md"]
     for name in required:
         if not (spec_dir / name).is_file():
             errors.append(f"missing {spec_dir / name}")
+    machine_plan = first_existing(plan_toon_path(spec_dir), legacy_plan_toon_path(spec_dir))
+    if not machine_plan.is_file():
+        errors.append(f"missing {plan_toon_path(spec_dir)}")
 
     tasks = spec_dir / "tasks.md"
     if tasks.is_file():

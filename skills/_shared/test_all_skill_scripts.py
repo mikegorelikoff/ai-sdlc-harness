@@ -18,6 +18,8 @@ import unittest
 from pathlib import Path
 
 from ai_sdlc_context import emit_context_pack, estimate_tokens, toon_row
+from ai_sdlc_specs_index import write_indexes_for_roots
+from ai_sdlc_state_machine import STAGES, initial_state, to_toon
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -216,7 +218,7 @@ def write_valid_spec(spec_dir: Path) -> None:
         - test-cases.md
         - qa.md
         - tasks.md
-        - plan.toon
+        - _ai_sdlc/plan.toon
         - decision-log.md
         ## Cross-Artifact Trace Map
         - AC-001: requirements.md -> test-cases.md (TC-001) -> tasks.md (T001, T002, T003) -> qa.md -> decision-log.md
@@ -235,7 +237,7 @@ def write_valid_spec(spec_dir: Path) -> None:
         """,
     )
     write(
-        spec_dir / "plan.toon",
+        spec_dir / "_ai_sdlc/plan.toon",
         """
         feature: script-contract
         workspace: implementation
@@ -275,7 +277,7 @@ def write_valid_spec(spec_dir: Path) -> None:
     feature = spec_dir.name.split("-", 1)[1] if "-" in spec_dir.name else spec_dir.name
     refinement_dir = spec_dir.parent / "specs-refiniment" / feature
     write(
-        refinement_dir / "state.toon",
+        refinement_dir / "_ai_sdlc/state.toon",
         f"""
         feature: {feature}
         workspace: refinement
@@ -344,6 +346,8 @@ class ScriptContractTests(unittest.TestCase):
             second = emit_context_pack(**kwargs)
             self.assertIn("cache_status: refreshed", first)
             self.assertIn("cache_status: hit", second)
+            cache = cwd / "specs-refiniment/cache-demo/_ai_sdlc/context/ai-sdlc-ba.toon"
+            self.assertTrue(cache.is_file())
             source.write_text("# Input\n\n## Goal\nREQ-002: Changed value.\n", encoding="utf-8")
             changed = emit_context_pack(**kwargs)
             self.assertIn("cache_status: refreshed", changed)
@@ -391,7 +395,12 @@ class ScriptContractTests(unittest.TestCase):
     def test_every_cli_script_exposes_state_flags(self) -> None:
         """Every CLI helper should expose the shared feature-state flags."""
         for path in cli_script_paths():
-            if path.name in {"state_machine.py", "ai_sdlc_specs_index.py", "ai_sdlc_context_benchmark.py"}:
+            if path.name in {
+                "state_machine.py",
+                "ai_sdlc_specs_index.py",
+                "ai_sdlc_context_benchmark.py",
+                "refinement_status.py",
+            }:
                 continue
             with self.subTest(path=path.relative_to(ROOT)):
                 result = run_script(path, "--help")
@@ -459,7 +468,7 @@ class ScriptContractTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             artifact = cwd / "specs-refiniment/write-contract/business-context.md"
             decision_log = cwd / "specs-refiniment/write-contract/decision-log.md"
-            toon_index = cwd / "specs-refiniment/specs-index.toon"
+            toon_index = cwd / "specs-refiniment/_ai_sdlc/specs-index.toon"
             md_index = cwd / "specs-refiniment/specs-index.md"
             self.assertTrue(artifact.is_file())
             self.assertTrue(decision_log.is_file())
@@ -477,6 +486,74 @@ class ScriptContractTests(unittest.TestCase):
             self.assertIn("DEC-001", decision_log_text)
             self.assertIn("features[1]", toon_index.read_text(encoding="utf-8"))
             self.assertIn("business-context.md", md_index.read_text(encoding="utf-8"))
+
+    def test_complete_refinement_status_requires_all_18_artifacts(self) -> None:
+        """Full refinement must include every stage and print status without summary files."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            cwd = Path(temp_dir)
+            feature = "complete-refinement"
+            workspace_root = cwd / "specs-refiniment"
+            feature_root = workspace_root / feature
+            state = initial_state(feature, "refinement")
+            refinement_stages = [stage for stage in STAGES if stage.workspace == "refinement"]
+            self.assertEqual(len(refinement_stages), 18)
+            for row in state["stages"]:
+                if row["workspace"] == "refinement":
+                    row["status"] = "done"
+            state["current_stage"] = "delivery_handoff"
+            write(feature_root / "_ai_sdlc/state.toon", to_toon(state))
+            write(feature_root / "decision-log.md", "# Decision Log\n")
+            for stage in refinement_stages:
+                artifact_path = f"specs-refiniment/{feature}/{stage.artifacts}"
+                write(
+                    feature_root / stage.artifacts,
+                    f"""
+                    ---
+                    artifact_metadata:
+                      feature: "{feature}"
+                      artifact: "{stage.artifacts}"
+                      path: "{artifact_path}"
+                      workspace: "refinement"
+                      skill: "{stage.skill}"
+                      status: "review"
+                      metatags: []
+                    ---
+
+                    # {stage.artifacts}
+                    """,
+                )
+            write_indexes_for_roots([workspace_root])
+
+            script = ROOT / "skills/_shared/refinement_status.py"
+            complete = run_script(
+                script,
+                "--feature",
+                feature,
+                "--root",
+                str(cwd),
+                "--format",
+                "markdown",
+                cwd=cwd,
+            )
+            self.assertEqual(complete.returncode, 0, complete.stderr)
+            self.assertIn("`18/18`", complete.stdout)
+            self.assertFalse(any(cwd.rglob("*summary*.txt")))
+            self.assertTrue(all("_ai_sdlc" in path.parts for path in cwd.rglob("*.toon")))
+
+            (feature_root / "release-slicing.md").unlink()
+            incomplete = run_script(
+                script,
+                "--feature",
+                feature,
+                "--root",
+                str(cwd),
+                "--format",
+                "toon",
+                cwd=cwd,
+            )
+            self.assertEqual(incomplete.returncode, 1)
+            self.assertIn("ai-sdlc-release-slicing-and-backlog-readiness-review", incomplete.stdout)
+            self.assertIn("release-slicing.md", incomplete.stdout)
 
     def test_artifact_profile_writes_sections_from_stdin_and_finalizes(self) -> None:
         """The AI should supply only section bodies while the script owns files."""
@@ -525,14 +602,14 @@ class ScriptContractTests(unittest.TestCase):
             self.assertNotIn("ai-sdlc:empty", artifact_text)
             self.assertIn('status: "review"', artifact_text)
             self.assertIn('"AC-001"', artifact_text)
-            self.assertTrue((cwd / "specs-refiniment/specs-index.toon").is_file())
+            self.assertTrue((cwd / "specs-refiniment/_ai_sdlc/specs-index.toon").is_file())
 
     def test_specs_index_cli_writes_toon_and_markdown_indexes(self) -> None:
         """Specs index CLI must summarize features for LLMs and humans."""
         with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
             cwd = Path(temp_dir)
             write(
-                cwd / "specs-refiniment/demo/state.toon",
+                cwd / "specs-refiniment/demo/_ai_sdlc/state.toon",
                 """
                 feature: demo
                 workspace: refinement
@@ -560,7 +637,7 @@ class ScriptContractTests(unittest.TestCase):
                   workspace: "refinement"
                   skill: "ai-sdlc-ba"
                   flow_mode: "quick"
-                  state_file: "specs-refiniment/demo/state.toon"
+                  state_file: "specs-refiniment/demo/_ai_sdlc/state.toon"
                   decision_log: "specs-refiniment/demo/decision-log.md"
                   status: "draft"
                   owner: "BA"
@@ -588,7 +665,7 @@ class ScriptContractTests(unittest.TestCase):
                 cwd=cwd,
             )
             self.assertEqual(result.returncode, 0, result.stderr)
-            toon_index = cwd / "specs-refiniment/specs-index.toon"
+            toon_index = cwd / "specs-refiniment/_ai_sdlc/specs-index.toon"
             md_index = cwd / "specs-refiniment/specs-index.md"
             self.assertTrue(toon_index.is_file())
             self.assertTrue(md_index.is_file())
@@ -621,7 +698,7 @@ class ScriptContractTests(unittest.TestCase):
             self.assertIn("schema: ai-sdlc-context/v1", context.stdout)
             for trace_id in ("AC-001", "TC-001", "T001", "DEC-001"):
                 self.assertIn(trace_id, context.stdout)
-            self.assertIn("plan.toon", context.stdout)
+            self.assertIn("_ai_sdlc/plan.toon", context.stdout)
             resolved = run_script(ROOT / "skills/ai-sdlc-sdd/scripts/resolve_active_spec.py", str(spec_dir), "--quick-flow")
             self.assertEqual(resolved.returncode, 0, resolved.stderr)
             self.assertIn("explicit", resolved.stdout)
@@ -691,6 +768,28 @@ class ScriptContractTests(unittest.TestCase):
                 self.assertIn("## 0.7 Specs Index", text)
                 self.assertIn("specs-index.toon", text)
                 self.assertIn("specs-index.md", text)
+
+    def test_every_skill_routes_machine_files_and_summaries_consistently(self) -> None:
+        """Every skill must hide TOON writes and keep summaries in Codex."""
+        for skill_doc in sorted((ROOT / "skills").glob("*/SKILL.md")):
+            with self.subTest(skill_doc=skill_doc.relative_to(ROOT)):
+                text = skill_doc.read_text(encoding="utf-8")
+                self.assertIn("_ai_sdlc/state.toon", text)
+                self.assertIn("_ai_sdlc/specs-index.toon", text)
+                self.assertIn("Do not create `summary.txt`", text)
+                self.assertIn("directly in the Codex response", text)
+
+    def test_exactly_18_refinement_skills_document_complete_cascade(self) -> None:
+        """Only lifecycle refinement skills should advertise the complete cascade."""
+        cascade_docs = []
+        for skill_doc in sorted((ROOT / "skills").glob("*/SKILL.md")):
+            text = skill_doc.read_text(encoding="utf-8")
+            if "## 0.8 Complete Refinement Cascade" in text:
+                cascade_docs.append(skill_doc)
+                self.assertIn("all 18 canonical Markdown artifacts", text)
+                self.assertIn("normal `--full-flow` call for one skill remains single-stage", text)
+                self.assertIn("refinement_status.py", text)
+        self.assertEqual(len(cascade_docs), 18)
 
 
 if __name__ == "__main__":

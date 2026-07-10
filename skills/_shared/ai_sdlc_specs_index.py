@@ -15,11 +15,18 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+from ai_sdlc_paths import (
+    INDEX_TOON,
+    INTERNAL_DIR,
+    first_existing,
+    index_toon_path,
+    legacy_state_path,
+    state_path,
+)
 from ai_sdlc_state_machine import csv_escape, from_toon
 
 
 WORKSPACE_ROOTS = ("specs-refiniment", "specs")
-INDEX_TOON = "specs-index.toon"
 INDEX_MD = "specs-index.md"
 
 
@@ -146,7 +153,11 @@ def artifact_entry(path: Path, workspace_root: Path, feature: str) -> ArtifactEn
 def feature_entry(feature_dir: Path, workspace_root: Path, artifacts: list[ArtifactEntry]) -> FeatureEntry:
     """Build a feature summary row from state.toon and artifact entries."""
     workspace = workspace_for_root(workspace_root)
-    state_file = feature_dir / "state.toon"
+    canonical_state = state_path(feature_dir.name, workspace, workspace_root.parent)
+    state_file = first_existing(
+        canonical_state,
+        legacy_state_path(feature_dir.name, workspace, workspace_root.parent),
+    )
     state: dict[str, object] = {}
     if state_file.exists():
         state = from_toon(state_file.read_text(encoding="utf-8"))
@@ -172,7 +183,9 @@ def scan_workspace(workspace_root: Path) -> tuple[list[FeatureEntry], list[Artif
     if not workspace_root.exists():
         return features, artifacts
 
-    for feature_dir in sorted(path for path in workspace_root.iterdir() if path.is_dir()):
+    for feature_dir in sorted(
+        path for path in workspace_root.iterdir() if path.is_dir() and path.name != INTERNAL_DIR
+    ):
         feature_artifacts = [
             artifact_entry(path, workspace_root, feature_dir.name)
             for path in sorted(feature_dir.glob("*.md"))
@@ -310,8 +323,9 @@ def write_workspace_index(workspace_root: Path) -> tuple[Path, Path]:
     """Write TOON and Markdown indexes for one workspace root."""
     features, artifacts = scan_workspace(workspace_root)
     workspace_root.mkdir(parents=True, exist_ok=True)
-    toon_path = workspace_root / INDEX_TOON
+    toon_path = index_toon_path(workspace_root)
     md_path = workspace_root / INDEX_MD
+    toon_path.parent.mkdir(parents=True, exist_ok=True)
     toon_path.write_text(render_toon(workspace_root, features, artifacts), encoding="utf-8")
     md_path.write_text(render_markdown(workspace_root, features, artifacts), encoding="utf-8")
     return toon_path, md_path

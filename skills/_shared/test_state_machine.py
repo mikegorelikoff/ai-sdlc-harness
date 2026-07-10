@@ -87,7 +87,7 @@ class StateMachineTests(unittest.TestCase):
                 stderr=subprocess.PIPE,
             )
             self.assertEqual(init.returncode, 0, init.stderr)
-            self.assertTrue((cwd / "specs-refiniment/cli-demo/state.toon").is_file())
+            self.assertTrue((cwd / "specs-refiniment/cli-demo/_ai_sdlc/state.toon").is_file())
 
             status = subprocess.run(
                 [
@@ -108,6 +108,40 @@ class StateMachineTests(unittest.TestCase):
             self.assertEqual(status.returncode, 0, status.stderr)
             self.assertIn("feature: cli-demo", status.stdout)
             self.assertIn("stages[", status.stdout)
+
+    def test_cli_reads_legacy_state_but_writes_canonical_state(self) -> None:
+        """State mutations should migrate forward without overwriting legacy files."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            cwd = Path(temp_dir)
+            legacy = cwd / "specs-refiniment/legacy-demo/state.toon"
+            legacy.parent.mkdir(parents=True, exist_ok=True)
+            legacy_text = sm.to_toon(sm.initial_state("legacy-demo", "refinement", "discovery"))
+            legacy.write_text(legacy_text, encoding="utf-8")
+
+            begin = subprocess.run(
+                [
+                    sys.executable,
+                    str(CLI),
+                    "begin",
+                    "--feature",
+                    "legacy-demo",
+                    "--workspace",
+                    "refinement",
+                    "--skill",
+                    "ai-sdlc-working-backwards-discovery",
+                    "--full-flow",
+                ],
+                cwd=cwd,
+                check=False,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            self.assertEqual(begin.returncode, 0, begin.stderr)
+            canonical = cwd / "specs-refiniment/legacy-demo/_ai_sdlc/state.toon"
+            self.assertTrue(canonical.is_file())
+            self.assertIn("active_skill: ai-sdlc-working-backwards-discovery", canonical.read_text(encoding="utf-8"))
+            self.assertEqual(legacy.read_text(encoding="utf-8"), legacy_text)
 
 
 if __name__ == "__main__":

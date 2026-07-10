@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_paths import first_existing, legacy_plan_toon_path, plan_toon_path
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
 from spec_helpers import SDD_ARTIFACT_SECTIONS, plan_required_sections
 
@@ -35,7 +36,11 @@ def headings(markdown: str) -> set[str]:
 
 def require_file(spec_dir: Path, name: str) -> tuple[Path, str, list[str]]:
     """Read a required file or return a normalized missing-file error."""
-    path = spec_dir / name
+    path = (
+        first_existing(plan_toon_path(spec_dir), legacy_plan_toon_path(spec_dir))
+        if name == "plan.toon"
+        else spec_dir / name
+    )
     if not path.is_file():
         return path, "", [f"missing {path}"]
     return path, path.read_text(encoding="utf-8"), []

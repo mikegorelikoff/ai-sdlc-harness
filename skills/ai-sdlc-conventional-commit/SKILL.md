@@ -51,6 +51,9 @@ description: AI SDLC Conventional Commit workflow. Use when an AI assistant draf
 - Make findings, gaps, risks, and blockers explicit.
 - Tie recommendations to evidence from the provided artifact, repository, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
 - Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
+- Return progress, completion, validation, and handoff summaries directly in the Codex response.
+- Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file unless the user explicitly requests one.
+- Keep durable writes limited to the canonical lifecycle artifacts, decision log, human-readable index, and `_ai_sdlc` machine files.
 
 ### 0.4 Artifact Routing
 
@@ -74,7 +77,7 @@ description: AI SDLC Conventional Commit workflow. Use when an AI assistant draf
 
 ## 0.5 Feature State Machine
 
-- Maintain feature lifecycle state in TOON at `specs-refiniment/<feature-name>/state.toon` for refinement work and `specs/<feature-name>/state.toon` for implementation work.
+- Maintain feature lifecycle state in TOON at `specs-refiniment/<feature-name>/_ai_sdlc/state.toon` for refinement work and `specs/<feature-name>/_ai_sdlc/state.toon` for implementation work.
 - Before executing this skill for a feature, check the state machine with `python3 skills/_shared/state_machine.py check --feature <feature-name> --skill <this-skill-name> --workspace <refinement|implementation> --quick-flow|--full-flow`.
 - When this skill starts durable work, mark it in progress with `begin`; when the skill's required artifact or review is complete, mark it done with `complete` and include `--artifacts <path>` plus `--decision-ref DEC-###` when a decision was involved.
 - In `--full-flow`, do not proceed when predecessor stages are incomplete, another lifecycle skill is active, or the state file reports a blocker.
@@ -94,7 +97,7 @@ description: AI SDLC Conventional Commit workflow. Use when an AI assistant draf
 
 ## 0.7 Specs Index
 
-- Before searching across feature folders, inspect the compact LLM index first: `specs-refiniment/specs-index.toon` for refinement work or `specs/specs-index.toon` for implementation work.
+- Before searching across feature folders, inspect the compact LLM index first: `specs-refiniment/_ai_sdlc/specs-index.toon` for refinement work or `specs/_ai_sdlc/specs-index.toon` for implementation work.
 - Use the human-readable index at `specs-refiniment/specs-index.md` or `specs/specs-index.md` when reporting feature coverage, artifact inventory, or handoff status to people.
 - After this skill creates or materially updates an artifact, refresh the matching workspace index with `python3 skills/_shared/ai_sdlc_specs_index.py --workspace <refinement|implementation> --quick-flow|--full-flow`.
 - In `--quick-flow`, rely on `specs-index.toon` to choose the smallest relevant artifact set before opening files.

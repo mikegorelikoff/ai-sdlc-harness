@@ -1,6 +1,6 @@
 ---
 name: ai-sdlc-test-cases
-description: AI SDLC test-case-driven testing workflow. Use when an AI assistant is asked to derive test cases, create a test plan, expand coverage, or write tests from explicit scenarios before implementing unit, service, transport, or integration tests. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
+description: AI SDLC test-case-driven testing workflow. Use when an AI assistant is asked to derive test cases, create a test plan, expand coverage, or write tests from explicit scenarios before implementing unit, service, transport, or integration tests. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
 ---
 
 # ai-sdlc-test-cases: Test Cases For Implementation
@@ -51,6 +51,9 @@ description: AI SDLC test-case-driven testing workflow. Use when an AI assistant
 - Make findings, gaps, risks, and blockers explicit.
 - Tie recommendations to evidence from the provided artifact, `specs-refiniment/<feature-name>/<file.md>` workspace, stakeholder context, or user-provided source material.
 - Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
+- Return progress, completion, validation, and handoff summaries directly in the Codex response.
+- Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file unless the user explicitly requests one.
+- Keep durable writes limited to the canonical lifecycle artifacts, decision log, human-readable index, and `_ai_sdlc` machine files.
 
 ### 0.4 Artifact Routing
 
@@ -75,7 +78,7 @@ description: AI SDLC test-case-driven testing workflow. Use when an AI assistant
 
 ## 0.5 Feature State Machine
 
-- Maintain feature lifecycle state in TOON at `specs-refiniment/<feature-name>/state.toon` for refinement work and `specs/<feature-name>/state.toon` for implementation work.
+- Maintain feature lifecycle state in TOON at `specs-refiniment/<feature-name>/_ai_sdlc/state.toon` for refinement work and `specs/<feature-name>/_ai_sdlc/state.toon` for implementation work.
 - Before executing this skill for a feature, check the state machine with `python3 skills/_shared/state_machine.py check --feature <feature-name> --skill <this-skill-name> --workspace <refinement|implementation> --quick-flow|--full-flow`.
 - When this skill starts durable work, mark it in progress with `begin`; when the skill's required artifact or review is complete, mark it done with `complete` and include `--artifacts <path>` plus `--decision-ref DEC-###` when a decision was involved.
 - In `--full-flow`, do not proceed when predecessor stages are incomplete, another lifecycle skill is active, or the state file reports a blocker.
@@ -95,12 +98,22 @@ description: AI SDLC test-case-driven testing workflow. Use when an AI assistant
 
 ## 0.7 Specs Index
 
-- Before searching across feature folders, inspect the compact LLM index first: `specs-refiniment/specs-index.toon` for refinement work or `specs/specs-index.toon` for implementation work.
+- Before searching across feature folders, inspect the compact LLM index first: `specs-refiniment/_ai_sdlc/specs-index.toon` for refinement work or `specs/_ai_sdlc/specs-index.toon` for implementation work.
 - Use the human-readable index at `specs-refiniment/specs-index.md` or `specs/specs-index.md` when reporting feature coverage, artifact inventory, or handoff status to people.
 - After this skill creates or materially updates an artifact, refresh the matching workspace index with `python3 skills/_shared/ai_sdlc_specs_index.py --workspace <refinement|implementation> --quick-flow|--full-flow`.
 - In `--quick-flow`, rely on `specs-index.toon` to choose the smallest relevant artifact set before opening files.
 - In `--full-flow`, verify the updated artifact appears in both `specs-index.toon` and `specs-index.md` before final handoff.
 - The specs index summarizes artifact metadata and state; it does not replace reading the selected source artifacts when details, approvals, or validation evidence matter.
+
+## 0.8 Complete Refinement Cascade
+
+- Trigger the complete cascade only when the user explicitly asks for a full, complete, or end-to-end spec refinement or asks for every refinement artifact. A normal `--full-flow` call for one skill remains single-stage.
+- Before the first durable write, run `python3 skills/_shared/refinement_status.py --feature <feature-name> --format toon` and start with the earliest reported `next_skill`, including stages earlier than this skill.
+- Execute the existing refinement skills in lifecycle order with `--full-flow`: discovery, PRFAQ, delivery-package gap review, requirements readiness, goal/capability mapping, backlog gap review, backlog decomposition, story decomposition, release slicing, BA context, delivery spec, QA plan, QA gap review, test strategy, test cases, test suite, QA readiness, and delivery handoff.
+- Produce all 18 canonical Markdown artifacts. `release-slicing.md` is mandatory for a complete cascade; when release slicing is not applicable, write an explicit evidence-backed N/A artifact and complete the stage instead of skipping it.
+- After every stage, finalize its artifact, record required decisions, mark the stage `done`, and refresh the refinement indexes before selecting the next skill.
+- Do not declare the cascade complete until `python3 skills/_shared/refinement_status.py --feature <feature-name> --format markdown` exits successfully with `18/18`. If it fails, continue with the reported next skill or return the concrete blocker and remaining inventory in Codex.
+- Surface checkpoint and final summaries in Codex only; never persist a cascade summary as a text file.
 
 ## References
 

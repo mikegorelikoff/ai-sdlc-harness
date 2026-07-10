@@ -10,8 +10,12 @@ from __future__ import annotations
 
 import re
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_paths import first_existing, internal_dir
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -392,7 +396,10 @@ def upstream_refinement_errors(spec_dir: Path, explicit_feature: str = "") -> li
     local_refinement_root = spec_dir.parent / "specs-refiniment"
     refinement_root = local_refinement_root if local_refinement_root.is_dir() else ROOT / "specs-refiniment"
     refinement_dir = refinement_root / feature
-    state_file = refinement_dir / "state.toon"
+    state_file = first_existing(
+        internal_dir(refinement_dir) / "state.toon",
+        refinement_dir / "state.toon",
+    )
     errors: list[str] = []
 
     if not state_file.is_file():
