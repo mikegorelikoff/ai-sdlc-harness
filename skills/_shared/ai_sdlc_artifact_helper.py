@@ -25,24 +25,31 @@ import os
 import re
 import sys
 import tempfile
+from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
 from ai_sdlc_artifact_profiles import (
     COMMON_CONTEXT_SECTIONS,
+    MAX_ARTIFACT_TOKENS,
+    QUICK_CONTEXT_TOKENS,
+    STANDARD_CONTEXT_TOKENS,
     profile_for_skill,
     required_sections as profile_sections,
     required_tables as profile_tables,
 )
 from ai_sdlc_context import (
+    context_cache_path as skill_context_path,
     emit_context_pack,
     estimate_tokens,
     feature_context_path,
     positive_int,
     source_paths_from_context,
+    stale_sources_from_context,
 )
 from ai_sdlc_specs_index import parse_artifact_metadata
 from ai_sdlc_specs_index import write_indexes_for_roots
+from ai_sdlc_migrate import MigrationConflict, migrate_workspace
 from ai_sdlc_paths import state_path
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
 
@@ -439,7 +446,16 @@ def placeholder_only(content: str) -> bool:
     return not re.sub(r"\s+", "", normalized)
 
 
-def artifact_quality_errors(
+@dataclass(frozen=True)
+class QualityIssue:
+    """One stable artifact-quality signal with gate severity."""
+
+    code: str
+    severity: str
+    detail: str
+
+
+def artifact_quality_issues(
     *,
     text: str,
     required_sections: list[str],
@@ -448,26 +464,33 @@ def artifact_quality_errors(
     artifact_path: str,
     max_tokens: int,
     required_tables: dict[str, tuple[str, ...]] | None = None,
-) -> list[str]:
+) -> list[QualityIssue]:
     """Validate self-contained context depth, source coverage, and size."""
-    errors: list[str] = []
+    issues: list[QualityIssue] = []
+
+    def add(code: str, detail: str, *, heuristic: bool = False) -> None:
+        severity = "error" if not heuristic or flow_mode == "full" else "warning"
+        issues.append(QualityIssue(code, severity, detail))
+
     estimated = estimate_tokens(text)
     if estimated > max_tokens:
-        errors.append(f"artifact exceeds --max-artifact-tokens: {estimated}>{max_tokens}")
+        add("artifact_too_large", f"artifact exceeds --max-artifact-tokens: {estimated}>{max_tokens}")
     if flow_mode == "quick":
-        return errors
+        return issues
 
     for section in required_sections:
         content = section_body(text, section, required_sections)
         lines = meaningful_content_lines(content)
         words = len(re.findall(r"\S+", content))
         if placeholder_only(content):
-            errors.append(f"placeholder-only section: {section}")
+            add("placeholder_section", f"placeholder-only section: {section}")
             continue
         minimum_words = 8 if section == "Source Coverage" else 20 if section in COMMON_CONTEXT_SECTIONS else 12
         if len(lines) < 2 and words < minimum_words:
-            errors.append(
-                f"section lacks meaningful detail: {section} ({words} words, {len(lines)} content lines)"
+            add(
+                "shallow_section",
+                f"section lacks meaningful detail: {section} ({words} words, {len(lines)} content lines)",
+                heuristic=True,
             )
 
     if "Source Coverage" in required_sections:
@@ -476,7 +499,7 @@ def artifact_quality_errors(
             if source == artifact_path or source.endswith("/state.toon"):
                 continue
             if source not in source_coverage:
-                errors.append(f"Source Coverage missing: {source}")
+                add("missing_source_coverage", f"Source Coverage missing: {source}")
 
     for section, headers in (required_tables or {}).items():
         content = section_body(text, section, required_sections)
@@ -490,8 +513,9 @@ def artifact_quality_errors(
             None,
         )
         if header_line is None:
-            errors.append(
-                f"section {section} missing required table columns: {', '.join(headers)}"
+            add(
+                "missing_table_columns",
+                f"section {section} missing required table columns: {', '.join(headers)}",
             )
             continue
         data_rows = [
@@ -500,7 +524,7 @@ def artifact_quality_errors(
             if line != header_line and not re.fullmatch(r"\|?[\s:|-]+\|?", line)
         ]
         if not data_rows or all(placeholder_only(line) for line in data_rows):
-            errors.append(f"section {section} has no populated table rows")
+            add("empty_required_table", f"section {section} has no populated table rows")
 
     visible_text = text
     if visible_text.startswith("---\n"):
@@ -515,10 +539,21 @@ def artifact_quality_errors(
         if not all(marker in lowered for marker in ("owner", "impact")) or not (
             "resolution" in lowered or "next step" in lowered
         ):
-            errors.append(
-                "full-flow unresolved markers require owner, impact, and resolution/next step"
+            add(
+                "unowned_open_marker",
+                "unresolved markers require owner, impact, and resolution/next step",
+                heuristic=True,
             )
-    return errors
+    return issues
+
+
+def artifact_quality_errors(**kwargs: object) -> list[str]:
+    """Return blocking details for compatibility with existing callers."""
+    return [
+        issue.detail
+        for issue in artifact_quality_issues(**kwargs)  # type: ignore[arg-type]
+        if issue.severity == "error"
+    ]
 
 
 def ensure_decision_log(
@@ -644,8 +679,7 @@ def emit_profile_report(
         artifact_name = profile.artifact_name
         legacy_artifact_names = profile.legacy_names
         table_requirements = profile_tables(profile)
-        if flow_mode != "quick":
-            required_sections = profile_sections(profile, flow_mode)
+        required_sections = profile_sections(profile, flow_mode)
 
     # Route outputs according to the SDLC phase: implementation artifacts go to
     # `specs/`, while refinement/planning/QA artifacts go to `specs-refiniment/`.
@@ -654,11 +688,26 @@ def emit_profile_report(
     decision_log_path = f"{base_path}/{feature}/decision-log.md"
     state_file_path = state_path(feature, workspace).as_posix()
     feature_root = Path(base_path) / feature
+    section = getattr(state_args, "section", None) if state_args is not None else None
+    finalize = bool(getattr(state_args, "finalize", False)) if state_args is not None else False
+    decision_row = bool(getattr(state_args, "decision_row", False)) if state_args is not None else False
+    stdin_action = bool(section or finalize or decision_row)
+    if (stdin_action or write) and feature != "<feature-name>":
+        try:
+            migrate_workspace(Path.cwd(), workspace, apply=True)
+        except MigrationConflict as exc:
+            print(f"ERROR: migration conflict; {exc}", file=sys.stderr)
+            return 2
+    context_snapshot = skill_context_path(Path.cwd(), workspace, feature, skill_name)
     context_dossier = feature_context_path(Path.cwd(), workspace, feature)
-    if context_dossier.is_file():
-        source_paths = source_paths_from_context(read_text(context_dossier))
+    readable_context = context_snapshot if context_snapshot.is_file() else context_dossier
+    if readable_context.is_file():
+        context_text = read_text(readable_context)
+        source_paths = source_paths_from_context(context_text)
+        stale_context_sources = stale_sources_from_context(context_text, Path.cwd())
     else:
         source_paths = [path.as_posix() for path in sorted(feature_root.glob("*.md"))]
+        stale_context_sources = []
         if Path(state_file_path).is_file():
             source_paths.append(state_file_path)
     local_related = sorted(
@@ -670,11 +719,6 @@ def emit_profile_report(
             and path != artifact_path
         }
     )
-
-    section = getattr(state_args, "section", None) if state_args is not None else None
-    finalize = bool(getattr(state_args, "finalize", False)) if state_args is not None else False
-    decision_row = bool(getattr(state_args, "decision_row", False)) if state_args is not None else False
-    stdin_action = bool(section or finalize or decision_row)
 
     if stdin_action:
         artifact_file = Path(artifact_path)
@@ -787,8 +831,8 @@ def emit_profile_report(
             if remaining:
                 raise ValueError("cannot finalize; unfinished sections: " + ", ".join(remaining))
             updated = artifact_text.replace(EMPTY_SECTION_MARKER, "")
-            max_artifact_tokens = getattr(state_args, "max_artifact_tokens", 24000)
-            quality_errors = artifact_quality_errors(
+            max_artifact_tokens = getattr(state_args, "max_artifact_tokens", MAX_ARTIFACT_TOKENS)
+            quality_issues = artifact_quality_issues(
                 text=updated,
                 required_sections=required_sections,
                 flow_mode=flow_mode,
@@ -797,6 +841,14 @@ def emit_profile_report(
                 max_tokens=max_artifact_tokens,
                 required_tables=table_requirements,
             )
+            quality_issues.extend(
+                QualityIssue("stale_context_source", "error", f"stale context source: {source}")
+                for source in stale_context_sources
+            )
+            warnings = [issue.detail for issue in quality_issues if issue.severity == "warning"]
+            quality_errors = [issue.detail for issue in quality_issues if issue.severity == "error"]
+            for warning in warnings:
+                print(f"QUALITY WARN: {warning}")
             if quality_errors:
                 raise ValueError("cannot finalize quality gate; " + "; ".join(quality_errors))
             updated = refreshed_artifact_metadata(
@@ -824,11 +876,11 @@ def emit_profile_report(
                 return state_rc
             atomic_write_text(artifact_file, updated)
             ensure_decision_log(path=decision_file, metadata_lines=decision_metadata)
-            write_indexes_for_roots([Path(base_path)])
             if state_args is not None:
                 state_rc = run_state_action(state_args, skill_name, workspace, artifact_path)
                 if state_rc:
                     return state_rc
+            write_indexes_for_roots([Path(base_path)])
             finalized_ids = sorted({match.group(0).upper() for match in ID_PATTERN.finditer(updated)})
             print(f"Finalized artifact: {artifact_file}")
             print(
@@ -852,7 +904,7 @@ def emit_profile_report(
     legacy_operation = bool(emit_template or emit_decision_log_entry or write)
     if output_format == "toon" and not legacy_operation:
         configured_budget = getattr(state_args, "budget_tokens", None) if state_args is not None else None
-        budget = configured_budget or (4000 if flow_mode == "quick" else 24000)
+        budget = configured_budget or (QUICK_CONTEXT_TOKENS if flow_mode == "quick" else STANDARD_CONTEXT_TOKENS)
         print(
             emit_context_pack(
                 files=files,
@@ -867,6 +919,7 @@ def emit_profile_report(
                     getattr(state_args, "cache_context", False) or getattr(state_args, "refresh_context", False)
                 ) if state_args is not None else False,
                 refresh=bool(getattr(state_args, "refresh_context", False)) if state_args is not None else False,
+                exclude_paths=[Path(artifact_path)],
             ),
             end="",
         )
@@ -1024,12 +1077,12 @@ def emit_profile_report(
         # only if absent, preserving any existing traceability history.
         artifact_file = Path(artifact_path)
         artifact_file.parent.mkdir(parents=True, exist_ok=True)
-        artifact_file.write_text("\n".join(template_lines).rstrip() + "\n", encoding="utf-8")
+        atomic_write_text(artifact_file, "\n".join(template_lines).rstrip() + "\n")
         decision_file = Path(decision_log_path)
         if not decision_file.exists():
-            decision_file.write_text(
+            atomic_write_text(
+                decision_file,
                 "\n".join(decision_log_metadata).rstrip() + "\n# Decision Log\n\n" + "\n".join(decision_log_lines) + "\n",
-                encoding="utf-8",
             )
         index_files = write_indexes_for_roots([Path(base_path)])
         print("## Written Files")
@@ -1072,7 +1125,7 @@ def build_parser(description: str) -> argparse.ArgumentParser:
     parser.add_argument(
         "--max-artifact-tokens",
         type=positive_int,
-        default=24000,
+        default=MAX_ARTIFACT_TOKENS,
         help="Maximum finalized artifact size; defaults to 24000 tokens",
     )
     parser.add_argument("--cache-context", action="store_true", help="Reuse or write the feature-local derived context cache")

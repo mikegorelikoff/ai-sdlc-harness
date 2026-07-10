@@ -3,7 +3,21 @@
 
 from __future__ import annotations
 
+import os
+import tempfile
+import time
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Iterator
+
+try:  # pragma: no cover - platform-specific import
+    import fcntl
+except ImportError:  # pragma: no cover
+    fcntl = None  # type: ignore[assignment]
+try:  # pragma: no cover - platform-specific import
+    import msvcrt
+except ImportError:  # pragma: no cover
+    msvcrt = None  # type: ignore[assignment]
 
 
 INTERNAL_DIR = "_ai_sdlc"
@@ -79,3 +93,56 @@ def first_existing(canonical: Path, *legacy: Path) -> Path:
         if candidate.is_file():
             return candidate
     return canonical
+
+
+def atomic_write_text(path: Path, text: str) -> None:
+    """Replace one UTF-8 file atomically without exposing partial content."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", dir=path.parent,
+            prefix=f".{path.name}.", suffix=".tmp", delete=False,
+        ) as handle:
+            handle.write(text)
+            temp_path = Path(handle.name)
+        os.replace(temp_path, path)
+    finally:
+        if temp_path is not None and temp_path.exists():
+            temp_path.unlink()
+
+
+@contextmanager
+def write_lock(scope: Path, timeout: float = 10.0) -> Iterator[None]:
+    """Serialize writers with an OS lock released automatically on process exit."""
+    lock = scope / ".write.lock"
+    scope.mkdir(parents=True, exist_ok=True)
+    deadline = time.monotonic() + timeout
+    with lock.open("a+", encoding="utf-8") as handle:
+        if msvcrt is not None:
+            handle.seek(0)
+            if not handle.read(1):
+                handle.write("0")
+                handle.flush()
+        while True:
+            try:
+                if fcntl is not None:
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                elif msvcrt is not None:  # pragma: no cover - Windows only
+                    handle.seek(0)
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+                else:  # pragma: no cover
+                    raise RuntimeError("no supported file-lock implementation")
+                break
+            except (BlockingIOError, OSError):
+                if time.monotonic() >= deadline:
+                    raise TimeoutError(f"timed out waiting for write lock: {lock}")
+                time.sleep(0.05)
+        try:
+            yield
+        finally:
+            if fcntl is not None:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+            elif msvcrt is not None:  # pragma: no cover - Windows only
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)

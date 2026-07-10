@@ -5,8 +5,10 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
-from ai_sdlc_paths import first_existing, legacy_state_path
+from ai_sdlc_migrate import MigrationConflict, migrate_feature
+from ai_sdlc_paths import first_existing, legacy_state_path, write_lock
 from ai_sdlc_state_machine import (
     STAGE_BY_SKILL,
     begin_stage,
@@ -43,8 +45,14 @@ def print_messages(errors: list[str], warnings: list[str]) -> int:
 def command_init(args: argparse.Namespace) -> int:
     """Create or overwrite a feature state file."""
     path = state_path(args.feature, args.workspace)
-    state = initial_state(args.feature, args.workspace, args.entrypoint)
-    save_state(path, state)
+    try:
+        migrate_feature(Path.cwd(), args.feature, args.workspace, apply=True)
+    except MigrationConflict as exc:
+        print(f"ERROR: migration conflict; {exc}", file=sys.stderr)
+        return 2
+    with write_lock(path.parent):
+        state = initial_state(args.feature, args.workspace, args.entrypoint)
+        save_state(path, state)
     print(f"Created state: {path}")
     return 0
 
@@ -70,26 +78,40 @@ def command_check(args: argparse.Namespace) -> int:
 
 def command_begin(args: argparse.Namespace) -> int:
     """Mark a skill stage as in progress."""
-    path, state = load_or_init(args.feature, args.workspace)
-    flow = flow_mode_from_args(args)
-    errors, warnings = begin_stage(state, args.skill, flow, args.decision_ref, args.assumption)
-    rc = print_messages(errors, warnings)
-    if rc:
-        return rc
-    save_state(path, state)
+    try:
+        migrate_feature(Path.cwd(), args.feature, args.workspace, apply=True)
+    except MigrationConflict as exc:
+        print(f"ERROR: migration conflict; {exc}", file=sys.stderr)
+        return 2
+    path = state_path(args.feature, args.workspace)
+    with write_lock(path.parent):
+        path, state = load_or_init(args.feature, args.workspace)
+        flow = flow_mode_from_args(args)
+        errors, warnings = begin_stage(state, args.skill, flow, args.decision_ref, args.assumption)
+        rc = print_messages(errors, warnings)
+        if rc:
+            return rc
+        save_state(path, state)
     print(f"State begin recorded: {path}")
     return 0
 
 
 def command_complete(args: argparse.Namespace) -> int:
     """Mark a skill stage as complete."""
-    path, state = load_or_init(args.feature, args.workspace)
-    flow = flow_mode_from_args(args)
-    errors, warnings = complete_stage(state, args.skill, args.artifacts, args.decision_ref, flow, args.assumption)
-    rc = print_messages(errors, warnings)
-    if rc:
-        return rc
-    save_state(path, state)
+    try:
+        migrate_feature(Path.cwd(), args.feature, args.workspace, apply=True)
+    except MigrationConflict as exc:
+        print(f"ERROR: migration conflict; {exc}", file=sys.stderr)
+        return 2
+    path = state_path(args.feature, args.workspace)
+    with write_lock(path.parent):
+        path, state = load_or_init(args.feature, args.workspace)
+        flow = flow_mode_from_args(args)
+        errors, warnings = complete_stage(state, args.skill, args.artifacts, args.decision_ref, flow, args.assumption)
+        rc = print_messages(errors, warnings)
+        if rc:
+            return rc
+        save_state(path, state)
     print(f"State completion recorded: {path}")
     return 0
 

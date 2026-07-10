@@ -7,8 +7,8 @@ marks it complete only after the required artifact or review exists.
 
 ## State Files
 
-- Refinement: `specs-refiniment/<feature-name>/state.toon`
-- Implementation: `specs/<feature-name>/state.toon`
+- Refinement: `specs-refiniment/<feature-name>/_ai_sdlc/state.toon`
+- Implementation: `specs/<feature-name>/_ai_sdlc/state.toon`
 
 Implementation state may reference upstream refinement state through
 `upstream_state`.

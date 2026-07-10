@@ -6,7 +6,7 @@ artifact writes.
 
 It exists in two forms:
 
-- `specs-refiniment/specs-index.toon` and `specs/specs-index.toon` for LLMs;
+- `specs-refiniment/_ai_sdlc/specs-index.toon` and `specs/_ai_sdlc/specs-index.toon` for LLMs;
 - `specs-refiniment/specs-index.md` and `specs/specs-index.md` for humans.
 
 The TOON file is the first place the AI reads before opening individual feature
@@ -20,9 +20,9 @@ for review, handoff, and feature inventory.
 
 When the AI needs feature context, it reads the relevant TOON index first:
 
-- `specs-refiniment/specs-index.toon` for PM, BA, QA, Delivery, and refinement
+- `specs-refiniment/_ai_sdlc/specs-index.toon` for PM, BA, QA, Delivery, and refinement
   work;
-- `specs/specs-index.toon` for implementation work.
+- `specs/_ai_sdlc/specs-index.toon` for implementation work.
 
 The AI uses index rows to narrow the file set by:
 
@@ -75,7 +75,7 @@ root: specs-refiniment
 updated_at: YYYY-MM-DD
 
 features[1]{feature,workspace,current_stage,active_skill,flow_mode,updated_at,artifact_count,decision_log,state_file,metatags}:
-  payment-retry-policy,refinement,qa_traceability,,full,YYYY-MM-DD,8,specs-refiniment/payment-retry-policy/decision-log.md,specs-refiniment/payment-retry-policy/state.toon,ai-sdlc;qa-readiness;validated
+  payment-retry-policy,refinement,qa_traceability,,full,YYYY-MM-DD,8,specs-refiniment/payment-retry-policy/decision-log.md,specs-refiniment/payment-retry-policy/_ai_sdlc/state.toon,ai-sdlc;qa-readiness;validated
 
 artifacts[1]{feature,path,artifact,skill,status,flow_mode,updated_at,trace_ids,metatags}:
   payment-retry-policy,specs-refiniment/payment-retry-policy/qa-readiness.md,qa-readiness.md,ai-sdlc-qa-traceability-and-readiness-review,validated,full,YYYY-MM-DD,AC-001;TC-001,ai-sdlc;refinement;qa-readiness;validated

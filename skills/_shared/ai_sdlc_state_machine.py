@@ -13,7 +13,8 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-from ai_sdlc_paths import first_existing, legacy_state_path, state_path, workspace_base
+from ai_sdlc_artifact_profiles import PROFILES
+from ai_sdlc_paths import atomic_write_text, first_existing, legacy_state_path, state_path, workspace_base, write_lock
 
 
 STATUSES = {"not_started", "in_progress", "blocked", "done", "skipped", "not_applicable"}
@@ -32,25 +33,20 @@ class StageDef:
     optional: bool = False
 
 
-STAGES: tuple[StageDef, ...] = (
-    StageDef("discovery", "ai-sdlc-working-backwards-discovery", "refinement", "discovery.md"),
-    StageDef("prfaq", "ai-sdlc-prfaq-package-synthesis", "refinement", "prfaq.md", ("discovery",)),
-    StageDef("delivery_package_gap_review", "ai-sdlc-delivery-package-gap-review", "refinement", "delivery-gap-review.md", ("prfaq",)),
-    StageDef("requirements_readiness", "ai-sdlc-requirements-readiness-review", "refinement", "requirements-readiness.md", ("delivery_package_gap_review",)),
-    StageDef("goal_epic_mapping", "ai-sdlc-goal-capability-and-epic-mapping", "refinement", "goal-capability-map.md", ("requirements_readiness",)),
-    StageDef("backlog_gap_review", "ai-sdlc-backlog-requirements-gap-review", "refinement", "backlog-gap-review.md", ("goal_epic_mapping",)),
-    StageDef("backlog_decomposition", "ai-sdlc-backlog-decomposition-and-task-planning", "refinement", "backlog.md", ("backlog_gap_review",)),
-    StageDef("story_decomposition", "ai-sdlc-user-story-decomposition", "refinement", "user-stories.md", ("backlog_decomposition",)),
-    StageDef("release_slicing", "ai-sdlc-release-slicing-and-backlog-readiness-review", "refinement", "release-slicing.md", ("backlog_decomposition",), True),
-    StageDef("ba_context", "ai-sdlc-ba", "refinement", "business-context.md", ("story_decomposition",)),
-    StageDef("delivery_spec", "ai-sdlc-delivery-spec-synthesis", "refinement", "delivery-spec.md", ("ba_context",)),
-    StageDef("delivery_handoff", "ai-sdlc-delivery-handoff-review", "refinement", "delivery-handoff-review.md", ("delivery_spec", "qa_traceability")),
-    StageDef("qa_plan", "ai-sdlc-qa", "refinement", "qa.md", ("requirements_readiness",)),
-    StageDef("qa_gap_review", "ai-sdlc-qa-requirements-gap-review", "refinement", "qa-gap-review.md", ("qa_plan",)),
-    StageDef("test_strategy", "ai-sdlc-test-scope-and-strategy-design", "refinement", "qa-strategy.md", ("qa_gap_review",)),
-    StageDef("test_cases", "ai-sdlc-test-cases", "refinement", "test-cases.md", ("test_strategy",)),
-    StageDef("test_suite", "ai-sdlc-test-case-and-suite-synthesis", "refinement", "test-suite.md", ("test_cases",)),
-    StageDef("qa_traceability", "ai-sdlc-qa-traceability-and-readiness-review", "refinement", "qa-readiness.md", ("test_suite",)),
+REFINEMENT_STAGES: tuple[StageDef, ...] = tuple(
+    StageDef(
+        profile.stage_id,
+        profile.skill,
+        "refinement",
+        profile.artifact_name,
+        profile.predecessors,
+        profile.optional,
+    )
+    for profile in PROFILES
+)
+
+
+STAGES: tuple[StageDef, ...] = REFINEMENT_STAGES + (
     StageDef("sdd", "ai-sdlc-sdd", "implementation", "specs/<feature>", ("delivery_spec", "qa_traceability")),
     StageDef("branching", "ai-sdlc-branching", "implementation", "branch-plan.md", ("sdd",)),
     StageDef("validation", "ai-sdlc-validation", "implementation", "validation.md", ("branching",)),
@@ -184,8 +180,7 @@ def load_state(path: Path) -> dict[str, object]:
 
 def save_state(path: Path, state: dict[str, object]) -> None:
     """Write state to a TOON file, creating parent directories."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(to_toon(state), encoding="utf-8")
+    atomic_write_text(path, to_toon(state))
 
 
 def stage_for_skill(skill: str) -> StageDef:
@@ -326,30 +321,31 @@ def run_state_action(args: argparse.Namespace, skill: str, workspace: str, artif
         return 1
     resolved_workspace = getattr(args, "state_workspace", None) or workspace
     path = state_path(feature, resolved_workspace)
-    read_path = first_existing(path, legacy_state_path(feature, resolved_workspace))
-    state = load_state(read_path) if read_path.exists() else initial_state(feature, resolved_workspace)
-    flow = flow_mode_from_args(args)
-    decision_ref = getattr(args, "decision_ref", "")
-    assumption = getattr(args, "assumption", "")
+    with write_lock(path.parent):
+        read_path = first_existing(path, legacy_state_path(feature, resolved_workspace))
+        state = load_state(read_path) if read_path.exists() else initial_state(feature, resolved_workspace)
+        flow = flow_mode_from_args(args)
+        decision_ref = getattr(args, "decision_ref", "")
+        assumption = getattr(args, "assumption", "")
 
-    errors: list[str] = []
-    warnings: list[str] = []
-    if getattr(args, "begin_state", False):
-        errors, warnings = begin_stage(state, skill, flow, decision_ref, assumption)
-    elif getattr(args, "complete_state", False):
-        errors, warnings = complete_stage(state, skill, artifacts, decision_ref, flow, assumption)
-    else:
-        errors, warnings = validate_transition(state, skill, flow, decision_ref, assumption)
+        errors: list[str] = []
+        warnings: list[str] = []
+        if getattr(args, "begin_state", False):
+            errors, warnings = begin_stage(state, skill, flow, decision_ref, assumption)
+        elif getattr(args, "complete_state", False):
+            errors, warnings = complete_stage(state, skill, artifacts, decision_ref, flow, assumption)
+        else:
+            errors, warnings = validate_transition(state, skill, flow, decision_ref, assumption)
 
-    for warning in warnings:
-        print(f"STATE WARN: {warning}")
-    if errors:
-        for error in errors:
-            print(f"STATE ERROR: {error}")
-        return 1
-    if getattr(args, "begin_state", False) or getattr(args, "complete_state", False):
-        save_state(path, state)
-        print(f"STATE: updated {path}")
-    else:
-        print(f"STATE: ok {path}")
+        for warning in warnings:
+            print(f"STATE WARN: {warning}")
+        if errors:
+            for error in errors:
+                print(f"STATE ERROR: {error}")
+            return 1
+        if getattr(args, "begin_state", False) or getattr(args, "complete_state", False):
+            save_state(path, state)
+            print(f"STATE: updated {path}")
+        else:
+            print(f"STATE: ok {path}")
     return 0

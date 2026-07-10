@@ -141,7 +141,7 @@ class StateMachineTests(unittest.TestCase):
             canonical = cwd / "specs-refiniment/legacy-demo/_ai_sdlc/state.toon"
             self.assertTrue(canonical.is_file())
             self.assertIn("active_skill: ai-sdlc-working-backwards-discovery", canonical.read_text(encoding="utf-8"))
-            self.assertEqual(legacy.read_text(encoding="utf-8"), legacy_text)
+            self.assertFalse(legacy.exists())
 
 
 if __name__ == "__main__":

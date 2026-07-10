@@ -4,7 +4,11 @@
 
 ### Added
 
-- Added bounded `ai-sdlc-context/v1` TOON packs with exact source evidence,
+- Added safe `--check`/`--apply` migration for legacy TOON and Markdown paths,
+  with hard failure for divergent canonical and legacy content.
+- Added tiered artifact quality signals and full-cascade gating.
+- Added per-skill context snapshots and a skill-neutral feature source manifest.
+- Added bounded `ai-sdlc-context/v2` TOON packs with exact source evidence,
   trace anchors, structural gaps, and targeted `next_reads` ranges.
 - Added optional fingerprinted feature-local context caching and an
   informational raw/pack/targeted-reread benchmark CLI.
@@ -19,6 +23,12 @@
 
 ### Changed
 
+- Centralized the 18-stage refinement order, predecessors, artifact names,
+  sections, tables, and token budgets in one canonical profile registry.
+- Moved delivery handoff after QA traceability and made index writes atomic and
+  state-aware.
+- Routed every maintained TOON file through `_ai_sdlc`; derived context files
+  are reproducible and ignored by Git.
 - Profile analysis keeps Markdown as the human-readable default and exposes
   bounded TOON through `--format toon` for token-efficient agent context.
 - Scaffold scripts now own Markdown initialization, section placement, metadata,

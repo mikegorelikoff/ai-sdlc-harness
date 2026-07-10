@@ -19,7 +19,7 @@ artifact_metadata:
   workspace: "refinement"
   skill: "<skill-name>"
   flow_mode: "quick"
-  state_file: "specs-refiniment/<feature-name>/state.toon"
+  state_file: "specs-refiniment/<feature-name>/_ai_sdlc/state.toon"
   decision_log: "specs-refiniment/<feature-name>/decision-log.md"
   status: "draft"
   owner: "TBD"

@@ -13,8 +13,8 @@ refinement, readiness, and handoff artifacts.
 specs-refiniment/
   <feature-name>/
     decision-log.md
-    state.toon
-    discovery-notes.md
+    _ai_sdlc/state.toon
+    discovery.md
     prfaq.md
     business-context.md
     backlog.md
@@ -32,13 +32,13 @@ artifacts.
 specs/
   <feature-name>/
     decision-log.md
-    state.toon
+    _ai_sdlc/state.toon
     requirements.md
     design.md
     test-cases.md
     qa.md
     tasks.md
-    plan.toon
+    _ai_sdlc/plan.toon
     plan.md
     validation.md
     code-review.md
@@ -61,8 +61,8 @@ specs/
 
 Before opening many files, the AI first reads the workspace index:
 
-- `specs-refiniment/specs-index.toon` for refinement context;
-- `specs/specs-index.toon` for implementation context.
+- `specs-refiniment/_ai_sdlc/specs-index.toon` for refinement context;
+- `specs/_ai_sdlc/specs-index.toon` for implementation context.
 
 The AI then opens only the feature artifacts that match the active task,
 metadata tags, current stage, or trace IDs. Broad recursive reads are a fallback,
@@ -75,12 +75,17 @@ When the AI creates a refinement artifact, it produces:
 - the routed Markdown artifact under `specs-refiniment/<feature-name>/`;
 - `artifact_metadata` frontmatter at the top of the artifact;
 - a decision-log entry when a decision or assumption is involved;
-- a refreshed `specs-refiniment/specs-index.toon` and `specs-index.md`.
+- a refreshed `specs-refiniment/_ai_sdlc/specs-index.toon` and `specs-index.md`.
 
 When the AI creates an implementation artifact, it produces the same supporting
 records under `specs/<feature-name>/`. For implementation SDD packages, the AI
-also maintains `plan.toon` as the compact task/status/link graph and `plan.md`
+also maintains `_ai_sdlc/plan.toon` as the compact task/status/link graph and `plan.md`
 as the readable execution plan generated from those links.
+
+All machine-readable TOON files live under `_ai_sdlc`. Context snapshots and
+`feature-context.toon` are derived; state, plans, and indexes are durable.
+Writers migrate legacy files only when the canonical path is absent or the
+content is identical. Divergent copies are blocking conflicts.
 
 ## AI Failure Modes
 

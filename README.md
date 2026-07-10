@@ -106,12 +106,16 @@ machine-readable indexes.
 - For generated Markdown, AI sends only section content through stdin; scaffold
   scripts own headings, metadata, routing, file writes, and finalization.
 - `decision-log.md` captures why important choices were made.
-- `state.toon`, `specs-index.toon`, and `plan.toon` give AI compact continuity
-  across sessions.
+- `_ai_sdlc/state.toon`, `_ai_sdlc/specs-index.toon`, and
+  `_ai_sdlc/plan.toon` give AI compact continuity across sessions.
 - Profile scripts keep Markdown for people and can emit bounded
-  `ai-sdlc-context/v1` TOON packs with exact evidence locations and targeted
+  `ai-sdlc-context/v2` TOON packs with exact evidence locations and targeted
   follow-up reads for agents.
 - Markdown stays readable for humans; TOON files stay cheap for AI to inspect.
+- Default and full refinement context and generated artifacts are bounded at
+  24,000 estimated tokens per file; quick context uses a 4,000-token budget.
+- Legacy paths are read during the v0.4 transition and safely migrated on the
+  next write. Divergent legacy/canonical files block instead of overwriting.
 
 ## Role Coverage
 

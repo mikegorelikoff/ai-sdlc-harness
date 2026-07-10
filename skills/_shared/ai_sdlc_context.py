@@ -34,7 +34,7 @@ from ai_sdlc_paths import (
 )
 
 
-CONTEXT_SCHEMA = "ai-sdlc-context/v1"
+CONTEXT_SCHEMA = "ai-sdlc-context/v2"
 ID_RE = re.compile(
     r"\b(?:(?:REQ|AC|US|TC|TASK|RISK|DEC|EPIC|GOAL|CAP|WF|BR|SC|NFR|DEP)-\d{2,4}|T\d{3,4})\b",
     re.IGNORECASE,
@@ -167,7 +167,8 @@ def _index_artifact_paths(index: Path, features: set[str], root: Path) -> list[P
 
 
 def resolve_sources(
-    files: list[Path], *, feature: str, workspace: str, flow_mode: str, root: Path
+    files: list[Path], *, feature: str, workspace: str, flow_mode: str, root: Path,
+    exclude_paths: list[Path] | None = None,
 ) -> list[SourceDocument]:
     """Resolve explicit inputs plus the whole feature package outside quick flow."""
     candidates: list[Path] = []
@@ -218,12 +219,13 @@ def resolve_sources(
 
     unique: list[Path] = []
     seen: set[str] = set()
+    excluded = {str((path if path.is_absolute() else root / path).resolve()) for path in (exclude_paths or [])}
     for path in candidates:
         key = str(path.resolve())
         derived_cache = ".ai-sdlc" in path.parts or (
             INTERNAL_DIR in path.parts and "context" in path.parts
         )
-        if key not in seen and not derived_cache:
+        if key not in seen and key not in excluded and not derived_cache:
             seen.add(key)
             unique.append(path)
     return [_source(path, root) for path in unique]
@@ -280,14 +282,11 @@ def extract_context(
     all_ids: set[str] = set()
     seen_evidence: set[tuple[str, int, str]] = set()
     seen_signal_text: set[str] = set()
-    all_sections: set[str] = set()
     for source in sources:
         if source.status != "current":
             gaps.append(Gap("missing_source", source.display_path, "document", "yes", "source file is missing"))
             continue
         rows = _line_sections(source.text)
-        sections = {section.lower() for _, section, _ in rows}
-        all_sections.update(sections)
         for number, section, line in rows:
             identifiers = sorted({match.group(0).upper() for match in ID_RE.finditer(line)})
             all_ids.update(identifiers)
@@ -344,17 +343,6 @@ def extract_context(
                     Evidence("section_context", "/".join(ids), source.display_path, section, chunk_start, 5, chunk)
                 )
 
-    missing = [required for required in required_sections if required.lower() not in all_sections]
-    if missing:
-        gaps.append(
-            Gap(
-                "missing_output_context",
-                "feature-package",
-                "document",
-                "no",
-                "headings not represented yet: " + "/".join(missing),
-            )
-        )
     # Round-robin sources inside each priority tier. This prevents a long first
     # artifact from consuming the whole budget before another source appears.
     ordered: list[Evidence] = []
@@ -452,11 +440,13 @@ def build_context_pack(
     *, files: list[Path], feature: str, skill: str, workspace: str,
     flow_mode: str, budget_tokens: int, required_sections: list[str],
     keywords: list[str], root: Path | None = None, cache_status: str = "off",
+    exclude_paths: list[Path] | None = None,
 ) -> tuple[str, str, list[SourceDocument]]:
     """Build one bounded TOON pack and return text, fingerprint, and sources."""
     root = (root or Path.cwd()).resolve()
     sources = resolve_sources(
-        files, feature=feature, workspace=workspace, flow_mode=flow_mode, root=root
+        files, feature=feature, workspace=workspace, flow_mode=flow_mode, root=root,
+        exclude_paths=exclude_paths,
     )
     evidence, gaps, trace_ids = extract_context(sources, required_sections=required_sections, keywords=keywords)
     fingerprint = _fingerprint(
@@ -534,6 +524,57 @@ def source_paths_from_context(text: str) -> list[str]:
     return paths
 
 
+def stale_sources_from_context(text: str, root: Path) -> list[str]:
+    """Return missing or hash-mismatched source paths from a saved context snapshot."""
+    stale: list[str] = []
+    in_sources = False
+    for raw_line in text.splitlines():
+        line = raw_line.rstrip()
+        if line.startswith("sources["):
+            in_sources = True
+            continue
+        if in_sources and not line.startswith("  "):
+            break
+        if not in_sources or not line.startswith("  "):
+            continue
+        values = next(csv.reader([line.strip()]))
+        if len(values) < 3 or values[2] != "current":
+            stale.append(values[0] if values else "unknown")
+            continue
+        path = Path(values[0])
+        path = path if path.is_absolute() else root / path
+        if not path.is_file():
+            stale.append(values[0])
+            continue
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if not digest.startswith(values[1]):
+            stale.append(values[0])
+    return stale
+
+
+def _feature_manifest(
+    *, feature: str, workspace: str, sources: list[SourceDocument]
+) -> str:
+    """Render a skill-neutral, deterministic feature source inventory."""
+    ordered_sources = sorted(sources, key=lambda source: source.display_path)
+    digest = hashlib.sha256()
+    for source in ordered_sources:
+        digest.update(source.display_path.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(source.sha256.encode("ascii"))
+        digest.update(b"\0")
+    lines = [
+        "schema: ai-sdlc-feature-context/v1",
+        f"feature: {toon_scalar(feature)}",
+        f"workspace: {workspace}",
+        f"fingerprint: {digest.hexdigest()}",
+        "",
+        f"sources[{len(ordered_sources)}]{{path,sha256,status}}:",
+    ]
+    lines.extend("  " + toon_row((source.display_path, source.sha256, source.status)) for source in ordered_sources)
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def _write_derived_context(path: Path, text: str) -> None:
     """Atomically write a derived context file inside `_ai_sdlc`."""
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -556,17 +597,23 @@ def emit_context_pack(
     flow_mode: str, budget_tokens: int, required_sections: list[str],
     keywords: list[str], cache: bool = False, refresh: bool = False,
     root: Path | None = None, persist_dossier: bool = True,
+    exclude_paths: list[Path] | None = None,
 ) -> str:
     """Return a context pack, reusing a fresh explicit cache when requested."""
     root = (root or Path.cwd()).resolve()
-    text, fingerprint, _ = build_context_pack(
+    text, fingerprint, sources = build_context_pack(
         files=files, feature=feature, skill=skill, workspace=workspace,
         flow_mode=flow_mode, budget_tokens=budget_tokens,
         required_sections=required_sections, keywords=keywords, root=root,
-        cache_status="miss" if cache else "off",
+        cache_status="miss" if cache else "off", exclude_paths=exclude_paths,
     )
     if persist_dossier and flow_mode != "quick" and feature != "<feature-name>":
-        _write_derived_context(feature_context_path(root, workspace, feature), text)
+        _write_derived_context(
+            feature_context_path(root, workspace, feature),
+            _feature_manifest(feature=feature, workspace=workspace, sources=sources),
+        )
+        if not cache:
+            _write_derived_context(context_cache_path(root, workspace, feature, skill), text)
     if not cache:
         return text
 

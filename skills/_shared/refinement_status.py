@@ -7,7 +7,7 @@ import argparse
 from dataclasses import dataclass
 from pathlib import Path
 
-from ai_sdlc_artifact_helper import artifact_quality_errors
+from ai_sdlc_artifact_helper import artifact_quality_issues
 from ai_sdlc_artifact_profiles import PROFILE_BY_STAGE, required_sections, required_tables
 from ai_sdlc_context import toon_row, toon_scalar
 from ai_sdlc_paths import (
@@ -32,9 +32,10 @@ class Issue:
     skill: str
     path: str
     detail: str
+    severity: str = "error"
 
 
-def inspect_package(root: Path, feature: str) -> tuple[list[Issue], Path, Path]:
+def inspect_package(root: Path, feature: str, gate: str = "default") -> tuple[list[Issue], Path, Path]:
     """Return completeness issues plus the canonical feature and state paths."""
     workspace_root = root / "specs-refiniment"
     feature_root = workspace_root / feature
@@ -116,27 +117,40 @@ def inspect_package(root: Path, feature: str) -> tuple[list[Issue], Path, Path]:
                 )
             )
         elif artifact_flow in {"default", "full"}:
+            if gate == "full" and artifact_flow != "full":
+                issues.append(
+                    Issue("wrong_flow", stage.stage_id, stage.skill, readable_artifact.relative_to(root).as_posix(), "full gate requires flow_mode=full")
+                )
             artifact_text = readable_artifact.read_text(encoding="utf-8", errors="replace")
             relative_path = readable_artifact.relative_to(root).as_posix()
-            quality_errors = artifact_quality_errors(
+            quality_issues = artifact_quality_issues(
                 text=artifact_text,
                 required_sections=required_sections(profile, artifact_flow),
-                flow_mode=artifact_flow,
+                flow_mode="full" if gate == "full" else artifact_flow,
                 source_paths=[str(value) for value in metadata.get("related_artifacts", ())],
                 artifact_path=relative_path,
                 max_tokens=24000,
                 required_tables=required_tables(profile),
             )
-            for detail in quality_errors:
+            for quality_issue in quality_issues:
                 issues.append(
                     Issue(
                         "weak_artifact",
                         stage.stage_id,
                         stage.skill,
                         relative_path,
-                        detail,
+                        quality_issue.detail,
+                        quality_issue.severity,
                     )
                 )
+        elif gate == "full":
+            issues.append(
+                Issue("wrong_flow", stage.stage_id, stage.skill, readable_artifact.relative_to(root).as_posix(), "full gate requires flow_mode=full")
+            )
+        else:
+            issues.append(
+                Issue("unknown_flow", stage.stage_id, stage.skill, readable_artifact.relative_to(root).as_posix(), "flow_mode is missing or unknown", "warning")
+            )
 
     decision_log = feature_root / "decision-log.md"
     if not decision_log.is_file():
@@ -179,7 +193,10 @@ def inspect_package(root: Path, feature: str) -> tuple[list[Issue], Path, Path]:
         for expected in expected_paths:
             if expected not in index_text:
                 stage = next(
-                    stage for stage in REFINEMENT_STAGES if expected.endswith("/" + stage.artifacts)
+                    stage
+                    for stage in REFINEMENT_STAGES
+                    if Path(expected).name
+                    in {stage.artifacts, *PROFILE_BY_STAGE[stage.stage_id].legacy_names}
                 )
                 issues.append(
                     Issue(
@@ -196,7 +213,7 @@ def inspect_package(root: Path, feature: str) -> tuple[list[Issue], Path, Path]:
 
 def next_skill(issues: list[Issue]) -> str:
     """Return the earliest lifecycle skill that can repair an issue."""
-    issues_by_stage = {issue.stage for issue in issues if issue.stage}
+    issues_by_stage = {issue.stage for issue in issues if issue.stage and issue.severity == "error"}
     for stage in REFINEMENT_STAGES:
         if stage.stage_id in issues_by_stage:
             return stage.skill
@@ -205,11 +222,13 @@ def next_skill(issues: list[Issue]) -> str:
 
 def render_markdown(feature: str, issues: list[Issue], feature_root: Path) -> str:
     """Render a Codex-friendly completion summary."""
+    blocking = [issue for issue in issues if issue.severity == "error"]
+    warnings = [issue for issue in issues if issue.severity == "warning"]
     complete_stages = len(
         {
             stage.stage_id
             for stage in REFINEMENT_STAGES
-            if not any(issue.stage == stage.stage_id for issue in issues)
+            if not any(issue.stage == stage.stage_id for issue in blocking)
         }
     )
     lines = [
@@ -217,14 +236,16 @@ def render_markdown(feature: str, issues: list[Issue], feature_root: Path) -> st
         "",
         f"- Feature: `{feature}`",
         f"- Package: `{feature_root}`",
-        f"- Complete: `{'yes' if not issues else 'no'}`",
+        f"- Complete: `{'yes' if not blocking else 'no'}`",
         f"- Lifecycle artifacts: `{complete_stages}/{len(REFINEMENT_STAGES)}`",
-        f"- Next skill: `{next_skill(issues)}`",
+        f"- Blocking issues: `{len(blocking)}`",
+        f"- Warnings: `{len(warnings)}`",
+        f"- Next skill: `{next_skill(blocking)}`",
     ]
     if issues:
         lines.extend(["", "## Issues"])
         lines.extend(
-            f"- {issue.kind}: `{issue.path}` — {issue.detail}"
+            f"- {issue.severity}/{issue.kind}: `{issue.path}` — {issue.detail}"
             for issue in issues
         )
     return "\n".join(lines).rstrip() + "\n"
@@ -232,25 +253,29 @@ def render_markdown(feature: str, issues: list[Issue], feature_root: Path) -> st
 
 def render_toon(feature: str, issues: list[Issue], feature_root: Path) -> str:
     """Render a compact agent-oriented completion summary."""
+    blocking = [issue for issue in issues if issue.severity == "error"]
+    warnings = [issue for issue in issues if issue.severity == "warning"]
     complete_stages = len(
         {
             stage.stage_id
             for stage in REFINEMENT_STAGES
-            if not any(issue.stage == stage.stage_id for issue in issues)
+            if not any(issue.stage == stage.stage_id for issue in blocking)
         }
     )
     lines = [
         "schema: ai-sdlc-refinement-status/v1",
         f"feature: {toon_scalar(feature)}",
         f"package: {toon_scalar(feature_root.as_posix())}",
-        f"complete: {'yes' if not issues else 'no'}",
+        f"complete: {'yes' if not blocking else 'no'}",
         f"artifact_count: {complete_stages}/{len(REFINEMENT_STAGES)}",
-        f"next_skill: {toon_scalar(next_skill(issues))}",
+        f"blocking_count: {len(blocking)}",
+        f"warning_count: {len(warnings)}",
+        f"next_skill: {toon_scalar(next_skill(blocking))}",
         "",
-        f"issues[{len(issues)}]{{kind,stage,skill,path,detail}}:",
+        f"issues[{len(issues)}]{{severity,kind,stage,skill,path,detail}}:",
     ]
     lines.extend(
-        "  " + toon_row((issue.kind, issue.stage, issue.skill, issue.path, issue.detail))
+        "  " + toon_row((issue.severity, issue.kind, issue.stage, issue.skill, issue.path, issue.detail))
         for issue in issues
     )
     return "\n".join(lines).rstrip() + "\n"
@@ -262,13 +287,14 @@ def main() -> int:
     parser.add_argument("--feature", required=True)
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--format", choices=["markdown", "toon"], default="markdown")
+    parser.add_argument("--gate", choices=["default", "full"], default="default")
     args = parser.parse_args()
 
     root = args.root.resolve()
-    issues, feature_root, _ = inspect_package(root, args.feature)
+    issues, feature_root, _ = inspect_package(root, args.feature, args.gate)
     renderer = render_toon if args.format == "toon" else render_markdown
     print(renderer(args.feature, issues, feature_root), end="")
-    return 1 if issues else 0
+    return 1 if any(issue.severity == "error" for issue in issues) else 0
 
 
 if __name__ == "__main__":

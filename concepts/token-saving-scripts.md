@@ -44,14 +44,14 @@ skill has a script that can compress or validate the inputs. If a script exists,
 the AI runs it with the active flow flag and reads the compact output first.
 
 Profile scripts keep Markdown as the human-readable default. For agent work,
-the skill invokes `--format toon` to emit an `ai-sdlc-context/v1` evidence
+the skill invokes `--format toon` to emit an `ai-sdlc-context/v2` evidence
 index rather than a generated summary: every anchor carries an
 exact source path, Markdown section, and line number. The AI reads `anchors`
 first and opens only the `next_reads` ranges needed for details that did not fit
 the active budget.
 
-Default approximate budgets are 1,200 tokens for quick flow, 2,500 for full
-flow, and 1,800 without an explicit flow. Override them with
+Default approximate budgets are 4,000 tokens for quick flow and 24,000 for
+default or full flow. Finalized artifacts are also capped at 24,000. Override them with
 `--budget-tokens`; omit `--format toon` when a person needs the Markdown report.
 
 The AI uses script output to identify:
@@ -68,10 +68,14 @@ The AI uses script output to identify:
 ## Context Cache And Measurement
 
 Context packs are generated on demand. `--cache-context` stores a derived pack
-at `specs[-refiniment]/<feature>/.ai-sdlc/context/<skill>.toon` and reuses it
+at `specs[-refiniment]/<feature>/_ai_sdlc/context/<skill>.toon` and reuses it
 only while its source/profile fingerprint matches. `--refresh-context` forces a
 rebuild. Cache files are reproducible, excluded from the specs index, and
 ignored by Git.
+
+Each non-quick skill keeps its own snapshot. `feature-context.toon` is a
+skill-neutral source inventory, so one stage cannot replace another stage's
+evidence contract.
 
 Use `skills/_shared/ai_sdlc_context_benchmark.py` to compare raw source tokens,
 the bounded pack, and the exact line ranges requested through `next_reads`.

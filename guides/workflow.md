@@ -222,7 +222,7 @@ the role lane that usually owns the output.
 ```mermaid
 flowchart TB
     subgraph PM["PM / Product"]
-        PM1["ai-sdlc-working-backwards-discovery<br/>discovery-notes.md"]
+        PM1["ai-sdlc-working-backwards-discovery<br/>discovery.md"]
         PM2["ai-sdlc-prfaq-package-synthesis<br/>prfaq.md"]
         PM3["ai-sdlc-goal-capability-and-epic-mapping<br/>goal-capability-map.md"]
         PM4["ai-sdlc-backlog-decomposition-and-task-planning<br/>backlog.md"]

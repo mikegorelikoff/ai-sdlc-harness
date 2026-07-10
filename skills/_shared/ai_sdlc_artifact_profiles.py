@@ -19,6 +19,10 @@ COMMON_CONTEXT_SECTIONS: tuple[str, ...] = (
     "Source Coverage",
 )
 
+QUICK_CONTEXT_TOKENS = 4000
+STANDARD_CONTEXT_TOKENS = 24000
+MAX_ARTIFACT_TOKENS = 24000
+
 
 @dataclass(frozen=True)
 class ArtifactProfile:
@@ -28,6 +32,8 @@ class ArtifactProfile:
     skill: str
     artifact_name: str
     stage_sections: tuple[str, ...]
+    predecessors: tuple[str, ...] = ()
+    optional: bool = False
     legacy_names: tuple[str, ...] = ()
 
 
@@ -46,117 +52,135 @@ PROFILES: tuple[ArtifactProfile, ...] = (
             "Operations, Launch, and Support",
             "Discovery Risks and Dependencies",
         ),
-        ("discovery-notes.md",),
+        legacy_names=("discovery-notes.md",),
     ),
     ArtifactProfile(
         "prfaq",
         "ai-sdlc-prfaq-package-synthesis",
         "prfaq.md",
         ("Press Release", "Customer FAQ", "Internal FAQ", "Business Requirements", "Launch Risks"),
+        ("discovery",),
     ),
     ArtifactProfile(
         "delivery_package_gap_review",
         "ai-sdlc-delivery-package-gap-review",
         "delivery-gap-review.md",
         ("Evidence Reviewed", "Gap Matrix", "Contradictions", "Blocking Questions", "Readiness Verdict"),
-        ("delivery-package-gap-review.md",),
+        ("prfaq",),
+        legacy_names=("delivery-package-gap-review.md",),
     ),
     ArtifactProfile(
         "requirements_readiness",
         "ai-sdlc-requirements-readiness-review",
         "requirements-readiness.md",
         ("Readiness Score", "Dimension Assessment", "Blocking Gaps", "Required Follow-Up", "Readiness Verdict"),
+        ("delivery_package_gap_review",),
     ),
     ArtifactProfile(
         "goal_epic_mapping",
         "ai-sdlc-goal-capability-and-epic-mapping",
         "goal-capability-map.md",
         ("Business Goals", "Role Matrix", "Capability Map", "Epic Map", "Outcome Traceability"),
-        ("goal-capability-epic-map.md",),
+        ("requirements_readiness",),
+        legacy_names=("goal-capability-epic-map.md",),
     ),
     ArtifactProfile(
         "backlog_gap_review",
         "ai-sdlc-backlog-requirements-gap-review",
         "backlog-gap-review.md",
         ("Planning Evidence", "Gap Matrix", "Priority and Scope Gaps", "Dependency Gaps", "Planning Verdict"),
-        ("backlog-requirements-gap-review.md",),
+        ("goal_epic_mapping",),
+        legacy_names=("backlog-requirements-gap-review.md",),
     ),
     ArtifactProfile(
         "backlog_decomposition",
         "ai-sdlc-backlog-decomposition-and-task-planning",
         "backlog.md",
         ("Epic Backlog", "Story Backlog", "Acceptance Summary", "Priorities and Dependencies", "Cross-Functional Tasks", "Definition of Ready"),
+        ("backlog_gap_review",),
     ),
     ArtifactProfile(
         "story_decomposition",
         "ai-sdlc-user-story-decomposition",
         "user-stories.md",
         ("Story Detail Matrix", "Acceptance Criteria Matrix", "Scenario Coverage Matrix", "Story Dependencies and Risks", "Story Readiness"),
+        ("backlog_decomposition",),
     ),
     ArtifactProfile(
         "release_slicing",
         "ai-sdlc-release-slicing-and-backlog-readiness-review",
         "release-slicing.md",
         ("MVP Slice", "Release Slice Matrix", "Sequencing and Dependencies", "Milestones and Readiness", "Release Risks", "Release Verdict"),
+        ("backlog_decomposition",),
+        True,
     ),
     ArtifactProfile(
         "ba_context",
         "ai-sdlc-ba",
         "business-context.md",
         ("Current Behavior", "Desired Behavior", "Actor and Permission Matrix", "Workflow Detail", "Business Rule Catalog", "Acceptance Criteria", "Business Context Gaps"),
+        ("story_decomposition",),
     ),
     ArtifactProfile(
         "delivery_spec",
         "ai-sdlc-delivery-spec-synthesis",
         "delivery-spec.md",
         ("Requirement Detail", "Workflow Detail", "Business Rule Detail", "User Story Traceability", "Acceptance Traceability", "QA and Operational Notes", "Handoff Risks"),
+        ("ba_context",),
     ),
     ArtifactProfile(
         "qa_plan",
         "ai-sdlc-qa",
         "qa.md",
         ("Acceptance Scenarios", "Regression Targets", "Risk-Based Coverage", "Test Data and Environment", "Validation Commands", "Manual Checks", "Signoff Criteria"),
-        ("qa-plan.md",),
+        ("requirements_readiness",),
+        legacy_names=("qa-plan.md",),
     ),
     ArtifactProfile(
         "qa_gap_review",
         "ai-sdlc-qa-requirements-gap-review",
         "qa-gap-review.md",
         ("QA Evidence Reviewed", "Testability Gap Matrix", "Negative and Edge Coverage", "Data and Environment Gaps", "Blocking Questions", "QA Gap Verdict"),
-        ("qa-requirements-gap-review.md",),
+        ("qa_plan",),
+        legacy_names=("qa-requirements-gap-review.md",),
     ),
     ArtifactProfile(
         "test_strategy",
         "ai-sdlc-test-scope-and-strategy-design",
         "qa-strategy.md",
         ("Test Scope", "Risk and Coverage Priorities", "Layer and Suite Strategy", "Test Data Strategy", "Environment Dependencies", "Automation Strategy", "Strategy Risks"),
-        ("test-strategy.md",),
+        ("qa_gap_review",),
+        legacy_names=("test-strategy.md",),
     ),
     ArtifactProfile(
         "test_cases",
         "ai-sdlc-test-cases",
         "test-cases.md",
         ("Scenario Matrix", "Detailed Test Cases", "Permission and Negative Cases", "Expected Results", "Layer Mapping", "Automation Plan"),
+        ("test_strategy",),
     ),
     ArtifactProfile(
         "test_suite",
         "ai-sdlc-test-case-and-suite-synthesis",
         "test-suite.md",
         ("Suite Coverage Matrix", "Smoke Suite", "Regression Suite", "UAT Suite", "Entry Criteria", "Exit Criteria", "Execution Dependencies"),
-        ("test-suites.md",),
+        ("test_cases",),
+        legacy_names=("test-suites.md",),
     ),
     ArtifactProfile(
         "qa_traceability",
         "ai-sdlc-qa-traceability-and-readiness-review",
         "qa-readiness.md",
         ("Requirement-to-Test Traceability", "Risk Coverage", "Coverage Gaps", "Execution Readiness Evidence", "Blocked Coverage", "QA Readiness Verdict"),
-        ("qa-traceability.md",),
+        ("test_suite",),
+        legacy_names=("qa-traceability.md",),
     ),
     ArtifactProfile(
         "delivery_handoff",
         "ai-sdlc-delivery-handoff-review",
         "delivery-handoff-review.md",
         ("Handoff Evidence", "Requirement and Story Coverage", "QA Readiness", "Ownership and Dependencies", "Decision Coverage", "Implementation Handoff", "Final Verdict"),
+        ("delivery_spec", "qa_traceability"),
     ),
 )
 

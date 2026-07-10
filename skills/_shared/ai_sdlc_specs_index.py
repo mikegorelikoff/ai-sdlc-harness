@@ -22,6 +22,8 @@ from ai_sdlc_paths import (
     index_toon_path,
     legacy_state_path,
     state_path,
+    atomic_write_text,
+    write_lock,
 )
 from ai_sdlc_state_machine import csv_escape, from_toon
 
@@ -324,13 +326,16 @@ def render_markdown(workspace_root: Path, features: list[FeatureEntry], artifact
 
 def write_workspace_index(workspace_root: Path) -> tuple[Path, Path]:
     """Write TOON and Markdown indexes for one workspace root."""
-    features, artifacts = scan_workspace(workspace_root)
+    from ai_sdlc_migrate import migrate_workspace
+
+    migrate_workspace(workspace_root.parent.resolve(), workspace_for_root(workspace_root), apply=True)
     workspace_root.mkdir(parents=True, exist_ok=True)
     toon_path = index_toon_path(workspace_root)
     md_path = workspace_root / INDEX_MD
-    toon_path.parent.mkdir(parents=True, exist_ok=True)
-    toon_path.write_text(render_toon(workspace_root, features, artifacts), encoding="utf-8")
-    md_path.write_text(render_markdown(workspace_root, features, artifacts), encoding="utf-8")
+    with write_lock(workspace_root / INTERNAL_DIR):
+        features, artifacts = scan_workspace(workspace_root)
+        atomic_write_text(toon_path, render_toon(workspace_root, features, artifacts))
+        atomic_write_text(md_path, render_markdown(workspace_root, features, artifacts))
     return toon_path, md_path
 
 

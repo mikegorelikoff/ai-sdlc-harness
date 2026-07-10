@@ -328,7 +328,7 @@ class ScriptContractTests(unittest.TestCase):
                 workspace="refinement", flow_mode="quick", budget_tokens=700,
                 required_sections=["Acceptance Criteria"], keywords=["validation"], root=cwd,
             )
-            self.assertIn("schema: ai-sdlc-context/v1", output)
+            self.assertIn("schema: ai-sdlc-context/v2", output)
             self.assertIn("AC-001", output)
             self.assertIn("AC-030", output)
             self.assertIn("next_reads[", output)
@@ -388,7 +388,11 @@ class ScriptContractTests(unittest.TestCase):
             self.assertEqual(output.count(repeated), 1)
             dossier = feature_context_path(cwd / "specs-refiniment", feature)
             self.assertTrue(dossier.is_file())
+            self.assertIn("schema: ai-sdlc-feature-context/v1", dossier.read_text(encoding="utf-8"))
             self.assertIn("sources[3]", dossier.read_text(encoding="utf-8"))
+            snapshot = cwd / f"specs-refiniment/{feature}/_ai_sdlc/context/ai-sdlc-ba.toon"
+            self.assertTrue(snapshot.is_file())
+            self.assertIn("schema: ai-sdlc-context/v2", snapshot.read_text(encoding="utf-8"))
 
             quick = emit_context_pack(
                 files=[explicit],
@@ -497,7 +501,7 @@ class ScriptContractTests(unittest.TestCase):
             )
             self.assertEqual(quick_template.returncode, 0, quick_template.stderr)
             self.assertNotIn("## Feature Summary", quick_template.stdout)
-            self.assertIn("## Goal", quick_template.stdout)
+            self.assertIn("## Current Behavior", quick_template.stdout)
 
             notes = cwd / "notes.md"
             write(notes, "# Notes\n\n## Goal\nDetailed feature input.")
@@ -538,7 +542,7 @@ class ScriptContractTests(unittest.TestCase):
             script, "--feature", "format-demo", "--quick-flow", "--format", "toon", str(README)
         )
         self.assertEqual(compact.returncode, 0, compact.stderr)
-        self.assertTrue(compact.stdout.startswith("schema: ai-sdlc-context/v1"))
+        self.assertTrue(compact.stdout.startswith("schema: ai-sdlc-context/v2"))
         human = run_script(script, "--feature", "format-demo", "--quick-flow", str(README))
         self.assertEqual(human.returncode, 0, human.stderr)
         self.assertIn("## Compact Summary", human.stdout)
@@ -578,6 +582,7 @@ class ScriptContractTests(unittest.TestCase):
                 "ai_sdlc_specs_index.py",
                 "ai_sdlc_context_benchmark.py",
                 "refinement_status.py",
+                "ai_sdlc_migrate.py",
             }:
                 continue
             with self.subTest(path=path.relative_to(ROOT)):
@@ -763,14 +768,13 @@ class ScriptContractTests(unittest.TestCase):
             cwd = Path(temp_dir)
             script = ROOT / "skills/ai-sdlc-ba/scripts/ba_context_scaffold.py"
             sections = [
-                "Goal",
-                "Problem",
-                "Actors",
                 "Current Behavior",
                 "Desired Behavior",
-                "Business Rules",
+                "Actor and Permission Matrix",
+                "Workflow Detail",
+                "Business Rule Catalog",
                 "Acceptance Criteria",
-                "Open Questions",
+                "Business Context Gaps",
             ]
             for section in sections:
                 body = "- AC-001: Observable content." if section == "Acceptance Criteria" else f"Content for {section}."
@@ -799,7 +803,7 @@ class ScriptContractTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("Summary: completed business-context.md", result.stdout)
-            self.assertIn("8 sections, 1 trace IDs, indexes refreshed", result.stdout)
+            self.assertIn("7 sections, 1 trace IDs, indexes refreshed", result.stdout)
             artifact_text = artifact.read_text(encoding="utf-8")
             self.assertNotIn("ai-sdlc:empty", artifact_text)
             self.assertIn('status: "review"', artifact_text)
@@ -897,7 +901,7 @@ class ScriptContractTests(unittest.TestCase):
             self.assertIn("ready_for_impl", status.stdout)
             context = run_script(ROOT / "skills/ai-sdlc-sdd/scripts/sdd_context.py", str(spec_dir), "--full-flow")
             self.assertEqual(context.returncode, 0, context.stderr)
-            self.assertIn("schema: ai-sdlc-context/v1", context.stdout)
+            self.assertIn("schema: ai-sdlc-context/v2", context.stdout)
             for trace_id in ("AC-001", "TC-001", "T001", "DEC-001"):
                 self.assertIn(trace_id, context.stdout)
             self.assertIn("_ai_sdlc/plan.toon", context.stdout)
@@ -980,6 +984,25 @@ class ScriptContractTests(unittest.TestCase):
                 self.assertIn("_ai_sdlc/specs-index.toon", text)
                 self.assertIn("Do not create `summary.txt`", text)
                 self.assertIn("directly in the Codex response", text)
+
+    def test_public_docs_use_canonical_machine_paths_and_budgets(self) -> None:
+        """Public documentation must not reintroduce legacy runtime contracts."""
+        docs = [README, ROOT / "FAQ.md", *sorted((ROOT / "concepts").glob("*.md")), *sorted((ROOT / "guides").glob("*.md"))]
+        forbidden = (
+            "specs-refiniment/<feature-name>/state.toon",
+            "specs/<feature-name>/state.toon",
+            "specs-refiniment/specs-index.toon",
+            "specs/specs-index.toon",
+            "/.ai-sdlc/context/",
+            "ai-sdlc-context/v1",
+            "1,200 tokens for quick",
+            "2,500 for full",
+        )
+        for path in docs:
+            text = path.read_text(encoding="utf-8")
+            for value in forbidden:
+                with self.subTest(path=path.relative_to(ROOT), value=value):
+                    self.assertNotIn(value, text)
 
     def test_exactly_18_refinement_skills_document_complete_cascade(self) -> None:
         """Only lifecycle refinement skills should advertise the complete cascade."""

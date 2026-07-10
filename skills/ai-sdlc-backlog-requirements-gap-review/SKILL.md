@@ -54,6 +54,7 @@ description: Use when PRFAQ, BRD, PRD, product brief, workflow, or equivalent in
 - Return progress, completion, validation, and handoff summaries directly in the Codex response.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file unless the user explicitly requests one.
 - Keep durable writes limited to the canonical lifecycle artifacts, decision log, human-readable index, and `_ai_sdlc` machine files.
+- Let shared helpers migrate legacy paths on the next write; never overwrite or manually merge divergent legacy and canonical files.
 
 ### 0.4 Artifact Routing
 
@@ -108,11 +109,11 @@ description: Use when PRFAQ, BRD, PRD, product brief, workflow, or equivalent in
 ## 0.8 Complete Refinement Cascade
 
 - Trigger the complete cascade only when the user explicitly asks for a full, complete, or end-to-end spec refinement or asks for every refinement artifact. A normal `--full-flow` call for one skill remains single-stage.
-- Before the first durable write, run `python3 skills/_shared/refinement_status.py --feature <feature-name> --format toon` and start with the earliest reported `next_skill`, including stages earlier than this skill.
+- Before the first durable write, run `python3 skills/_shared/refinement_status.py --feature <feature-name> --gate full --format toon` and start with the earliest reported `next_skill`, including stages earlier than this skill.
 - Execute the existing refinement skills in lifecycle order with `--full-flow`: discovery, PRFAQ, delivery-package gap review, requirements readiness, goal/capability mapping, backlog gap review, backlog decomposition, story decomposition, release slicing, BA context, delivery spec, QA plan, QA gap review, test strategy, test cases, test suite, QA readiness, and delivery handoff.
 - Produce all 18 canonical Markdown artifacts. `release-slicing.md` is mandatory for a complete cascade; when release slicing is not applicable, write an explicit evidence-backed N/A artifact and complete the stage instead of skipping it.
 - After every stage, finalize its artifact, record required decisions, mark the stage `done`, and refresh the refinement indexes before selecting the next skill.
-- Do not declare the cascade complete until `python3 skills/_shared/refinement_status.py --feature <feature-name> --format markdown` exits successfully with `18/18`. If it fails, continue with the reported next skill or return the concrete blocker and remaining inventory in Codex.
+- Do not declare the cascade complete until `python3 skills/_shared/refinement_status.py --feature <feature-name> --gate full --format markdown` exits successfully with `18/18`. If it fails, continue with the reported next skill or return the concrete blocker and remaining inventory in Codex.
 - Surface checkpoint and final summaries in Codex only; never persist a cascade summary as a text file.
 
 ## References

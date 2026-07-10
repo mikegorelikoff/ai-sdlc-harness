@@ -54,6 +54,7 @@ description: AI SDLC Git-flow branching workflow. Use when an AI assistant start
 - Return progress, completion, validation, and handoff summaries directly in the Codex response.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file unless the user explicitly requests one.
 - Keep durable writes limited to the canonical lifecycle artifacts, decision log, human-readable index, and `_ai_sdlc` machine files.
+- Let shared helpers migrate legacy paths on the next write; never overwrite or manually merge divergent legacy and canonical files.
 
 ### 0.4 Artifact Routing
 
