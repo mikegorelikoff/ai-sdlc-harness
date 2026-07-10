@@ -22,6 +22,57 @@ TASK_LINE_RE = re.compile(r"^- \[[ xX]\]\s+((?:\d+|T\d{3}))(?:\.|\b)")
 HEADING_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 COMPLETE_STAGE_STATUSES = {"done", "skipped", "not_applicable"}
 
+SDD_ARTIFACT_SECTIONS = {
+    "requirements": [
+        "Goal",
+        "Problem Statement",
+        "Scope",
+        "Actors",
+        "Inputs",
+        "Outputs",
+        "Functional Requirements",
+        "Non-Functional Requirements",
+        "Constraints",
+        "Acceptance Criteria",
+        "Out of Scope",
+        "Assumptions",
+        "Open Questions",
+        "Decision Status",
+    ],
+    "design": [
+        "Overview",
+        "Architecture",
+        "Components",
+        "Interfaces and Contracts",
+        "Data Model",
+        "Error Handling",
+        "Security Considerations",
+        "Observability",
+        "Risks and Tradeoffs",
+        "Validation Strategy",
+        "Migration Notes",
+    ],
+    "test-cases": ["Scope", "Scenario Matrix", "Layer Mapping", "Automation Plan", "Open Gaps"],
+    "qa": [
+        "Change Summary",
+        "Acceptance Scenarios",
+        "Regression Targets",
+        "Risk Notes",
+        "Validation Commands",
+        "Manual Checks",
+        "Signoff",
+    ],
+    "tasks": ["Implementation", "Testing", "Documentation"],
+}
+
+SDD_ARTIFACT_TITLES = {
+    "requirements": "Requirements",
+    "design": "Design",
+    "test-cases": "Test Cases",
+    "qa": "QA",
+    "tasks": "Tasks",
+}
+
 
 @dataclass(frozen=True)
 class TaskEntry:
@@ -203,6 +254,16 @@ def resolve_active_spec(
 def headings(markdown: str) -> set[str]:
     """Return second-level Markdown headings used by SDD templates."""
     return {match.group(1).strip() for match in HEADING_RE.finditer(markdown)}
+
+
+def markdown_body(markdown: str) -> str:
+    """Return visible Markdown without generated YAML frontmatter."""
+    if not markdown.startswith("---\n"):
+        return markdown
+    end = markdown.find("\n---", 4)
+    if end == -1:
+        return markdown
+    return markdown[end + len("\n---") :].lstrip("\r\n")
 
 
 def section_text(markdown: str, heading: str) -> str:

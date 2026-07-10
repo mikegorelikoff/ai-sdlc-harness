@@ -15,7 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
-from spec_helpers import ROOT, meaningful_lines, parse_acceptance_ids, section_text
+from spec_helpers import ROOT, markdown_body, meaningful_lines, parse_acceptance_ids, section_text
 
 
 PLACEHOLDER_TOKENS = {"tbd", "todo", "to do", "works correctly", "make it better"}
@@ -60,7 +60,8 @@ def validate(spec_dir: Path) -> list[str]:
 
     # Generic TODO/TBD markers hide ownership. TODO(dm) is allowed because it
     # explicitly marks a decision-maker handoff.
-    if re.search(r"\bTBD\b|\bTODO\b", markdown) and "TODO(dm):" not in markdown:
+    visible_markdown = markdown_body(markdown)
+    if re.search(r"\bTBD\b|\bTODO\b", visible_markdown) and "TODO(dm):" not in visible_markdown:
         errors.append("requirements.md may not use generic TODO/TBD markers outside TODO(dm)")
 
     return errors

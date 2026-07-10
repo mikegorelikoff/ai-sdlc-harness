@@ -54,11 +54,18 @@ def artifact_profile_scripts() -> list[Path]:
     return [
         path
         for path in script_paths()
-        if "emit_profile_report(" in path.read_text(encoding="utf-8") and path.name != "ai_sdlc_artifact_helper.py"
+        if "emit_profile_report(" in path.read_text(encoding="utf-8")
+        and "build_parser(" in path.read_text(encoding="utf-8")
+        and path.name != "ai_sdlc_artifact_helper.py"
     ]
 
 
-def run_script(path: Path, *args: str, cwd: Path = ROOT) -> subprocess.CompletedProcess[str]:
+def run_script(
+    path: Path,
+    *args: str,
+    cwd: Path = ROOT,
+    input_text: str | None = None,
+) -> subprocess.CompletedProcess[str]:
     """Run a Python helper script with captured output and temp pycache."""
     env = os.environ.copy()
     env["PYTHONPYCACHEPREFIX"] = "/tmp/ai-sdlc-harness-pycache"
@@ -68,6 +75,7 @@ def run_script(path: Path, *args: str, cwd: Path = ROOT) -> subprocess.Completed
         env=env,
         check=False,
         text=True,
+        input=input_text,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
@@ -325,6 +333,9 @@ class ScriptContractTests(unittest.TestCase):
                 self.assertIn("--artifact-status", result.stdout)
                 self.assertIn("--artifact-owner", result.stdout)
                 self.assertIn("--artifact-tag", result.stdout)
+                self.assertIn("--section", result.stdout)
+                self.assertIn("--finalize", result.stdout)
+                self.assertIn("--decision-row", result.stdout)
 
     def test_artifact_profile_scripts_materialize_quick_and_full_outputs(self) -> None:
         """Artifact-profile scripts must emit flow-specific templates and logs."""
@@ -390,6 +401,53 @@ class ScriptContractTests(unittest.TestCase):
             self.assertIn("DEC-001", decision_log_text)
             self.assertIn("features[1]", toon_index.read_text(encoding="utf-8"))
             self.assertIn("business-context.md", md_index.read_text(encoding="utf-8"))
+
+    def test_artifact_profile_writes_sections_from_stdin_and_finalizes(self) -> None:
+        """The AI should supply only section bodies while the script owns files."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            cwd = Path(temp_dir)
+            script = ROOT / "skills/ai-sdlc-ba/scripts/ba_context_scaffold.py"
+            sections = [
+                "Goal",
+                "Problem",
+                "Actors",
+                "Current Behavior",
+                "Desired Behavior",
+                "Business Rules",
+                "Acceptance Criteria",
+                "Open Questions",
+            ]
+            for section in sections:
+                body = "- AC-001: Observable content." if section == "Acceptance Criteria" else f"Content for {section}."
+                result = run_script(
+                    script,
+                    "--feature",
+                    "stdin-contract",
+                    "--quick-flow",
+                    "--section",
+                    section,
+                    cwd=cwd,
+                    input_text=body,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+
+            artifact = cwd / "specs-refiniment/stdin-contract/business-context.md"
+            self.assertTrue(artifact.is_file())
+            self.assertNotIn("\n# Goal\n", artifact.read_text(encoding="utf-8"))
+            result = run_script(
+                script,
+                "--feature",
+                "stdin-contract",
+                "--quick-flow",
+                "--finalize",
+                cwd=cwd,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            artifact_text = artifact.read_text(encoding="utf-8")
+            self.assertNotIn("ai-sdlc:empty", artifact_text)
+            self.assertIn('status: "review"', artifact_text)
+            self.assertIn('"AC-001"', artifact_text)
+            self.assertTrue((cwd / "specs-refiniment/specs-index.toon").is_file())
 
     def test_specs_index_cli_writes_toon_and_markdown_indexes(self) -> None:
         """Specs index CLI must summarize features for LLMs and humans."""

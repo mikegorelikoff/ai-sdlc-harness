@@ -140,6 +140,54 @@ def write_spec(spec_dir: Path, *, bad_acceptance: bool = False, decision_log: bo
         Pending.
         """,
     )
+    write(
+        spec_dir / "plan.md",
+        """
+        # Plan
+        ## Upstream Refinement Sources
+        - Quick-flow fixture.
+        ## SDD Artifact Links
+        - requirements.md, design.md, test-cases.md, qa.md, tasks.md, plan.toon, decision-log.md
+        ## Cross-Artifact Trace Map
+        - AC-001 -> TC-001 -> T001, T002, T003
+        ## Task Execution Plan
+        - [x] T001
+        - [x] T002
+        - [x] T003
+        ## Task Dependencies
+        - T001: none
+        - T002: T001
+        - T003: T001
+        ## Validation Sequence
+        - validate_spec.py
+        ## Open Links And Blockers
+        - None.
+        """,
+    )
+    write(
+        spec_dir / "plan.toon",
+        """
+        feature: example
+        workspace: implementation
+        flow_mode: quick
+        updated_at: 2026-07-10
+        source_artifacts[6]{artifact,path}:
+          requirements,requirements.md
+          design,design.md
+          test_cases,test-cases.md
+          qa,qa.md
+          tasks,tasks.md
+          decisions,decision-log.md
+        trace[1]{acceptance_id,test_cases,tasks}:
+          AC-001,TC-001,T001/T002/T003
+        tasks[3]{id,status,refs,tests,depends_on,artifact,decision_ref}:
+          T001,done,AC-001,TC-001,none,Done.,DEC-001
+          T002,done,AC-001,TC-001,T001,Done.,DEC-001
+          T003,done,AC-001,TC-001,T001,Done.,DEC-001
+        validation_sequence[1]{step,command}:
+          1,validate_spec.py --quick-flow
+        """,
+    )
     if decision_log:
         write(
             spec_dir / "decision-log.md",

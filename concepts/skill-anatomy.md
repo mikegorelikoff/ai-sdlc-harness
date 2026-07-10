@@ -68,9 +68,12 @@ When a task triggers a skill, the AI:
 4. Runs the skill script when deterministic scaffolding, compression, validation,
    or indexing is useful.
 5. Reads only the references needed for the requested output.
-6. Produces or updates the routed artifact.
-7. Updates metadata, decision log, state, and specs index when durable files
-   change.
+6. Sends each content-only section body to the script on stdin with `--section`.
+7. Runs `--finalize`; the script writes the routed artifact, metadata, decision
+   log, state changes requested by flags, and specs index.
+
+The AI does not create a temporary content Markdown file and does not directly
+edit an artifact owned by a scaffold script.
 
 ## AI Production Behavior
 

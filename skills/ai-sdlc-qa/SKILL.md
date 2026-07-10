@@ -112,8 +112,11 @@ description: AI SDLC QA workflow. Use when an AI assistant is asked for QA plann
 - Run `scripts/qa_plan_scaffold.py` before drafting or updating this skill's artifact when inputs are longer than a few bullets, when traceability matters, or when a flow flag is supplied.
 - Quick flow analysis: `python3 skills/ai-sdlc-qa/scripts/qa_plan_scaffold.py --feature <feature-name> --quick-flow <input.md>...`
 - Full flow analysis: `python3 skills/ai-sdlc-qa/scripts/qa_plan_scaffold.py --feature <feature-name> --full-flow <input.md>...`
-- To emit the canonical artifact skeleton and decision-log row without writing files, add `--emit-template --emit-decision-log-entry`.
-- To create the routed artifact and `decision-log.md`, add `--write`; then review and fill the generated TBD fields before final output.
+- To write content, pass one canonical heading with `--section "<section>"`; provide only that section body on stdin, without H1, H2, frontmatter, or a temporary content file.
+- Repeat `--section` for each required section, then run the same script with `--finalize` to validate the artifact and refresh metadata and specs indexes.
+- The AI must not write or directly edit the routed Markdown artifact; the script owns scaffold creation, section placement, and durable file writes.
+- Use `--decision-row` with one nine-cell Markdown table row on stdin when a decision-log entry is required.
+- Legacy `--emit-template`, `--emit-decision-log-entry`, and `--write` remain available for compatibility.
 - Use `--quick-flow` for first-pass synthesis with assumptions; use `--full-flow` before readiness, handoff, signoff, or any decision-sensitive output.
 
 ## Purpose

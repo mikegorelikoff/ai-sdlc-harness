@@ -54,7 +54,8 @@ def _is_cli_script(path: Path) -> bool:
 
 def _is_artifact_profile_script(path: Path) -> bool:
     """Detect wrappers around the shared artifact-profile helper."""
-    return "emit_profile_report(" in path.read_text(encoding="utf-8")
+    text = path.read_text(encoding="utf-8")
+    return "emit_profile_report(" in text and "build_parser(" in text
 
 
 def run_skill_script_contract(skill_dir: Path) -> None:
@@ -83,6 +84,10 @@ def run_skill_script_contract(skill_dir: Path) -> None:
                 raise AssertionError(f"{script.relative_to(ROOT)} --help did not print usage")
 
         if _is_artifact_profile_script(script):
+            help_result = _run_script(script, "--help")
+            for flag in ("--section", "--finalize", "--decision-row"):
+                if flag not in help_result.stdout:
+                    raise AssertionError(f"{script.relative_to(ROOT)} --help missing {flag}")
             # Artifact-profile scripts must honor both flow modes and emit the
             # deterministic skeletons used to save prompt tokens.
             for flag, expected in (("--quick-flow", "Assumption/default"), ("--full-flow", "Open questions/blockers")):

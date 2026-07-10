@@ -56,15 +56,23 @@ The AI uses script output to identify:
 
 ## AI Production Behavior
 
-When the AI uses a scaffold script with `--write`, the script produces:
+The AI does not create a temporary content file or write the routed Markdown
+artifact itself. It sends only one section body to the scaffold script on stdin:
 
-- the routed artifact skeleton;
+```bash
+python3 <skill-script> --feature <feature> --section "<canonical-section>" --quick-flow
+```
+
+The script owns:
+
+- routed artifact initialization and section placement;
 - `artifact_metadata`;
 - `decision-log.md` when absent;
-- refreshed workspace specs indexes.
+- atomic durable writes.
 
-The AI then fills or updates the generated artifact body and reports any
-residual risk or blocked validation.
+After all required sections are supplied, the AI runs the same script with
+`--finalize`. Finalization checks completeness, refreshes metadata and workspace
+indexes, and leaves the artifact ready for the skill's validation gates.
 
 ## Shared Contract
 
@@ -73,6 +81,9 @@ CLI scripts support:
 - `--help`;
 - `--quick-flow`;
 - `--full-flow`;
+- `--section` with content on stdin;
+- `--finalize`;
+- `--decision-row` with one decision table row on stdin;
 - state flags when they operate on a lifecycle skill;
 - metadata flags when they create or update generated artifacts.
 
@@ -90,6 +101,7 @@ evidence and deterministic outputs that the skill can review.
 The AI must not:
 
 - manually retype large scaffold structures when the script can emit them;
+- create temporary section files or directly edit a script-owned artifact;
 - ignore script warnings in full flow;
 - pass `--quick-flow` to the script while behaving as full flow in the response;
 - treat script output as human approval;

@@ -103,6 +103,8 @@ machine-readable indexes.
 - Skills define role-specific AI behavior for PM, BA, QA, Delivery, and Dev.
 - Helper scripts handle repetitive scaffolding, validation, indexing, and state
   checks so AI spends fewer tokens rediscovering context.
+- For generated Markdown, AI sends only section content through stdin; scaffold
+  scripts own headings, metadata, routing, file writes, and finalization.
 - `decision-log.md` captures why important choices were made.
 - `state.toon`, `specs-index.toon`, and `plan.toon` give AI compact continuity
   across sessions.

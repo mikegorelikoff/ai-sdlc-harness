@@ -15,53 +15,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
-from spec_helpers import plan_required_sections
+from spec_helpers import SDD_ARTIFACT_SECTIONS, plan_required_sections
 
-REQUIRED_REQUIREMENTS = [
-    "Goal",
-    "Problem Statement",
-    "Scope",
-    "Actors",
-    "Inputs",
-    "Outputs",
-    "Functional Requirements",
-    "Non-Functional Requirements",
-    "Constraints",
-    "Acceptance Criteria",
-    "Out of Scope",
-]
-
-REQUIRED_DESIGN = [
-    "Overview",
-    "Architecture",
-    "Components",
-    "Interfaces and Contracts",
-    "Data Model",
-    "Error Handling",
-    "Security Considerations",
-    "Observability",
-    "Risks and Tradeoffs",
-    "Validation Strategy",
-    "Migration Notes",
-]
-
-REQUIRED_TEST_CASES = [
-    "Scope",
-    "Scenario Matrix",
-    "Layer Mapping",
-    "Automation Plan",
-    "Open Gaps",
-]
-
-REQUIRED_QA = [
-    "Change Summary",
-    "Acceptance Scenarios",
-    "Regression Targets",
-    "Risk Notes",
-    "Validation Commands",
-    "Manual Checks",
-    "Signoff",
-]
+REQUIRED_REQUIREMENTS = SDD_ARTIFACT_SECTIONS["requirements"][:11]
+REQUIRED_DESIGN = SDD_ARTIFACT_SECTIONS["design"]
+REQUIRED_TEST_CASES = SDD_ARTIFACT_SECTIONS["test-cases"]
+REQUIRED_QA = SDD_ARTIFACT_SECTIONS["qa"]
 
 REQUIRED_PLAN = plan_required_sections()
 

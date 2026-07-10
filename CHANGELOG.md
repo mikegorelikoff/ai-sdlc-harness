@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Added stdin-driven `--section` and `--finalize` artifact assembly across the
+  20 shared profile skills.
+- Added deterministic decision-log row insertion with `--decision-row`.
+- Added `sdd_artifact_scaffold.py` for content-only generation of the five SDD
+  source Markdown artifacts.
+
+### Changed
+
+- Scaffold scripts now own Markdown initialization, section placement, metadata,
+  atomic writes, and index refresh; the AI supplies only section bodies.
+- Centralized SDD artifact section definitions for scaffold and validator reuse.
+
 ## v0.3.0 - 2026-07-10
 
 ### Added
