@@ -16,6 +16,10 @@ flow modes, trace IDs, and metadata tags in a compact form.
 The Markdown file is the human-facing view of the same index. It is optimized
 for review, handoff, and feature inventory.
 
+The index is a projection, not a manually curated registry. The indexer scans
+feature folders, parses artifact metadata, reads canonical state, and renders
+both formats from the same in-memory rows.
+
 ## AI Reading Behavior
 
 When the AI needs feature context, it reads the relevant TOON index first:
@@ -48,6 +52,20 @@ workspace index. The generated TOON index includes:
 
 The generated Markdown index includes the same information in tables for humans.
 
+### Source Fields
+
+Feature rows combine:
+
+- the folder slug and workspace;
+- `current_stage`, `active_skill`, flow, and update date from state;
+- artifact count and metatags from visible Markdown;
+- direct decision-log and canonical state paths.
+
+Artifact rows combine metadata with safe fallbacks. Missing metadata produces
+`unknown`/`unindexed` signals rather than inventing a valid status or skill.
+Trace IDs may be extracted from the body as a fallback, but generated metadata
+should still be repaired.
+
 ## CLI
 
 The AI refreshes both refinement and implementation indexes with:
@@ -66,6 +84,9 @@ python3 skills/_shared/ai_sdlc_specs_index.py --workspace implementation --full-
 `--quick-flow` is enough after routine scaffold writes. The AI uses
 `--full-flow` when a handoff, readiness review, or signoff depends on proving
 that the index reflects the latest artifacts.
+
+The current CLI always scans the selected local workspace; flow flags describe
+the caller's verification intent rather than changing index contents.
 
 ## TOON Shape
 
@@ -113,4 +134,37 @@ The AI must not:
 - rely on stale index rows after creating or materially changing artifacts;
 - treat `specs-index.md` as the LLM-optimized source when TOON exists;
 - treat the index summary as a replacement for reading selected source
-  artifacts when details, approvals, or validation evidence matter.
+artifacts when details, approvals, or validation evidence matter.
+
+## Freshness And Rebuild Semantics
+
+Indexes do not watch the filesystem. They become stale when an artifact,
+metadata block, decision path, or state file changes outside a helper-managed
+finalization. Rebuild the affected workspace after repair.
+
+Index writes are atomic and serialized. The scanner reads state after the
+artifact transition, then replaces TOON and Markdown outputs under a workspace
+lock. Concurrent feature writers may cause an intermediate scan to miss a later
+change, but the last completed rebuild scans the whole workspace and converges
+to current sources.
+
+## Index Integrity Checks
+
+For strict handoff, verify:
+
+- the feature row points to canonical `_ai_sdlc/state.toon`;
+- artifact count matches visible feature Markdown intended for indexing;
+- every canonical lifecycle artifact has a row;
+- artifact path, skill, status, and flow match metadata;
+- the Markdown and TOON indexes were generated from the same update;
+- legacy and canonical index files are not divergent.
+
+`refinement_status.py` checks required artifact entries in both indexes for a
+complete refinement package.
+
+## Scaling Behavior
+
+The TOON index exists to avoid recursive reads as the number of features grows.
+An agent filters rows first, then opens a small selected set. If indexes become
+large, split work by the existing refinement/implementation workspace boundary
+rather than creating per-role indexes that can disagree about the same feature.

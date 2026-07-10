@@ -5,6 +5,11 @@ AI assistant produces this index as YAML frontmatter at the top of each Markdown
 artifact so future agents can filter, validate, and connect artifacts without
 rereading every body section.
 
+Metadata is deliberately denormalized: fields repeat information available in
+the path, state, or body so an indexer can route the artifact without reading
+everything. Because it is denormalized, helpers must refresh it whenever the
+underlying facts change.
+
 ## Required Frontmatter
 
 The AI places this block before the first visible heading:
@@ -59,6 +64,58 @@ artifact_metadata:
   that prove the artifact has been checked.
 - `metatags` should stay compact and retrieval-oriented.
 
+## Field Semantics
+
+| Field | Authority and expected value |
+| --- | --- |
+| `schema` | Parser contract, currently `ai-sdlc-artifact-metadata/v1` |
+| `feature` | Stable feature slug shared with the containing folder |
+| `artifact` | Canonical filename, not a display title |
+| `path` | Repository-relative canonical path |
+| `workspace` | Ownership boundary: `refinement` or `implementation` |
+| `skill` | Skill responsible for the latest material shape/content update |
+| `flow_mode` | Evidence strictness of that material update |
+| `state_file` | Canonical feature-local lifecycle state path |
+| `decision_log` | Canonical feature-local decision record path |
+| `status` | Artifact review/readiness state, not lifecycle stage state |
+| `owner` | Role or person accountable for unresolved work or acceptance |
+| `created_at` | Original creation date; preserved across normal updates |
+| `updated_at` | Date of the latest material update |
+| `trace_ids` | IDs materially represented or depended upon |
+| `related_artifacts` | Local sources needed to interpret this artifact |
+| `validation` | Evidence already executed or externally linked |
+| `metatags` | Compact retrieval vocabulary |
+
+## Artifact Status Versus Stage Status
+
+Artifact `status` and state-machine stage status answer different questions.
+
+- Artifact status says whether this document is draft, under review, approved,
+  validated, blocked, or superseded.
+- Stage status says whether the lifecycle activity is not started, active,
+  blocked, done, skipped, or not applicable.
+
+A stage must not be marked done merely because metadata says `review`. Likewise,
+an approved artifact does not prove every downstream stage is done. Strict
+handoff checks both records and their evidence.
+
+## Metatag Design
+
+Good metatags are stable retrieval facets, not prose. A typical set includes:
+
+```yaml
+metatags:
+  - ai-sdlc
+  - refinement
+  - ai-sdlc-ba
+  - business-context
+  - review
+```
+
+Add a risk, domain, or assumption tag only when future filtering benefits from
+it. Do not encode full decisions, owners, or requirement text into tags; those
+belong in dedicated fields or the body.
+
 ## AI Reading Behavior
 
 When the AI opens an artifact, it reads the metadata first and uses it to decide:
@@ -96,6 +153,10 @@ When the AI creates an artifact, it produces metadata with:
 When the AI materially updates an artifact, it updates `updated_at`, status,
 trace IDs, related artifacts, validation, and metatags as needed.
 
+The scaffold helper preserves durable annotations where possible. It recomputes
+path, feature, flow, trace IDs, dates, and lifecycle references from canonical
+inputs rather than trusting stale generated values.
+
 ## Flow Behavior
 
 In `--quick-flow`, metadata is filled from available context without a
@@ -121,6 +182,22 @@ Update the frontmatter whenever any of these change:
 
 Metadata is an index. It does not replace the artifact content, the decision
 log, or the feature `state.toon`.
+
+## Consistency Checks
+
+Before full-flow handoff, verify:
+
+- physical path equals `path` and filename equals `artifact`;
+- folder slug equals `feature`;
+- workspace matches the routing root;
+- `state_file` and `decision_log` exist at canonical locations;
+- `flow_mode` matches the artifact quality level being claimed;
+- trace IDs exist in the body or linked evidence;
+- related artifacts are current and listed in Source Coverage when consumed;
+- approved/validated status has visible evidence.
+
+The specs index is rebuilt from metadata. Incorrect metadata therefore creates
+incorrect discovery even when the body itself is strong.
 
 ## AI Failure Modes
 

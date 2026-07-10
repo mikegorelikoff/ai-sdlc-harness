@@ -11,8 +11,20 @@ They are not required runtime input for every AI task; operational behavior live
 in the selected skill instructions, helper scripts, state files, and workspace
 indexes.
 
+Start with [System Model](system-model.md) for architecture and authority. Read
+[Refinement Lifecycle](refinement-lifecycle.md) for the end-to-end cascade, then
+use the focused concept files when changing a contract or diagnosing a package.
+
 ## Concept Map
 
+- [System Model](system-model.md) explains the architecture layers, authority
+  hierarchy, invariants, end-to-end data flow, and recovery model.
+- [Refinement Lifecycle](refinement-lifecycle.md) defines the canonical
+  18-stage cascade, predecessor graph, completion semantics, and SDD handoff.
+- [Context And Quality Gates](context-and-quality.md) explains source union,
+  context snapshots, 24k budgets, self-contained artifacts, and tiered gates.
+- [Migration And Concurrency](migration-and-concurrency.md) explains canonical
+  paths, legacy conflict handling, atomic writes, locks, and recovery.
 - [Artifact Routing](artifact-routing.md) explains `specs-refiniment/` versus
   `specs/` and where generated files belong.
 - [Artifact Metadata And Metatags](artifact-metadata.md) defines the required
@@ -33,3 +45,14 @@ indexes.
 When working with the harness, use these concept files to understand why the
 system behaves the way it does. Use role guides and individual `SKILL.md` files
 as the workflow and execution entrypoints.
+
+## Suggested Reading Paths
+
+- **New maintainer:** System Model → Skill Anatomy → Artifact Routing → State
+  Machine → Context And Quality → Migration And Concurrency.
+- **PM/BA/QA workflow owner:** Refinement Lifecycle → Flow Modes → Decision Log
+  → Traceability.
+- **Runtime contributor:** Token-Saving Scripts → Context And Quality → Specs
+  Index → Migration And Concurrency.
+- **Incident/recovery:** System Model authority hierarchy → Migration And
+  Concurrency recovery → State/Artifact consistency → package status gates.

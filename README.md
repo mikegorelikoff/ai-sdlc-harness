@@ -159,6 +159,14 @@ lives in the selected skill, helper scripts, state files, and workspace indexes.
 
 - [Artifact Routing](concepts/artifact-routing.md) explains where generated
   artifacts belong and why `specs-refiniment/` is separate from `specs/`.
+- [System Model](concepts/system-model.md) explains architecture layers,
+  authority, invariants, data flow, consistency, and recovery.
+- [Refinement Lifecycle](concepts/refinement-lifecycle.md) documents the full
+  18-stage cascade, predecessor graph, resume rules, and SDD handoff.
+- [Context And Quality Gates](concepts/context-and-quality.md) explains source
+  resolution, context snapshots, 24k budgets, and tiered finalization gates.
+- [Migration And Concurrency](concepts/migration-and-concurrency.md) explains
+  legacy-path safety, atomic writes, locks, and interrupted-write recovery.
 - [Artifact Metadata And Metatags](concepts/artifact-metadata.md) explains
   searchable frontmatter, tags, trace fields, and update triggers.
 - [Decision Log](concepts/decision-log.md) explains auditable decisions,

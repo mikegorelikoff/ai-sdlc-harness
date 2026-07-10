@@ -4,6 +4,10 @@ Scripts exist to reduce repeated LLM work. The AI assistant delegates local,
 deterministic analysis, scaffolding, validation, and indexing to scripts so it
 spends tokens on judgment rather than file scanning and reformatting.
 
+Token saving is a consequence of determinism, not the only quality goal. A
+smaller output that omits a blocker, source, or trace ID is worse than a larger
+pack with targeted follow-up reads.
+
 ## What Scripts Should Do
 
 A useful skill script takes over work that is:
@@ -16,7 +20,7 @@ A useful skill script takes over work that is:
 
 Examples:
 
-- summarize long input artifacts into compact signals;
+- project long input artifacts into compact evidence signals;
 - extract trace IDs and open markers;
 - check required Markdown sections;
 - generate canonical artifact templates;
@@ -36,6 +40,10 @@ Scripts honor the same flow mode used by the skill:
   stronger traceability or validation signals.
 
 If both flags are present, full flow wins.
+
+Default flow uses the full 24,000-token context budget and self-contained
+artifact shape, while treating depth heuristics as warnings. See
+[Context And Quality Gates](context-and-quality.md) for the exact gate matrix.
 
 ## AI Reading Behavior
 
@@ -65,6 +73,20 @@ The AI uses script output to identify:
 - decision-log rows;
 - validation blockers.
 
+### Reading A Context Pack
+
+Use this order:
+
+1. Confirm `feature`, `skill`, `workspace`, `flow_mode`, and budget.
+2. Review `budget_status` and source status.
+3. Read blocker, decision, security, validation, and trace anchors.
+4. Review gaps.
+5. Open every required `next_reads` range.
+6. Use the complete trace-ID set while drafting and checking coverage.
+
+Do not treat `estimated_tokens` or a cache hit as evidence that sources are
+complete or current; source hashes and statuses provide that signal.
+
 ## Context Cache And Measurement
 
 Context packs are generated on demand. `--cache-context` stores a derived pack
@@ -81,6 +103,13 @@ Use `skills/_shared/ai_sdlc_context_benchmark.py` to compare raw source tokens,
 the bounded pack, and the exact line ranges requested through `next_reads`.
 Savings are informational: source-detail preservation and evidence correctness
 take precedence over a fixed percentage target.
+
+### Cache Identity
+
+The per-skill fingerprint covers context schema, skill, flow, budget, required
+sections, keywords, source paths, and source hashes. A change to any of them
+invalidates the cache. The feature manifest uses a skill-neutral fingerprint of
+the sorted source inventory so it remains deterministic across stages.
 
 ## AI Production Behavior
 
@@ -105,6 +134,11 @@ success, stdout ends with a short human-readable `Summary:` line covering the
 artifact, feature, flow, completed section count, trace-ID count, and index
 refresh.
 
+Finalization reads the current skill snapshot when available, checks source
+freshness, validates Source Coverage, updates metadata, applies requested state
+changes, and rebuilds the index. The script summary reports what completed; it
+does not replace the artifact body.
+
 ## Shared Contract
 
 CLI scripts support:
@@ -120,6 +154,25 @@ CLI scripts support:
 
 Skill-specific scripts are tested by both per-skill tests and the shared
 repository test suite.
+
+Shared state, index, and migration CLIs are infrastructure commands and do not
+pretend to expose lifecycle flags that have no meaning for them. Repository
+contract tests explicitly distinguish those commands from skill wrappers.
+
+## Script Exit Semantics
+
+Scripts use non-zero exits for actionable failure:
+
+- invalid CLI input or section content;
+- transition/predecessor failure;
+- migration conflict;
+- missing or stale evidence;
+- artifact quality failure;
+- incomplete package/readiness gate.
+
+Warnings remain visible on stdout/stderr but do not fail default flow when the
+tiered quality policy classifies them as heuristic. Agents must report the
+warning as residual risk rather than hiding it.
 
 ## What Scripts Should Not Do
 

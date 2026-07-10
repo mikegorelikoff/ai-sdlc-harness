@@ -4,6 +4,11 @@
 
 ### Added
 
+- Expanded `concepts/` with detailed system architecture, the canonical
+  18-stage refinement lifecycle, context/quality semantics, and safe
+  migration/concurrency behavior.
+- Added authority hierarchies, invariants, status matrices, worked traceability
+  examples, consistency checks, and recovery playbooks across concept docs.
 - Added safe `--check`/`--apply` migration for legacy TOON and Markdown paths,
   with hard failure for divergent canonical and legacy content.
 - Added tiered artifact quality signals and full-cascade gating.

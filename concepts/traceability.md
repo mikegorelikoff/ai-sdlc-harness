@@ -8,6 +8,11 @@ source artifact IDs.
 In this library, traceability is not stored in one file. It is built from a
 small set of linked records.
 
+Traceability is directional. Upstream records explain intent; downstream
+records prove decomposition, implementation, and validation. A useful chain can
+be traversed in both directions: from a goal to its tests, or from a failed test
+back to the requirement and decision that created it.
+
 ## Traceability Sources
 
 - `decision-log.md` records durable decisions.
@@ -33,6 +38,14 @@ The AI preserves or produces stable IDs when possible:
 - `DEC-###` for decisions;
 - `EPIC-###` for epics.
 
+The runtime also recognizes `GOAL-###`, `CAP-###`, `WF-###`, `BR-###`,
+`SC-###`, `NFR-###`, and `DEP-###` when artifacts use more detailed goal,
+capability, workflow, business-rule, scenario, non-functional, or dependency
+catalogs. `T###` remains supported by SDD task plans.
+
+IDs are stable within a feature. Do not renumber them merely to make tables
+contiguous; supersede or deprecate records while preserving references.
+
 ## Minimum Bar
 
 The AI produces enough traceability for a feature to answer:
@@ -45,6 +58,41 @@ The AI produces enough traceability for a feature to answer:
 
 The AI reads `specs-index.toon` first, then opens only the artifacts needed for
 the current question.
+
+## Traceability Graph
+
+```text
+GOAL-001
+  -> CAP-002
+    -> EPIC-003
+      -> US-014
+        -> REQ-021 / BR-006
+          -> AC-031
+            -> TC-044
+              -> suite: regression
+                -> validation evidence / defect / signoff
+
+DEC-004 -------> REQ-021, AC-031, rollout notes
+RISK-007 ------> test strategy, TC-044, monitoring requirement
+```
+
+Not every feature needs every ID type. The chain must be detailed enough for
+the decisions and risks involved, without generating identifiers that no
+artifact uses.
+
+## Coverage Dimensions
+
+Traceability reviews should distinguish:
+
+- **requirements coverage:** every material requirement has acceptance evidence;
+- **scenario coverage:** happy, negative, boundary, permission, and failure paths;
+- **risk coverage:** high-impact risks map to prevention, detection, or tests;
+- **decision coverage:** accepted choices appear in affected artifacts;
+- **execution coverage:** planned tests map to suites, environments, and results;
+- **ownership coverage:** blockers and follow-up work have accountable owners.
+
+A high percentage of linked IDs is not sufficient when the uncovered item is a
+critical security, data-loss, compliance, or rollout risk.
 
 ## AI Reading Behavior
 
@@ -71,6 +119,29 @@ When the AI creates or updates an artifact, it produces traceability by:
 - updating state transition `decision_ref` values;
 - adding validation evidence when checks were run;
 - refreshing specs indexes.
+
+### Worked Example
+
+Suppose `REQ-012` requires retrying a recoverable payment failure and `DEC-004`
+sets the retry window to 72 hours. The delivery spec should link both IDs,
+`AC-019` should describe observable retry behavior and stopping conditions, and
+`TC-044` should test issuer recovery while a negative case proves permanent
+failures are not retried. QA readiness then reports both test IDs and any
+environment dependency. A reviewer can recover the whole chain without the
+original chat.
+
+## Broken-Link Handling
+
+When an ID is referenced but its defining artifact is missing:
+
+1. Search the workspace index and related-artifact metadata.
+2. Check whether the record was renamed, superseded, or migrated.
+3. Restore the defining source or update every affected reference deliberately.
+4. Record a decision if meaning or accepted scope changed.
+5. Rebuild indexes and rerun the relevant traceability/readiness gate.
+
+Do not satisfy the check by removing the downstream ID when the underlying
+requirement or risk still exists.
 
 ## AI Failure Modes
 

@@ -5,6 +5,10 @@ validation, implementation, rollout, or traceability. The AI assistant produces
 or updates decision rows whenever a skill makes, accepts, changes, or depends on
 a material decision.
 
+A decision is not merely an action item or an unanswered question. It records a
+choice between meaningful alternatives whose outcome affects delivery. Open
+questions remain in artifacts until a choice is proposed or accepted.
+
 Every feature workspace should keep its own decision log:
 
 - `specs-refiniment/<feature-name>/decision-log.md` for refinement work;
@@ -20,6 +24,9 @@ The AI adds or updates a decision entry when a skill:
 - skips a lifecycle predecessor in quick flow;
 - changes artifact routing, ownership, status, validation, or rollout;
 - depends on a decision made outside the current artifact.
+
+Do not add a new row for formatting changes, routine script execution, or facts
+that are already authoritative source evidence and involve no choice.
 
 ## Canonical Structure
 
@@ -39,6 +46,29 @@ The AI adds or updates a decision entry when a skill:
   them manually.
 - Decision IDs should appear in related artifacts when they materially explain
   scope or validation.
+
+## Decision Status Lifecycle
+
+| Status | Meaning | May downstream work rely on it? |
+| --- | --- | --- |
+| `proposed` | A concrete option is awaiting authority or evidence | Only as an explicit risk/assumption |
+| `accepted` | The accountable owner or authorized workflow adopted it | Yes |
+| `rejected` | The option must not be treated as current intent | No |
+| `superseded` | A later decision replaced it | Follow the replacing decision |
+
+When superseding, preserve the original row and add the new `DEC-###` reference
+to its context or affected artifacts. This keeps historical reasoning auditable.
+
+## ID Allocation And Updates
+
+Decision IDs are feature-local, stable, and monotonically allocated. Before
+creating a row, inspect the existing log and choose the next unused `DEC-###`.
+If the same decision is being clarified without changing its meaning, update
+the existing row. If the selected option, scope, or authority changes, create a
+new decision and supersede the old one.
+
+Deterministic helpers upsert a row by ID and require the canonical nine-column
+shape. This avoids duplicate decisions caused by retries.
 
 ## AI Reading Behavior
 
@@ -72,6 +102,24 @@ When the AI creates a decision row, it produces:
 When a later skill changes the decision, the AI does not overwrite history
 silently. It updates status, adds a superseding decision, or references the new
 decision from affected artifacts.
+
+### Example
+
+```markdown
+| DEC-004 | 2026-07-10 | accepted | Product | Retry failed payments for 72 hours | Discovery showed recoverable issuer failures and support cost | 24h; 72h; manual-only — 72h selected | delivery-spec.md; qa.md | REQ-012; AC-019; TC-044 |
+```
+
+The row states the outcome, evidence, alternatives, ownership, affected files,
+and proof links. “Use recommended retry behavior” would be too vague to recover
+the decision later.
+
+## Cross-Workspace Decisions
+
+Refinement and implementation keep separate decision logs because they have
+different authorities. When an implementation constraint changes product scope,
+record the technical choice in the implementation log and link or add the
+scope-impact decision in refinement. Do not copy an accepted row into both logs
+without clarifying which record owns the decision.
 
 ## AI Failure Modes
 

@@ -5,6 +5,11 @@ single feature. The AI assistant reads `state.toon` before durable work,
 checks whether the requested skill can run, marks the skill in progress, and
 marks it complete only after the required artifact or review exists.
 
+The canonical 18-stage refinement graph and outputs are documented in
+[Refinement Lifecycle](refinement-lifecycle.md). The state machine consumes that
+same profile registry, preventing documentation, artifact names, and transition
+order from becoming independent contracts.
+
 ## State Files
 
 - Refinement: `specs-refiniment/<feature-name>/_ai_sdlc/state.toon`
@@ -54,6 +59,22 @@ Allowed statuses:
 - `skipped`
 - `not_applicable`
 
+### Status Meaning
+
+| Status | Meaning |
+| --- | --- |
+| `not_started` | No durable stage work has begun |
+| `in_progress` | This is the feature's single active lifecycle skill |
+| `blocked` | Work started but cannot proceed without evidence or authority |
+| `done` | Required output/review exists and completion checks passed |
+| `skipped` | The stage was intentionally bypassed with traceable justification |
+| `not_applicable` | The stage does not apply to this feature/workspace |
+
+`skipped` and `not_applicable` satisfy generic predecessor checks, but a
+declared complete refinement cascade can impose a stronger package rule. For
+example, release slicing requires an explicit N/A artifact rather than an absent
+stage.
+
 ## Enforcement Rules
 
 - Only one lifecycle skill may be `in_progress` for a feature.
@@ -63,6 +84,10 @@ Allowed statuses:
 - In `--quick-flow`, incomplete predecessors may be skipped only with
   `--assumption` or `--decision-ref`.
 - Skips must be represented in both `state.toon` and `decision-log.md`.
+
+State validation does not inspect artifact semantics on every transition. The
+stage helper and package status gates provide that evidence layer. A caller must
+therefore not invoke `complete` as a shortcut around artifact finalization.
 
 ## AI Production Behavior
 
@@ -105,6 +130,31 @@ Before choosing a next skill, the AI follows this pattern:
 
 Utility skills such as approvals do not advance the lifecycle unless a caller
 explicitly asks for state side effects.
+
+## State And Artifact Consistency
+
+| Observed state | Interpretation | Repair |
+| --- | --- | --- |
+| Stage `done`, artifact missing | State overclaims completion | Restore/regenerate artifact, or correct state with evidence |
+| Artifact finalized, stage `in_progress` | Transition may have been interrupted | Validate artifact, then complete stage |
+| Two stages `in_progress` | Corrupt or manually edited state | Stop and resolve ownership before writing |
+| Stage `done`, artifact `flow_mode: quick` in strict cascade | Focused completion is insufficient for full package | Enrich/refinalize in full flow |
+| State canonical and legacy copies differ | Migration conflict | Resolve files before transitions |
+
+State writes are atomic and serialized. The workspace index is rebuilt after
+the state update so its current-stage row reflects the committed transition.
+
+## Refinement And Implementation State
+
+Implementation has its own state because code delivery can progress, block, or
+be reviewed independently after upstream refinement. `upstream_state` links the
+implementation package to refinement without allowing implementation stages to
+rewrite upstream history.
+
+The implementation entrypoint normally requires delivery spec and QA readiness.
+If upstream evidence changes materially during implementation, revalidate the
+affected SDD artifacts and record the resulting decision; do not merely update
+the link.
 
 ## AI Failure Modes
 
