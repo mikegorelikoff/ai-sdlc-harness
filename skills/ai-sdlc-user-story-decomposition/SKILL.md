@@ -109,7 +109,7 @@ description: Use when the delivery gap review is complete and you need to conver
 
 ## Script Usage
 
-- Run `scripts/story_map.py` before drafting or updating this skill's artifact when inputs are longer than a few bullets, when traceability matters, or when a flow flag is supplied.
+- Run `scripts/story_map.py` before drafting or updating this skill's artifact when inputs are longer than a few bullets, when traceability matters, or when a flow flag is supplied. For agent analysis, pass `--format toon`, read `anchors` first, and open only `next_reads`; without that flag the script keeps its human-readable Markdown output.
 - Quick flow analysis: `python3 skills/ai-sdlc-user-story-decomposition/scripts/story_map.py --feature <feature-name> --quick-flow <input.md>...`
 - Full flow analysis: `python3 skills/ai-sdlc-user-story-decomposition/scripts/story_map.py --feature <feature-name> --full-flow <input.md>...`
 - To write content, pass one canonical heading with `--section "<section>"`; provide only that section body on stdin, without H1, H2, frontmatter, or a temporary content file.

@@ -1,0 +1,3 @@
+# Derived AI context packs are reproducible from source artifacts.
+specs/*/.ai-sdlc/context/
+specs-refiniment/*/.ai-sdlc/context/

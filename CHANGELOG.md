@@ -4,6 +4,13 @@
 
 ### Added
 
+- Added bounded `ai-sdlc-context/v1` TOON packs with exact source evidence,
+  trace anchors, structural gaps, and targeted `next_reads` ranges.
+- Added optional fingerprinted feature-local context caching and an
+  informational raw/pack/targeted-reread benchmark CLI.
+- Added SDD-specific compact context and TOON workflow status output.
+- Added a short human-readable stdout summary after successful artifact
+  finalization.
 - Added stdin-driven `--section` and `--finalize` artifact assembly across the
   20 shared profile skills.
 - Added deterministic decision-log row insertion with `--decision-row`.
@@ -12,6 +19,8 @@
 
 ### Changed
 
+- Profile analysis keeps Markdown as the human-readable default and exposes
+  bounded TOON through `--format toon` for token-efficient agent context.
 - Scaffold scripts now own Markdown initialization, section placement, metadata,
   atomic writes, and index refresh; the AI supplies only section bodies.
 - Centralized SDD artifact section definitions for scaffold and validator reuse.

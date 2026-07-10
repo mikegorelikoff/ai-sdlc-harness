@@ -14,6 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
+from ai_sdlc_context import toon_row, toon_scalar
 from analyze_spec import validate as analyze_validate
 from check_checklist import validate as checklist_validate
 from check_clarify import validate as clarify_validate
@@ -96,6 +97,7 @@ def main() -> int:
     parser.add_argument("--files", nargs="*", help="Changed-file context override")
     parser.add_argument("--quick-flow", action="store_true", help="Report concise status for quick-flow use")
     parser.add_argument("--full-flow", action="store_true", help="Report stricter status for full-flow use")
+    parser.add_argument("--format", choices=["toon", "text"], default="text", help="Human-readable text by default or compact TOON for agents")
     parser.add_argument("--feature", default="<feature-name>")
     add_state_arguments(parser)
     args = parser.parse_args()
@@ -119,13 +121,31 @@ def main() -> int:
     # Non-ready states write to stderr so shell callers can distinguish blockers
     # from successful status output.
     stream = sys.stdout if state == "ready_for_impl" else sys.stderr
-    print(f"Spec: {relative}", file=stream)
-    print(f"Resolved from: {resolved.source}", file=stream)
-    print(f"Current workflow state: {state}", file=stream)
-    if reasons:
-        print("Reasons:", file=stream)
+    if args.format == "toon":
+        next_actions = {
+            "needs_spec": "complete required SDD artifacts",
+            "needs_clarify": "resolve blocking questions and assumptions",
+            "needs_checklist": "complete the SDD checklist",
+            "needs_analyze": "repair cross-artifact traceability",
+            "needs_refinement": "complete upstream refinement gates",
+            "ready_for_impl": "start the next implementation task from plan.toon",
+        }
+        print("schema: ai-sdlc-sdd-status/v1", file=stream)
+        print(f"spec: {toon_scalar(relative.as_posix())}", file=stream)
+        print(f"resolved_from: {resolved.source}", file=stream)
+        print(f"state: {state}", file=stream)
+        print(f"next_action: {toon_scalar(next_actions[state])}", file=stream)
+        print(f"reasons[{len(reasons)}]{{message}}:", file=stream)
         for reason in reasons:
-            print(f"- {reason}", file=stream)
+            print("  " + toon_row((reason,)), file=stream)
+    else:
+        print(f"Spec: {relative}", file=stream)
+        print(f"Resolved from: {resolved.source}", file=stream)
+        print(f"Current workflow state: {state}", file=stream)
+        if reasons:
+            print("Reasons:", file=stream)
+            for reason in reasons:
+                print(f"- {reason}", file=stream)
     return 0 if state == "ready_for_impl" else 1
 
 

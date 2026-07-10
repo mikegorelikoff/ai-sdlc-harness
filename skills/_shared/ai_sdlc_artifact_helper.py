@@ -31,6 +31,7 @@ from pathlib import Path
 from ai_sdlc_specs_index import parse_artifact_metadata
 from ai_sdlc_specs_index import write_indexes_for_roots
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
+from ai_sdlc_context import emit_context_pack, positive_int
 
 
 # Common traceability IDs that should survive compression and remain visible to
@@ -637,7 +638,12 @@ def emit_profile_report(
                 state_rc = run_state_action(state_args, skill_name, workspace, artifact_path)
                 if state_rc:
                     return state_rc
+            finalized_ids = sorted({match.group(0).upper() for match in ID_PATTERN.finditer(updated)})
             print(f"Finalized artifact: {artifact_file}")
+            print(
+                f"Summary: completed {artifact_name} for {feature} in {flow_mode} flow; "
+                f"{len(required_sections)} sections, {len(finalized_ids)} trace IDs, indexes refreshed."
+            )
             return 0
         except ValueError as exc:
             print(f"ERROR: {exc}", file=sys.stderr)
@@ -647,6 +653,33 @@ def emit_profile_report(
         state_rc = run_state_action(state_args, skill_name, workspace, artifact_path)
         if state_rc:
             return state_rc
+
+    # Pure analysis defaults to the compact evidence-backed TOON projection.
+    # Artifact/template operations intentionally retain their existing Markdown
+    # contract because they are human-facing or write source-of-truth files.
+    output_format = getattr(state_args, "format", "markdown") if state_args is not None else "markdown"
+    legacy_operation = bool(emit_template or emit_decision_log_entry or write)
+    if output_format == "toon" and not legacy_operation:
+        configured_budget = getattr(state_args, "budget_tokens", None) if state_args is not None else None
+        budget = configured_budget or (1200 if flow_mode == "quick" else 2500 if flow_mode == "full" else 1800)
+        print(
+            emit_context_pack(
+                files=files,
+                feature=feature,
+                skill=skill_name,
+                workspace=workspace,
+                flow_mode=flow_mode,
+                budget_tokens=budget,
+                required_sections=required_sections,
+                keywords=keywords,
+                cache=bool(
+                    getattr(state_args, "cache_context", False) or getattr(state_args, "refresh_context", False)
+                ) if state_args is not None else False,
+                refresh=bool(getattr(state_args, "refresh_context", False)) if state_args is not None else False,
+            ),
+            end="",
+        )
+        return 0
 
     # Header metadata is printed first so an agent can decide where the output
     # belongs without reading the entire generated report.
@@ -834,6 +867,10 @@ def build_parser(description: str) -> argparse.ArgumentParser:
     parser.add_argument("files", nargs="*", type=Path, help="Markdown or text artifacts to compress")
     parser.add_argument("--feature", default="<feature-name>")
     parser.add_argument("--summary-limit", type=int, default=5)
+    parser.add_argument("--format", choices=["toon", "markdown"], default="markdown", help="Human-readable Markdown by default; use TOON for compact agent context")
+    parser.add_argument("--budget-tokens", type=positive_int, help="Approximate context budget; defaults depend on flow mode")
+    parser.add_argument("--cache-context", action="store_true", help="Reuse or write the feature-local derived context cache")
+    parser.add_argument("--refresh-context", action="store_true", help="Force refresh of the feature-local context cache")
     parser.add_argument("--quick-flow", action="store_true", help="Compress aggressively and minimize questions")
     parser.add_argument("--full-flow", action="store_true", help="Use stricter gap handling and verification prompts")
     parser.add_argument("--emit-template", action="store_true", help="Emit the target Markdown artifact template")

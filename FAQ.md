@@ -38,6 +38,12 @@ Common examples:
 - `specs-index.toon` summarizes feature artifacts.
 - `plan.toon` links implementation tasks, status, dependencies, tests, and
   validation order.
+- Profile-script context packs carry exact facts, trace IDs, blockers, and
+  source line references within a configurable context budget. They are
+  derived views and never replace the full Markdown specification.
+
+When a pack cannot include all useful evidence, `next_reads` identifies the
+smallest source sections and line ranges the assistant should inspect next.
 
 ## Where do generated artifacts go?
 

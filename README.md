@@ -108,6 +108,9 @@ machine-readable indexes.
 - `decision-log.md` captures why important choices were made.
 - `state.toon`, `specs-index.toon`, and `plan.toon` give AI compact continuity
   across sessions.
+- Profile scripts keep Markdown for people and can emit bounded
+  `ai-sdlc-context/v1` TOON packs with exact evidence locations and targeted
+  follow-up reads for agents.
 - Markdown stays readable for humans; TOON files stay cheap for AI to inspect.
 
 ## Role Coverage

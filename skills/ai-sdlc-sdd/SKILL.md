@@ -109,6 +109,7 @@ description: AI SDLC repository spec-driven development workflow. Use when an AI
 - Use `scripts/check_clarify.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
 - Use `scripts/resolve_active_spec.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
 - Use `scripts/sdd_status.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
+- Use `scripts/sdd_context.py` before broad SDD reads; inspect its exact AC/TC/task/decision anchors and follow only the reported `next_reads` ranges.
 - Use `scripts/spec_helpers.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
 - Use `scripts/validate_spec.py` when deterministic validation, planning, or formatting is required by the workflow; pass the same `--quick-flow` or `--full-flow` flag that was supplied to the skill when supported.
 - Use `scripts/plan_links.py` to emit, write, or validate the required `plan.toon` machine plan plus `plan.md` execution plan and cross-artifact trace map.
@@ -119,7 +120,8 @@ description: AI SDLC repository spec-driven development workflow. Use when an AI
 
 - Use SDD scripts as ordered gates for implementation work; pass the same flow flag supplied to the skill.
 - Resolve active spec when the target is unclear: `python3 skills/ai-sdlc-sdd/scripts/resolve_active_spec.py --quick-flow --files <changed-file>...` or `python3 skills/ai-sdlc-sdd/scripts/resolve_active_spec.py --full-flow <spec-or-folder>`.
-- Check workflow state: `python3 skills/ai-sdlc-sdd/scripts/sdd_status.py --spec specs/<feature-name> --quick-flow` for concise status, or `--full-flow` before handoff.
+- Check workflow state for people with `python3 skills/ai-sdlc-sdd/scripts/sdd_status.py --spec specs/<feature-name> --quick-flow`; agents add `--format toon`, and full-flow remains required before handoff.
+- Build bounded implementation context: `python3 skills/ai-sdlc-sdd/scripts/sdd_context.py specs/<feature-name> --quick-flow`; use `--cache-context` only when cross-session reuse is useful.
 - Write one artifact section: `python3 skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py specs/<feature-name> --artifact <requirements|design|test-cases|qa|tasks> --section "<section>" --quick-flow`; provide only the section body on stdin.
 - Repeat section writes and then replace `--section ...` with `--finalize`; the AI must not create a temporary content file or directly edit the generated Markdown artifact.
 - Add a decision with `--decision-row` and one nine-cell Markdown table row on stdin; `--artifact` is not required for this action.

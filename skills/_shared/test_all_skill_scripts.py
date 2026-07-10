@@ -17,6 +17,8 @@ import textwrap
 import unittest
 from pathlib import Path
 
+from ai_sdlc_context import emit_context_pack, estimate_tokens, toon_row
+
 
 ROOT = Path(__file__).resolve().parents[2]
 README = ROOT / "README.md"
@@ -304,6 +306,80 @@ class ScriptContractTests(unittest.TestCase):
                 cache_name = str(path.relative_to(ROOT)).replace("/", "__") + ".pyc"
                 py_compile.compile(str(path), cfile=str(Path("/tmp") / "ai-sdlc-harness-pycache" / cache_name), doraise=True)
 
+    def test_context_pack_preserves_exact_evidence_and_uses_targeted_reads(self) -> None:
+        """Compact output must retain trace anchors without invented summaries."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            cwd = Path(temp_dir)
+            source = cwd / "notes.md"
+            lines = ["# Notes", "", "## Acceptance Criteria"]
+            lines.extend(
+                f"- AC-{index:03d}: Проверить значение, кавычки \"точно\" и validation evidence {index}."
+                for index in range(1, 31)
+            )
+            source.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            output = emit_context_pack(
+                files=[source], feature="context-test", skill="ai-sdlc-ba",
+                workspace="refinement", flow_mode="quick", budget_tokens=700,
+                required_sections=["Acceptance Criteria"], keywords=["validation"], root=cwd,
+            )
+            self.assertIn("schema: ai-sdlc-context/v1", output)
+            self.assertIn("AC-001", output)
+            self.assertIn("AC-030", output)
+            self.assertIn("next_reads[", output)
+            self.assertLessEqual(estimate_tokens(output), 700)
+            self.assertEqual(toon_row(('значение, кавычки "точно"',)), '"значение, кавычки ""точно"""')
+
+    def test_context_cache_hits_and_invalidates_by_source_hash(self) -> None:
+        """Feature-local cache must only be reused for an exact fingerprint."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            cwd = Path(temp_dir)
+            source = cwd / "input.md"
+            source.write_text("# Input\n\n## Goal\nREQ-001: First value.\n", encoding="utf-8")
+            kwargs = dict(
+                files=[source], feature="cache-demo", skill="ai-sdlc-ba",
+                workspace="refinement", flow_mode="quick", budget_tokens=1200,
+                required_sections=["Goal"], keywords=["value"], cache=True, root=cwd,
+            )
+            first = emit_context_pack(**kwargs)
+            second = emit_context_pack(**kwargs)
+            self.assertIn("cache_status: refreshed", first)
+            self.assertIn("cache_status: hit", second)
+            source.write_text("# Input\n\n## Goal\nREQ-002: Changed value.\n", encoding="utf-8")
+            changed = emit_context_pack(**kwargs)
+            self.assertIn("cache_status: refreshed", changed)
+            self.assertIn("REQ-002", changed)
+
+    def test_profile_analysis_keeps_markdown_default_and_offers_compact_toon(self) -> None:
+        """People get Markdown by default while agents can request compact TOON."""
+        script = ROOT / "skills/ai-sdlc-ba/scripts/ba_context_scaffold.py"
+        compact = run_script(
+            script, "--feature", "format-demo", "--quick-flow", "--format", "toon", str(README)
+        )
+        self.assertEqual(compact.returncode, 0, compact.stderr)
+        self.assertTrue(compact.stdout.startswith("schema: ai-sdlc-context/v1"))
+        human = run_script(script, "--feature", "format-demo", "--quick-flow", str(README))
+        self.assertEqual(human.returncode, 0, human.stderr)
+        self.assertIn("## Compact Summary", human.stdout)
+
+    def test_context_benchmark_reports_positive_savings_without_a_percentage_gate(self) -> None:
+        """Measurement should expose savings while leaving quality authoritative."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            source = Path(temp_dir) / "long-notes.md"
+            source.write_text(
+                "# Notes\n\n## Goal\nREQ-001: Preserve the accepted requirement.\n\n"
+                + "\n".join(f"Background detail {index} without routing signals." for index in range(300))
+                + "\n",
+                encoding="utf-8",
+            )
+            result = run_script(
+                ROOT / "skills/_shared/ai_sdlc_context_benchmark.py",
+                str(source), "--feature", "benchmark-demo", "--skill", "ai-sdlc-ba",
+                "--quick-flow", "--required-section", "Goal",
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("quality_gate: informational", result.stdout)
+            self.assertIn("positive_savings: yes", result.stdout)
+
     def test_every_cli_script_has_help(self) -> None:
         """Every argparse CLI must support token-cheap usage discovery."""
         for path in cli_script_paths():
@@ -315,7 +391,7 @@ class ScriptContractTests(unittest.TestCase):
     def test_every_cli_script_exposes_state_flags(self) -> None:
         """Every CLI helper should expose the shared feature-state flags."""
         for path in cli_script_paths():
-            if path.name in {"state_machine.py", "ai_sdlc_specs_index.py"}:
+            if path.name in {"state_machine.py", "ai_sdlc_specs_index.py", "ai_sdlc_context_benchmark.py"}:
                 continue
             with self.subTest(path=path.relative_to(ROOT)):
                 result = run_script(path, "--help")
@@ -443,6 +519,8 @@ class ScriptContractTests(unittest.TestCase):
                 cwd=cwd,
             )
             self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("Summary: completed business-context.md", result.stdout)
+            self.assertIn("8 sections, 1 trace IDs, indexes refreshed", result.stdout)
             artifact_text = artifact.read_text(encoding="utf-8")
             self.assertNotIn("ai-sdlc:empty", artifact_text)
             self.assertIn('status: "review"', artifact_text)
@@ -538,6 +616,12 @@ class ScriptContractTests(unittest.TestCase):
             status = run_script(ROOT / "skills/ai-sdlc-sdd/scripts/sdd_status.py", "--spec", str(spec_dir), "--full-flow")
             self.assertEqual(status.returncode, 0, status.stderr)
             self.assertIn("ready_for_impl", status.stdout)
+            context = run_script(ROOT / "skills/ai-sdlc-sdd/scripts/sdd_context.py", str(spec_dir), "--full-flow")
+            self.assertEqual(context.returncode, 0, context.stderr)
+            self.assertIn("schema: ai-sdlc-context/v1", context.stdout)
+            for trace_id in ("AC-001", "TC-001", "T001", "DEC-001"):
+                self.assertIn(trace_id, context.stdout)
+            self.assertIn("plan.toon", context.stdout)
             resolved = run_script(ROOT / "skills/ai-sdlc-sdd/scripts/resolve_active_spec.py", str(spec_dir), "--quick-flow")
             self.assertEqual(resolved.returncode, 0, resolved.stderr)
             self.assertIn("explicit", resolved.stdout)

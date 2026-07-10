@@ -43,6 +43,17 @@ Before the AI reads large artifacts directly, it checks whether the relevant
 skill has a script that can compress or validate the inputs. If a script exists,
 the AI runs it with the active flow flag and reads the compact output first.
 
+Profile scripts keep Markdown as the human-readable default. For agent work,
+the skill invokes `--format toon` to emit an `ai-sdlc-context/v1` evidence
+index rather than a generated summary: every anchor carries an
+exact source path, Markdown section, and line number. The AI reads `anchors`
+first and opens only the `next_reads` ranges needed for details that did not fit
+the active budget.
+
+Default approximate budgets are 1,200 tokens for quick flow, 2,500 for full
+flow, and 1,800 without an explicit flow. Override them with
+`--budget-tokens`; omit `--format toon` when a person needs the Markdown report.
+
 The AI uses script output to identify:
 
 - required sections that are present or missing;
@@ -53,6 +64,19 @@ The AI uses script output to identify:
 - artifact templates;
 - decision-log rows;
 - validation blockers.
+
+## Context Cache And Measurement
+
+Context packs are generated on demand. `--cache-context` stores a derived pack
+at `specs[-refiniment]/<feature>/.ai-sdlc/context/<skill>.toon` and reuses it
+only while its source/profile fingerprint matches. `--refresh-context` forces a
+rebuild. Cache files are reproducible, excluded from the specs index, and
+ignored by Git.
+
+Use `skills/_shared/ai_sdlc_context_benchmark.py` to compare raw source tokens,
+the bounded pack, and the exact line ranges requested through `next_reads`.
+Savings are informational: source-detail preservation and evidence correctness
+take precedence over a fixed percentage target.
 
 ## AI Production Behavior
 
@@ -72,7 +96,10 @@ The script owns:
 
 After all required sections are supplied, the AI runs the same script with
 `--finalize`. Finalization checks completeness, refreshes metadata and workspace
-indexes, and leaves the artifact ready for the skill's validation gates.
+indexes, and leaves the artifact ready for the skill's validation gates. On
+success, stdout ends with a short human-readable `Summary:` line covering the
+artifact, feature, flow, completed section count, trace-ID count, and index
+refresh.
 
 ## Shared Contract
 
