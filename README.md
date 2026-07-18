@@ -69,15 +69,24 @@ or agent environment:
 ## Quick Start
 
 1. Install all skills with `npx skills add ... -g --all`.
-2. Pick the role or workflow you need from [guides/](guides/).
-3. Use the matching skill for the task, for example:
+2. When the next workflow is unclear, start with the context-aware navigator:
+
+   ```bash
+   npx skills use mikegorelikoff/ai-sdlc-harness@ai-sdlc-navigator
+   ```
+
+3. The navigator inspects installed skills, branch and feature state, then
+   reports one required action, optional actions, exact invocations, expected
+   artifacts, and blockers. You can also pick a role or workflow directly from
+   [guides/](guides/).
+4. Use a matching skill directly when you already know the workflow, for example:
 
    ```bash
    npx skills use mikegorelikoff/ai-sdlc-harness@ai-sdlc-sdd
    ```
 
-4. For fast work, use the skill's `--quick-flow` behavior when available.
-5. For auditable work, use `--full-flow` so the assistant checks decisions,
+5. For fast work, use the skill's `--quick-flow` behavior when available.
+6. For auditable work, use `--full-flow` so the assistant checks decisions,
    upstream artifacts, traceability, and validation evidence.
 
 ## Why Teams Use It
@@ -101,6 +110,8 @@ The harness combines role skills, helper scripts, routed artifacts, and compact
 machine-readable indexes.
 
 - Skills define role-specific AI behavior for PM, BA, QA, Delivery, and Dev.
+- `ai-sdlc-navigator` provides a read-only entry point that recommends the next
+  required and optional actions from repository evidence.
 - Helper scripts handle repetitive scaffolding, validation, indexing, and state
   checks so AI spends fewer tokens rediscovering context.
 - For generated Markdown, AI sends only section content through stdin; scaffold

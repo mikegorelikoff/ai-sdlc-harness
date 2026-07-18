@@ -308,6 +308,7 @@ flowchart TB
 
 | Role lane | Skills |
 | --- | --- |
+| Cross-lifecycle navigation | `ai-sdlc-navigator` |
 | PM / Product | `ai-sdlc-working-backwards-discovery`, `ai-sdlc-prfaq-package-synthesis`, `ai-sdlc-goal-capability-and-epic-mapping`, `ai-sdlc-backlog-decomposition-and-task-planning`, `ai-sdlc-release-slicing-and-backlog-readiness-review` |
 | BA / Delivery Refinement | `ai-sdlc-delivery-package-gap-review`, `ai-sdlc-requirements-readiness-review`, `ai-sdlc-backlog-requirements-gap-review`, `ai-sdlc-user-story-decomposition`, `ai-sdlc-ba`, `ai-sdlc-delivery-spec-synthesis`, `ai-sdlc-delivery-handoff-review` |
 | QA / Test Engineering | `ai-sdlc-qa`, `ai-sdlc-qa-requirements-gap-review`, `ai-sdlc-test-scope-and-strategy-design`, `ai-sdlc-test-cases`, `ai-sdlc-test-case-and-suite-synthesis`, `ai-sdlc-qa-traceability-and-readiness-review` |
@@ -317,6 +318,7 @@ flowchart TB
 
 | Workflow stage | Primary skills | AI-produced output |
 | --- | --- | --- |
+| Navigation / resume | `ai-sdlc-navigator` | Read-only detected context, required and optional next actions, exact invocations, expected artifacts, and blockers. |
 | Product discovery | `ai-sdlc-working-backwards-discovery` | Discovery notes with problem, audience, value, MVP, risks, and success metrics. |
 | PRFAQ / product package | `ai-sdlc-prfaq-package-synthesis` | PRFAQ, FAQ package, or BRD-style product package. |
 | Delivery package gap review | `ai-sdlc-delivery-package-gap-review` | Gap review before stories, specs, or handoff. |

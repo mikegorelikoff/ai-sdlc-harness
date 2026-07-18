@@ -34,6 +34,7 @@ artifact_metadata:
   related_artifacts:
     - "specs/001-adaptive-harness-roadmap/decision-log.md"
     - "specs/001-adaptive-harness-roadmap/design.md"
+    - "specs/001-adaptive-harness-roadmap/plan.md"
     - "specs/001-adaptive-harness-roadmap/qa.md"
     - "specs/001-adaptive-harness-roadmap/requirements.md"
     - "specs/001-adaptive-harness-roadmap/test-cases.md"
@@ -52,7 +53,7 @@ artifact_metadata:
 - [x] T001. Establish the roadmap SDD package and traceable execution plan.
   Output: Complete SDD artifacts, decision log, plan.toon, plan.md, registry entry, and passing gates.
   Refs: AC-014, DEC-001, DEC-002, DEC-003
-- [ ] T002. Implement the context-aware AI SDLC navigator.
+- [x] T002. Implement the context-aware AI SDLC navigator.
   Output: Navigator skill, deterministic router CLI, Markdown and TOON outputs, tests, and docs.
   Refs: AC-001
   Depends on: T001
