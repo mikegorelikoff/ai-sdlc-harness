@@ -52,8 +52,8 @@ class CompatibilityTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1)
             self.assertIn("missing stable flag --future-required-flag", result.stdout)
 
-    def test_precommit_roadmap_audit_allows_only_pending_t015(self) -> None:
-        """The branch must contain exactly one ordered commit for T001-T014."""
+    def test_roadmap_audit_allows_completed_roadmap_and_maintenance(self) -> None:
+        """The roadmap prefix remains exact after later maintenance commits."""
         result = self.run_check("--allow-pending-last", "--format", "toon")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 

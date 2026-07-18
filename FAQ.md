@@ -1,10 +1,11 @@
 # FAQ
 
-## Is this external delivery framework?
+## What is this library?
 
-No. This is not external delivery framework, not a external delivery framework-compatible preset, and not a external delivery framework clone.
-external delivery framework is a broad AI agile agent method. AI SDLC Skill Library is a lifecycle
-harness for traceable AI-assisted delivery across PM, BA, QA, Delivery, and Dev.
+AI SDLC Skill Library is a lifecycle harness for traceable AI-assisted delivery
+across PM, BA, QA, Delivery, and Dev. It preserves state, decisions, evidence,
+and workflow handoffs as repository artifacts that different AI assistants and
+team members can continue safely.
 
 
 ## Is this domain-specific?

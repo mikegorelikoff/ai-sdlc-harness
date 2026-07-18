@@ -128,7 +128,7 @@ def validate_git_audit(root: Path, baseline: dict[str, Any], base: str, allow_pe
     expected = baseline.get("roadmap_commit_subjects", [])
     if allow_pending_last and actual == expected[:-1]:
         return []
-    if actual != expected:
+    if actual[: len(expected)] != expected:
         return ["roadmap commit subjects do not map one-to-one with T001-T015", f"expected: {expected}", f"actual: {actual}"]
     return []
 

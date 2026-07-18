@@ -9,11 +9,10 @@ prepare reviews or commits. The skills are plain repository artifacts, so they
 can be used by different AI assistants, agent runners, and internal workflows.
 
 > Positioning: this library is built from real team experience delivering
-> software with AI assistants, not from copying another framework. It is not
-> external delivery framework, not a external delivery framework-compatible preset, and not yet another external delivery framework, OpenSpec, or
-> Spec Kit clone. It is an AI-first SDLC harness for teams that need flexible
-> entry points, traceability, decision history, validation evidence, and
-> continuity across real delivery workflows.
+> software with AI assistants, not from copying another framework. It is an
+> AI-first SDLC harness for teams that need flexible entry points,
+> traceability, decision history, validation evidence, and continuity across
+> real delivery workflows.
 
 ## Table Of Contents
 
@@ -251,25 +250,23 @@ lives in the selected skill, helper scripts, state files, and workspace indexes.
 
 ## Comparison
 
-external delivery framework, OpenSpec, and Spec Kit are useful. This library makes a different
+OpenSpec and Spec Kit are useful. This library makes a different
 tradeoff: it optimizes for AI assistants that repeatedly enter the same delivery
 context and must preserve state, decisions, and validation evidence across PM,
 BA, QA, Delivery, and Dev.
 
-Sources: [external delivery framework Method docs](https://example.invalid/removed-framework-reference),
-[OpenSpec](https://openspec.dev/), and
+Sources: [OpenSpec](https://openspec.dev/) and
 [GitHub Spec Kit](https://github.com/github/spec-kit).
 
-| Area | external delivery framework Method | OpenSpec | GitHub Spec Kit | AI SDLC Skill Library |
-| --- | --- | --- | --- | --- |
-| Best fit | Broad AI agile agent method. | Lightweight living specs and change deltas. | Focused spec -> plan -> tasks -> implement loop. | Flexible AI SDLC lifecycle with traceability and reusable context. |
-| Entry point | Agent/workflow trigger, PRD, story, architecture, quick-dev intent. | Change intent and proposal workspace. | Feature prompt after project constitution. | Any lifecycle signal: notes, PRFAQ, backlog, QA plan, diff, validation, review, commit. |
-| State model | Workflow and project-context documents. | Repo-resident specs and change folders. | Generated feature specs, plans, and tasks. | TOON state, specs indexes, execution plans, metadata, decision logs. |
-| Strictness | Workflow-dependent. | Lightweight by default. | Structured command sequence. | Explicit quick/full flow across skills and scripts. |
+| Area | OpenSpec | GitHub Spec Kit | AI SDLC Skill Library |
+| --- | --- | --- | --- |
+| Best fit | Lightweight living specs and change deltas. | Focused spec -> plan -> tasks -> implement loop. | Flexible AI SDLC lifecycle with traceability and reusable context. |
+| Entry point | Change intent and proposal workspace. | Feature prompt after project constitution. | Any lifecycle signal: notes, PRFAQ, backlog, QA plan, diff, validation, review, commit. |
+| State model | Repo-resident specs and change folders. | Generated feature specs, plans, and tasks. | TOON state, specs indexes, execution plans, metadata, decision logs. |
+| Strictness | Lightweight by default. | Structured command sequence. | Explicit quick/full flow across skills and scripts. |
 
 ## FAQ
 
-- Is this external delivery framework? No. It is not external delivery framework, not a external delivery framework preset, and not a external delivery framework clone.
 - Is it domain-specific? No. It is domain-agnostic and focuses on software
   delivery workflow structure.
 - Do small changes need full flow? No. Use quick flow or a single focused skill
