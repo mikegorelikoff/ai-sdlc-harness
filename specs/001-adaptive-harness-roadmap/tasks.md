@@ -85,7 +85,7 @@ artifact_metadata:
   Output: Versioned config schema, deterministic resolver, provenance, protected-gate checks, tests, and docs.
   Refs: AC-009
   Depends on: T004, T005
-- [ ] T010. Implement optional module manifests and discovery.
+- [x] T010. Implement optional module manifests and discovery.
   Output: Versioned module schema, registry and discovery CLI, compatibility checks, tests, and docs.
   Refs: AC-010
   Depends on: T002, T009

@@ -68,7 +68,7 @@ artifact_metadata:
 - [x] T007: - [x] T007. Implement change-impact analysis and safe lifecycle reopening.; refs: AC-007; output: Change-impact skill, affected-artifact analysis, reopen plan, evidence gates, tests, and docs.
 - [x] T008: - [x] T008. Implement retrospective learning with reviewable proposals.; refs: AC-008; output: Retrospective skill, observation and proposal schemas, policy safety checks, tests, and docs.
 - [x] T009: - [x] T009. Implement layered team and user customization.; refs: AC-009; output: Versioned config schema, deterministic resolver, provenance, protected-gate checks, tests, and docs.
-- [ ] T010: - [ ] T010. Implement optional module manifests and discovery.; refs: AC-010; output: Versioned module schema, registry and discovery CLI, compatibility checks, tests, and docs.
+- [x] T010: - [x] T010. Implement optional module manifests and discovery.; refs: AC-010; output: Versioned module schema, registry and discovery CLI, compatibility checks, tests, and docs.
 - [ ] T011: - [ ] T011. Add the optional Architecture capability.; refs: AC-011; output: Architecture skill, routed design artifact workflow, tests, and module registration.
 - [ ] T012: - [ ] T012. Add the optional UX capability.; refs: AC-011; output: UX skill, routed experience artifact workflow, tests, and module registration.
 - [ ] T013: - [ ] T013. Add the optional Research capability.; refs: AC-011; output: Research skill, evidence and source artifact workflow, tests, and module registration.

@@ -185,6 +185,10 @@ per-value provenance. Protected rigor and governance gates may be strengthened
 but never weakened by later layers. See
 [Layered Configuration](concepts/layered-configuration.md).
 
+Optional domain capabilities use versioned manifests and harness API ranges.
+They remain discoverable without becoming core dependencies. See
+[Optional Modules](concepts/optional-modules.md).
+
 ## Core Concepts
 
 The `concepts/` folder explains how the harness works for teams and maintainers.
