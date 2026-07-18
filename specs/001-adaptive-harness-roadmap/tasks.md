@@ -61,7 +61,7 @@ artifact_metadata:
   Output: Shared handoff schema, emitter, adoption guidance, compatibility tests, and docs.
   Refs: AC-002
   Depends on: T002
-- [ ] T004. Implement explainable risk-adaptive rigor profiles.
+- [x] T004. Implement explainable risk-adaptive rigor profiles.
   Output: Policy engine, patch/standard/assured/regulated profiles, safe overrides, tests, and docs.
   Refs: AC-003, AC-004
   Depends on: T002, T003

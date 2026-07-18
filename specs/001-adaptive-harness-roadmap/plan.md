@@ -62,7 +62,7 @@ artifact_metadata:
 - [x] T001: - [x] T001. Establish the roadmap SDD package and traceable execution plan.; refs: AC-014, DEC-001, DEC-002, DEC-003; output: Complete SDD artifacts, decision log, plan.toon, plan.md, registry entry, and passing gates.
 - [x] T002: - [x] T002. Implement the context-aware AI SDLC navigator.; refs: AC-001; output: Navigator skill, deterministic router CLI, Markdown and TOON outputs, tests, and docs.
 - [x] T003: - [x] T003. Implement the common post-workflow handoff contract.; refs: AC-002; output: Shared handoff schema, emitter, adoption guidance, compatibility tests, and docs.
-- [ ] T004: - [ ] T004. Implement explainable risk-adaptive rigor profiles.; refs: AC-003, AC-004; output: Policy engine, patch/standard/assured/regulated profiles, safe overrides, tests, and docs.
+- [x] T004: - [x] T004. Implement explainable risk-adaptive rigor profiles.; refs: AC-003, AC-004; output: Policy engine, patch/standard/assured/regulated profiles, safe overrides, tests, and docs.
 - [ ] T005: - [ ] T005. Implement evidence-backed project context and drift detection.; refs: AC-005; output: Project-context skill, Markdown and TOON generator, evidence anchors, drift checks, tests, and docs.
 - [ ] T006: - [ ] T006. Implement the reusable quality-lens registry and reports.; refs: AC-006; output: Quality-lens skill, registry, traceable finding schema, report generator, tests, and docs.
 - [ ] T007: - [ ] T007. Implement change-impact analysis and safe lifecycle reopening.; refs: AC-007; output: Change-impact skill, affected-artifact analysis, reopen plan, evidence gates, tests, and docs.

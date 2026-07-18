@@ -164,6 +164,11 @@ without mixing them into implementation-owned SDD packages.
 Use quick flow for low-risk movement. Use full flow when work needs auditability,
 handoff confidence, or enterprise-grade delivery control.
 
+When risk is not already classified, the adaptive rigor engine can recommend
+`patch`, `standard`, `assured`, or `regulated` from explicit delivery factors.
+Explicit flow flags remain supported, while automatic risk and protected team
+minimums prevent unsafe downgrades. See [Adaptive Rigor](concepts/adaptive-rigor.md).
+
 ## Core Concepts
 
 The `concepts/` folder explains how the harness works for teams and maintainers.
