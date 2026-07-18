@@ -1,0 +1,10 @@
+{
+  "schema": "ai-sdlc-module/v1",
+  "id": "research",
+  "version": "1.0.0",
+  "kind": "optional",
+  "harness_api": {"min": "1.0.0", "max_exclusive": "2.0.0"},
+  "requires": ["core"],
+  "description": "Sourced research questions, evidence inventory, confidence, limitations, and delivery traces.",
+  "skills": [{"name": "ai-sdlc-research", "path": "skills/ai-sdlc-research"}]
+}

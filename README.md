@@ -197,6 +197,10 @@ The optional `ux` module adds actors, journeys, non-happy interaction states,
 recovery behavior, accessibility evidence, and testable UX acceptance through
 `ai-sdlc-ux`.
 
+The optional `research` module adds question framing, source inventories,
+cited findings, confidence, limitations, and owned open questions through
+`ai-sdlc-research`.
+
 ## Core Concepts
 
 The `concepts/` folder explains how the harness works for teams and maintainers.

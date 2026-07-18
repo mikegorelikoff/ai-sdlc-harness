@@ -97,7 +97,7 @@ artifact_metadata:
   Output: UX skill, routed experience artifact workflow, tests, and module registration.
   Refs: AC-011
   Depends on: T010
-- [ ] T013. Add the optional Research capability.
+- [x] T013. Add the optional Research capability.
   Output: Research skill, evidence and source artifact workflow, tests, and module registration.
   Refs: AC-011
   Depends on: T010
