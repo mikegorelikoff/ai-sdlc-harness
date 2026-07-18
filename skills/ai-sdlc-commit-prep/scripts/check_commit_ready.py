@@ -40,12 +40,30 @@ def has_staged_changes() -> bool:
     return run(["git", "diff", "--cached", "--quiet"]).returncode != 0
 
 
-def spec_tasks_complete(spec_dir: Path) -> list[str]:
-    """Return incomplete task rows from `tasks.md`, or a missing-file error."""
+def spec_tasks_complete(spec_dir: Path, selected_task: str | None = None) -> list[str]:
+    """Return task-scope errors from `tasks.md`, or a missing-file error.
+
+    Without ``selected_task`` the historical strict behavior remains: every
+    task must be complete. An explicit task permits incremental, auditable
+    commits from a larger SDD plan while still requiring that task to be
+    present and complete.
+    """
     tasks = spec_dir / "tasks.md"
     if not tasks.is_file():
         return [f"missing {tasks}"]
     lines = tasks.read_text(encoding="utf-8").splitlines()
+    if selected_task:
+        prefix = f"- ["
+        matching = [
+            line
+            for line in lines
+            if line.startswith(prefix) and line[6:].startswith(f"{selected_task}.")
+        ]
+        if not matching:
+            return [f"selected task not found in {tasks}: {selected_task}"]
+        if not matching[0].startswith("- [x]") and not matching[0].startswith("- [X]"):
+            return [f"selected task is incomplete in {tasks}: {matching[0]}"]
+        return []
     return [line for line in lines if line.startswith("- [ ]")]
 
 
@@ -67,6 +85,7 @@ def main() -> int:
     """Run commit readiness checks and print blocking errors."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--spec", type=Path)
+    parser.add_argument("--task", help="Require one completed SDD task instead of all tasks")
     parser.add_argument("--allow-unstaged", action="store_true")
     parser.add_argument("--no-require-staged", action="store_true")
     parser.add_argument("--quick-flow", action="store_true", help="Skip expensive spec lint gates and report lean readiness")
@@ -99,9 +118,10 @@ def main() -> int:
 
     if args.spec:
         spec_dir = args.spec if args.spec.is_absolute() else ROOT / args.spec
-        incomplete = spec_tasks_complete(spec_dir)
+        incomplete = spec_tasks_complete(spec_dir, args.task)
         if incomplete:
-            errors.append(f"incomplete spec tasks in {args.spec}:")
+            scope = f"selected task {args.task}" if args.task else "spec tasks"
+            errors.append(f"incomplete {scope} in {args.spec}:")
             errors.extend(incomplete)
         # Quick flow runs the structural validator only. Full/default flow runs
         # the deeper clarify/checklist/analysis gates before commit.

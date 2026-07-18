@@ -250,6 +250,82 @@ class CheckCommitReadyTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1)
             self.assertIn("missing decision log for full flow", result.stderr)
 
+    def test_selected_complete_task_allows_incremental_commit(self) -> None:
+        """A completed selected task should not be blocked by later pending tasks."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            subprocess.run(["git", "init"], cwd=root, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            spec_dir = root / "specs" / "187-example"
+            spec_dir.mkdir(parents=True)
+            write_spec(spec_dir)
+            for relative, old, new in (
+                ("tasks.md", "- [x] T003.", "- [ ] T003."),
+                ("plan.md", "- [x] T003", "- [ ] T003"),
+                ("_ai_sdlc/plan.toon", "T003,done", "T003,pending"),
+            ):
+                path = spec_dir / relative
+                path.write_text(path.read_text(encoding="utf-8").replace(old, new), encoding="utf-8")
+            write(root / "README.md", "example\n")
+            subprocess.run(["git", "add", "."], cwd=root, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+            result = subprocess.run(
+                [
+                    "python3",
+                    str(CHECK_COMMIT_READY),
+                    "--spec",
+                    str(spec_dir),
+                    "--task",
+                    "T001",
+                    "--quick-flow",
+                    "--allow-unstaged",
+                ],
+                cwd=root,
+                check=False,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_selected_incomplete_task_is_blocked(self) -> None:
+        """Task-scoped readiness must fail when the selected task is pending."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            subprocess.run(["git", "init"], cwd=root, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            spec_dir = root / "specs" / "188-example"
+            spec_dir.mkdir(parents=True)
+            write_spec(spec_dir)
+            tasks = spec_dir / "tasks.md"
+            tasks.write_text(tasks.read_text(encoding="utf-8").replace("- [x] T003.", "- [ ] T003."), encoding="utf-8")
+            plan = spec_dir / "plan.md"
+            plan.write_text(plan.read_text(encoding="utf-8").replace("- [x] T003", "- [ ] T003"), encoding="utf-8")
+            plan_toon = spec_dir / "_ai_sdlc/plan.toon"
+            plan_toon.write_text(plan_toon.read_text(encoding="utf-8").replace("T003,done", "T003,pending"), encoding="utf-8")
+            write(root / "README.md", "example\n")
+            subprocess.run(["git", "add", "."], cwd=root, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+            result = subprocess.run(
+                [
+                    "python3",
+                    str(CHECK_COMMIT_READY),
+                    "--spec",
+                    str(spec_dir),
+                    "--task",
+                    "T003",
+                    "--quick-flow",
+                    "--allow-unstaged",
+                ],
+                cwd=root,
+                check=False,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("selected task is incomplete", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

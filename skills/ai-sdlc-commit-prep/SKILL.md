@@ -114,6 +114,9 @@ description: AI SDLC commit preparation workflow. Use when an AI assistant is as
 - Run commit readiness before staging final commit content or writing the final commit summary.
 - Quick flow: `python3 skills/ai-sdlc-commit-prep/scripts/check_commit_ready.py --quick-flow --spec specs/<feature-name> --allow-unstaged --no-require-staged`
 - Full flow: `python3 skills/ai-sdlc-commit-prep/scripts/check_commit_ready.py --full-flow --spec specs/<feature-name>`
+- For an explicitly task-scoped commit in a larger active SDD plan, add
+  `--task TNNN`. The selected task must be present and complete; later pending
+  tasks remain allowed. Without `--task`, every spec task must be complete.
 - Use `--allow-unstaged` only when intentionally checking readiness before final staging.
 - Use `--no-require-staged` only for preflight checks; omit it immediately before commit creation.
 
@@ -144,6 +147,9 @@ Prepare and create a safe AI SDLC commit by reviewing the branch and working tre
    ```bash
    python3 skills/ai-sdlc-commit-prep/scripts/check_commit_ready.py --spec specs/NNN-feature-name --no-require-staged
    ```
+
+   When the user explicitly requested one commit per SDD task, add
+   `--task TNNN` and verify that the staged diff belongs only to that task.
 
 10. Stage only files belonging to the current change.
 11. Leave unrelated dirty files unstaged and report them.
