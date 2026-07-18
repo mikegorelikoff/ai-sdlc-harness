@@ -59,6 +59,9 @@ description: AI SDLC context-aware navigation workflow. Use when an AI assistant
   invocation guidance, and expected artifact.
 - Return the navigation report directly in the Codex response.
 - Return progress, blockers, and recommendations directly in the Codex response.
+- Before the final response, emit the `ai-sdlc-handoff/v1` contract with
+  `result`, `blockers`, `next_required`, and `next_optional`; every action
+  includes `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or a durable navigation artifact.
 - Do not imply that an optional action is a lifecycle predecessor.
 

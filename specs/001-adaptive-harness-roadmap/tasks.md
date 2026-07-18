@@ -57,7 +57,7 @@ artifact_metadata:
   Output: Navigator skill, deterministic router CLI, Markdown and TOON outputs, tests, and docs.
   Refs: AC-001
   Depends on: T001
-- [ ] T003. Implement the common post-workflow handoff contract.
+- [x] T003. Implement the common post-workflow handoff contract.
   Output: Shared handoff schema, emitter, adoption guidance, compatibility tests, and docs.
   Refs: AC-002
   Depends on: T002

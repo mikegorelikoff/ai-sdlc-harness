@@ -27,7 +27,7 @@ trace[14]{acceptance_id,test_cases,tasks}:
 tasks[15]{id,status,refs,tests,depends_on,artifact,decision_ref}:
   T001,done,AC-014/DEC-001/DEC-002/DEC-003,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,none,Complete SDD artifacts; decision log; plan.toon; plan.md; registry entry; and passing gates.,TBD
   T002,done,AC-001,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T001,Navigator skill; deterministic router CLI; Markdown and TOON outputs; tests; and docs.,DEC-001
-  T003,pending,AC-002,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T002,Shared handoff schema; emitter; adoption guidance; compatibility tests; and docs.,TBD
+  T003,done,AC-002,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T002,Shared handoff schema; emitter; adoption guidance; compatibility tests; and docs.,DEC-001
   T004,pending,AC-003/AC-004,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T002/T003,Policy engine; patch/standard/assured/regulated profiles; safe overrides; tests; and docs.,TBD
   T005,pending,AC-005,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T002/T004,Project-context skill; Markdown and TOON generator; evidence anchors; drift checks; tests; and docs.,TBD
   T006,pending,AC-006,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T003/T004,Quality-lens skill; registry; traceable finding schema; report generator; tests; and docs.,TBD

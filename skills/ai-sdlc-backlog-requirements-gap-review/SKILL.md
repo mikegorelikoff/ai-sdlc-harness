@@ -52,6 +52,7 @@ description: Use when PRFAQ, BRD, PRD, product brief, workflow, or equivalent in
 - Tie recommendations to evidence from the provided artifact, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
 - Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
 - Return progress, completion, validation, and handoff summaries directly in the Codex response.
+- Before the final response, emit the `ai-sdlc-handoff/v1` contract with `result`, `blockers`, `next_required`, and `next_optional`; every action includes `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file unless the user explicitly requests one.
 - Keep durable writes limited to the canonical lifecycle artifacts, decision log, human-readable index, and `_ai_sdlc` machine files.
 - Let shared helpers migrate legacy paths on the next write; never overwrite or manually merge divergent legacy and canonical files.

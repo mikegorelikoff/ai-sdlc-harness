@@ -117,6 +117,8 @@ machine-readable indexes.
 - For generated Markdown, AI sends only section content through stdin; scaffold
   scripts own headings, metadata, routing, file writes, and finalization.
 - `decision-log.md` captures why important choices were made.
+- Every workflow returns the versioned `ai-sdlc-handoff/v1` result, blockers,
+  and required or optional next actions directly in the assistant response.
 - `_ai_sdlc/state.toon`, `_ai_sdlc/specs-index.toon`, and
   `_ai_sdlc/plan.toon` give AI compact continuity across sessions.
 - Profile scripts keep Markdown for people and can emit bounded
@@ -194,6 +196,8 @@ lives in the selected skill, helper scripts, state files, and workspace indexes.
   take over repetitive scaffolding, validation, indexing, and formatting.
 - [Traceability](concepts/traceability.md) explains how artifacts, decisions,
   metadata, AC IDs, TC IDs, tasks, validation, and state files connect.
+- [Workflow Handoff](concepts/workflow-handoff.md) defines the common result,
+  blocker, and next-action response contract.
 
 ## Comparison
 
