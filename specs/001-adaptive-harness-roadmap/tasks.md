@@ -73,7 +73,7 @@ artifact_metadata:
   Output: Quality-lens skill, registry, traceable finding schema, report generator, tests, and docs.
   Refs: AC-006
   Depends on: T003, T004
-- [ ] T007. Implement change-impact analysis and safe lifecycle reopening.
+- [x] T007. Implement change-impact analysis and safe lifecycle reopening.
   Output: Change-impact skill, affected-artifact analysis, reopen plan, evidence gates, tests, and docs.
   Refs: AC-007
   Depends on: T003, T005, T006

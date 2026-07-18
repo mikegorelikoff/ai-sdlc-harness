@@ -65,7 +65,7 @@ artifact_metadata:
 - [x] T004: - [x] T004. Implement explainable risk-adaptive rigor profiles.; refs: AC-003, AC-004; output: Policy engine, patch/standard/assured/regulated profiles, safe overrides, tests, and docs.
 - [x] T005: - [x] T005. Implement evidence-backed project context and drift detection.; refs: AC-005; output: Project-context skill, Markdown and TOON generator, evidence anchors, drift checks, tests, and docs.
 - [x] T006: - [x] T006. Implement the reusable quality-lens registry and reports.; refs: AC-006; output: Quality-lens skill, registry, traceable finding schema, report generator, tests, and docs.
-- [ ] T007: - [ ] T007. Implement change-impact analysis and safe lifecycle reopening.; refs: AC-007; output: Change-impact skill, affected-artifact analysis, reopen plan, evidence gates, tests, and docs.
+- [x] T007: - [x] T007. Implement change-impact analysis and safe lifecycle reopening.; refs: AC-007; output: Change-impact skill, affected-artifact analysis, reopen plan, evidence gates, tests, and docs.
 - [ ] T008: - [ ] T008. Implement retrospective learning with reviewable proposals.; refs: AC-008; output: Retrospective skill, observation and proposal schemas, policy safety checks, tests, and docs.
 - [ ] T009: - [ ] T009. Implement layered team and user customization.; refs: AC-009; output: Versioned config schema, deterministic resolver, provenance, protected-gate checks, tests, and docs.
 - [ ] T010: - [ ] T010. Implement optional module manifests and discovery.; refs: AC-010; output: Versioned module schema, registry and discovery CLI, compatibility checks, tests, and docs.

@@ -117,6 +117,9 @@ machine-readable indexes.
 - `ai-sdlc-quality-lenses` applies a versioned registry of reusable challenge
   lenses and finalizes only findings with evidence, trace targets, ownership,
   resolution status, and a concrete next action.
+- `ai-sdlc-change-impact` traces changed requirements and decisions to stale
+  artifacts and proposes evidence-backed lifecycle recovery without mutating
+  authoritative state.
 - Helper scripts handle repetitive scaffolding, validation, indexing, and state
   checks so AI spends fewer tokens rediscovering context.
 - For generated Markdown, AI sends only section content through stdin; scaffold
