@@ -70,7 +70,7 @@ artifact_metadata:
 - [x] T009: - [x] T009. Implement layered team and user customization.; refs: AC-009; output: Versioned config schema, deterministic resolver, provenance, protected-gate checks, tests, and docs.
 - [x] T010: - [x] T010. Implement optional module manifests and discovery.; refs: AC-010; output: Versioned module schema, registry and discovery CLI, compatibility checks, tests, and docs.
 - [x] T011: - [x] T011. Add the optional Architecture capability.; refs: AC-011; output: Architecture skill, routed design artifact workflow, tests, and module registration.
-- [ ] T012: - [ ] T012. Add the optional UX capability.; refs: AC-011; output: UX skill, routed experience artifact workflow, tests, and module registration.
+- [x] T012: - [x] T012. Add the optional UX capability.; refs: AC-011; output: UX skill, routed experience artifact workflow, tests, and module registration.
 - [ ] T013: - [ ] T013. Add the optional Research capability.; refs: AC-011; output: Research skill, evidence and source artifact workflow, tests, and module registration.
 - [ ] T014: - [ ] T014. Implement the evidence council and portable review orchestration.; refs: AC-012; output: Council skill, simulated and independent plans, authority-safe report, tests, and docs.
 - [ ] T015: - [ ] T015. Add install, update, and compatibility contracts and run final integration validation.; refs: AC-013, AC-014; output: Compatibility baseline, validator, install and update docs, full regression evidence, and closed roadmap.

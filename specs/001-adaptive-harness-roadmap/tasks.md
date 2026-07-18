@@ -93,7 +93,7 @@ artifact_metadata:
   Output: Architecture skill, routed design artifact workflow, tests, and module registration.
   Refs: AC-011
   Depends on: T010
-- [ ] T012. Add the optional UX capability.
+- [x] T012. Add the optional UX capability.
   Output: UX skill, routed experience artifact workflow, tests, and module registration.
   Refs: AC-011
   Depends on: T010

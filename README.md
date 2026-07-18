@@ -193,6 +193,10 @@ The optional `architecture` module adds traceable system boundaries,
 interfaces, decisions, tradeoffs, risks, and design validation through
 `ai-sdlc-architecture`.
 
+The optional `ux` module adds actors, journeys, non-happy interaction states,
+recovery behavior, accessibility evidence, and testable UX acceptance through
+`ai-sdlc-ux`.
+
 ## Core Concepts
 
 The `concepts/` folder explains how the harness works for teams and maintainers.
