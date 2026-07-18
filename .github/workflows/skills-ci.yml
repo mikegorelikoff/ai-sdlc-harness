@@ -30,5 +30,7 @@ jobs:
         run: python skills/_shared/test_migration.py
       - name: Repository contract tests
         run: python skills/_shared/test_all_skill_scripts.py
+      - name: Release compatibility
+        run: python skills/_shared/ai_sdlc_compatibility.py --skip-git-audit --format toon
       - name: Per-skill tests
         run: python skills/_shared/test_each_skill_tests.py

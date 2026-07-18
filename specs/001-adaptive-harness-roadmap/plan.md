@@ -73,7 +73,7 @@ artifact_metadata:
 - [x] T012: - [x] T012. Add the optional UX capability.; refs: AC-011; output: UX skill, routed experience artifact workflow, tests, and module registration.
 - [x] T013: - [x] T013. Add the optional Research capability.; refs: AC-011; output: Research skill, evidence and source artifact workflow, tests, and module registration.
 - [x] T014: - [x] T014. Implement the evidence council and portable review orchestration.; refs: AC-012; output: Council skill, simulated and independent plans, authority-safe report, tests, and docs.
-- [ ] T015: - [ ] T015. Add install, update, and compatibility contracts and run final integration validation.; refs: AC-013, AC-014; output: Compatibility baseline, validator, install and update docs, full regression evidence, and closed roadmap.
+- [x] T015: - [x] T015. Add install, update, and compatibility contracts and run final integration validation.; refs: AC-013, AC-014; output: Compatibility baseline, validator, install and update docs, full regression evidence, and closed roadmap.
 
 ## Task Dependencies
 - T001: depends on previous applicable task / none

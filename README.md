@@ -32,6 +32,9 @@ can be used by different AI assistants, agent runners, and internal workflows.
 
 ## Install
 
+Release compatibility, update, and rollback procedures are documented in
+[Install, Update, And Rollback](guides/install-and-update.md).
+
 Install all skills globally:
 
 ```bash
@@ -54,6 +57,12 @@ Open the Skills CLI:
 
 ```bash
 npx skills
+```
+
+Validate a checkout against the `1.0.0` compatibility baseline:
+
+```bash
+python3 skills/_shared/ai_sdlc_compatibility.py --skip-git-audit --format toon
 ```
 
 ## Private Repository Access

@@ -105,7 +105,7 @@ artifact_metadata:
   Output: Council skill, simulated and independent plans, authority-safe report, tests, and docs.
   Refs: AC-012
   Depends on: T006, T010, T011, T012, T013
-- [ ] T015. Add install, update, and compatibility contracts and run final integration validation.
+- [x] T015. Add install, update, and compatibility contracts and run final integration validation.
   Output: Compatibility baseline, validator, install and update docs, full regression evidence, and closed roadmap.
   Refs: AC-013, AC-014
   Depends on: T001, T002, T003, T004, T005, T006, T007, T008, T009, T010, T011, T012, T013, T014

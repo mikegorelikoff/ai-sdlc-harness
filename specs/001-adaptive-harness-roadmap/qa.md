@@ -9,15 +9,17 @@ artifact_metadata:
   flow_mode: "quick"
   state_file: "specs/001-adaptive-harness-roadmap/_ai_sdlc/state.toon"
   decision_log: "specs/001-adaptive-harness-roadmap/decision-log.md"
-  status: "review"
+  status: "validated"
   owner: "QA"
   created_at: "2026-07-18"
-  updated_at: "2026-07-18"
+  updated_at: "2026-07-19"
   trace_ids: []
   related_artifacts:
     - "specs/001-adaptive-harness-roadmap/decision-log.md"
     - "specs/001-adaptive-harness-roadmap/design.md"
+    - "specs/001-adaptive-harness-roadmap/plan.md"
     - "specs/001-adaptive-harness-roadmap/requirements.md"
+    - "specs/001-adaptive-harness-roadmap/tasks.md"
     - "specs/001-adaptive-harness-roadmap/test-cases.md"
   validation: []
   metatags:
@@ -25,7 +27,7 @@ artifact_metadata:
     - "implementation"
     - "ai-sdlc-sdd"
     - "qa"
-    - "review"
+    - "validated"
 ---
 
 # QA
@@ -59,10 +61,19 @@ A fifteen-capability program adds guidance, adaptive policy, repository memory, 
 - Program spec status must stay aligned with one-task-one-commit history.
 
 ## Validation Commands
+- PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-harness-pycache python3 -m compileall -q skills
+- python3 skills/_shared/test_state_machine.py
+- python3 skills/_shared/test_artifact_scaffold.py
+- python3 skills/_shared/test_migration.py
 - python3 skills/_shared/test_all_skill_scripts.py
-- python3 -m unittest discover -s skills -p test_scripts.py
+- python3 skills/_shared/test_config.py
+- python3 skills/_shared/test_modules.py
+- python3 skills/_shared/test_each_skill_tests.py
+- python3 skills/_shared/test_compatibility.py
+- python3 skills/_shared/ai_sdlc_compatibility.py --allow-pending-last --format toon
 - python3 skills/ai-sdlc-sdd/scripts/check_clarify.py specs/001-adaptive-harness-roadmap --quick-flow
 - python3 skills/ai-sdlc-sdd/scripts/check_checklist.py specs/001-adaptive-harness-roadmap --quick-flow
+- python3 skills/ai-sdlc-sdd/scripts/plan_links.py specs/001-adaptive-harness-roadmap --check --quick-flow
 - python3 skills/ai-sdlc-sdd/scripts/analyze_spec.py specs/001-adaptive-harness-roadmap --quick-flow
 - python3 skills/ai-sdlc-sdd/scripts/validate_spec.py specs/001-adaptive-harness-roadmap --quick-flow
 - git diff --check
@@ -75,4 +86,4 @@ A fifteen-capability program adds guidance, adaptive policy, repository memory, 
 - Confirm council proposals do not modify authoritative artifacts.
 
 ## Signoff
-Pending completion of T001 through T015 and final compatibility validation.
+Passed for release 1.0.0. T001 through T014 have one ordered focused commit each; T015 is the pending release-validation commit. Compile, state, scaffold, migration, repository contracts, layered config, module discovery, every per-skill test, compatibility baseline, and pre-commit history audit passed. Compatibility validator result: compatible; 35 skills; 5 modules; harness API 1.0.0.

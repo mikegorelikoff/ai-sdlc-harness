@@ -31,6 +31,8 @@ use the focused concept files when changing a contract or diagnosing a package.
   base/team/user precedence, per-value provenance, and protected gates.
 - [Optional Modules](optional-modules.md) defines manifests, API compatibility,
   dependency closure, skill ownership, and discovery.
+- [Install, Update, And Rollback](../guides/install-and-update.md) defines the
+  release compatibility baseline and safe package lifecycle.
 - [Artifact Metadata And Metatags](artifact-metadata.md) defines the required
   `artifact_metadata` frontmatter and `metatags` contract.
 - [Decision Log](decision-log.md) explains feature-level decision traceability.
