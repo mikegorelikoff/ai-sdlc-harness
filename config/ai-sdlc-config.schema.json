@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-sdlc.local/schemas/ai-sdlc-config-v1.json",
+  "title": "AI SDLC layered configuration",
+  "type": "object",
+  "required": ["schema", "values"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-config/v1"},
+    "values": {"type": "object"},
+    "protected": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+  },
+  "additionalProperties": false
+}

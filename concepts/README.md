@@ -27,6 +27,8 @@ use the focused concept files when changing a contract or diagnosing a package.
   paths, legacy conflict handling, atomic writes, locks, and recovery.
 - [Artifact Routing](artifact-routing.md) explains `specs-refiniment/` versus
   `specs/` and where generated files belong.
+- [Layered Configuration](layered-configuration.md) defines deterministic
+  base/team/user precedence, per-value provenance, and protected gates.
 - [Artifact Metadata And Metatags](artifact-metadata.md) defines the required
   `artifact_metadata` frontmatter and `metatags` contract.
 - [Decision Log](decision-log.md) explains feature-level decision traceability.

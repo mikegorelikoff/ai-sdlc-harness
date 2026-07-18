@@ -12,7 +12,7 @@ artifact_metadata:
   status: "approved"
   owner: "Dev"
   created_at: "2026-07-18"
-  updated_at: "2026-07-18"
+  updated_at: "2026-07-19"
   trace_ids:
     - "AC-001"
     - "AC-002"
@@ -81,7 +81,7 @@ artifact_metadata:
   Output: Retrospective skill, observation and proposal schemas, policy safety checks, tests, and docs.
   Refs: AC-008
   Depends on: T007
-- [ ] T009. Implement layered team and user customization.
+- [x] T009. Implement layered team and user customization.
   Output: Versioned config schema, deterministic resolver, provenance, protected-gate checks, tests, and docs.
   Refs: AC-009
   Depends on: T004, T005

@@ -180,6 +180,11 @@ When risk is not already classified, the adaptive rigor engine can recommend
 Explicit flow flags remain supported, while automatic risk and protected team
 minimums prevent unsafe downgrades. See [Adaptive Rigor](concepts/adaptive-rigor.md).
 
+Base, team, and user configuration resolves in deterministic order with
+per-value provenance. Protected rigor and governance gates may be strengthened
+but never weakened by later layers. See
+[Layered Configuration](concepts/layered-configuration.md).
+
 ## Core Concepts
 
 The `concepts/` folder explains how the harness works for teams and maintainers.

@@ -1,7 +1,7 @@
 feature: 001-adaptive-harness-roadmap
 workspace: implementation
 flow_mode: quick
-updated_at: 2026-07-18
+updated_at: 2026-07-19
 source_artifacts[6]{artifact,path}:
   requirements,requirements.md
   design,design.md
@@ -33,7 +33,7 @@ tasks[15]{id,status,refs,tests,depends_on,artifact,decision_ref}:
   T006,done,AC-006,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T003/T004,Quality-lens skill; registry; traceable finding schema; report generator; tests; and docs.,DEC-001
   T007,done,AC-007,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T003/T005/T006,Change-impact skill; affected-artifact analysis; reopen plan; evidence gates; tests; and docs.,DEC-001
   T008,done,AC-008,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T007,Retrospective skill; observation and proposal schemas; policy safety checks; tests; and docs.,DEC-001
-  T009,pending,AC-009,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T004/T005,Versioned config schema; deterministic resolver; provenance; protected-gate checks; tests; and docs.,TBD
+  T009,done,AC-009,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T004/T005,Versioned config schema; deterministic resolver; provenance; protected-gate checks; tests; and docs.,DEC-001
   T010,pending,AC-010,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T002/T009,Versioned module schema; registry and discovery CLI; compatibility checks; tests; and docs.,TBD
   T011,pending,AC-011,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T010,Architecture skill; routed design artifact workflow; tests; and module registration.,TBD
   T012,pending,AC-011,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T010,UX skill; routed experience artifact workflow; tests; and module registration.,TBD

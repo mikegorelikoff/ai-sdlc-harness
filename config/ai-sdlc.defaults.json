@@ -1,0 +1,15 @@
+{
+  "schema": "ai-sdlc-config/v1",
+  "values": {
+    "rigor": {"minimum_profile": "patch"},
+    "gates": {"require_traceability": true, "require_evidence": true, "allow_state_bypass": false},
+    "output": {"human": "markdown", "machine": "toon"},
+    "modules": {"enabled": []}
+  },
+  "protected": [
+    "rigor.minimum_profile",
+    "gates.require_traceability",
+    "gates.require_evidence",
+    "gates.allow_state_bypass"
+  ]
+}
