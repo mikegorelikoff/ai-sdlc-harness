@@ -201,6 +201,10 @@ The optional `research` module adds question framing, source inventories,
 cited findings, confidence, limitations, and owned open questions through
 `ai-sdlc-research`.
 
+The optional `evidence-council` module orchestrates honestly labeled simulated
+or truly independent reviews and preserves agreements, conflicts, proposals,
+owners, and unresolved questions without granting panel write authority.
+
 ## Core Concepts
 
 The `concepts/` folder explains how the harness works for teams and maintainers.

@@ -101,7 +101,7 @@ artifact_metadata:
   Output: Research skill, evidence and source artifact workflow, tests, and module registration.
   Refs: AC-011
   Depends on: T010
-- [ ] T014. Implement the evidence council and portable review orchestration.
+- [x] T014. Implement the evidence council and portable review orchestration.
   Output: Council skill, simulated and independent plans, authority-safe report, tests, and docs.
   Refs: AC-012
   Depends on: T006, T010, T011, T012, T013

@@ -1,0 +1,10 @@
+{
+  "schema": "ai-sdlc-module/v1",
+  "id": "evidence-council",
+  "version": "1.0.0",
+  "kind": "optional",
+  "harness_api": {"min": "1.0.0", "max_exclusive": "2.0.0"},
+  "requires": ["core"],
+  "description": "Authority-safe simulated and independent evidence review orchestration.",
+  "skills": [{"name": "ai-sdlc-evidence-council", "path": "skills/ai-sdlc-evidence-council"}]
+}
