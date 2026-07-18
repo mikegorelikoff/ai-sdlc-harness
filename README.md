@@ -189,6 +189,10 @@ Optional domain capabilities use versioned manifests and harness API ranges.
 They remain discoverable without becoming core dependencies. See
 [Optional Modules](concepts/optional-modules.md).
 
+The optional `architecture` module adds traceable system boundaries,
+interfaces, decisions, tradeoffs, risks, and design validation through
+`ai-sdlc-architecture`.
+
 ## Core Concepts
 
 The `concepts/` folder explains how the harness works for teams and maintainers.

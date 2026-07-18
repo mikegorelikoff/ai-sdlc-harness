@@ -1,0 +1,10 @@
+{
+  "schema": "ai-sdlc-module/v1",
+  "id": "architecture",
+  "version": "1.0.0",
+  "kind": "optional",
+  "harness_api": {"min": "1.0.0", "max_exclusive": "2.0.0"},
+  "requires": ["core"],
+  "description": "Traceable system architecture decisions, interfaces, risks, and validation.",
+  "skills": [{"name": "ai-sdlc-architecture", "path": "skills/ai-sdlc-architecture"}]
+}

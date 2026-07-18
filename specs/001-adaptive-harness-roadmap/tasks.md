@@ -89,7 +89,7 @@ artifact_metadata:
   Output: Versioned module schema, registry and discovery CLI, compatibility checks, tests, and docs.
   Refs: AC-010
   Depends on: T002, T009
-- [ ] T011. Add the optional Architecture capability.
+- [x] T011. Add the optional Architecture capability.
   Output: Architecture skill, routed design artifact workflow, tests, and module registration.
   Refs: AC-011
   Depends on: T010
