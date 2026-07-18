@@ -120,6 +120,9 @@ machine-readable indexes.
 - `ai-sdlc-change-impact` traces changed requirements and decisions to stale
   artifacts and proposes evidence-backed lifecycle recovery without mutating
   authoritative state.
+- `ai-sdlc-retrospective` separates delivery observations from governed
+  improvement proposals and requires an accepted decision before policy can
+  change.
 - Helper scripts handle repetitive scaffolding, validation, indexing, and state
   checks so AI spends fewer tokens rediscovering context.
 - For generated Markdown, AI sends only section content through stdin; scaffold

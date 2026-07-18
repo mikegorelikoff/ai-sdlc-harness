@@ -77,7 +77,7 @@ artifact_metadata:
   Output: Change-impact skill, affected-artifact analysis, reopen plan, evidence gates, tests, and docs.
   Refs: AC-007
   Depends on: T003, T005, T006
-- [ ] T008. Implement retrospective learning with reviewable proposals.
+- [x] T008. Implement retrospective learning with reviewable proposals.
   Output: Retrospective skill, observation and proposal schemas, policy safety checks, tests, and docs.
   Refs: AC-008
   Depends on: T007
