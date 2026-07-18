@@ -65,7 +65,7 @@ artifact_metadata:
   Output: Policy engine, patch/standard/assured/regulated profiles, safe overrides, tests, and docs.
   Refs: AC-003, AC-004
   Depends on: T002, T003
-- [ ] T005. Implement evidence-backed project context and drift detection.
+- [x] T005. Implement evidence-backed project context and drift detection.
   Output: Project-context skill, Markdown and TOON generator, evidence anchors, drift checks, tests, and docs.
   Refs: AC-005
   Depends on: T002, T004

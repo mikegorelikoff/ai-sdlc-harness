@@ -112,6 +112,8 @@ machine-readable indexes.
 - Skills define role-specific AI behavior for PM, BA, QA, Delivery, and Dev.
 - `ai-sdlc-navigator` provides a read-only entry point that recommends the next
   required and optional actions from repository evidence.
+- `ai-sdlc-project-context` creates evidence-backed repository memory with
+  exact source anchors, Git identity, and deterministic drift detection.
 - Helper scripts handle repetitive scaffolding, validation, indexing, and state
   checks so AI spends fewer tokens rediscovering context.
 - For generated Markdown, AI sends only section content through stdin; scaffold
