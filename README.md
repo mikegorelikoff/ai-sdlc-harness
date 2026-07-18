@@ -114,6 +114,9 @@ machine-readable indexes.
   required and optional actions from repository evidence.
 - `ai-sdlc-project-context` creates evidence-backed repository memory with
   exact source anchors, Git identity, and deterministic drift detection.
+- `ai-sdlc-quality-lenses` applies a versioned registry of reusable challenge
+  lenses and finalizes only findings with evidence, trace targets, ownership,
+  resolution status, and a concrete next action.
 - Helper scripts handle repetitive scaffolding, validation, indexing, and state
   checks so AI spends fewer tokens rediscovering context.
 - For generated Markdown, AI sends only section content through stdin; scaffold

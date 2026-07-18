@@ -69,7 +69,7 @@ artifact_metadata:
   Output: Project-context skill, Markdown and TOON generator, evidence anchors, drift checks, tests, and docs.
   Refs: AC-005
   Depends on: T002, T004
-- [ ] T006. Implement the reusable quality-lens registry and reports.
+- [x] T006. Implement the reusable quality-lens registry and reports.
   Output: Quality-lens skill, registry, traceable finding schema, report generator, tests, and docs.
   Refs: AC-006
   Depends on: T003, T004

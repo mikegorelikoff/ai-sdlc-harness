@@ -1,0 +1,55 @@
+{
+  "schema": "ai-sdlc-quality-lens-registry/v1",
+  "version": "1.0.0",
+  "default_quick_lenses": ["edge-case-hunt", "assumption-challenge"],
+  "lenses": [
+    {
+      "id": "pre-mortem",
+      "name": "Pre-mortem",
+      "prompt": "Assume the outcome failed; identify evidence-backed causes and earlier controls.",
+      "applies_to": ["requirements", "design", "plan", "tasks", "release", "general"]
+    },
+    {
+      "id": "adversarial-review",
+      "name": "Adversarial review",
+      "prompt": "Challenge claims, boundaries, and happy-path assumptions using contrary evidence.",
+      "applies_to": ["requirements", "design", "tests", "change", "general"]
+    },
+    {
+      "id": "edge-case-hunt",
+      "name": "Edge-case hunt",
+      "prompt": "Find boundary values, empty states, races, retries, partial failures, and uncommon actors.",
+      "applies_to": ["requirements", "design", "tests", "change", "ux", "general"]
+    },
+    {
+      "id": "stakeholder-conflict",
+      "name": "Stakeholder conflict",
+      "prompt": "Expose incompatible goals, incentives, permissions, and ownership expectations.",
+      "applies_to": ["requirements", "plan", "ux", "release", "general"]
+    },
+    {
+      "id": "reversibility-check",
+      "name": "Reversibility check",
+      "prompt": "Test rollback, migration, data recovery, compatibility, and decision reversibility.",
+      "applies_to": ["design", "plan", "change", "release", "general"]
+    },
+    {
+      "id": "abuse-case-review",
+      "name": "Abuse-case review",
+      "prompt": "Identify misuse, privilege, trust-boundary, validation, and data-exposure paths.",
+      "applies_to": ["requirements", "design", "tests", "change", "ux", "general"]
+    },
+    {
+      "id": "operational-failure-review",
+      "name": "Operational failure review",
+      "prompt": "Challenge observability, degradation, dependency failure, recovery, and operator response.",
+      "applies_to": ["design", "plan", "tests", "change", "release", "general"]
+    },
+    {
+      "id": "assumption-challenge",
+      "name": "Assumption challenge",
+      "prompt": "Locate unsupported, stale, hidden, or mutually inconsistent assumptions.",
+      "applies_to": ["requirements", "design", "plan", "tasks", "tests", "change", "ux", "research", "release", "general"]
+    }
+  ]
+}
