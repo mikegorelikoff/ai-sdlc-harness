@@ -41,7 +41,7 @@ jobs:
       - name: Validate documentation source
         run: python3 docs/scripts/validate_docs.py
       - name: Smoke test project-scoped skill installation
-        run: python3 skills/_shared/ai_sdlc_install_smoke.py --mode npx
+        run: python3 skills/_shared/ai_sdlc_install_smoke.py --mode npx --source https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0
       - name: Run documentation tests
         run: python3 -m unittest discover -s docs/tests -v
       - name: Build documentation

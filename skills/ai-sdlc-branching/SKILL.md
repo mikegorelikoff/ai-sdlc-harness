@@ -139,7 +139,7 @@ to validation and commit prep without mixing unrelated changes.
   git status --short --branch
   ```
 
-- Collect the current `dev` branch state before creating any new task branch.
+- Collect the repository's declared base branch before creating any new task branch.
 - Collect whether the intended change is feature, fix, docs-only, or
   repo-local maintenance/governance.
 - Collect sandbox or approval constraints from `$ai-sdlc-approvals-sandbox` if
@@ -160,20 +160,22 @@ to validation and commit prep without mixing unrelated changes.
    - Repo-local governance or maintenance: `chore/<short-name>`.
 6. For medium or large work, preserve the full active spec slug after the
    prefix, for example `feature/191-branching-workflow`.
-7. Use `dev` as the default base branch for every new task branch.
+7. Resolve the base branch in this order: explicit repository policy
+   (`ai-sdlc.baseBranch`), `origin/HEAD`, then an existing local `dev`, `main`,
+   or `master`. Use `dev` only when it is declared or actually present.
 8. If already on a correctly named task branch for the current task, continue
    and report `already correct`; do not recreate the branch.
-9. Before creating a new task branch, switch to `dev` and pull the latest
-   remote state with fast-forward-only semantics:
+9. Before creating a new task branch, switch to the resolved base and pull the
+   latest remote state with fast-forward-only semantics:
 
    ```bash
-   git checkout dev
-   git pull --ff-only
+   git checkout <base-branch>
+   git pull --ff-only origin <base-branch>
    ```
 
-10. If `dev` cannot be checked out or pulled cleanly, stop and report the
+10. If the resolved base cannot be checked out or pulled cleanly, stop and report the
     blocker instead of branching from stale or divergent local state.
-11. Create the new branch from the refreshed `dev` branch with a non-interactive
+11. Create the new branch from the refreshed resolved base with a non-interactive
     command, for example:
 
    ```bash
@@ -199,8 +201,8 @@ Branching:
 - Task: user-visible task name
 - Change size: small | medium | large
 - Spec: specs/NNN-short-feature-name | none
-- Base branch: dev | other with reason
-- Base refresh: pulled latest dev | reused existing task branch | blocked
+- Base branch: resolved branch | blocked with reason
+- Base refresh: pulled latest resolved base | reused existing task branch | blocked
 - Current branch: branch-name
 - Expected branch: branch-name
 - Action: already correct | created | reused with reason | blocked
@@ -225,9 +227,9 @@ Branching:
 - Task: AI SDLC Git-flow branching skill and workflow update
 - Change size: medium
 - Spec: specs/191-branching-workflow
-- Base branch: dev
-- Base refresh: pulled latest dev
-- Current branch: dev
+- Base branch: main (origin/HEAD)
+- Base refresh: pulled latest resolved base
+- Current branch: main
 - Expected branch: feature/191-branching-workflow
 - Action: created
 - Dirty tree: clean
@@ -241,9 +243,9 @@ Branching:
 - Task: fix typo in validation warning
 - Change size: small
 - Spec: none
-- Base branch: dev
-- Base refresh: pulled latest dev
-- Current branch: dev
+- Base branch: main (repository default)
+- Base refresh: pulled latest resolved base
+- Current branch: main
 - Expected branch: fix/validation-warning-typo
 - Action: created
 - Dirty tree: clean
@@ -253,7 +255,7 @@ Branching:
 Invalid counter-example:
 
 ```text
-Edited files directly on dev and will make a branch later.
+Edited files directly on the shared base and will make a branch later.
 ```
 
 Reject this because branch verification must happen before repo-tracked file
@@ -261,12 +263,14 @@ mutation for implementation work.
 
 ## Edge Cases
 
+- If the repository has no declared/present base branch, stop and ask the owner
+  to declare one; do not invent `dev`.
 - If already on a correctly named task branch, continue and report `already
   correct`.
 - If already on a non-default branch that clearly belongs to the same task,
   report `reused with reason`; do not create a second branch.
-- For new task branches, do not skip `git checkout dev` and `git pull --ff-only`
-  merely because local `dev` looks recent.
+- For new task branches, do not skip checkout/pull of the resolved base merely
+  because it looks recent.
 - If `git pull --ff-only` reports divergence, stop and ask for repository
   maintenance instead of merge-committing during task setup.
 - If the branch name matches multiple specs or no spec for medium or large work,

@@ -74,7 +74,7 @@ artifact_metadata:
   Output: Persona/role paths, pilot playbook, metrics interpretation, operating model, human/agent RACI, trust/governance, maturity/limitations, troubleshooting runbook, contributor/extension path, canonical-source reconciliation, full navigation/index consistency, tests, and one focused commit.
   Refs: AC-002, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014, AC-017, AC-018
   Depends on: T005
-- [ ] T007. Close independent persona review and release-quality validation.
+- [x] T007. Close independent persona review and release-quality validation.
   Output: Junior, lead, and VP reread findings, revisions until all return PASS with no P0/P1, complete regression/build/render/compatibility/SDD evidence, exact task-to-commit audit, clean tree, and one focused completion commit.
   Refs: AC-014, AC-015, AC-016, AC-018
   Depends on: T006

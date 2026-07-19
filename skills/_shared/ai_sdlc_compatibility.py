@@ -142,6 +142,18 @@ def validate_routes_and_docs(root: Path, baseline: dict[str, Any]) -> list[str]:
     return errors
 
 
+def audit_subjects(
+    actual: list[str], expected: list[str], allowed_prelude: list[str] | None = None,
+    allow_pending_last: bool = False,
+) -> bool:
+    """Require the release sequence to occupy the complete audited range."""
+    prefix = allowed_prelude or []
+    candidates = [expected]
+    if allow_pending_last and expected:
+        candidates.append(expected[:-1])
+    return any(actual == prefix + candidate for candidate in candidates)
+
+
 def validate_git_audit(root: Path, baseline: dict[str, Any], base: str, allow_pending_last: bool) -> list[str]:
     """Validate the released roadmap as one ordered historical sequence."""
     result = subprocess.run(["git", "log", "--reverse", "--format=%s", f"{base}..HEAD"], cwd=root, check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -149,8 +161,9 @@ def validate_git_audit(root: Path, baseline: dict[str, Any], base: str, allow_pe
         return ["cannot audit roadmap commits: " + result.stderr.strip()]
     actual = result.stdout.splitlines()
     expected = baseline.get("roadmap_commit_subjects", [])
-    candidates = (expected, expected[:-1]) if allow_pending_last else (expected,)
-    if any(any(actual[index:index + len(candidate)] == candidate for index in range(len(actual) - len(candidate) + 1)) for candidate in candidates):
+    allowed_prelude = baseline.get("roadmap_allowed_prelude_subjects", [])
+    valid = audit_subjects(actual, expected, list(allowed_prelude), allow_pending_last)
+    if valid:
         return []
     if expected:
         return ["roadmap commit subjects do not map one-to-one with T001-T015", f"expected: {expected}", f"actual: {actual}"]

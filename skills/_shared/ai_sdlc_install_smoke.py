@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -17,9 +18,12 @@ CLI_VERSION = "1.5.19"
 
 def run(command: list[str], cwd: Path, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
     """Run one smoke command with captured diagnostics."""
+    environment = os.environ.copy()
+    environment["DISABLE_TELEMETRY"] = "1"
     return subprocess.run(
         command,
         cwd=cwd,
+        env=environment,
         input=input_text,
         check=False,
         text=True,
@@ -44,7 +48,7 @@ def install_emulated(source: Path, consumer: Path) -> None:
             shutil.copytree(skill, installed / skill.name)
 
 
-def install_npx(source: Path, consumer: Path) -> None:
+def install_npx(source: str, consumer: Path) -> None:
     """Install the local source through the pinned real Skills CLI."""
     require(run(["git", "init"], consumer), "consumer git init")
     require(
@@ -54,7 +58,7 @@ def install_npx(source: Path, consumer: Path) -> None:
                 "-y",
                 f"skills@{CLI_VERSION}",
                 "add",
-                str(source),
+                source,
                 "--all",
                 "-y",
             ],
@@ -64,7 +68,7 @@ def install_npx(source: Path, consumer: Path) -> None:
     )
 
 
-def verify(consumer: Path) -> None:
+def verify(consumer: Path, expected_skill_count: int = 44) -> None:
     """Execute installed imports, one complete write, and finalization."""
     require(run(["git", "init"], consumer), "navigator fixture git init")
     require(run(["git", "checkout", "-B", "dev"], consumer), "navigator fixture dev branch")
@@ -88,6 +92,9 @@ def verify(consumer: Path) -> None:
         "navigator fixture base commit",
     )
     installed = consumer / ".agents" / "skills"
+    installed_skills = [path for path in installed.iterdir() if path.is_dir() and path.name != "_shared"]
+    if len(installed_skills) != expected_skill_count:
+        raise RuntimeError(f"expected {expected_skill_count} installed skills, found {len(installed_skills)}")
     if (installed / "_shared").exists():
         raise RuntimeError("smoke must not depend on source-only skills/_shared")
     runtime = installed / "ai-sdlc-shared-runtime" / "scripts"
@@ -178,7 +185,7 @@ def verify(consumer: Path) -> None:
 def main() -> int:
     """Install into a temporary consumer and execute the portable runtime."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", type=Path, default=ROOT)
+    parser.add_argument("--source", default=str(ROOT), help="Local checkout or pinned Skills CLI source URL")
     parser.add_argument("--mode", choices=("emulated", "npx"), default="emulated")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")
@@ -189,14 +196,18 @@ def main() -> int:
     if args.begin_state or args.complete_state:
         print("ERROR: installation smoke cannot mutate feature state")
         return 1
-    source = args.source.resolve()
-    if not (source / "skills").is_dir():
-        print(f"ERROR: source has no skills directory: {source}")
+    source_value = str(args.source)
+    source_path = Path(source_value).resolve()
+    if args.mode == "emulated" and not (source_path / "skills").is_dir():
+        print(f"ERROR: source has no skills directory: {source_path}")
         return 1
     try:
         with tempfile.TemporaryDirectory() as temp:
             consumer = Path(temp)
-            (install_npx if args.mode == "npx" else install_emulated)(source, consumer)
+            if args.mode == "npx":
+                install_npx(source_value, consumer)
+            else:
+                install_emulated(source_path, consumer)
             verify(consumer)
     except (OSError, RuntimeError) as exc:
         print(f"ERROR: {exc}")

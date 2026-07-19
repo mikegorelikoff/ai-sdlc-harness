@@ -312,6 +312,20 @@ def parse_test_case_ids(markdown: str) -> list[str]:
     return unique(TEST_CASE_ID_RE.findall(markdown))
 
 
+def parse_test_case_acceptance_links(markdown: str) -> dict[str, list[str]]:
+    """Map each test case to the acceptance IDs declared on its own row."""
+    links: dict[str, list[str]] = {}
+    for line in markdown.splitlines():
+        ids = TEST_CASE_ID_RE.findall(line)
+        if not ids:
+            continue
+        test_id = ids[0]
+        acceptance = unique(ACCEPTANCE_ID_RE.findall(line))
+        if acceptance:
+            links[test_id] = acceptance
+    return links
+
+
 def plan_required_sections() -> list[str]:
     """Return canonical plan.md sections used by SDD gates."""
     return [

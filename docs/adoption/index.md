@@ -71,6 +71,9 @@ the decision.
 4. Approve the [governance and trust boundary](../operations/governance.md).
 5. Run the [one-team pilot](pilot.md).
 6. Interpret [pilot metrics](metrics.md) without claiming causality.
-7. Record a scale or stop decision.
+7. If the pilot passes, write the [staged rollout contract](rollout.md).
+8. Record a scale or stop decision.
 
 Broad rollout is a new decision. It is not an automatic final step of the pilot.
+Use the rollout contract to move pilot → limited cohort → broader cohort or
+standard/hold, with a separate rollback boundary for every cohort.

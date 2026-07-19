@@ -27,7 +27,7 @@ Install every core and optional skill into the current consumer project using
 the pinned Skills CLI version verified by the public docs:
 
 ```bash
-npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
 ```
 
 The generic CLI shape remains `npx skills add`; pinning the CLI makes the
@@ -37,9 +37,9 @@ to install user-wide rather than project-scoped skills.
 Install a specific core or optional capability:
 
 ```bash
-npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --skill ai-sdlc-shared-runtime --agent '*' -y
-npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --skill ai-sdlc-navigator --agent '*' -y
-npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --skill ai-sdlc-architecture --agent '*' -y
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --skill ai-sdlc-shared-runtime --agent '*' -y
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --skill ai-sdlc-navigator --agent '*' -y
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --skill ai-sdlc-architecture --agent '*' -y
 ```
 
 `--all` includes optional capabilities. A minimal installation selects only

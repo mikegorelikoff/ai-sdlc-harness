@@ -470,6 +470,22 @@ def source_link(path: Path, label: str | None = None) -> str:
     return f"[{label or relative}]({SOURCE_URL}/{relative})"
 
 
+def has_cli_entry(source: str) -> bool:
+    """Return true only for scripts that execute a real module entrypoint."""
+    tree = ast.parse(source)
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.If) or not isinstance(node.test, ast.Compare):
+            continue
+        if not isinstance(node.test.left, ast.Name) or node.test.left.id != "__name__":
+            continue
+        if any(isinstance(op, ast.Eq) for op in node.test.ops) and any(
+            isinstance(comparator, ast.Constant) and comparator.value == "__main__"
+            for comparator in node.test.comparators
+        ):
+            return True
+    return False
+
+
 def script_record(path: Path) -> ScriptRecord:
     """Classify one script conservatively from its path and source behavior."""
     relative = path.relative_to(ROOT)
@@ -538,7 +554,8 @@ def script_record(path: Path) -> ScriptRecord:
                         command.group(0).rstrip("\\").strip() if command else ""
                     )
                     break
-    if "argparse.ArgumentParser" in source:
+    cli_entry = has_cli_entry(source)
+    if cli_entry and "argparse.ArgumentParser" in source:
         invocation = f"python3 {relative.as_posix()} --help"
     elif skill_usage:
         invocation = skill_usage

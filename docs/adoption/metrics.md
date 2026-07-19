@@ -70,6 +70,36 @@ It must not be converted to zeros that imply observed activity.
 Avoid universal “good” numbers. A five-minute gate can be excessive for a typo
 and negligible for a security-sensitive migration.
 
+## Cost and resource ledger
+
+The pilot owner and cost/resource owner maintain a separate ledger for the
+baseline and pilot windows. This is a decision aid, not a promise of ROI. The
+FinOps Foundation describes total cost of ownership as including acquisition,
+management, support, communications, end-user expense, labor, downtime,
+training, and productivity loss; use that breadth when it is material to the
+decision. See its [TCO terminology](https://framework.finops.org/assets/terminology/)
+and [unit-economics guidance](https://www.finops.org/framework/capabilities/unit-economics/).
+
+| Cost/resource category | Definition and unit | Source / accountable owner | Baseline and pilot window/allocation | Uncertainty to record |
+| --- | --- | --- | --- | --- |
+| Model/API consumption | Provider tokens, requests, or subscription increment attributable to the pilot. | Provider bill or approved estimate / platform or finance owner. | Same calendar window and cohort allocation. | Shared plans, rate changes, and unmetered use. |
+| Agent/tooling and license | Incremental host, CLI, seat, plugin, or tool cost. | Procurement/billing / platform owner. | Baseline seats versus pilot seats. | Discounts, unused seats, and renewal exposure. |
+| Installation and supply chain | Review, package verification, mirror, network, and dependency effort. | Install evidence and package policy / maintainer. | One-time setup plus per-cohort refresh. | Provider behavior, cache, and network variability. |
+| Onboarding and training | Participant and enablement time to learn, practice, and attend support. | Time sample / enablement owner. | Comparable training window and participant count. | Recall bias and non-pilot learning spillover. |
+| Workflow participation and rework | Human time for artifact creation, review, correction, and recovery. | Work log/PR evidence / delivery owner. | Same task mix and role rates. | Workload complexity and staffing changes. |
+| Platform and maintenance | Runtime packaging, upgrades, policy maintenance, and internal support. | Platform backlog / platform owner. | Allocated hours and release window. | Shared infrastructure and future upgrade load. |
+| Governance and assurance | Security, privacy, legal, compliance, audit, and exception review effort. | Review records / security or compliance owner. | Baseline policy effort versus pilot increment. | Jurisdiction, risk class, and review depth. |
+| Support and enablement | Office hours, triage, incident response, documentation, and coaching. | Support queue / support owner. | Ticket hours and cohort count. | Early-adopter intensity and unrecorded help. |
+| Upgrade and deprecation | Migration, compatibility, retraining, and retirement effort. | Release/maintenance plan / maintainer. | Expected window and affected cohorts. | Vendor changes and unknown migration scope. |
+| Incident and remediation | Recovery, containment, rework, downtime, and risk-remediation effort. | Incident/defect records / incident owner. | Include zero only when zero was actually observed. | Severity, counterfactuals, and unpriced risk. |
+
+For each row, record a low/central/high range, the unit, sample, missing data,
+and owner. Compare incremental resource ranges with observed delivery, quality,
+experience, and risk evidence. Use best/central/worst scenarios and explicit
+decision thresholds; do not turn an unmeasured benefit into a universal ROI
+claim. Require the ledger in every final pilot decision and every staged
+rollout promotion packet.
+
 ## Weekly review
 
 For each signal record:

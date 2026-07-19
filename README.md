@@ -72,21 +72,27 @@ engineering, QA, security, or legal ownership.
 
 ## Install in a consumer repository
 
-Prerequisites: Git, Node.js/npm with `npx`, Python 3.10 or newer, a supported
+Prerequisites: Git, Node.js `>=22.20.0`/npm with `npx`, Python 3.10 or newer, a supported
 AI agent, and a clean Git working tree in the project that will use the skills.
 
 Run this from the **consumer project**, not from a clone of this source
 repository. The pinned CLI version below is the version verified by these docs:
 
+The third-party Skills CLI sends anonymous telemetry by default. These
+privacy-safe commands opt out with `DISABLE_TELEMETRY=1`; review the
+[upstream telemetry contract](https://www.skills.sh/docs/cli#telemetry) before
+choosing a different policy. This installer boundary is separate from the
+harness's content-free local metrics.
+
 ```bash
-npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
 ```
 
 This is project-scoped because `-g` is intentionally absent. Review the files
 reported by the CLI, then verify the installed inventory:
 
 ```bash
-npx -y skills@1.5.19 list --json
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
 git status --short
 python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
 python3 .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
@@ -100,7 +106,7 @@ accepted installation baseline before starting feature work.
 To inspect available skills before installing:
 
 ```bash
-npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --list
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --list
 ```
 
 Network access to npm and GitHub is required for installation. An offline
@@ -190,7 +196,7 @@ UV_CACHE_DIR=/tmp/ai-sdlc-uv-cache uv run --offline \
   --with-requirements requirements-docs.txt mkdocs serve
 ```
 
-Validate a source checkout against release `1.1.0`:
+Validate a source checkout against the current release `1.2.0` compatibility baseline (the audit compares commits from `v1.1.0`):
 
 ```bash
 python3 skills/_shared/ai_sdlc_compatibility.py \

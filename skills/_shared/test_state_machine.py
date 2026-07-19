@@ -109,6 +109,29 @@ class StateMachineTests(unittest.TestCase):
             self.assertIn("feature: cli-demo", status.stdout)
             self.assertIn("stages[", status.stdout)
 
+    def test_read_only_status_fails_when_state_is_missing(self) -> None:
+        """Status must not synthesize evidence that was never persisted."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            result = subprocess.run(
+                [sys.executable, str(CLI), "status", "--feature", "missing-state", "--workspace", "implementation"],
+                cwd=temp_dir,
+                check=False,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("authoritative state is missing", result.stderr)
+
+    def test_implementation_starts_with_branching_before_sdd(self) -> None:
+        """The executable lifecycle matches the public branch-first contract."""
+        state = sm.initial_state("implementation-demo", "implementation")
+        self.assertEqual(state["current_stage"], "branching")
+        branching = sm.stage_row(state, "branching")
+        sdd = sm.stage_row(state, "sdd")
+        self.assertEqual(branching["status"], "not_started")
+        self.assertIn("branching", sm.STAGE_BY_ID["sdd"].predecessors)
+
     def test_cli_reads_legacy_state_but_writes_canonical_state(self) -> None:
         """State mutations should migrate forward without overwriting legacy files."""
         with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:

@@ -14,7 +14,7 @@ create delivery artifacts until you ask an agent to use a workflow.
 You need:
 
 - Git and a repository with a clean or understood working tree;
-- Node.js/npm with `npx`;
+- Node.js `>=22.20.0`/npm with `npx`;
 - Python 3.10 or newer for deterministic helpers;
 - network access to npm and GitHub during installation;
 - a supported AI agent environment;
@@ -24,16 +24,47 @@ Choose a low-risk consumer repository for your first use. The **consumer
 repository** is the software project receiving skills. The **harness source
 repository** is this GitHub project, used by maintainers and contributors.
 
+The shell blocks below use POSIX syntax (Linux, macOS, WSL, or Git Bash). In
+PowerShell, set the opt-out once in the session and run the same pinned CLI:
+
+```powershell
+$env:DISABLE_TELEMETRY = "1"
+node --version  # expected: v22.20.0 or newer
+npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
+npx -y skills@1.5.19 list --json
+```
+
+Do not paste the PowerShell environment assignment into a POSIX shell; use the
+`DISABLE_TELEMETRY=1` prefix shown in the POSIX blocks instead.
+
+## Decide the installer telemetry boundary
+
+The third-party Skills CLI is separate from the harness. Its
+[official CLI documentation](https://www.skills.sh/docs/cli#telemetry) says
+that it sends anonymous telemetry by default, including the skill name, skill
+files, and a timestamp. The harness's content-free local metrics do not send
+network requests, but that property does not cover npm, GitHub, the Skills CLI,
+your agent host, or model provider.
+
+The canonical commands below set `DISABLE_TELEMETRY=1`. Keep that privacy-safe
+default unless a human data/privacy owner explicitly accepts the upstream
+collection and retention policy. `DO_NOT_TRACK=1` is also supported upstream;
+use the form required by your organization consistently.
+
 ## Inspect before installing
 
 !!! terminal "Run in terminal — from the consumer repository"
 
     ```bash
-    npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --list
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --list
     ```
 
+Before this command, run `node --version` and stop unless it reports
+`v22.20.0` or newer. `npm view skills@1.5.19 engines --json` is the recovery
+check when a pinned CLI invocation reports an engine mismatch.
+
 This lists available skills without installing them. Review the repository
-origin and selected package names. Release `v1.1.0` is the current documented
+origin and selected package names. Release `v1.2.0` is the current documented
 harness release; the CLI version is pinned here so this procedure is
 reproducible.
 
@@ -42,7 +73,7 @@ reproducible.
 !!! terminal "Run in terminal — from the consumer repository"
 
     ```bash
-    npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
     ```
 
 `--all` selects every capability—including the portable shared runtime—and
@@ -63,7 +94,7 @@ healthy installation.
 !!! terminal "Run in terminal"
 
     ```bash
-    npx -y skills@1.5.19 list --json
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
     git status --short
     python3 --version
     python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
@@ -97,15 +128,16 @@ Expected result:
 
 Expected result: a read-only `ai-sdlc-handoff/v1` recommendation grounded in
 repository evidence. If the agent cannot find the skill, verify the target
-agent and installation scope with `skills list` before reinstalling.
+agent and installation scope with `DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json`
+before reinstalling.
 
 ## Update, remove, or roll back
 
 !!! terminal "Run in terminal"
 
     ```bash
-    npx -y skills@1.5.19 update
-    npx -y skills@1.5.19 remove
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 update
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 remove
     ```
 
 Review updates like source changes. Preserve project-owned specs, decisions,

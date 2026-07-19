@@ -28,7 +28,7 @@ gate needs exactly one named accountable human or group under local policy.
 | Commit ready | Change owner | Developer | Reviewer, QA as required | Repository and delivery owners | Check staged scope, traceability, message, tests. | Stage unrelated files or commit incomplete work. | Staged diff, task, validation, commit message. | Repository owner. |
 | Release/deployment approved | Release owner | Delivery/release lead | Product, engineering, QA, security, operations | Support teams and stakeholders | Assemble readiness and rollback evidence. | Deploy or approve release without explicit authority. | Release package, compatibility, rollback, signoffs. | Delivery leadership. |
 | Incident contained/resumed | Incident commander | Incident response team | Security, operations, engineering, vendor owners | Affected owners and notification stakeholders | Collect diagnostics, stop bounded automation, propose recovery. | Destroy evidence, rotate secrets, notify parties, or resume autonomously. | Timeline, state, logs, containment, approvals. | Incident commander. |
-| Pilot scale/stop decision | Executive/adoption owner | Pilot owner | Team leads, users, security, finance as relevant | Participants and affected leadership | Aggregate metrics and limitations. | Claim causality or authorize rollout. | Baseline, samples, incidents, feedback, recommendation. | Executive sponsor. |
+| Pilot scale/stop decision | Executive/adoption owner | Pilot owner | Team leads, users, security, finance as relevant | Participants and affected leadership | Aggregate metrics and limitations. | Claim causality or authorize rollout. | Baseline, samples, incidents, feedback, cost/resource ledger, recommendation. | Executive sponsor. |
 
 ## Decision and action separation
 

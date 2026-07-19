@@ -27,7 +27,7 @@ and accept each handoff.
     git checkout -b dev
     git add scenario.md decisions.md
     git commit -m "chore: initialize organization SSO scenario"
-    npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
     git add .agents .claude agent skills-lock.json
     git commit -m "chore: install AI SDLC harness"
     git init --bare /tmp/ai-sdlc-sso-demo-origin.git

@@ -109,11 +109,15 @@ a terminal, what the agent does automatically, and where a human must decide.
 The canonical project-scoped installation command is:
 
 ```bash
-npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
 ```
 
 Run it from the consumer repository only after reviewing the
-[installation prerequisites and trust boundary](how-to/install.md).
+[installation prerequisites, third-party installer telemetry, and trust
+boundary](how-to/install.md). The opt-out applies to the Skills CLI; it does not
+describe the independent data behavior of an agent host or model provider.
+The pinned CLI requires Node.js `>=22.20.0`; verify `node --version` before
+starting.
 
 ## What the evidence proves
 

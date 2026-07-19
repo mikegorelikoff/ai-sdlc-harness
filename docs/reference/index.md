@@ -21,6 +21,7 @@ Reference pages state the contracts precisely. Use them while configuring automa
 - [**Compatibility contract**](compatibility.md) — release and extension boundaries.
 - [**Supported versions**](versions.md) — release, API, migration, and support matrix.
 - [**Release 1.1 audit**](release-1.1.md) — task-to-commit and validation evidence.
+- [**Release 1.2 audit**](release-1.2.md) — guided onboarding closeout and release evidence.
 
 </div>
 

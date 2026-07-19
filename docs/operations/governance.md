@@ -29,6 +29,13 @@ permission, and a chat message does not replace a required approval system.
 
 ## Data and secrets
 
+The installer is a separate data boundary. The third-party Skills CLI documents
+anonymous telemetry of skill name, skill files, and timestamp by default. The
+canonical install commands set `DISABLE_TELEMETRY=1`; a pilot must record the
+human privacy/data owner's choice, provider policy, retention, and any approved
+exception. Content-free local metrics do not imply that npm, GitHub, the agent
+host, or model provider is network-free.
+
 Classify data before an agent can read it.
 
 | Class | Default treatment |

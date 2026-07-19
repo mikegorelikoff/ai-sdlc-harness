@@ -10,24 +10,74 @@ service. It teaches the shortest complete evidence loop; the point is not the
 endpoint but the ability to explain and verify every step without the original
 chat.
 
-You need a harness source checkout to copy the fixture, network access for the
-pinned installer, Git, Python 3.10+, Node/npm, and a supported AI agent. Every
-repository created here is disposable and lives under `/tmp`.
+You need network access, Git, Python 3.10+, Node.js `>=22.20.0`, npm, and a
+supported AI agent. The commands are written for Linux/macOS/WSL or Git Bash;
+PowerShell users should use WSL for this end-to-end fixture. Every repository
+created here is disposable.
+
+## 0. Acquire the pinned tutorial source
+
+The fixture is in the tagged source release. Run this before the first step:
+
+!!! terminal "Linux/macOS/WSL/Git Bash"
+
+    ```bash
+    git clone --branch v1.2.0 --depth 1 https://github.com/mikegorelikoff/ai-sdlc-harness.git ai-sdlc-harness-v1.2.0
+    cd ai-sdlc-harness-v1.2.0
+    node --version  # expected: v22.20.0 or newer
+    npm --version
+    python3 --version
+    ```
+
+!!! terminal "PowerShell"
+
+    ```powershell
+    git clone --branch v1.2.0 --depth 1 https://github.com/mikegorelikoff/ai-sdlc-harness.git ai-sdlc-harness-v1.2.0
+    Set-Location ai-sdlc-harness-v1.2.0
+    node --version  # expected: v22.20.0 or newer
+    npm --version
+    py --version
+    ```
+
+If Node is older than `22.20.0`, stop and upgrade Node before invoking the
+pinned Skills CLI. The CLI package declares that engine floor; changing the
+Node version is safer than forcing installation with an unsupported runtime.
 
 ## 1. Create a clean consumer and explicit base branch
 
-!!! terminal "Run in terminal — harness source checkout"
+!!! terminal "Run in terminal — harness source checkout (POSIX)"
 
     ```bash
-    cp -R examples/onboarding-health-service /tmp/ai-sdlc-health-demo
-    cd /tmp/ai-sdlc-health-demo
+    DEMO_PARENT="$(mktemp -d)"
+    DEMO_ROOT="$DEMO_PARENT/ai-sdlc-health-demo"
+    cp -R examples/onboarding-health-service "$DEMO_ROOT"
+    cd "$DEMO_ROOT"
     git init
     git checkout -b dev
+    git config --local user.name "AI SDLC Tutorial"
+    git config --local user.email "tutorial@example.invalid"
+    git config --local commit.gpgsign false
+    git config --get user.name
+    git config --get user.email
     git add README.md app.py test_app.py deliberate_unknown_route_regression.py.disabled
     git commit -m "chore: initialize health service fixture"
     python3 -m unittest -v
     git status --short
     ```
+
+For PowerShell, use a disposable directory explicitly:
+
+```powershell
+$demoRoot = Join-Path ([System.IO.Path]::GetTempPath()) 'ai-sdlc-health-demo'
+Remove-Item -Recurse -Force $demoRoot -ErrorAction SilentlyContinue
+Copy-Item -Recurse examples/onboarding-health-service $demoRoot
+Set-Location $demoRoot
+git init
+git checkout -b dev
+git config --local user.name "AI SDLC Tutorial"
+git config --local user.email "tutorial@example.invalid"
+git config --local commit.gpgsign false
+```
 
 Expected tests:
 
@@ -58,7 +108,7 @@ the consumer root. Then inspect what the installer added.
 !!! terminal "Run in terminal"
 
     ```bash
-    npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
     python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
     python3 .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
     git status --short
@@ -78,7 +128,7 @@ scope.
 !!! terminal "Run in terminal"
 
     ```bash
-    git add .agents .claude agent skills-lock.json
+    git add -A
     git diff --cached --stat
     git commit -m "chore: install AI SDLC harness"
     git init --bare /tmp/ai-sdlc-health-demo-origin.git
@@ -353,7 +403,7 @@ can reconstruct intent → acceptance → test → implementation → evidence.
 
     ```bash
     cd /tmp
-    rm -rf ai-sdlc-health-demo ai-sdlc-health-demo-origin.git
+    rm -rf "$DEMO_PARENT"
     ```
 
 Only remove these disposable paths. Never use cleanup commands on a real
