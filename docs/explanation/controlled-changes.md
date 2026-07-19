@@ -72,3 +72,20 @@ python3 skills/ai-sdlc-change-set/scripts/spec_delta.py . \
 Validation proves target declaration, stable-ID presence or absence, scenario
 completeness, source hashes, and absence of overlapping operations. The
 generated `delta-set.json` is still non-authoritative and cannot apply itself.
+
+## Apply preview
+
+Preview recompiles the authoritative delta Markdown against current target
+bytes. It produces virtual after-state hashes and unified diffs, detects
+ambiguous blocks and overlaps with other active changes, finds exact downstream
+references that need revalidation, and explains every required gate.
+
+```bash
+python3 skills/ai-sdlc-change-set/scripts/change_preview.py . \
+  --change-id add-session-timeout \
+  --preview --write --format toon
+```
+
+A ready preview still has no write authority. A conflicting preview returns
+`blocked`, preserves the evidence for review, and never guesses which target
+block or proposal should win.

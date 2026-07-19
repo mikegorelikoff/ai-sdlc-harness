@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-change-preview-v1",
+  "title": "AI SDLC Change Apply Preview",
+  "type": "object",
+  "required": ["schema", "change_id", "status", "delta_fingerprint", "targets", "conflicts", "stale_references", "reopen_actions", "required_gates", "authority", "preview_fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-change-preview/v1"},
+    "change_id": {"type": "string"},
+    "status": {"enum": ["ready", "blocked"]},
+    "delta_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "targets": {"type": "array", "minItems": 1},
+    "conflicts": {"type": "array"},
+    "stale_references": {"type": "array"},
+    "reopen_actions": {"type": "array"},
+    "required_gates": {"type": "array", "minItems": 2},
+    "authority": {"type": "object"},
+    "preview_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

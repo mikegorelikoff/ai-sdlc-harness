@@ -59,7 +59,7 @@ artifact_metadata:
 - [x] T003. Implement requirement delta parsing and semantic validation.
   Output: Added, modified, removed, and renamed operation parser; scenario and target validation; overlap detection; tests; and documentation.
   Refs: AC-001, AC-002, AC-013
-- [ ] T004. Implement non-mutating apply preview and conflict analysis.
+- [x] T004. Implement non-mutating apply preview and conflict analysis.
   Output: Deterministic preview plan, target diffs, downstream staleness and reopen analysis, policy gate discovery, conflict reasons, tests, and documentation.
   Refs: AC-002, AC-013
 - [ ] T005. Implement policy-gated atomic apply and archive.

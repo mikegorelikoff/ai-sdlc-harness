@@ -101,6 +101,10 @@ description: AI SDLC controlled change-workspace and specification-delta workflo
 - Read `references/spec-delta-contract.md` before authoring or reviewing delta
   Markdown and use `references/spec-delta.schema.json` for its projection.
 - Use `scripts/spec_delta.py` to validate and project semantic deltas.
+- Read `references/apply-preview-contract.md` before reviewing planned target
+  changes and use `references/change-preview.schema.json` for the projection.
+- Use `scripts/change_preview.py` to compile diffs, conflicts, stale evidence,
+  reopen actions, and required gates without target writes.
 
 ## Script Usage
 
@@ -109,6 +113,7 @@ python3 skills/ai-sdlc-change-set/scripts/change_set.py . --change-id add-sessio
 python3 skills/ai-sdlc-change-set/scripts/change_set.py . --change-id add-session-timeout --title "Add session timeout" --summary "Expire inactive sessions." --owner Security --target specs/auth/requirements.md --create --full-flow
 python3 skills/ai-sdlc-change-set/scripts/change_set.py . --change-id add-session-timeout --validate --format json
 python3 skills/ai-sdlc-change-set/scripts/spec_delta.py . --change-id add-session-timeout --validate --write --format toon
+python3 skills/ai-sdlc-change-set/scripts/change_preview.py . --change-id add-session-timeout --preview --write --format toon
 ```
 
 `--emit` renders the planned record without writes. `--create` builds the
@@ -149,6 +154,10 @@ artifact paths, authority rules, and `contract_fingerprint`.
 The JSON schema `ai-sdlc-spec-delta/v1` contains normalized operations, target
 and source evidence, exact source hashes, and a deterministic fingerprint.
 
+The JSON schema `ai-sdlc-change-preview/v1` contains virtual target hashes and
+diffs, conservative conflicts, stale references, reopen actions, gates, and a
+fingerprint that becomes invalid when any input drifts.
+
 Quality gate:
 
 - Pass when the workspace has every required artifact, the JSON record matches
@@ -174,10 +183,14 @@ must remain repository-relative and cannot traverse outside the repository.
 - A hand-edited record with a stale fingerprint fails validation.
 - Empty delta and evidence indexes are valid at intake and become stricter in
   later lifecycle stages.
+- Preview returns status `blocked` and exit code 2 for semantic conflicts while
+  still emitting complete review evidence.
 
 ## Scope Boundary
 
 - Do not treat valid requirement delta semantics as approval or compatibility.
+- Do not apply a preview or mutate a target; the controlled apply workflow owns
+  that later transition.
 - Do not compute downstream impact; use `$ai-sdlc-change-impact` and preview.
 - Do not mutate canonical artifacts, policy, feature state, or specs indexes.
 - Do not approve, apply, archive, merge, commit, or release a change.

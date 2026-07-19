@@ -56,8 +56,10 @@ def scenarios(block_lines: list[str], base_line: int, prefix: str) -> tuple[list
         end = positions[offset + 1] if offset + 1 < len(positions) else len(block_lines)
         name = block_lines[start].split(":", 1)[1].strip()
         content = "\n".join(block_lines[start + 1:end])
-        when = bool(re.search(r"(?im)^\s*[-*]\s*(?:\*\*)?WHEN(?:\*\*)?(?:\s|:).+", content))
-        then = bool(re.search(r"(?im)^\s*[-*]\s*(?:\*\*)?THEN(?:\*\*)?(?:\s|:).+", content))
+        when_match = re.search(r"(?im)^\s*[-*]\s*(?:\*\*)?WHEN(?:\*\*)?(?:\s|:)\s*(.+)", content)
+        then_match = re.search(r"(?im)^\s*[-*]\s*(?:\*\*)?THEN(?:\*\*)?(?:\s|:)\s*(.+)", content)
+        when = when_match.group(1).strip() if when_match else ""
+        then = then_match.group(1).strip() if then_match else ""
         line_number = base_line + start
         if not name:
             errors.append(f"{prefix}:{line_number}: scenario name is required")
@@ -185,7 +187,7 @@ def validate_semantics(repository: Path, declared_targets: list[str], operations
             target_cache[target], target_errors = read_target(repository, target)
             errors.extend(target_errors)
         canonical = target_cache[target]
-        present = bool(canonical is not None and re.search(rf"(?<![A-Za-z0-9_.-]){re.escape(requirement_id)}(?![A-Za-z0-9_.-])", canonical))
+        present = bool(canonical is not None and re.search(rf"(?<![A-Za-z0-9_-]){re.escape(requirement_id)}(?![A-Za-z0-9_-])", canonical))
         if operation["operation"] == "ADDED" and present:
             errors.append(f"{prefix}: ADDED requirement already exists in {target}: {requirement_id}")
         if operation["operation"] != "ADDED" and not present:
@@ -237,6 +239,27 @@ def render_toon(record: dict[str, Any]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def analyze_delta_set(repository: Path, change_id: str) -> tuple[dict[str, Any], list[str]]:
+    """Rebuild one delta projection from authoritative Markdown."""
+    workspace = repository / "changes" / change_id
+    change_record, errors = validate_workspace(workspace, change_id)
+    if errors:
+        return {}, errors
+    paths = sorted(path for path in (workspace / "deltas").glob("*.md") if path.name != "index.md")
+    if not paths:
+        return {}, ["no semantic delta Markdown files found"]
+    operations: list[dict[str, Any]] = []
+    sources: list[dict[str, str]] = []
+    for path in paths:
+        parsed, source, parse_errors = parse_delta(path, workspace)
+        operations.extend(parsed)
+        if source:
+            sources.append(source)
+        errors.extend(parse_errors)
+    errors.extend(validate_semantics(repository, change_record["canonical_targets"], operations))
+    return (build_projection(change_id, operations, sources) if not errors else {}), errors
+
+
 def main() -> int:
     """Validate and optionally persist one semantic delta projection."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -260,29 +283,11 @@ def main() -> int:
         return 1
     repository = args.repository.resolve()
     workspace = repository / "changes" / args.change_id
-    change_record, errors = validate_workspace(workspace, args.change_id)
+    record, errors = analyze_delta_set(repository, args.change_id)
     if errors:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
-    paths = sorted(path for path in (workspace / "deltas").glob("*.md") if path.name != "index.md")
-    if not paths:
-        print("ERROR: no semantic delta Markdown files found")
-        return 1
-    operations: list[dict[str, Any]] = []
-    sources: list[dict[str, str]] = []
-    for path in paths:
-        parsed, source, parse_errors = parse_delta(path, workspace)
-        operations.extend(parsed)
-        if source:
-            sources.append(source)
-        errors.extend(parse_errors)
-    errors.extend(validate_semantics(repository, change_record["canonical_targets"], operations))
-    if errors:
-        for error in errors:
-            print(f"ERROR: {error}")
-        return 1
-    record = build_projection(args.change_id, operations, sources)
     if args.write:
         atomic_write(workspace / "_ai_sdlc/delta-set.json", json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
     if args.format == "json":
@@ -291,7 +296,7 @@ def main() -> int:
         print(render_toon(record), end="")
     else:
         print(f"Delta set: {args.change_id}")
-        print(f"Operations: {len(operations)}")
+        print(f"Operations: {len(record['operations'])}")
         print(f"Fingerprint: {record['contract_fingerprint']}")
         print("Validation: passed")
     return 0
