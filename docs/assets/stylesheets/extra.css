@@ -50,6 +50,11 @@
   line-height: .98;
 }
 
+/* The hero headline is a visual masthead, not a deep-link target. */
+.md-typeset .hero h1 .headerlink {
+  display: none;
+}
+
 .md-typeset .hero__accent {
   background: var(--ai-gradient);
   background-clip: text;
