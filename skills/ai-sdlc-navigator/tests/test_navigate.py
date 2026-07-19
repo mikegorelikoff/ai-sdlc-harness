@@ -25,6 +25,11 @@ def install_skill(root: Path, name: str) -> None:
     write(root / "skills" / name / "SKILL.md", f"---\nname: {name}\ndescription: fixture\n---")
 
 
+def install_project_skill(root: Path, name: str) -> None:
+    """Create a project-scoped universal Skills CLI fixture."""
+    write(root / ".agents" / "skills" / name / "SKILL.md", f"---\nname: {name}\ndescription: fixture\n---")
+
+
 class NavigateTests(unittest.TestCase):
     """Navigator routing contract tests."""
 
@@ -46,6 +51,61 @@ class NavigateTests(unittest.TestCase):
             self.assertIn("schema: ai-sdlc-navigator/v1", result.stdout)
             self.assertIn("ai-sdlc-working-backwards-discovery", result.stdout)
             self.assertIn("blockers[0]", result.stdout)
+
+    def test_project_scoped_installed_skills_are_discovered(self) -> None:
+        """A consumer installation under .agents must satisfy routing checks."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            subprocess.run(["git", "init"], cwd=root, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            install_project_skill(root, "ai-sdlc-sdd")
+            result = self.run_nav(
+                root,
+                "--intent",
+                "Implement GET /health behavior while preserving existing route behavior.",
+                "--format",
+                "toon",
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("installed_skill_count: 1", result.stdout)
+            self.assertNotIn("recommended skill is not installed", result.stdout)
+
+    def test_implementation_on_shared_base_routes_to_branching_first(self) -> None:
+        """Repository-tracked SDD work must not begin on dev/main/master."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            subprocess.run(["git", "init"], cwd=root, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["git", "checkout", "-b", "dev"], cwd=root, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(
+                [
+                    "git",
+                    "-c",
+                    "user.name=Fixture",
+                    "-c",
+                    "user.email=fixture@example.invalid",
+                    "-c",
+                    "commit.gpgsign=false",
+                    "commit",
+                    "--allow-empty",
+                    "-m",
+                    "fixture",
+                ],
+                cwd=root,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            install_skill(root, "ai-sdlc-sdd")
+            install_skill(root, "ai-sdlc-branching")
+            result = self.run_nav(
+                root,
+                "--intent",
+                "Implement GET /health behavior while preserving existing route behavior.",
+                "--format",
+                "toon",
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("ai-sdlc-branching", result.stdout)
+            self.assertIn("must not start on shared base branch dev", result.stdout)
 
     def test_active_feature_state_has_priority_over_intent(self) -> None:
         """An active lifecycle skill should outrank unrelated intent keywords."""

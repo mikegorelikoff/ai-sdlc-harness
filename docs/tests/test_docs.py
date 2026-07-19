@@ -10,14 +10,23 @@ SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 from validate_docs import (  # noqa: E402
+    CONTROL_PLANE_CONTRACT,
+    IMPLEMENTATION_CONTRACT,
     Page,
     internal_links,
     navigation_paths,
     parse_frontmatter,
+    validate_contract_matrix,
     validate_links,
+    validate_flows,
+    validate_full_lifecycle_contract,
     validate_navigation,
     validate_onboarding,
+    validate_refinement_contract,
 )
+
+
+DOCS_ROOT = SCRIPTS.parent
 
 
 class DocumentationValidationTests(unittest.TestCase):
@@ -105,6 +114,84 @@ class DocumentationValidationTests(unittest.TestCase):
             (root / "README.md").write_text("AI SDLC Harness", encoding="utf-8")
             errors = validate_onboarding(root)
             self.assertTrue(any("missing foundation/onboarding pages" in error for error in errors))
+
+    def test_flows_require_complete_stage_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            docs = root / "docs"
+            for relative in (
+                "flows/index.md",
+                "flows/refinement.md",
+                "flows/implementation.md",
+                "flows/control-plane.md",
+                "flows/recovery.md",
+                "tutorials/first-feature.md",
+            ):
+                path = docs / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("incomplete", encoding="utf-8")
+            errors = validate_flows(root)
+            self.assertTrue(any("missing parseable exact stage table" in error for error in errors))
+            self.assertTrue(any("missing runnable tutorial contract" in error for error in errors))
+
+    def test_refinement_rejects_misassociated_artifact(self) -> None:
+        text = (DOCS_ROOT / "flows/refinement.md").read_text(encoding="utf-8")
+        self.assertEqual(validate_refinement_contract(text), [])
+        mutated = text.replace("`discovery.md`", "`wrong-discovery.md`", 1)
+        self.assertTrue(any("mis-associated canonical profile discovery" in error for error in validate_refinement_contract(mutated)))
+
+    def test_full_lifecycle_rejects_misassociated_stage_prompt(self) -> None:
+        text = (DOCS_ROOT / "tutorials/full-lifecycle.md").read_text(encoding="utf-8")
+        self.assertEqual(validate_full_lifecycle_contract(text), [])
+        mutated = text.replace("Produce discovery.md.", "Produce wrong.md.", 1)
+        self.assertTrue(any("mis-associated stage contract discovery" in error for error in validate_full_lifecycle_contract(mutated)))
+
+    def test_flow_matrices_reject_misassociated_artifacts(self) -> None:
+        implementation = (DOCS_ROOT / "flows/implementation.md").read_text(encoding="utf-8")
+        self.assertEqual(
+            validate_contract_matrix(
+                implementation,
+                "## Exact implementation contract",
+                "implementation",
+                IMPLEMENTATION_CONTRACT,
+            ),
+            [],
+        )
+        broken_implementation = implementation.replace("feature/<slug>", "feature/wrong", 1)
+        self.assertTrue(
+            any(
+                "mis-associated branch contract branch" in error
+                for error in validate_contract_matrix(
+                    broken_implementation,
+                    "## Exact implementation contract",
+                    "implementation",
+                    IMPLEMENTATION_CONTRACT,
+                )
+            )
+        )
+
+        control = (DOCS_ROOT / "flows/control-plane.md").read_text(encoding="utf-8")
+        self.assertEqual(
+            validate_contract_matrix(
+                control,
+                "## Exact control-plane branch contract",
+                "control",
+                CONTROL_PLANE_CONTRACT,
+            ),
+            [],
+        )
+        broken_control = control.replace("delivery-graph.{toon,json,md}", "delivery-graph.broken", 1)
+        self.assertTrue(
+            any(
+                "mis-associated branch contract delivery_graph" in error
+                for error in validate_contract_matrix(
+                    broken_control,
+                    "## Exact control-plane branch contract",
+                    "control",
+                    CONTROL_PLANE_CONTRACT,
+                )
+            )
+        )
 
 
 if __name__ == "__main__":

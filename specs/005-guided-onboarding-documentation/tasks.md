@@ -62,7 +62,7 @@ artifact_metadata:
   Output: Installable shared runtime capability, source-to-runtime synchronization, portable fallback in every dependent helper, module and compatibility registration, fresh skill-only install scaffold smoke test, generated inventory refresh, and one focused commit.
   Refs: AC-003, AC-007, AC-014, AC-015, AC-018
   Depends on: T002
-- [ ] T004. Publish runnable tutorials and the complete lifecycle flow library.
+- [x] T004. Publish runnable tutorials and the complete lifecycle flow library.
   Output: Copyable small-change and full-feature walkthroughs, explicit prompts/terminal actions/expected artifacts/checkpoints/recovery, all 18 refinement stages, implementation/control-plane journeys, entry/exit/reopen matrices, decision tree, navigation, tests, and one focused commit.
   Refs: AC-004, AC-005, AC-006, AC-009, AC-012, AC-018
   Depends on: T003

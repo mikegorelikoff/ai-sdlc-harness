@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 COMPLETE_STATUSES = {"done", "skipped", "not_applicable"}
+DEFAULT_BASE_BRANCHES = {"dev", "main", "master"}
 
 
 @dataclass(frozen=True)
@@ -77,11 +78,17 @@ def git_output(root: Path, *args: str) -> str:
 
 
 def discover_skills(root: Path) -> set[str]:
-    """Return repository-local skill directory names."""
-    skills = root / "skills"
-    if not skills.is_dir():
-        return set()
-    return {path.name for path in skills.iterdir() if path.is_dir() and (path / "SKILL.md").is_file()}
+    """Return source-checkout and project-scoped installed skill names."""
+    discovered: set[str] = set()
+    for skills in (root / "skills", root / ".agents" / "skills"):
+        if not skills.is_dir():
+            continue
+        discovered.update(
+            path.name
+            for path in skills.iterdir()
+            if path.is_dir() and (path / "SKILL.md").is_file()
+        )
+    return discovered
 
 
 def discover_states(root: Path) -> tuple[list[FeatureState], list[str]]:
@@ -238,6 +245,13 @@ def main() -> int:
         blockers.extend(state_blockers)
     if required is None:
         required = intent_action(args.intent, root)
+    if required.skill == "ai-sdlc-sdd" and branch in DEFAULT_BASE_BRANCHES:
+        required = Action(
+            "ai-sdlc-branching",
+            f"Repository-tracked specification and implementation work must not start on shared base branch {branch}.",
+            "Use $ai-sdlc-branching to create a task branch before SDD writes.",
+            "task branch",
+        )
     if required.skill not in installed:
         blockers.append(f"recommended skill is not installed: {required.skill}")
 

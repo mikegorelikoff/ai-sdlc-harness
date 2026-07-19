@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import re
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -11,6 +12,9 @@ from typing import Optional
 from urllib.parse import unquote, urlsplit
 
 from build_catalog import DOCS, ROOT, generate
+
+sys.path.insert(0, str(ROOT / "skills" / "_shared"))
+from ai_sdlc_artifact_profiles import PROFILES  # noqa: E402
 
 
 REQUIRED_META = {"title", "description"}
@@ -43,6 +47,50 @@ BEGINNER_TERMS = (
     "handoff",
 )
 CANONICAL_INSTALL = "npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all"
+FLOW_PAGES = {
+    "flows/index.md",
+    "flows/refinement.md",
+    "flows/implementation.md",
+    "flows/control-plane.md",
+    "flows/recovery.md",
+}
+REFINEMENT_STAGES = tuple(profile.stage_id for profile in PROFILES)
+TUTORIAL_NAVIGATOR_INTENT = "Implement GET /health behavior while preserving existing route behavior."
+IMPLEMENTATION_CONTRACT = (
+    ("branch", "ai-sdlc-branching", "feature/<slug>"),
+    ("sdd", "ai-sdlc-sdd", "specs/<feature>/"),
+    ("task_context", "ai-sdlc-project-context", "task-packs/<task>"),
+    ("implement", "Host coding agent", "Code, tests"),
+    ("validate", "ai-sdlc-validation", "Exact command outcomes"),
+    ("review", "ai-sdlc-code-review", "Evidence-ranked findings"),
+    ("commit_prep", "ai-sdlc-commit-prep", "traceable commit"),
+    ("release_handoff", "ai-sdlc-validation", "ai-sdlc-handoff/v1"),
+)
+CONTROL_PLANE_CONTRACT = (
+    ("controlled_change", "ai-sdlc-change-set", "changes/<change-id>/"),
+    ("change_impact", "ai-sdlc-change-impact", "change-impact.md"),
+    ("delivery_graph", "ai-sdlc-delivery-graph", "delivery-graph.{toon,json,md}"),
+    ("evidence_freshness", "ai-sdlc-delivery-graph", "evidence-ledger.{toon,json,md}"),
+    ("policy_waiver", "ai-sdlc-policy", "policy-resolution.{toon,json}"),
+    ("context_pack", "ai-sdlc-project-context", "project-context.md"),
+    ("runtime", "ai-sdlc-runtime", "journal.jsonl"),
+    ("workflow_plan", "ai-sdlc-workflow", "plan.{toon,json,md}"),
+    ("host_adapter", "ai-sdlc-host-adapter", "negotiation.{toon,json,md}"),
+    ("doctor", "ai-sdlc-doctor", "doctor/report.{toon,json,md}"),
+    ("upgrade", "ai-sdlc-doctor", "upgrades/<id>/plan.{toon,json,md}"),
+    ("package_trust", "ai-sdlc-package-trust", "decision.{toon,json,md}"),
+    ("local_metrics", "ai-sdlc-package-trust", "metrics/local.{toon,json,md}"),
+)
+CONTRACT_HEADERS = (
+    "Predecessor / entry",
+    "Accountable owner",
+    "Required input",
+    "Exact capability",
+    "Artifact / result",
+    "Exit gate",
+    "Next consumer / handoff",
+    "Reopen condition",
+)
 
 
 @dataclass(frozen=True)
@@ -203,6 +251,286 @@ def validate_onboarding(root: Path = ROOT) -> list[str]:
     return errors
 
 
+def markdown_table(text: str, heading: str) -> list[list[str]]:
+    """Return one Markdown table below an exact level-two heading."""
+    match = re.search(
+        rf"^{re.escape(heading)}\s*$\n\s*\n((?:^\|.*\|\s*$\n?)+)",
+        text,
+        re.MULTILINE,
+    )
+    if not match:
+        return []
+    return [
+        [cell.strip() for cell in line.strip().strip("|").split("|")]
+        for line in match.group(1).splitlines()
+        if line.strip()
+    ]
+
+
+def plain_cell(value: str) -> str:
+    """Normalize inline-code markers for exact contract comparisons."""
+    return value.replace("`", "").strip()
+
+
+def contains_contract_token(text: str, token: str) -> bool:
+    """Match a skill/artifact token without accepting a longer fake identifier."""
+    return bool(
+        re.search(
+            rf"(?<![A-Za-z0-9_-]){re.escape(token)}(?![A-Za-z0-9_-])",
+            text,
+        )
+    )
+
+
+def validate_refinement_contract(text: str) -> list[str]:
+    """Bind every canonical refinement stage to its ordered table record."""
+    errors: list[str] = []
+    table = markdown_table(text, "## Exact stage contract")
+    if len(table) < 3:
+        return ["docs/flows/refinement.md: missing parseable exact stage table"]
+    rows = table[2:]
+    actual_order = [plain_cell(row[1]) for row in rows if len(row) == 7]
+    if actual_order != list(REFINEMENT_STAGES):
+        errors.append("docs/flows/refinement.md: canonical stage order does not match PROFILES")
+    if len(rows) != len(PROFILES):
+        errors.append(
+            "docs/flows/refinement.md: expected "
+            f"{len(PROFILES)} stage rows but found {len(rows)}"
+        )
+    for number, profile in enumerate(PROFILES, start=1):
+        if number > len(rows):
+            break
+        row = rows[number - 1]
+        if len(row) != 7:
+            errors.append(
+                f"docs/flows/refinement.md: stage row {number} must contain seven fields"
+            )
+            continue
+        predecessors = ", ".join(profile.predecessors) or "none"
+        actual = (
+            plain_cell(row[0]),
+            plain_cell(row[1]),
+            plain_cell(row[2]),
+            plain_cell(row[3]),
+            plain_cell(row[5]),
+        )
+        expected = (
+            str(number),
+            profile.stage_id,
+            profile.skill,
+            predecessors,
+            profile.artifact_name,
+        )
+        if actual != expected:
+            errors.append(
+                "docs/flows/refinement.md: mis-associated canonical profile "
+                f"{profile.stage_id}; expected {expected}, found {actual}"
+            )
+    return errors
+
+
+def validate_full_lifecycle_contract(text: str) -> list[str]:
+    """Bind each ordered tutorial heading to its exact skill and artifact."""
+    errors: list[str] = []
+    matches = list(
+        re.finditer(r"^### Stage (\d+) — `([^`]+)`(?:,.*)?\s*$", text, re.MULTILINE)
+    )
+    actual = [(int(match.group(1)), match.group(2)) for match in matches]
+    expected = [(number, profile.stage_id) for number, profile in enumerate(PROFILES, start=1)]
+    if actual != expected:
+        errors.append("docs/tutorials/full-lifecycle.md: canonical stage heading order does not match PROFILES")
+    for index, profile in enumerate(PROFILES):
+        if index >= len(matches):
+            break
+        start = matches[index].end()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        section = text[start:end]
+        if not contains_contract_token(section, profile.skill) or not contains_contract_token(
+            section, profile.artifact_name
+        ):
+            errors.append(
+                "docs/tutorials/full-lifecycle.md: mis-associated stage contract "
+                f"{profile.stage_id}/{profile.skill}/{profile.artifact_name}"
+            )
+    return errors
+
+
+def validate_contract_matrix(
+    text: str,
+    heading: str,
+    label: str,
+    expected: tuple[tuple[str, str, str], ...],
+) -> list[str]:
+    """Validate ordered implementation/control branch records and all fields."""
+    errors: list[str] = []
+    table = markdown_table(text, heading)
+    if len(table) < 3:
+        return [f"{label}: missing parseable contract matrix"]
+    header = tuple(plain_cell(value) for value in table[0][1:])
+    if header != CONTRACT_HEADERS:
+        errors.append(f"{label}: contract matrix headers are incomplete")
+    rows = table[2:]
+    actual_order = [plain_cell(row[0]) for row in rows if len(row) == 9]
+    if actual_order != [item[0] for item in expected]:
+        errors.append(f"{label}: branch order/inventory does not match the canonical contract")
+    if len(rows) != len(expected):
+        errors.append(f"{label}: expected {len(expected)} branch rows but found {len(rows)}")
+    for index, (branch_id, capability, artifact) in enumerate(expected):
+        if index >= len(rows):
+            break
+        row = rows[index]
+        if len(row) != 9 or any(not plain_cell(value) for value in row):
+            errors.append(f"{label}: branch {branch_id} must populate all nine fields")
+            continue
+        if plain_cell(row[0]) != branch_id or capability not in row[4] or artifact not in row[5]:
+            errors.append(
+                f"{label}: mis-associated branch contract {branch_id}/{capability}/{artifact}"
+            )
+    return errors
+
+
+def validate_flows(root: Path = ROOT) -> list[str]:
+    """Validate lifecycle closure and runnable tutorial semantics."""
+    errors: list[str] = []
+    docs = root / "docs"
+    missing = sorted(relative for relative in FLOW_PAGES if not (docs / relative).is_file())
+    if missing:
+        errors.append("missing workflow journey pages: " + ", ".join(missing))
+
+    refinement = docs / "flows/refinement.md"
+    if refinement.is_file():
+        text = refinement.read_text(encoding="utf-8")
+        normalized = " ".join(text.split())
+        errors.extend(validate_refinement_contract(text))
+        if "`--full-flow`" not in text and "full-flow" not in text:
+            errors.append("docs/flows/refinement.md: missing full-flow semantics")
+        if "strengthens only that skill and never starts the next one" not in normalized:
+            errors.append("docs/flows/refinement.md: full-flow must be distinguished from the 18-stage sequence")
+
+    implementation = docs / "flows/implementation.md"
+    if implementation.is_file():
+        errors.extend(
+            validate_contract_matrix(
+                implementation.read_text(encoding="utf-8"),
+                "## Exact implementation contract",
+                "docs/flows/implementation.md",
+                IMPLEMENTATION_CONTRACT,
+            )
+        )
+
+    control_plane = docs / "flows/control-plane.md"
+    if control_plane.is_file():
+        errors.extend(
+            validate_contract_matrix(
+                control_plane.read_text(encoding="utf-8"),
+                "## Exact control-plane branch contract",
+                "docs/flows/control-plane.md",
+                CONTROL_PLANE_CONTRACT,
+            )
+        )
+
+    first_feature = docs / "tutorials/first-feature.md"
+    if first_feature.is_file():
+        text = first_feature.read_text(encoding="utf-8")
+        required = (
+            "Tell your agent",
+            "Run in terminal",
+            "Agent does automatically",
+            "Human checkpoint",
+            "Expected tree",
+            "deliberate regression",
+            "ai-sdlc-handoff/v1",
+            "python3 -m unittest -v",
+            "git diff --check",
+            "feature/001-health-endpoint",
+            "test_deliberate_unknown_route_regression.py",
+            "ai-sdlc-navigator/v1",
+            TUTORIAL_NAVIGATOR_INTENT,
+        )
+        for token in required:
+            if token.lower() not in text.lower():
+                errors.append(f"docs/tutorials/first-feature.md: missing runnable tutorial contract {token}")
+        handoffs = re.findall(r"```toon\n(schema: ai-sdlc-handoff/v1.*?)(?:\n```)", text, re.DOTALL)
+        if not handoffs:
+            errors.append("docs/tutorials/first-feature.md: missing parseable handoff example")
+        for handoff in handoffs:
+            for contract in (
+                "result: complete",
+                "summary:",
+                "blockers[",
+                "next_required[1]{skill,reason,command,expected_artifact}:",
+                "next_optional[",
+            ):
+                if contract not in handoff:
+                    errors.append(f"docs/tutorials/first-feature.md: invalid handoff example missing {contract}")
+            required_row = handoff.split("next_required[1]{skill,reason,command,expected_artifact}:", 1)[-1].split("next_optional[", 1)[0]
+            values = [item.strip() for item in required_row.strip().split(",")]
+            if len(values) != 4 or not all(values):
+                errors.append("docs/tutorials/first-feature.md: handoff next_required must contain four populated columns")
+        for source in (
+            root / "skills/_shared/ai_sdlc_install_smoke.py",
+            root / "skills/ai-sdlc-navigator/tests/test_navigate.py",
+        ):
+            if not source.is_file() or TUTORIAL_NAVIGATOR_INTENT not in source.read_text(encoding="utf-8"):
+                errors.append(
+                    f"{display_path(source, root)}: tutorial navigator intent is not exercised exactly"
+                )
+
+    fixture = root / "examples" / "onboarding-health-service"
+    failure_probe = fixture / "deliberate_unknown_route_regression.py.disabled"
+    if not failure_probe.is_file():
+        errors.append("examples/onboarding-health-service: missing deterministic failure fixture")
+    elif (fixture / "test_app.py").is_file():
+        failed = subprocess.run(
+            [sys.executable, str(failure_probe)],
+            cwd=fixture,
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        failed_output = failed.stderr + failed.stdout
+        if failed.returncode == 0 or "FAILED" not in failed_output or "deliberate probe" not in failed_output:
+            errors.append("examples/onboarding-health-service: deliberate failure probe must fail deterministically")
+        result = subprocess.run(
+            [sys.executable, "-m", "unittest", "-v"],
+            cwd=fixture,
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        if result.returncode or "Ran 2 tests" not in result.stderr + result.stdout:
+            errors.append("examples/onboarding-health-service: starting fixture tests must pass exactly two cases")
+
+    full_lifecycle = docs / "tutorials/full-lifecycle.md"
+    if full_lifecycle.is_file():
+        text = full_lifecycle.read_text(encoding="utf-8")
+        errors.extend(validate_full_lifecycle_contract(text))
+        for token in (
+            "feature/organization-sso",
+            "refinement_status.py",
+            "test-environment-resolution.md",
+            "rm /tmp/ai-sdlc-sso-demo/test-environment-resolution.md",
+            "cp /tmp/ai-sdlc-sso-test-environment-resolution.md test-environment-resolution.md",
+            "result is `blocked`",
+            "Stage 13 — resume",
+            "18/18",
+            "Never edit",
+        ):
+            if token not in text:
+                errors.append(
+                    "docs/tutorials/full-lifecycle.md: missing lifecycle proof "
+                    f"{token}"
+                )
+
+    sso_fixture = root / "examples" / "onboarding-sso"
+    for name in ("scenario.md", "decisions.md", "test-environment-resolution.md"):
+        if not (sso_fixture / name).is_file():
+            errors.append(f"examples/onboarding-sso: missing lifecycle fixture {name}")
+    return errors
+
+
 def validate_material(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     for relative in sorted(REQUIRED_FILES):
@@ -248,6 +576,7 @@ def validate_workflow(root: Path = ROOT) -> list[str]:
         "python3 -m pip install -r requirements-docs.txt",
         "mkdocs build --strict",
         "python3 docs/scripts/validate_rendered.py site",
+        "python3 skills/_shared/ai_sdlc_install_smoke.py --mode npx",
         "actions/upload-pages-artifact@v4",
         "path: site",
         "actions/deploy-pages@v4",
@@ -266,6 +595,7 @@ def validate(root: Path = ROOT) -> list[str]:
     errors.extend(validate_links(pages, docs))
     errors.extend(validate_content(pages, docs))
     errors.extend(validate_onboarding(root))
+    errors.extend(validate_flows(root))
     errors.extend(validate_material(root))
     errors.extend(validate_workflow(root))
     return errors

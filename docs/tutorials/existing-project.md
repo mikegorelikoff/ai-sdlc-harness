@@ -1,28 +1,81 @@
 ---
 title: Adopt an existing project
-description: Introduce the harness to an established repository without overwriting its conventions or inventing missing context.
+description: Introduce the harness without overwriting established conventions, inventing history, or forcing an organization-wide rollout.
 ---
 
-An established repository already has a delivery system, even if much of it is implicit. Adoption starts by observing that system and recording evidence, not by imposing a generic workflow.
+# Adopt an existing project
 
-## 1. Install additively
+An established repository already has a delivery system: Git conventions, CI,
+owners, release habits, architecture rules, and undocumented assumptions.
+Adoption begins by observing that system, not replacing it with generic defaults.
 
-Use the installer in merge-safe mode and review the resulting diff. Keep existing project instructions, CI, templates, and ownership rules authoritative unless the team explicitly changes them.
+## 1. Define the pilot boundary
 
-## 2. Build evidence-backed context
+Choose one team, one repository, one low-to-medium-risk change, and an informed
+reviewer. Name the accountable owner, what is being evaluated, which existing
+process remains authoritative, and conditions that will stop or roll back the
+pilot.
 
-Run `ai-sdlc-project-context --quick-flow`. The profiler should cite paths for architecture, test commands, language versions, code ownership, security boundaries, and delivery conventions. Unknown facts remain unknown.
+Do not backfill fictional AI SDLC history for completed work.
 
-## 3. Confirm the control plane
+## 2. Install project-scoped skills
 
-Inspect `specs-index.toon`, active `state.toon`, decision logs, and Git status. If the repository has no active AI SDLC feature, start a new feature for the first real change rather than backfilling fictional history.
+Follow [Install the harness](../how-to/install.md). Review the installed diff
+and preserve existing agent instructions, CI, templates, ownership, policy, and
+project artifacts unless the team explicitly accepts a change.
 
-## 4. Choose a pilot
+## 3. Build evidence-backed repository context
 
-Pick a bounded, valuable change with an informed reviewer. Use the navigator to select the entry point, then compare its recommendation with the repository context. Record any policy adjustment as a decision.
+!!! example "Tell your agent"
 
-## 5. Learn before expanding
+    ```text
+    Use ai-sdlc-project-context --quick-flow.
+    Profile this repository from evidence. Cite exact paths for stack,
+    architecture, test commands, ownership, security boundaries, generated
+    code, and delivery conventions. Mark unknown facts unknown. Do not infer
+    policy or product behavior from filenames alone.
+    ```
 
-After the pilot, run a retrospective. Separate observations from proposals. Adopt only improvements that have evidence, an owner, and an explicit decision; do not let a retrospective silently rewrite team policy.
+Expected: a bounded project-context artifact and drift identity. Secrets,
+credentials, environment files, binaries, and configured sensitive paths must
+be excluded.
 
-The result is an incremental adoption path: existing practice remains visible, new evidence contracts add continuity, and the team can expand usage based on measured value.
+## 4. Compare the profile with human knowledge
+
+!!! warning "Human checkpoint"
+
+    Repository owners review the profile. Correct missing evidence at its
+    authoritative source; do not teach the agent a private fact only in chat and
+    call the project documented.
+
+Classify mismatches:
+
+- evidence is present but the profile missed it;
+- the convention is real but undocumented;
+- the convention is only historical and should not govern new work;
+- a material decision is required.
+
+## 5. Navigate the pilot request
+
+Ask the read-only navigator for the earliest missing stage. Reuse existing valid
+requirements, designs, tests, or tickets; do not recreate artifacts merely to
+match a template. If observable behavior changes and no implementation contract
+exists, create a proportionate SDD.
+
+## 6. Preserve existing gates
+
+Quick flow can reduce ceremony but cannot weaken protected repository policy.
+Keep required reviewers, CI checks, security controls, release approvals, and
+branch rules. Add harness evidence alongside them and compare whether it reduces
+rediscovery or exposes gaps earlier.
+
+## 7. Review and decide
+
+After the pilot, inspect artifacts, agent retries, validation gaps, review
+rework, handoff delay, escaped issues, and qualitative team feedback. Separate
+mechanism signals from business outcomes and avoid claiming causality from one
+change.
+
+Scale only with an explicit decision, owner, support plan, and rollback. If the
+pilot adds overhead without useful continuity or control, remove installed
+skills while preserving the delivery evidence already created.

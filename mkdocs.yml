@@ -105,6 +105,12 @@ nav:
       - Ship a first feature: tutorials/first-feature.md
       - Adopt an existing project: tutorials/existing-project.md
       - Run the full lifecycle: tutorials/full-lifecycle.md
+  - Workflow journeys:
+      - Choose a journey: flows/index.md
+      - Complete refinement: flows/refinement.md
+      - Implementation: flows/implementation.md
+      - Control plane: flows/control-plane.md
+      - Recovery and learning: flows/recovery.md
   - How-to guides:
       - Overview: how-to/index.md
       - Install the harness: how-to/install.md

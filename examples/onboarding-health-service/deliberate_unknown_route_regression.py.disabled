@@ -1,0 +1,17 @@
+"""Intentionally wrong test copied only during the tutorial recovery drill."""
+
+import unittest
+
+from app import route
+
+
+class DeliberateRegressionProbe(unittest.TestCase):
+    """Demonstrate that unexplained failing evidence blocks completion."""
+
+    def test_unknown_route_is_deliberately_wrong(self) -> None:
+        status, _ = route("/missing")
+        self.assertEqual(status, 200, "deliberate probe expected 200 for an unknown route")
+
+
+if __name__ == "__main__":
+    unittest.main()

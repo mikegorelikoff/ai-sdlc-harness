@@ -1,39 +1,38 @@
 ---
 title: Tutorials
-description: Learn the harness by completing realistic delivery journeys from intent to evidence.
+description: Learn the harness through reproducible delivery journeys with prompts, expected artifacts, checkpoints, validation, and recovery.
 ---
 
 # Tutorials
 
-Tutorials are learning-oriented. Follow them in order when the system is new to you; each one leaves real repository artifacts behind.
+Tutorials teach by doing. Action blocks distinguish agent prompts from terminal
+commands, show expected results, and stop at human checkpoints.
 
 <div class="grid cards" markdown>
 
 -   **Ship a first feature**
 
-    Use navigation, SDD, validation, and a traceable commit.
+    Copy a dependency-free sample service and follow navigation, a small SDD,
+    implementation, a deliberate regression, recovery, validation, and commit.
 
-    [Begin the tutorial →](first-feature.md)
+    [Begin the runnable tutorial →](first-feature.md)
 
 -   **Adopt an existing project**
 
-    Profile conventions without pretending undocumented behavior is known.
+    Profile an established repository without inventing history or overwriting
+    conventions, then run a bounded evidence-based pilot.
 
-    [Begin the tutorial →](existing-project.md)
+    [Begin adoption →](existing-project.md)
 
 -   **Run the full lifecycle**
 
-    Move from customer problem through release evidence and learning.
+    Follow a medium-risk SSO feature through all 18 refinement stages,
+    a real blocked-and-resumed handoff, the 18/18 gate, and implementation SDD.
 
-    [Begin the tutorial →](full-lifecycle.md)
+    [Begin the full journey →](full-lifecycle.md)
 
 </div>
 
-## What you will learn
-
-- How the navigator chooses a safe entry point from repository evidence.
-- Why human-readable Markdown and complete token-efficient TOON coexist.
-- When quick flow is enough and when stronger gates are warranted.
-- How requirements, decisions, tests, tasks, validation, and commits stay linked.
-
-If you only need one bounded outcome, use the [how-to guides](../how-to/index.md).
+Read [Foundations](../foundations/index.md) first if AI SDLC, SDD, artifact,
+gate, or handoff is unfamiliar. Use [Flows](../flows/index.md) when you need an
+exact map rather than a learning exercise.

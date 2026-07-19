@@ -66,6 +66,27 @@ def install_npx(source: Path, consumer: Path) -> None:
 
 def verify(consumer: Path) -> None:
     """Execute installed imports, one complete write, and finalization."""
+    require(run(["git", "init"], consumer), "navigator fixture git init")
+    require(run(["git", "checkout", "-B", "dev"], consumer), "navigator fixture dev branch")
+    require(
+        run(
+            [
+                "git",
+                "-c",
+                "user.name=Fixture",
+                "-c",
+                "user.email=fixture@example.invalid",
+                "-c",
+                "commit.gpgsign=false",
+                "commit",
+                "--allow-empty",
+                "-m",
+                "fixture base",
+            ],
+            consumer,
+        ),
+        "navigator fixture base commit",
+    )
     installed = consumer / ".agents" / "skills"
     if (installed / "_shared").exists():
         raise RuntimeError("smoke must not depend on source-only skills/_shared")
@@ -76,6 +97,24 @@ def verify(consumer: Path) -> None:
         if not script.is_file():
             raise RuntimeError(f"installed helper missing: {script.relative_to(consumer)}")
         require(run([sys.executable, str(script), "--help"], consumer), script.name)
+
+    routed = run(
+        [
+            sys.executable,
+            str(navigator),
+            "--intent",
+            "Implement GET /health behavior while preserving existing route behavior.",
+            "--format",
+            "toon",
+            "--quick-flow",
+        ],
+        consumer,
+    )
+    require(routed, "installed navigator routing")
+    if "recommended skill is not installed" in routed.stdout:
+        raise RuntimeError("navigator did not discover project-scoped installed skills")
+    if "  ai-sdlc-branching," not in routed.stdout:
+        raise RuntimeError("tutorial intent on dev did not route to ai-sdlc-branching")
 
     spec = consumer / "specs" / "001-runtime-smoke"
     sections = (
