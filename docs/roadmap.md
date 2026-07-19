@@ -7,22 +7,31 @@ The harness evolves around one goal: make AI-assisted delivery faster without ma
 
 ## Now
 
-- Stabilize the adaptive navigator, rigor policy, context profiler, and post-workflow handoffs.
-- Expand deterministic compatibility coverage across skills, modules, configuration, and artifact routes.
-- Make the documentation site a complete learning, task, explanation, and reference surface.
+- Deliver controlled specification evolution through isolated change sets, semantic deltas, non-mutating preview, policy-gated apply, and evidence-preserving archive.
+- Build a repository-wide delivery graph with trace queries, gap detection, evidence coverage, and freshness propagation.
+- Add versioned policy evaluation and bounded task-specific context packs without weakening existing artifact authority.
 
 ## Next
 
-- Add richer installation diagnostics and upgrade previews.
-- Improve context budgeting and evidence freshness signals for large repositories.
-- Expand optional domain modules without increasing the core installation footprint.
-- Publish reusable organization policy examples for regulated and high-assurance delivery.
+- Add a resumable task runtime with durable journals, budgets, retries, stop reasons, and one-task-one-commit boundaries.
+- Add declarative workflows with gates, hooks, dependency waves, cycle detection, and safe sequential fallbacks.
+- Publish a portable host adapter SDK with capability negotiation and deterministic fallback behavior.
+- Add installation diagnostics, upgrade previews, migration backups, and rollback planning.
 
 ## Later
 
-- Portable interoperability contracts for additional assistant hosts and workflow runners.
-- More independent review adapters for evidence-council execution.
-- Versioned documentation for multiple harness API releases.
+- Validate module and workflow trust through origin, integrity, compatibility, declared capability, and update provenance.
+- Publish privacy-preserving local delivery metrics and reusable regulated or high-assurance policy profiles.
+- Complete versioned documentation, release migration guidance, and additional evidence-council execution adapters.
+
+## Active program
+
+The executable delivery control-plane program is tracked in the
+[implementation specification](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/specs/004-executable-delivery-control-plane/requirements.md).
+Its ordered tasks move from controlled spec evolution through delivery graph,
+policy, context, runtime, interoperability, operations, and release. Each task
+must pass focused validation and land as exactly one commit before the next task
+starts.
 
 ## Roadmap rules
 
