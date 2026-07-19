@@ -65,6 +65,14 @@ This page is generated from each package's `SKILL.md` frontmatter. The linked so
 
     [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-change-impact/SKILL.md)
 
+-   **`ai-sdlc-change-set`**
+
+    `core`
+
+    AI SDLC controlled change-workspace workflow. Use when an AI assistant needs to create or validate an isolated proposal workspace before changing canonical requirements, designs, policies, APIs, or other authoritative artifacts. Supports `--quick-flow` for assumption-driven drafts and `--full-flow` for strict owner, target, and authority checks.
+
+    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-change-set/SKILL.md)
+
 -   **`ai-sdlc-code-review`**
 
     `core`

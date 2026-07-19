@@ -132,6 +132,8 @@ machine-readable indexes.
 - `ai-sdlc-change-impact` traces changed requirements and decisions to stale
   artifacts and proposes evidence-backed lifecycle recovery without mutating
   authoritative state.
+- `ai-sdlc-change-set` creates and validates atomic proposal workspaces under
+  `changes/` while canonical specifications and policy remain untouched.
 - `ai-sdlc-retrospective` separates delivery observations from governed
   improvement proposals and requires an accepted decision before policy can
   change.

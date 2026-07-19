@@ -216,7 +216,9 @@ def main() -> int:
             print(f"ERROR: {error}")
         return 1
     pages, _ = collect_pages()
-    print(f"Documentation valid: {len(pages)} public pages, 35 skills, 5 modules")
+    skill_count = len(list((ROOT / "skills").glob("*/SKILL.md")))
+    module_count = len(list((ROOT / "modules").glob("*/module.json")))
+    print(f"Documentation valid: {len(pages)} public pages, {skill_count} skills, {module_count} modules")
     return 0
 
 

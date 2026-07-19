@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-change-set-v1",
+  "title": "AI SDLC Change Set",
+  "type": "object",
+  "required": [
+    "schema",
+    "change_id",
+    "title",
+    "summary",
+    "status",
+    "owner",
+    "flow_mode",
+    "created_at",
+    "updated_at",
+    "canonical_targets",
+    "artifacts",
+    "authority",
+    "contract_fingerprint"
+  ],
+  "properties": {
+    "schema": {"const": "ai-sdlc-change-set/v1"},
+    "change_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "title": {"type": "string", "minLength": 1},
+    "summary": {"type": "string", "minLength": 1},
+    "status": {"const": "draft"},
+    "owner": {"type": "string", "minLength": 1},
+    "flow_mode": {"enum": ["default", "quick", "full"]},
+    "created_at": {"type": "string", "format": "date"},
+    "updated_at": {"type": "string", "format": "date"},
+    "canonical_targets": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "artifacts": {"type": "object"},
+    "authority": {"type": "object"},
+    "contract_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

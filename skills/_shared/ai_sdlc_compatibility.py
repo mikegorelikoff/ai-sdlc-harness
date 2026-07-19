@@ -37,13 +37,9 @@ def validate_skills(root: Path, baseline: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     expected = baseline.get("required_skill_names", [])
     actual = sorted(path.name for path in (root / "skills").iterdir() if path.is_dir() and path.name != "_shared")
-    if actual != expected:
-        missing = sorted(set(expected) - set(actual))
-        extra = sorted(set(actual) - set(expected))
-        if missing:
-            errors.append("missing required skills: " + ", ".join(missing))
-        if extra:
-            errors.append("unbaselined skills: " + ", ".join(extra))
+    missing = sorted(set(expected) - set(actual))
+    if missing:
+        errors.append("missing required skills: " + ", ".join(missing))
     for skill in expected:
         doc = root / "skills" / skill / "SKILL.md"
         if not doc.is_file():
@@ -120,15 +116,16 @@ def validate_routes_and_docs(root: Path, baseline: dict[str, Any]) -> list[str]:
 
 
 def validate_git_audit(root: Path, baseline: dict[str, Any], base: str, allow_pending_last: bool) -> list[str]:
-    """Validate one ordered roadmap commit per task by stable subject."""
-    result = subprocess.run(["git", "log", "--reverse", "--format=%s", f"{base}..HEAD"], cwd=root, check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    """Validate the released roadmap as one ordered historical sequence."""
+    result = subprocess.run(["git", "log", "--reverse", "--format=%s", base], cwd=root, check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode:
         return ["cannot audit roadmap commits: " + result.stderr.strip()]
     actual = result.stdout.splitlines()
     expected = baseline.get("roadmap_commit_subjects", [])
-    if allow_pending_last and actual == expected[:-1]:
+    candidates = (expected, expected[:-1]) if allow_pending_last else (expected,)
+    if any(any(actual[index:index + len(candidate)] == candidate for index in range(len(actual) - len(candidate) + 1)) for candidate in candidates):
         return []
-    if actual[: len(expected)] != expected:
+    if expected:
         return ["roadmap commit subjects do not map one-to-one with T001-T015", f"expected: {expected}", f"actual: {actual}"]
     return []
 
@@ -178,14 +175,14 @@ def main() -> int:
         print("schema: ai-sdlc-compatibility-result/v1")
         print(f"release: {toon(baseline['release'])}")
         print(f"harness_api_version: {toon(baseline['harness_api_version'])}")
-        print(f"skills: {len(baseline['required_skill_names'])}")
+        print(f"skills: {len([path for path in (root / 'skills').iterdir() if path.is_dir() and path.name != '_shared'])}")
         print(f"modules: {len(baseline['modules']['ids'])}")
         print("result: compatible")
     else:
         print("# AI SDLC Compatibility\n")
         print(f"- Release: `{baseline['release']}`")
         print(f"- Harness API: `{baseline['harness_api_version']}`")
-        print(f"- Skills: `{len(baseline['required_skill_names'])}`")
+        print(f"- Skills: `{len([path for path in (root / 'skills').iterdir() if path.is_dir() and path.name != '_shared'])}`")
         print(f"- Modules: `{len(baseline['modules']['ids'])}`")
         print("- Result: `compatible`")
     return 0

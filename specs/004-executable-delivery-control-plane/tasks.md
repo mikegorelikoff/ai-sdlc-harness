@@ -53,7 +53,7 @@ artifact_metadata:
 - [x] T001. Define and validate the executable delivery control-plane program.
   Output: Complete SDD package, accepted decisions, registered roadmap, generated plans and indexes, validation evidence, and one focused planning commit.
   Refs: AC-013, AC-014, DEC-001, DEC-002
-- [ ] T002. Implement the isolated ChangeSet workspace contract.
+- [x] T002. Implement the isolated ChangeSet workspace contract.
   Output: ChangeSet skill, versioned schemas, deterministic workspace creator and validator, fixtures, tests, and documentation.
   Refs: AC-001, AC-013, DEC-001
 - [ ] T003. Implement requirement delta parsing and semantic validation.

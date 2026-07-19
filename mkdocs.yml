@@ -121,6 +121,7 @@ nav:
       - Layered configuration: explanation/configuration.md
       - Optional modules: explanation/modules.md
       - Change and learning: explanation/change-learning.md
+      - Controlled changes: explanation/controlled-changes.md
       - Agent portability: explanation/agent-portability.md
   - Reference:
       - Overview: reference/index.md

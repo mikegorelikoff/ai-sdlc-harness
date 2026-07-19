@@ -19,7 +19,7 @@ description: Installed capability modules, compatibility ranges, dependencies, a
 
     [Open manifest →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/modules/architecture/module.json)
 
--   **Core** · `core` · `v1.0.0`
+-   **Core** · `core` · `v1.1.0`
 
     Core AI SDLC lifecycle, control-plane, and delivery skills.
 
@@ -27,7 +27,7 @@ description: Installed capability modules, compatibility ranges, dependencies, a
 
     **Requires:** none
 
-    **Skills:** ai-sdlc-approvals-sandbox, ai-sdlc-ba, ai-sdlc-backlog-decomposition-and-task-planning, ai-sdlc-backlog-requirements-gap-review, ai-sdlc-branching, ai-sdlc-change-impact, ai-sdlc-code-review, ai-sdlc-commit-prep, ai-sdlc-conventional-commit, ai-sdlc-delivery-handoff-review, ai-sdlc-delivery-package-gap-review, ai-sdlc-delivery-spec-synthesis, ai-sdlc-goal-capability-and-epic-mapping, ai-sdlc-navigator, ai-sdlc-prfaq-package-synthesis, ai-sdlc-project-context, ai-sdlc-qa, ai-sdlc-qa-requirements-gap-review, ai-sdlc-qa-traceability-and-readiness-review, ai-sdlc-quality-lenses, ai-sdlc-release-slicing-and-backlog-readiness-review, ai-sdlc-requirements-readiness-review, ai-sdlc-retrospective, ai-sdlc-sdd, ai-sdlc-security-testing, ai-sdlc-test-case-and-suite-synthesis, ai-sdlc-test-cases, ai-sdlc-test-scope-and-strategy-design, ai-sdlc-user-story-decomposition, ai-sdlc-validation, ai-sdlc-working-backwards-discovery
+    **Skills:** ai-sdlc-approvals-sandbox, ai-sdlc-ba, ai-sdlc-backlog-decomposition-and-task-planning, ai-sdlc-backlog-requirements-gap-review, ai-sdlc-branching, ai-sdlc-change-set, ai-sdlc-change-impact, ai-sdlc-code-review, ai-sdlc-commit-prep, ai-sdlc-conventional-commit, ai-sdlc-delivery-handoff-review, ai-sdlc-delivery-package-gap-review, ai-sdlc-delivery-spec-synthesis, ai-sdlc-goal-capability-and-epic-mapping, ai-sdlc-navigator, ai-sdlc-prfaq-package-synthesis, ai-sdlc-project-context, ai-sdlc-qa, ai-sdlc-qa-requirements-gap-review, ai-sdlc-qa-traceability-and-readiness-review, ai-sdlc-quality-lenses, ai-sdlc-release-slicing-and-backlog-readiness-review, ai-sdlc-requirements-readiness-review, ai-sdlc-retrospective, ai-sdlc-sdd, ai-sdlc-security-testing, ai-sdlc-test-case-and-suite-synthesis, ai-sdlc-test-cases, ai-sdlc-test-scope-and-strategy-design, ai-sdlc-user-story-decomposition, ai-sdlc-validation, ai-sdlc-working-backwards-discovery
 
     [Open manifest →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/modules/core/module.json)
 

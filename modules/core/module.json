@@ -1,7 +1,7 @@
 {
   "schema": "ai-sdlc-module/v1",
   "id": "core",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "kind": "core",
   "harness_api": {"min": "1.0.0", "max_exclusive": "2.0.0"},
   "requires": [],
@@ -12,6 +12,7 @@
     {"name": "ai-sdlc-backlog-decomposition-and-task-planning", "path": "skills/ai-sdlc-backlog-decomposition-and-task-planning"},
     {"name": "ai-sdlc-backlog-requirements-gap-review", "path": "skills/ai-sdlc-backlog-requirements-gap-review"},
     {"name": "ai-sdlc-branching", "path": "skills/ai-sdlc-branching"},
+    {"name": "ai-sdlc-change-set", "path": "skills/ai-sdlc-change-set"},
     {"name": "ai-sdlc-change-impact", "path": "skills/ai-sdlc-change-impact"},
     {"name": "ai-sdlc-code-review", "path": "skills/ai-sdlc-code-review"},
     {"name": "ai-sdlc-commit-prep", "path": "skills/ai-sdlc-commit-prep"},

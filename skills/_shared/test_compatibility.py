@@ -27,7 +27,7 @@ class CompatibilityTests(unittest.TestCase):
         result = self.run_check("--skip-git-audit", "--format", "toon")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("result: compatible", result.stdout)
-        self.assertIn("skills: 35", result.stdout)
+        self.assertIn("skills: 36", result.stdout)
 
     def test_missing_skill_breaks_baseline(self) -> None:
         """A required skill rename or removal must fail mechanically."""
