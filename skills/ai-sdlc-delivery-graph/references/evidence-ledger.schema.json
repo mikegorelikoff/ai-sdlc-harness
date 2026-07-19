@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-evidence-ledger-v1",
+  "title": "AI SDLC Evidence Ledger",
+  "type": "object",
+  "required": ["schema", "as_of", "graph_fingerprint", "source_fingerprint", "records", "coverage", "stale_paths", "fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-evidence-ledger/v1"},
+    "as_of": {"type": "string", "format": "date"},
+    "graph_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "source_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "records": {"type": "array", "items": {"type": "object"}},
+    "coverage": {"type": "object"},
+    "stale_paths": {"type": "array", "items": {"type": "object"}},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

@@ -68,7 +68,7 @@ artifact_metadata:
 - [x] T006. Implement the repository delivery graph and trace queries.
   Output: Versioned node and edge schemas, deterministic indexer, trace and gap queries, orphan detection, tests, and documentation.
   Refs: AC-004, AC-013
-- [ ] T007. Implement the evidence ledger and freshness propagation.
+- [x] T007. Implement the evidence ledger and freshness propagation.
   Output: Evidence identity and fingerprint contract, dependency-aware staleness propagation, coverage queries, tests, and documentation.
   Refs: AC-004, AC-008, AC-013
 - [ ] T008. Implement versioned policy-as-code and waiver lifecycle.

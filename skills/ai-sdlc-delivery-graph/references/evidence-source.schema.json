@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-evidence-source-v1",
+  "title": "AI SDLC Evidence Source",
+  "type": "object",
+  "required": ["schema", "id", "kind", "subjects", "producer", "captured_at", "artifact", "dependencies", "depends_on"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-evidence-source/v1"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$"},
+    "kind": {"enum": ["test", "validation", "approval", "review", "research", "release"]},
+    "subjects": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "producer": {"type": "string", "minLength": 1},
+    "captured_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "artifact": {"$ref": "#/$defs/fileIdentity"},
+    "dependencies": {"type": "array", "items": {"$ref": "#/$defs/fileIdentity"}},
+    "depends_on": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+  },
+  "$defs": {
+    "fileIdentity": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

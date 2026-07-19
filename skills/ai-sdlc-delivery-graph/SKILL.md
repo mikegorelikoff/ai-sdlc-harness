@@ -1,6 +1,6 @@
 ---
 name: ai-sdlc-delivery-graph
-description: AI SDLC repository delivery-graph workflow. Use when an AI assistant needs to index goals, requirements, decisions, components, tasks, tests, evidence, commits, and releases; resolve end-to-end trace paths; or report coverage gaps and orphan lifecycle nodes. Supports `--quick-flow` for deterministic local analysis and `--full-flow` for strict trace review.
+description: AI SDLC repository delivery-graph and evidence-freshness workflow. Use when an AI assistant needs to index lifecycle traceability, resolve end-to-end paths, report gaps or orphans, register evidence identity, propagate stale dependencies, or calculate fresh evidence coverage. Supports `--quick-flow` for deterministic local analysis and `--full-flow` for strict trace and evidence review.
 ---
 
 # ai-sdlc-delivery-graph: Repository Traceability
@@ -68,6 +68,9 @@ description: AI SDLC repository delivery-graph workflow. Use when an AI assistan
   `ai-sdlc-delivery-edge/v1`.
 - The aggregate uses `ai-sdlc-delivery-graph/v1` and deterministic SHA-256
   fingerprints derived from normalized content.
+- Evidence producers use `ai-sdlc-evidence-source/v1`; generated freshness
+  records and ledgers use `ai-sdlc-evidence-record/v1` and
+  `ai-sdlc-evidence-ledger/v1`.
 - Source Markdown participates through canonical `artifact_metadata` and
   `metatags`; graph output does not replace or rewrite that metadata.
 
@@ -87,6 +90,12 @@ description: AI SDLC repository delivery-graph workflow. Use when an AI assistan
   `references/delivery-edge.schema.json`, and
   `references/delivery-graph.schema.json` for machine contracts.
 - Use `scripts/delivery_graph.py` for deterministic indexing and queries.
+- Read `references/evidence-ledger-contract.md` before registering or judging
+  evidence freshness. Validate inputs and outputs with
+  `references/evidence-source.schema.json` and
+  `references/evidence-ledger.schema.json`.
+- Use `scripts/evidence_ledger.py` to recalculate current file identities,
+  propagate stale state, and query fresh coverage.
 
 ## Script Usage
 
@@ -95,6 +104,9 @@ python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . --index --writ
 python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . --trace AC-004 --to T006 --format json
 python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . --gaps --format markdown
 python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . --orphans --format toon
+python3 skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py . --index --as-of 2026-07-19 --write --format toon
+python3 skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py . --coverage --as-of 2026-07-19 --format json
+python3 skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py . --stale --as-of 2026-07-19 --format markdown
 ```
 
 ## Purpose
@@ -120,12 +132,20 @@ what verifies it, what shipped it, and where delivery evidence is missing.
 5. Inspect orphan and missing-coverage results.
 6. Run trace queries using a scoped node ID when a short ID is ambiguous.
 7. Write generated projections only when explicitly requested.
+8. Register evidence with captured artifact and dependency hashes, expiry, and
+   upstream evidence identities.
+9. Rebuild the ledger for an explicit `as_of` date; resolve missing, changed,
+   expired, unknown, ambiguous, or cyclic evidence before claiming coverage.
 
 ## Output Spec
 
 The graph contains sorted nodes, edges, gaps, orphans, coverage counters, source
 hashes, and fingerprints. Rebuilding identical inputs produces byte-identical
 JSON and Markdown.
+
+The evidence ledger contains recalculated file identities, resolved subjects,
+freshness states, reason codes, upstream state, stale paths, and fresh-only
+requirement coverage.
 
 Quality gate:
 
@@ -147,10 +167,14 @@ acceptance criterion. A following `Refs: AC-004` under `T006` creates a task
   is reported as an orphan or coverage gap.
 - Git-less fixture directories still produce valid lifecycle graphs.
 - Generated graph files never become their own inputs.
+- Evidence dependency cycles, duplicate IDs, ambiguous subjects, and unknown
+  upstream evidence fail closed.
 
 ## Scope Boundary
 
-- Do not infer semantic similarity, ownership, freshness, or policy decisions.
+- Do not infer semantic similarity, ownership, or policy decisions.
+- Do not mark evidence fresh without matching current hashes, expiry, and all
+  upstream evidence states.
 - Do not edit lifecycle artifacts to make a graph appear complete.
 - Do not treat graph generation as approval, validation evidence, or release.
-- Evidence freshness propagation belongs to the evidence-ledger workflow.
+- Do not overwrite producer manifests or evidence artifacts during indexing.

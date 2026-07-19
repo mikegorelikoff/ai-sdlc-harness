@@ -101,7 +101,7 @@ This page is generated from each package's `SKILL.md` frontmatter. The linked so
 
     `core`
 
-    AI SDLC repository delivery-graph workflow. Use when an AI assistant needs to index goals, requirements, decisions, components, tasks, tests, evidence, commits, and releases; resolve end-to-end trace paths; or report coverage gaps and orphan lifecycle nodes. Supports `--quick-flow` for deterministic local analysis and `--full-flow` for strict trace review.
+    AI SDLC repository delivery-graph and evidence-freshness workflow. Use when an AI assistant needs to index lifecycle traceability, resolve end-to-end paths, report gaps or orphans, register evidence identity, propagate stale dependencies, or calculate fresh evidence coverage. Supports `--quick-flow` for deterministic local analysis and `--full-flow` for strict trace and evidence review.
 
     [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-delivery-graph/SKILL.md)
 

@@ -37,3 +37,17 @@ without requirement links, and disconnected lifecycle nodes. Trace queries
 walk semantic links in either direction so a reviewer can move from a customer
 criterion to its task, commit, and release without artifact declaration edges
 creating misleading shortcuts.
+
+## Evidence freshness
+
+Evidence coverage is useful only while its assumptions still match the
+repository. An evidence source record captures the exact artifact hash, direct
+dependency hashes, lifecycle subjects, producer, timestamp, optional expiry,
+and upstream evidence identities. The ledger recalculates those identities
+instead of trusting a remembered “passed” label.
+
+Missing artifacts are `missing`, changed bytes are `stale`, elapsed evidence is
+`expired`, and any non-fresh upstream record makes its dependants stale. This
+state propagates to a fixed point, which makes the complete stale path visible
+and prevents downstream summaries from hiding an invalid root proof. Coverage
+counts only fresh evidence tied to unambiguous graph nodes.
