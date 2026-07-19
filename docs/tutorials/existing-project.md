@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Adopt an existing project
 description: Introduce the harness to an established repository without overwriting its conventions or inventing missing context.
-kicker: Tutorial · Established codebase
-permalink: /tutorials/existing-project/
-nav_order: 4
 ---
 
 An established repository already has a delivery system, even if much of it is implicit. Adoption starts by observing that system and recording evidence, not by imposing a generic workflow.

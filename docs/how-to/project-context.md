@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Build project context
 description: Capture architecture and delivery conventions with source evidence and drift detection.
-kicker: How-to · Context
-permalink: /how-to/project-context/
-nav_order: 15
 ---
 
 ## Generate from evidence

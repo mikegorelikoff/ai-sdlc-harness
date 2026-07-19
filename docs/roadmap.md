@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Roadmap
 description: The direction of the AI SDLC Harness and the principles that govern future expansion.
-kicker: Product direction
-permalink: /roadmap/
-nav_order: 99
 ---
 
 The harness evolves around one goal: make AI-assisted delivery faster without making it less inspectable, portable, or safe.

@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Validation commands
 description: Deterministic repository gates for skills, specifications, modules, configuration, compatibility, and documentation.
-kicker: Reference · Checks
-permalink: /reference/validation/
-nav_order: 57
 ---
 
 ```bash

@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Install the harness
 description: Add AI SDLC skills and shared helpers to a project while keeping repository-owned files visible and reviewable.
-kicker: How-to · Setup
-permalink: /how-to/install/
-nav_order: 11
 ---
 
 ## Before you begin

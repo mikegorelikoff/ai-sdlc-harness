@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Choose a flow mode
 description: Select quick, full, or adaptive rigor from delivery risk instead of feature size alone.
-kicker: How-to · Rigor
-permalink: /how-to/choose-flow/
-nav_order: 13
 ---
 
 ## Use quick flow

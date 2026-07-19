@@ -1,18 +1,32 @@
 ---
-layout: default
 title: Tutorials
 description: Learn the harness by completing realistic delivery journeys from intent to evidence.
-kicker: Learn by doing
-permalink: /tutorials/
-nav_order: 2
 ---
 
-Tutorials are learning-oriented. Follow them in order when the system is new to you; each one leaves a real set of repository artifacts behind.
+# Tutorials
 
-<div class="doc-grid">
-  <a class="doc-card" href="{{ '/tutorials/first-feature/' | relative_url }}"><strong>Ship a first feature</strong><span>Use navigation, SDD, validation, and a traceable commit.</span></a>
-  <a class="doc-card" href="{{ '/tutorials/existing-project/' | relative_url }}"><strong>Adopt an existing project</strong><span>Profile conventions without pretending undocumented behavior is known.</span></a>
-  <a class="doc-card" href="{{ '/tutorials/full-lifecycle/' | relative_url }}"><strong>Run the full lifecycle</strong><span>Move from customer problem through release evidence and learning.</span></a>
+Tutorials are learning-oriented. Follow them in order when the system is new to you; each one leaves real repository artifacts behind.
+
+<div class="grid cards" markdown>
+
+-   **Ship a first feature**
+
+    Use navigation, SDD, validation, and a traceable commit.
+
+    [Begin the tutorial →](first-feature.md)
+
+-   **Adopt an existing project**
+
+    Profile conventions without pretending undocumented behavior is known.
+
+    [Begin the tutorial →](existing-project.md)
+
+-   **Run the full lifecycle**
+
+    Move from customer problem through release evidence and learning.
+
+    [Begin the tutorial →](full-lifecycle.md)
+
 </div>
 
 ## What you will learn
@@ -22,4 +36,4 @@ Tutorials are learning-oriented. Follow them in order when the system is new to 
 - When quick flow is enough and when stronger gates are warranted.
 - How requirements, decisions, tests, tasks, validation, and commits stay linked.
 
-If you only need to solve one bounded task, use the [how-to guides]({{ '/how-to/' | relative_url }}) instead.
+If you only need one bounded outcome, use the [how-to guides](../how-to/index.md).

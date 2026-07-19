@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Artifact authority
 description: Which records are authoritative, which are projections or proposals, and why review tools cannot silently rewrite delivery truth.
-kicker: Explanation · Governance
-permalink: /explanation/artifact-authority/
-nav_order: 33
 ---
 
 Delivery systems become unsafe when every generated summary appears equally authoritative. The harness assigns distinct roles to source artifacts, machine projections, evidence reports, and proposals.

@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Decision continuity
 description: Why material assumptions and choices belong in a durable decision log rather than remaining implicit in assistant output.
-kicker: Explanation · Decisions
-permalink: /explanation/decisions/
-nav_order: 37
 ---
 
 Requirements state what must be true; decisions explain why one path was chosen among alternatives. Without that reasoning, later teams cannot tell whether a constraint is intentional, obsolete, or accidental.

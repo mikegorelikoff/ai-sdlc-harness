@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Customize team policy
 description: Layer organization and personal preferences without editing installed defaults or weakening protected gates.
-kicker: How-to · Configuration
-permalink: /how-to/customize/
-nav_order: 16
 ---
 
 ## Choose the correct layer

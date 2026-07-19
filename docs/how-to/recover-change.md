@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Recover from change
 description: Identify stale downstream artifacts after a requirement, design, or decision changes and reopen only the necessary lifecycle stages.
-kicker: How-to · Recovery
-permalink: /how-to/recover-change/
-nav_order: 18
 ---
 
 ## Name the change signal

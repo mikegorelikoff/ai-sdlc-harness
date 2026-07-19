@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Compatibility contract
 description: Public surfaces protected across additive harness releases and the checks that enforce them.
-kicker: Reference · Releases
-permalink: /reference/compatibility/
-nav_order: 59
 ---
 
 ## Protected surfaces

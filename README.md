@@ -2,6 +2,8 @@
 
 **[Read the documentation](https://mikegorelikoff.github.io/ai-sdlc-harness/)** · Tutorials, how-to guides, system explanations, and generated skill/module reference.
 
+Preview the Material documentation locally with `uv run --with mkdocs-material==9.7.7 mkdocs serve`.
+
 Agent-agnostic, domain-agnostic AI SDLC skills for traceable software delivery.
 
 This repository gives AI assistants a practical operating layer for PM, BA, QA,

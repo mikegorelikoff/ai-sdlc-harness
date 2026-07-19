@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Layered configuration
 description: How defaults, team policy, and personal preferences combine with provenance and protected boundaries.
-kicker: Explanation · Configuration
-permalink: /explanation/configuration/
-nav_order: 39
 ---
 
 Customization is necessary for real teams, but unstructured overrides make behavior impossible to reproduce. Layered configuration provides flexibility while keeping the effective result explainable.

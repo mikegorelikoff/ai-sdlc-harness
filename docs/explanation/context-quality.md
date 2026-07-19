@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Context and quality
 description: Why bounded evidence-backed context and reusable review lenses improve continuity without flooding the model.
-kicker: Explanation · Reasoning
-permalink: /explanation/context-quality/
-nav_order: 36
 ---
 
 More context is not automatically better context. Large indiscriminate reads consume attention, preserve stale assumptions, and make important constraints harder to find.

@@ -1,0 +1,136 @@
+site_name: AI SDLC Harness
+site_description: A traceable, adaptive delivery harness for teams building software with AI assistants.
+site_url: https://mikegorelikoff.github.io/ai-sdlc-harness/
+repo_url: https://github.com/mikegorelikoff/ai-sdlc-harness
+repo_name: mikegorelikoff/ai-sdlc-harness
+edit_uri: edit/main/docs/
+docs_dir: docs
+site_dir: site
+use_directory_urls: true
+strict: true
+
+theme:
+  name: material
+  language: en
+  icon:
+    logo: material/source-branch
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      accent: cyan
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: cyan
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/mikegorelikoff/ai-sdlc-harness
+      name: AI SDLC Harness on GitHub
+
+copyright: Copyright &copy; 2026 AI SDLC Harness contributors
+
+exclude_docs: |
+  scripts/
+  tests/
+
+nav:
+  - Home: index.md
+  - Start here: start.md
+  - Tutorials:
+      - Overview: tutorials/index.md
+      - Ship a first feature: tutorials/first-feature.md
+      - Adopt an existing project: tutorials/existing-project.md
+      - Run the full lifecycle: tutorials/full-lifecycle.md
+  - How-to guides:
+      - Overview: how-to/index.md
+      - Install the harness: how-to/install.md
+      - Update safely: how-to/update.md
+      - Choose a flow mode: how-to/choose-flow.md
+      - Navigate a new request: how-to/navigate-request.md
+      - Build project context: how-to/project-context.md
+      - Customize team policy: how-to/customize.md
+      - Add a capability module: how-to/add-module.md
+      - Recover from change: how-to/recover-change.md
+      - Run an evidence council: how-to/evidence-council.md
+      - Research with sources: how-to/research.md
+      - Prepare a commit: how-to/prepare-commit.md
+      - Validate a release: how-to/validate-release.md
+  - Explanation:
+      - Overview: explanation/index.md
+      - System model: explanation/system-model.md
+      - Adaptive rigor: explanation/adaptive-rigor.md
+      - Artifact authority: explanation/artifact-authority.md
+      - Feature state machine: explanation/state-machine.md
+      - Traceability: explanation/traceability.md
+      - Context and quality: explanation/context-quality.md
+      - Decision continuity: explanation/decisions.md
+      - Workflow handoffs: explanation/handoffs.md
+      - Layered configuration: explanation/configuration.md
+      - Optional modules: explanation/modules.md
+      - Change and learning: explanation/change-learning.md
+      - Agent portability: explanation/agent-portability.md
+  - Reference:
+      - Overview: reference/index.md
+      - Workflow map: reference/workflow-map.md
+      - Skill catalog: reference/skills.md
+      - Module catalog: reference/modules.md
+      - Artifact routing: reference/artifact-routing.md
+      - Flow flags: reference/flow-flags.md
+      - Data contracts: reference/data-contracts.md
+      - Validation commands: reference/validation.md
+      - Directory layout: reference/directory-layout.md
+      - Compatibility contract: reference/compatibility.md
+  - Roadmap: roadmap.md

@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Feature state machine
 description: How lifecycle stages, active skills, skips, blockers, and artifact evidence prevent ambiguous workflow progress.
-kicker: Explanation · State
-permalink: /explanation/state-machine/
-nav_order: 34
 ---
 
 Chat history is a poor source of delivery state. It is incomplete, host-specific, and easily lost. Each feature therefore has a repository-local `state.toon` that describes lifecycle progress independently of any conversation.

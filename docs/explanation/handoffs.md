@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Workflow handoffs
 description: How every durable workflow communicates result, blockers, required next work, and optional opportunities.
-kicker: Explanation · Continuity
-permalink: /explanation/handoffs/
-nav_order: 38
 ---
 
 A workflow is not complete when it produces a file; it is complete when the next participant can understand the outcome and continue safely.

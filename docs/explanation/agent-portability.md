@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Agent portability
 description: Why workflows are packaged as inspectable repository skills instead of depending on one assistant host or conversational persona.
-kicker: Explanation · Portability
-permalink: /explanation/agent-portability/
-nav_order: 42
 ---
 
 AI tools change quickly. Delivery evidence, team policy, and workflow contracts should outlive a specific model, chat surface, or agent runtime.

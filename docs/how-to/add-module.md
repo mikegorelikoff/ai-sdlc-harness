@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Add a capability module
 description: Register optional skills through a versioned manifest without expanding the core installation contract.
-kicker: How-to · Extension
-permalink: /how-to/add-module/
-nav_order: 17
 ---
 
 ## Define the boundary

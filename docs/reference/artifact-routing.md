@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Artifact routing
 description: Canonical locations for refinement, implementation, state, plans, decisions, indexes, and supporting evidence.
-kicker: Reference · Paths
-permalink: /reference/artifact-routing/
-nav_order: 54
 ---
 
 | Artifact class | Canonical route |

@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Flow flags
 description: Stable execution-mode flags and their precedence rules across AI SDLC skills and helper scripts.
-kicker: Reference · CLI
-permalink: /reference/flow-flags/
-nav_order: 55
 ---
 
 | Flag | Contract |

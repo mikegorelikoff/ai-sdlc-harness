@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Prepare a commit
 description: Stage one coherent task with current validation and SDD traceability.
-kicker: How-to · Git
-permalink: /how-to/prepare-commit/
-nav_order: 21
 ---
 
 ## Confirm task completion

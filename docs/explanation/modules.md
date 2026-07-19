@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Optional modules
 description: Why specialized capabilities use versioned manifests while the core lifecycle remains small and portable.
-kicker: Explanation · Extensibility
-permalink: /explanation/modules/
-nav_order: 40
 ---
 
 Core should contain the controls most delivery work needs. Architecture, UX, research, and independent review can be valuable without becoming mandatory weight in every installation.

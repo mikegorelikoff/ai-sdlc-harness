@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Run the full lifecycle
 description: Follow a product change from customer problem through backlog, engineering delivery, QA readiness, release evidence, and learning.
-kicker: Tutorial · End to end
-permalink: /tutorials/full-lifecycle/
-nav_order: 5
 ---
 
 Use full lifecycle work when the problem is still ambiguous, several roles must align, or the change carries meaningful product or operational risk.

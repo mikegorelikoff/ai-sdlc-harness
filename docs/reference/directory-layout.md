@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Directory layout
 description: Repository surfaces and the kind of delivery contract each one owns.
-kicker: Reference · Repository
-permalink: /reference/directory-layout/
-nav_order: 58
 ---
 
 ```text

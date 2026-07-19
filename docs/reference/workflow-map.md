@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Workflow map
 description: Lifecycle stages, primary skills, artifacts, and common entry points in one compact map.
-kicker: Reference · Lifecycle
-permalink: /reference/workflow-map/
-nav_order: 51
 ---
 
 | Stage | Primary capability | Typical artifact |

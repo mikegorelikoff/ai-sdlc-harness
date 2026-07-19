@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Traceability
 description: How customer outcomes, requirements, decisions, tests, tasks, validation, and commits remain connected.
-kicker: Explanation · Evidence
-permalink: /explanation/traceability/
-nav_order: 35
 ---
 
 Traceability answers “why does this exist?” and “what proves it works?” without requiring the original author or assistant to reconstruct intent from a diff.

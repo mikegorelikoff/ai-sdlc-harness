@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Validate a release
 description: Combine focused change checks with compatibility, documentation, and release-contract evidence.
-kicker: How-to · Release
-permalink: /how-to/validate-release/
-nav_order: 22
 ---
 
 ## Start from changed risk

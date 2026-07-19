@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Update safely
 description: Upgrade the installed harness while protecting team configuration, user overrides, and public compatibility contracts.
-kicker: How-to · Maintenance
-permalink: /how-to/update/
-nav_order: 12
 ---
 
 ## Establish the baseline

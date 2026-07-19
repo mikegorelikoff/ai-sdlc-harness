@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Navigate a new request
 description: Turn an unstructured delivery request into one evidence-backed required action and relevant optional actions.
-kicker: How-to · Routing
-permalink: /how-to/navigate-request/
-nav_order: 14
 ---
 
 ## Provide intent, not a workflow guess

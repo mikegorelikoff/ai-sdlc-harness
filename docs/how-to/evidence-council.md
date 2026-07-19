@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Run an evidence council
 description: Combine architecture, UX, research, QA, and security perspectives without letting reviewers directly rewrite authoritative artifacts.
-kicker: How-to · Review
-permalink: /how-to/evidence-council/
-nav_order: 19
 ---
 
 ## Define the question

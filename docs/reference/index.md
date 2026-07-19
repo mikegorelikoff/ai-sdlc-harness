@@ -1,17 +1,24 @@
 ---
-layout: default
 title: Reference
-description: Look up exact workflow, capability, artifact, flag, schema, validation, layout, and compatibility contracts.
-kicker: Technical reference
-permalink: /reference/
-nav_order: 50
+description: Exact workflow, skill, module, path, flag, schema, and validation contracts.
 ---
 
-Reference pages are information-oriented. They favor stable names, paths, tables, and command contracts over narrative guidance.
+# Reference
 
-<div class="doc-grid">
-{% assign group = site.data.navigation | where: "url", "/reference/" | first %}
-{% for item in group.children %}<a class="doc-card" href="{{ item.url | relative_url }}"><strong>{{ item.title }}</strong><span>Open the contract →</span></a>{% endfor %}
+Reference pages state the contracts precisely. Use them while configuring automation, authoring skills, reviewing artifacts, or debugging a workflow.
+
+<div class="grid cards" markdown>
+
+- [**Workflow map**](workflow-map.md) — lifecycle stages, entry points, and artifacts.
+- [**Skill catalog**](skills.md) — every installed skill and authoritative package.
+- [**Module catalog**](modules.md) — optional capability groups and compatibility.
+- [**Artifact routing**](artifact-routing.md) — canonical paths by work type.
+- [**Flow flags**](flow-flags.md) — exact quick/full execution semantics.
+- [**Data contracts**](data-contracts.md) — machine-readable schemas and handoffs.
+- [**Validation commands**](validation.md) — deterministic repository checks.
+- [**Directory layout**](directory-layout.md) — source tree ownership.
+- [**Compatibility contract**](compatibility.md) — release and extension boundaries.
+
 </div>
 
-For rationale, use [Explanation]({{ '/explanation/' | relative_url }}). For a bounded procedure, use [How-to guides]({{ '/how-to/' | relative_url }}).
+For rationale, use [Explanation](../explanation/index.md). For a bounded procedure, use [How-to guides](../how-to/index.md).

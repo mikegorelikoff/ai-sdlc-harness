@@ -1,10 +1,6 @@
 ---
-layout: default
 title: System model
 description: How skills, deterministic helpers, repository artifacts, lifecycle state, and human authority form one delivery control plane.
-kicker: Explanation · Architecture
-permalink: /explanation/system-model/
-nav_order: 31
 ---
 
 The harness is not a single agent and not a hidden workflow server. It is a repository-resident operating layer made from portable skill instructions, deterministic helper scripts, visible artifacts, and explicit lifecycle state.

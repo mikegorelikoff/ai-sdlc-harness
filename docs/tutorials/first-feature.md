@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Ship a first feature
 description: Walk a small but meaningful feature through navigation, specification, implementation, validation, and commit preparation.
-kicker: Tutorial · 20 minutes
-permalink: /tutorials/first-feature/
-nav_order: 3
 ---
 
 This tutorial teaches the shortest complete delivery loop. Use a real low-risk feature in a disposable branch; the goal is to understand the evidence chain, not to manufacture paperwork.

@@ -1,35 +1,19 @@
 ---
-layout: default
 title: Start here
 description: Install the harness and route your first piece of work in a few deliberate steps.
-kicker: Quick start
-permalink: /start/
-nav_order: 1
 ---
 
 The harness is a library of repository-local skills, scripts, and evidence contracts. You bring it into a project, then ask your AI assistant to use the workflow that matches the work in front of you.
 
-<div class="callout">
-  <strong>You do not need to adopt the entire lifecycle at once.</strong>
-  <p>Start with navigation, validation, or one role-specific workflow. The artifacts remain compatible as your use expands.</p>
-</div>
+!!! tip "Adopt only what you need"
+
+    Start with navigation, validation, or one role-specific workflow. The artifacts remain compatible as your use expands.
 
 ## Install
 
-<div class="steps">
-  <div class="step">
-    <h3>Clone the library</h3>
-    <p>Keep a local source checkout so updates remain explicit and reviewable.</p>
-  </div>
-  <div class="step">
-    <h3>Install into a project</h3>
-    <p>Copy the skill packages and shared runtime using the repository installer.</p>
-  </div>
-  <div class="step">
-    <h3>Ask for the next action</h3>
-    <p>Use the navigator when you know the goal but not the correct lifecycle entry point.</p>
-  </div>
-</div>
+1. **Clone the library.** Keep a local source checkout so updates remain explicit and reviewable.
+2. **Install into a project.** Copy the skill packages and shared runtime using the repository installer.
+3. **Ask for the next action.** Use the navigator when you know the goal but not the correct lifecycle entry point.
 
 ```bash
 git clone https://github.com/mikegorelikoff/ai-sdlc-harness.git
@@ -73,4 +57,4 @@ You can skip navigation when the need is already clear:
 - Review: `ai-sdlc-code-review`
 - Commit preparation: `ai-sdlc-commit-prep`
 
-Next, see how these entry points connect in the [workflow map]({{ '/reference/workflow-map/' | relative_url }}).
+Next, see how these entry points connect in the [workflow map](reference/workflow-map.md).

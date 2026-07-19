@@ -1,0 +1,39 @@
+feature: 003-mkdocs-material-site
+workspace: implementation
+current_stage: commit_prep
+active_skill:
+flow_mode: quick
+updated_at: 2026-07-19
+decision_log: specs/003-mkdocs-material-site/decision-log.md
+upstream_state: specs-refiniment/003-mkdocs-material-site/_ai_sdlc/state.toon
+
+stages[26]{id,skill,status,workspace,artifacts,decision_ref}:
+  discovery,ai-sdlc-working-backwards-discovery,not_started,refinement,discovery.md,
+  prfaq,ai-sdlc-prfaq-package-synthesis,not_started,refinement,prfaq.md,
+  delivery_package_gap_review,ai-sdlc-delivery-package-gap-review,not_started,refinement,delivery-gap-review.md,
+  requirements_readiness,ai-sdlc-requirements-readiness-review,not_started,refinement,requirements-readiness.md,
+  goal_epic_mapping,ai-sdlc-goal-capability-and-epic-mapping,not_started,refinement,goal-capability-map.md,
+  backlog_gap_review,ai-sdlc-backlog-requirements-gap-review,not_started,refinement,backlog-gap-review.md,
+  backlog_decomposition,ai-sdlc-backlog-decomposition-and-task-planning,not_started,refinement,backlog.md,
+  story_decomposition,ai-sdlc-user-story-decomposition,not_started,refinement,user-stories.md,
+  release_slicing,ai-sdlc-release-slicing-and-backlog-readiness-review,not_started,refinement,release-slicing.md,
+  ba_context,ai-sdlc-ba,not_started,refinement,business-context.md,
+  delivery_spec,ai-sdlc-delivery-spec-synthesis,not_started,refinement,delivery-spec.md,
+  qa_plan,ai-sdlc-qa,not_started,refinement,qa.md,
+  qa_gap_review,ai-sdlc-qa-requirements-gap-review,not_started,refinement,qa-gap-review.md,
+  test_strategy,ai-sdlc-test-scope-and-strategy-design,not_started,refinement,qa-strategy.md,
+  test_cases,ai-sdlc-test-cases,not_started,refinement,test-cases.md,
+  test_suite,ai-sdlc-test-case-and-suite-synthesis,not_started,refinement,test-suite.md,
+  qa_traceability,ai-sdlc-qa-traceability-and-readiness-review,not_started,refinement,qa-readiness.md,
+  delivery_handoff,ai-sdlc-delivery-handoff-review,not_started,refinement,delivery-handoff-review.md,
+  sdd,ai-sdlc-sdd,done,implementation,specs/003-mkdocs-material-site/requirements.md; specs/003-mkdocs-material-site/design.md; specs/003-mkdocs-material-site/test-cases.md; specs/003-mkdocs-material-site/qa.md; specs/003-mkdocs-material-site/tasks.md; specs/003-mkdocs-material-site/_ai_sdlc/plan.toon; specs/003-mkdocs-material-site/plan.md,DEC-001
+  branching,ai-sdlc-branching,not_started,implementation,branch-plan.md,
+  validation,ai-sdlc-validation,done,implementation,specs/003-mkdocs-material-site/validation.md,DEC-002
+  code_review,ai-sdlc-code-review,not_started,implementation,code-review.md,
+  security_testing,ai-sdlc-security-testing,not_started,implementation,security-review.md,
+  commit_prep,ai-sdlc-commit-prep,done,implementation,specs/003-mkdocs-material-site/validation.md,DEC-003
+  conventional_commit,ai-sdlc-conventional-commit,not_started,implementation,commit-message.md,
+  approvals_sandbox,ai-sdlc-approvals-sandbox,not_applicable,utility,approval-plan.md,
+
+skips[1]{stage,reason,decision_ref,flow_mode}:
+  sdd,This presentation-system migration has explicit user intent and inherits the complete documentation requirements; IA; and QA baseline from spec 002.,,quick

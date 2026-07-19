@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "docs/**"
+      - "mkdocs.yml"
+      - "requirements-docs.txt"
       - "skills/*/SKILL.md"
       - "modules/*/module.json"
       - ".github/workflows/pages.yml"
@@ -25,19 +27,28 @@ jobs:
         uses: actions/checkout@v6
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements-docs.txt
+      - name: Install documentation dependencies
+        run: python3 -m pip install -r requirements-docs.txt
       - name: Validate generated catalogs
         run: python3 docs/scripts/build_catalog.py --check
       - name: Validate documentation source
         run: python3 docs/scripts/validate_docs.py
       - name: Run documentation tests
         run: python3 -m unittest discover -s docs/tests -v
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./docs
-          destination: ./_site
+      - name: Build documentation
+        run: mkdocs build --strict
+      - name: Validate rendered site
+        run: python3 docs/scripts/validate_rendered.py site
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
 
   deploy:
     needs: build

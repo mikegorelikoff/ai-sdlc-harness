@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Adaptive rigor
 description: Why delivery controls should follow risk, uncertainty, and reversibility rather than a universal ceremony level.
-kicker: Explanation · Policy
-permalink: /explanation/adaptive-rigor/
-nav_order: 32
 ---
 
 Uniform process creates two failure modes: low-risk changes drown in ceremony, while deceptively small high-risk changes receive too little scrutiny. Adaptive rigor separates work size from delivery risk.

@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Data contracts
 description: Core versioned records used for artifacts, handoffs, modules, compatibility, context, and findings.
-kicker: Reference · Schemas
-permalink: /reference/data-contracts/
-nav_order: 56
 ---
 
 | Schema | Purpose |

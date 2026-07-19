@@ -1,10 +1,6 @@
 ---
-layout: default
 title: Research with sources
 description: Gather current external evidence, distinguish it from repository facts, and preserve confidence and limitations.
-kicker: How-to · Research
-permalink: /how-to/research/
-nav_order: 20
 ---
 
 ## Frame answerable questions
