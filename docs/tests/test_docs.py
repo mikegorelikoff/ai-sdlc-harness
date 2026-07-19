@@ -9,6 +9,20 @@ from pathlib import Path
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
+from build_catalog import (  # noqa: E402
+    DOCS as CATALOG_DOCS,
+    SKILL_SELECTION_BOUNDARIES,
+    SKILL_GUIDES,
+    generated_outputs,
+    script_record,
+    script_sources,
+    skill_frontmatter,
+    skill_sources,
+    validate_coverage_manifest,
+    validate_script_catalog,
+    validate_selection_contract,
+    validate_skill_guide,
+)
 from validate_docs import (  # noqa: E402
     CONTROL_PLANE_CONTRACT,
     IMPLEMENTATION_CONTRACT,
@@ -193,6 +207,142 @@ class DocumentationValidationTests(unittest.TestCase):
             )
         )
 
+    def test_generated_catalog_closes_skill_and_script_inventories(self) -> None:
+        outputs = generated_outputs()
+        skills = skill_sources()
+        records = [script_record(path) for path in script_sources()]
+        self.assertEqual(len(skills), 44)
+        self.assertEqual(len(records), 106)
+        self.assertEqual(len(SKILL_SELECTION_BOUNDARIES), 44)
+        self.assertEqual(validate_selection_contract(skills), [])
+        for source in skills:
+            skill_id = skill_frontmatter(source)["name"]
+            page = outputs[SKILL_GUIDES / f"{skill_id}.md"]
+            self.assertEqual(validate_skill_guide(page, skill_id), [])
+
+        scripts = outputs[CATALOG_DOCS / "reference/scripts.md"]
+        coverage = outputs[CATALOG_DOCS / "reference/catalog-coverage.toon"]
+        self.assertEqual(validate_script_catalog(scripts, records), [])
+        self.assertEqual(validate_coverage_manifest(coverage, len(skills), records), [])
+        self.assertTrue(coverage.startswith("schema: ai-sdlc-documentation-coverage/v1\n"))
+        self.assertEqual(
+            sum(record.classification == "installed runtime mirror" for record in records),
+            17,
+        )
+
+    def test_generated_catalog_rejects_missing_sections_and_paths(self) -> None:
+        outputs = generated_outputs()
+        records = [script_record(path) for path in script_sources()]
+        navigator = outputs[SKILL_GUIDES / "ai-sdlc-navigator.md"]
+        broken_guide = navigator.replace("## Handoff", "## Missing handoff", 1)
+        self.assertTrue(
+            any(
+                "missing guide section ## Handoff" in error
+                for error in validate_skill_guide(broken_guide, "ai-sdlc-navigator")
+            )
+        )
+
+        broken_selection = navigator.replace(
+            "Use that owning skill instead", "Use that owning skill", 1
+        )
+        self.assertTrue(
+            any(
+                "non-use guidance must name a concrete alternative" in error
+                for error in validate_skill_guide(
+                    broken_selection, "ai-sdlc-navigator"
+                )
+            )
+        )
+
+        research = outputs[SKILL_GUIDES / "ai-sdlc-research.md"]
+        broken_research = research.replace("### Freshness rule", "### Recency note", 1)
+        self.assertTrue(
+            any(
+                "missing research evidence contract ### Freshness rule" in error
+                for error in validate_skill_guide(
+                    broken_research, "ai-sdlc-research"
+                )
+            )
+        )
+        invalid_research_json = research.replace(
+            '"limitations": "Jurisdiction review is still required"',
+            '"limitations": ["Jurisdiction review is still required"]',
+            1,
+        )
+        self.assertTrue(
+            any(
+                "published JSON fails helper: findings 1: limitations is required"
+                in error
+                for error in validate_skill_guide(
+                    invalid_research_json, "ai-sdlc-research"
+                )
+            )
+        )
+
+        package_trust = outputs[SKILL_GUIDES / "ai-sdlc-package-trust.md"]
+        broken_package_trust = package_trust.replace(
+            "### Branch B — Generate local metrics",
+            "### Combined operation",
+            1,
+        )
+        self.assertTrue(
+            any(
+                "missing branch ### Branch B — Generate local metrics" in error
+                for error in validate_skill_guide(
+                    broken_package_trust, "ai-sdlc-package-trust"
+                )
+            )
+        )
+        broken_branch_a = package_trust.replace(
+            "**Inputs and reads.** Read the package root",
+            "**Package inputs.** Read the package root",
+            1,
+        )
+        self.assertTrue(
+            any(
+                "Branch A — Verify a package missing independent field **Inputs and reads.**"
+                in error
+                for error in validate_skill_guide(
+                    broken_branch_a, "ai-sdlc-package-trust"
+                )
+            )
+        )
+        broken_branch_b = package_trust.replace(
+            "**Inputs and reads.** Read only repository-local",
+            "**Metrics inputs.** Read only repository-local",
+            1,
+        )
+        self.assertTrue(
+            any(
+                "Branch B — Generate local metrics missing independent field **Inputs and reads.**"
+                in error
+                for error in validate_skill_guide(
+                    broken_branch_b, "ai-sdlc-package-trust"
+                )
+            )
+        )
+
+        missing_path = records[0].path.relative_to(SCRIPTS.parents[1]).as_posix()
+        broken_scripts = outputs[CATALOG_DOCS / "reference/scripts.md"].replace(
+            missing_path, "missing/script.py"
+        )
+        self.assertTrue(
+            any(
+                missing_path in error
+                for error in validate_script_catalog(broken_scripts, records)
+            )
+        )
+        broken_coverage = outputs[
+            CATALOG_DOCS / "reference/catalog-coverage.toon"
+        ].replace(missing_path, "missing/script.py")
+        self.assertTrue(
+            any(
+                missing_path in error
+                for error in validate_coverage_manifest(
+                    broken_coverage, len(skill_sources()), records
+                )
+            )
+        )
 
 if __name__ == "__main__":
     unittest.main()

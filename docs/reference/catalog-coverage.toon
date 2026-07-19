@@ -1,0 +1,158 @@
+schema: ai-sdlc-documentation-coverage/v1
+skill_count: 44
+script_count: 106
+documentation_root: docs
+
+skills[44]{skill,source,page,module,package_scripts}:
+  ai-sdlc-approvals-sandbox,skills/ai-sdlc-approvals-sandbox/SKILL.md,reference/skills/ai-sdlc-approvals-sandbox.md,core,1
+  ai-sdlc-architecture,skills/ai-sdlc-architecture/SKILL.md,reference/skills/ai-sdlc-architecture.md,architecture,1
+  ai-sdlc-ba,skills/ai-sdlc-ba/SKILL.md,reference/skills/ai-sdlc-ba.md,core,1
+  ai-sdlc-backlog-decomposition-and-task-planning,skills/ai-sdlc-backlog-decomposition-and-task-planning/SKILL.md,reference/skills/ai-sdlc-backlog-decomposition-and-task-planning.md,core,1
+  ai-sdlc-backlog-requirements-gap-review,skills/ai-sdlc-backlog-requirements-gap-review/SKILL.md,reference/skills/ai-sdlc-backlog-requirements-gap-review.md,core,1
+  ai-sdlc-branching,skills/ai-sdlc-branching/SKILL.md,reference/skills/ai-sdlc-branching.md,core,1
+  ai-sdlc-change-impact,skills/ai-sdlc-change-impact/SKILL.md,reference/skills/ai-sdlc-change-impact.md,core,1
+  ai-sdlc-change-set,skills/ai-sdlc-change-set/SKILL.md,reference/skills/ai-sdlc-change-set.md,core,4
+  ai-sdlc-code-review,skills/ai-sdlc-code-review/SKILL.md,reference/skills/ai-sdlc-code-review.md,core,1
+  ai-sdlc-commit-prep,skills/ai-sdlc-commit-prep/SKILL.md,reference/skills/ai-sdlc-commit-prep.md,core,1
+  ai-sdlc-conventional-commit,skills/ai-sdlc-conventional-commit/SKILL.md,reference/skills/ai-sdlc-conventional-commit.md,core,1
+  ai-sdlc-delivery-graph,skills/ai-sdlc-delivery-graph/SKILL.md,reference/skills/ai-sdlc-delivery-graph.md,core,2
+  ai-sdlc-delivery-handoff-review,skills/ai-sdlc-delivery-handoff-review/SKILL.md,reference/skills/ai-sdlc-delivery-handoff-review.md,core,1
+  ai-sdlc-delivery-package-gap-review,skills/ai-sdlc-delivery-package-gap-review/SKILL.md,reference/skills/ai-sdlc-delivery-package-gap-review.md,core,1
+  ai-sdlc-delivery-spec-synthesis,skills/ai-sdlc-delivery-spec-synthesis/SKILL.md,reference/skills/ai-sdlc-delivery-spec-synthesis.md,core,1
+  ai-sdlc-doctor,skills/ai-sdlc-doctor/SKILL.md,reference/skills/ai-sdlc-doctor.md,core,1
+  ai-sdlc-evidence-council,skills/ai-sdlc-evidence-council/SKILL.md,reference/skills/ai-sdlc-evidence-council.md,evidence-council,1
+  ai-sdlc-goal-capability-and-epic-mapping,skills/ai-sdlc-goal-capability-and-epic-mapping/SKILL.md,reference/skills/ai-sdlc-goal-capability-and-epic-mapping.md,core,1
+  ai-sdlc-host-adapter,skills/ai-sdlc-host-adapter/SKILL.md,reference/skills/ai-sdlc-host-adapter.md,core,1
+  ai-sdlc-navigator,skills/ai-sdlc-navigator/SKILL.md,reference/skills/ai-sdlc-navigator.md,core,1
+  ai-sdlc-package-trust,skills/ai-sdlc-package-trust/SKILL.md,reference/skills/ai-sdlc-package-trust.md,core,2
+  ai-sdlc-policy,skills/ai-sdlc-policy/SKILL.md,reference/skills/ai-sdlc-policy.md,core,1
+  ai-sdlc-prfaq-package-synthesis,skills/ai-sdlc-prfaq-package-synthesis/SKILL.md,reference/skills/ai-sdlc-prfaq-package-synthesis.md,core,1
+  ai-sdlc-project-context,skills/ai-sdlc-project-context/SKILL.md,reference/skills/ai-sdlc-project-context.md,core,2
+  ai-sdlc-qa,skills/ai-sdlc-qa/SKILL.md,reference/skills/ai-sdlc-qa.md,core,1
+  ai-sdlc-qa-requirements-gap-review,skills/ai-sdlc-qa-requirements-gap-review/SKILL.md,reference/skills/ai-sdlc-qa-requirements-gap-review.md,core,1
+  ai-sdlc-qa-traceability-and-readiness-review,skills/ai-sdlc-qa-traceability-and-readiness-review/SKILL.md,reference/skills/ai-sdlc-qa-traceability-and-readiness-review.md,core,1
+  ai-sdlc-quality-lenses,skills/ai-sdlc-quality-lenses/SKILL.md,reference/skills/ai-sdlc-quality-lenses.md,core,1
+  ai-sdlc-release-slicing-and-backlog-readiness-review,skills/ai-sdlc-release-slicing-and-backlog-readiness-review/SKILL.md,reference/skills/ai-sdlc-release-slicing-and-backlog-readiness-review.md,core,1
+  ai-sdlc-requirements-readiness-review,skills/ai-sdlc-requirements-readiness-review/SKILL.md,reference/skills/ai-sdlc-requirements-readiness-review.md,core,1
+  ai-sdlc-research,skills/ai-sdlc-research/SKILL.md,reference/skills/ai-sdlc-research.md,research,1
+  ai-sdlc-retrospective,skills/ai-sdlc-retrospective/SKILL.md,reference/skills/ai-sdlc-retrospective.md,core,1
+  ai-sdlc-runtime,skills/ai-sdlc-runtime/SKILL.md,reference/skills/ai-sdlc-runtime.md,core,1
+  ai-sdlc-sdd,skills/ai-sdlc-sdd/SKILL.md,reference/skills/ai-sdlc-sdd.md,core,11
+  ai-sdlc-security-testing,skills/ai-sdlc-security-testing/SKILL.md,reference/skills/ai-sdlc-security-testing.md,core,1
+  ai-sdlc-shared-runtime,skills/ai-sdlc-shared-runtime/SKILL.md,reference/skills/ai-sdlc-shared-runtime.md,core,17
+  ai-sdlc-test-case-and-suite-synthesis,skills/ai-sdlc-test-case-and-suite-synthesis/SKILL.md,reference/skills/ai-sdlc-test-case-and-suite-synthesis.md,core,1
+  ai-sdlc-test-cases,skills/ai-sdlc-test-cases/SKILL.md,reference/skills/ai-sdlc-test-cases.md,core,1
+  ai-sdlc-test-scope-and-strategy-design,skills/ai-sdlc-test-scope-and-strategy-design/SKILL.md,reference/skills/ai-sdlc-test-scope-and-strategy-design.md,core,1
+  ai-sdlc-user-story-decomposition,skills/ai-sdlc-user-story-decomposition/SKILL.md,reference/skills/ai-sdlc-user-story-decomposition.md,core,1
+  ai-sdlc-ux,skills/ai-sdlc-ux/SKILL.md,reference/skills/ai-sdlc-ux.md,ux,1
+  ai-sdlc-validation,skills/ai-sdlc-validation/SKILL.md,reference/skills/ai-sdlc-validation.md,core,1
+  ai-sdlc-workflow,skills/ai-sdlc-workflow/SKILL.md,reference/skills/ai-sdlc-workflow.md,core,1
+  ai-sdlc-working-backwards-discovery,skills/ai-sdlc-working-backwards-discovery/SKILL.md,reference/skills/ai-sdlc-working-backwards-discovery.md,core,1
+
+scripts[106]{path,owner,classification,documentation}:
+  skills/ai-sdlc-approvals-sandbox/scripts/approval_plan.py,ai-sdlc-approvals-sandbox,skill package helper,reference/scripts.md
+  skills/ai-sdlc-architecture/scripts/architecture.py,ai-sdlc-architecture,skill package helper,reference/scripts.md
+  skills/ai-sdlc-ba/scripts/ba_context_scaffold.py,ai-sdlc-ba,skill package helper,reference/scripts.md
+  skills/ai-sdlc-backlog-decomposition-and-task-planning/scripts/backlog_matrix.py,ai-sdlc-backlog-decomposition-and-task-planning,skill package helper,reference/scripts.md
+  skills/ai-sdlc-backlog-requirements-gap-review/scripts/backlog_gap_scan.py,ai-sdlc-backlog-requirements-gap-review,skill package helper,reference/scripts.md
+  skills/ai-sdlc-branching/scripts/branch_plan.py,ai-sdlc-branching,skill package helper,reference/scripts.md
+  skills/ai-sdlc-change-impact/scripts/change_impact.py,ai-sdlc-change-impact,skill package helper,reference/scripts.md
+  skills/ai-sdlc-change-set/scripts/change_apply.py,ai-sdlc-change-set,skill package helper,reference/scripts.md
+  skills/ai-sdlc-change-set/scripts/change_preview.py,ai-sdlc-change-set,skill package helper,reference/scripts.md
+  skills/ai-sdlc-change-set/scripts/change_set.py,ai-sdlc-change-set,skill package helper,reference/scripts.md
+  skills/ai-sdlc-change-set/scripts/spec_delta.py,ai-sdlc-change-set,skill package helper,reference/scripts.md
+  skills/ai-sdlc-code-review/scripts/review_readiness.py,ai-sdlc-code-review,skill package helper,reference/scripts.md
+  skills/ai-sdlc-commit-prep/scripts/check_commit_ready.py,ai-sdlc-commit-prep,skill package helper,reference/scripts.md
+  skills/ai-sdlc-conventional-commit/scripts/validate_commit_msg.py,ai-sdlc-conventional-commit,skill package helper,reference/scripts.md
+  skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py,ai-sdlc-delivery-graph,skill package helper,reference/scripts.md
+  skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py,ai-sdlc-delivery-graph,skill package helper,reference/scripts.md
+  skills/ai-sdlc-delivery-handoff-review/scripts/handoff_readiness_score.py,ai-sdlc-delivery-handoff-review,skill package helper,reference/scripts.md
+  skills/ai-sdlc-delivery-package-gap-review/scripts/delivery_gap_scan.py,ai-sdlc-delivery-package-gap-review,skill package helper,reference/scripts.md
+  skills/ai-sdlc-delivery-spec-synthesis/scripts/delivery_spec_scaffold.py,ai-sdlc-delivery-spec-synthesis,skill package helper,reference/scripts.md
+  skills/ai-sdlc-doctor/scripts/doctor.py,ai-sdlc-doctor,skill package helper,reference/scripts.md
+  skills/ai-sdlc-evidence-council/scripts/evidence_council.py,ai-sdlc-evidence-council,skill package helper,reference/scripts.md
+  skills/ai-sdlc-goal-capability-and-epic-mapping/scripts/goal_capability_map.py,ai-sdlc-goal-capability-and-epic-mapping,skill package helper,reference/scripts.md
+  skills/ai-sdlc-host-adapter/scripts/adapter.py,ai-sdlc-host-adapter,skill package helper,reference/scripts.md
+  skills/ai-sdlc-navigator/scripts/navigate.py,ai-sdlc-navigator,skill package helper,reference/scripts.md
+  skills/ai-sdlc-package-trust/scripts/metrics.py,ai-sdlc-package-trust,skill package helper,reference/scripts.md
+  skills/ai-sdlc-package-trust/scripts/package_trust.py,ai-sdlc-package-trust,skill package helper,reference/scripts.md
+  skills/ai-sdlc-policy/scripts/policy.py,ai-sdlc-policy,skill package helper,reference/scripts.md
+  skills/ai-sdlc-prfaq-package-synthesis/scripts/prfaq_outline.py,ai-sdlc-prfaq-package-synthesis,skill package helper,reference/scripts.md
+  skills/ai-sdlc-project-context/scripts/context_engine.py,ai-sdlc-project-context,skill package helper,reference/scripts.md
+  skills/ai-sdlc-project-context/scripts/project_context.py,ai-sdlc-project-context,skill package helper,reference/scripts.md
+  skills/ai-sdlc-qa/scripts/qa_plan_scaffold.py,ai-sdlc-qa,skill package helper,reference/scripts.md
+  skills/ai-sdlc-qa-requirements-gap-review/scripts/qa_gap_scan.py,ai-sdlc-qa-requirements-gap-review,skill package helper,reference/scripts.md
+  skills/ai-sdlc-qa-traceability-and-readiness-review/scripts/traceability_matrix.py,ai-sdlc-qa-traceability-and-readiness-review,skill package helper,reference/scripts.md
+  skills/ai-sdlc-quality-lenses/scripts/quality_lens_report.py,ai-sdlc-quality-lenses,skill package helper,reference/scripts.md
+  skills/ai-sdlc-release-slicing-and-backlog-readiness-review/scripts/release_slice_plan.py,ai-sdlc-release-slicing-and-backlog-readiness-review,skill package helper,reference/scripts.md
+  skills/ai-sdlc-requirements-readiness-review/scripts/requirements_readiness_score.py,ai-sdlc-requirements-readiness-review,skill package helper,reference/scripts.md
+  skills/ai-sdlc-research/scripts/research.py,ai-sdlc-research,skill package helper,reference/scripts.md
+  skills/ai-sdlc-retrospective/scripts/retrospective.py,ai-sdlc-retrospective,skill package helper,reference/scripts.md
+  skills/ai-sdlc-runtime/scripts/runtime.py,ai-sdlc-runtime,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/analyze_spec.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/check_checklist.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/check_clarify.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/check_refinement_context.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/plan_links.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/resolve_active_spec.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/sdd_context.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/sdd_status.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/spec_helpers.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-sdd/scripts/validate_spec.py,ai-sdlc-sdd,skill package helper,reference/scripts.md
+  skills/ai-sdlc-security-testing/scripts/security_review_matrix.py,ai-sdlc-security-testing,skill package helper,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_artifact_helper.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_artifact_profiles.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_compatibility.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_config.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_context.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_context_benchmark.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_handoff.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_migrate.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_modules.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_paths.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_rigor.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_specs_index.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_state_machine.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_toon.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/refinement_status.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/skill_script_contract.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/state_machine.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-test-case-and-suite-synthesis/scripts/suite_outline.py,ai-sdlc-test-case-and-suite-synthesis,skill package helper,reference/scripts.md
+  skills/ai-sdlc-test-cases/scripts/case_matrix.py,ai-sdlc-test-cases,skill package helper,reference/scripts.md
+  skills/ai-sdlc-test-scope-and-strategy-design/scripts/strategy_scaffold.py,ai-sdlc-test-scope-and-strategy-design,skill package helper,reference/scripts.md
+  skills/ai-sdlc-user-story-decomposition/scripts/story_map.py,ai-sdlc-user-story-decomposition,skill package helper,reference/scripts.md
+  skills/ai-sdlc-ux/scripts/ux.py,ai-sdlc-ux,skill package helper,reference/scripts.md
+  skills/ai-sdlc-validation/scripts/validation_plan.py,ai-sdlc-validation,skill package helper,reference/scripts.md
+  skills/ai-sdlc-workflow/scripts/workflow.py,ai-sdlc-workflow,skill package helper,reference/scripts.md
+  skills/ai-sdlc-working-backwards-discovery/scripts/discovery_interview_plan.py,ai-sdlc-working-backwards-discovery,skill package helper,reference/scripts.md
+  skills/_shared/ai_sdlc_artifact_helper.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_artifact_profiles.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_compatibility.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_config.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_context.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_context_benchmark.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_handoff.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_install_smoke.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/ai_sdlc_migrate.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_modules.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_paths.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_rigor.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_specs_index.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_state_machine.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_toon.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/refinement_status.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/skill_script_contract.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/state_machine.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/sync_installed_runtime.py,shared runtime,runtime packaging helper,reference/scripts.md
+  skills/_shared/test_all_skill_scripts.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_artifact_scaffold.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_compatibility.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_config.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_each_skill_tests.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_handoff.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_migration.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_modules.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_rigor.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_state_machine.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_toon.py,shared runtime,repository validation runner,reference/scripts.md

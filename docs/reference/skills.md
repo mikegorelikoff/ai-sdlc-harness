@@ -1,364 +1,454 @@
 ---
 title: Skill catalog
-description: Every installed AI SDLC skill, its purpose, owning module, and authoritative package path.
+description: Every installed AI SDLC capability with a local human-facing guide, lifecycle position, module, outputs, and helper count.
 ---
 
 # Skill catalog
 
-This page is generated from each package's `SKILL.md` frontmatter. The linked source is the authoritative execution contract.
+This generated catalog is the public discovery surface for every installed capability. Each guide follows the same operating shape, while the linked `SKILL.md` remains execution authority.
 
 <div class="grid cards" markdown>
 
 -   **`ai-sdlc-approvals-sandbox`**
 
-    `core`
+    `core` · Sandbox escalation decision · 1 package helper(s)
 
-    AI SDLC approvals, sandbox, and command rule workflow. Use when an AI assistant needs to decide whether to request escalated permissions, explain sandbox failures, propose prefix_rule approvals, avoid unsafe command patterns, or document why a command was or was not rerun outside the sandbox. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
+    Decide, request, and report sandbox escalation for AI SDLC commands only when the sandbox blocks a required action or the task explicitly requires approved external access.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-approvals-sandbox/SKILL.md)
+    **Output:** Sandbox escalation decision record with prefix_rule guidance and residual risk
+
+    [Open the complete guide →](skills/ai-sdlc-approvals-sandbox.md)
 
 -   **`ai-sdlc-architecture`**
 
-    `architecture`
+    `architecture` · Design and implementation planning · 1 package helper(s)
 
-    Optional AI SDLC architecture workflow. Use when an AI assistant needs to define system boundaries, components, interfaces, architectural constraints, alternatives, decisions, tradeoffs, risks, or validation for a feature and produce routed human and machine artifacts linked to requirements and durable decisions. Supports `--quick-flow` for focused design and `--full-flow` for strict decision, risk, and validation coverage.
+    Preserve traceable architecture boundaries, decisions, and risks.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-architecture/SKILL.md)
+    **Output:** `architecture.md` and `_ai_sdlc/architecture.toon`
+
+    [Open the complete guide →](skills/ai-sdlc-architecture.md)
 
 -   **`ai-sdlc-ba`**
 
-    `core`
+    `core` · Business analysis and refinement · 1 package helper(s)
 
-    AI SDLC business analysis workflow. Use when an AI assistant needs to frame a feature or change before implementation, derive actors, workflows, business rules, assumptions, acceptance criteria, and richer spec context for requirements and design. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Convert a vague AI SDLC feature, refactor, or workflow request into requirements-ready business context with actors, rules, assumptions, exclusions, and measurable acceptance criteria.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-ba/SKILL.md)
+    **Output:** Business context, rules, assumptions, out-of-scope items, acceptance criteria, and open questions
+
+    [Open the complete guide →](skills/ai-sdlc-ba.md)
 
 -   **`ai-sdlc-backlog-decomposition-and-task-planning`**
 
-    `core`
+    `core` · Backlog decomposition · 1 package helper(s)
 
-    Use when goals, capabilities, and epics are defined and you need to decompose them into features, user stories, acceptance summaries, and cross-functional delivery tasks. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Convert planning structure into a delivery-oriented backlog with cross-functional work represented explicitly.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-backlog-decomposition-and-task-planning/SKILL.md)
+    **Output:** Features, user stories, acceptance summaries, and cross-functional delivery tasks
+
+    [Open the complete guide →](skills/ai-sdlc-backlog-decomposition-and-task-planning.md)
 
 -   **`ai-sdlc-backlog-requirements-gap-review`**
 
-    `core`
+    `core` · Pre-backlog planning review · 1 package helper(s)
 
-    Use when PRFAQ, BRD, PRD, product brief, workflow, or equivalent initiative artifacts exist and you need to review them for planning gaps, unclear scope, weak priorities, missing actors, and backlog-blocking ambiguity before decomposing work. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Review the incoming initiative package and determine whether it is specific enough to support backlog decomposition and release planning.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-backlog-requirements-gap-review/SKILL.md)
+    **Output:** Backlog-blocking gaps, assumptions, open questions, and readiness decision
+
+    [Open the complete guide →](skills/ai-sdlc-backlog-requirements-gap-review.md)
 
 -   **`ai-sdlc-branching`**
 
-    `core`
+    `core` · Git workflow setup · 1 package helper(s)
 
-    AI SDLC Git-flow branching workflow. Use when an AI assistant starts implementation work, needs to create or verify a task branch, checks branch/spec alignment, or prepares to hand off a completed user-visible task to validation and commit prep. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
+    Create or verify the correct Git-flow task branch before repo-tracked file mutation, keep branch names aligned with active specs, and hand completed work to validation and commit prep without mixing unrelated changes.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-branching/SKILL.md)
+    **Output:** Branching decision, branch name, base branch, dirty-tree assessment, and next handoff
+
+    [Open the complete guide →](skills/ai-sdlc-branching.md)
 
 -   **`ai-sdlc-change-impact`**
 
-    `core`
+    `core` · Cross-lifecycle change recovery · 1 package helper(s)
 
-    AI SDLC change-impact and lifecycle recovery workflow. Use when a requirement, acceptance criterion, decision, API contract, risk assumption, or other traced source changed after downstream artifacts were created and an AI assistant must identify stale artifacts, affected lifecycle stages, and evidence-backed reopen or revalidation actions without silently rewriting authoritative state. Supports `--quick-flow` for focused trace scanning and `--full-flow` for strict state and source-evidence gates.
+    Trace changed sources to stale artifacts and safe reopen actions.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-change-impact/SKILL.md)
+    **Output:** `change-impact.md` and `_ai_sdlc/change-impact.toon`
+
+    [Open the complete guide →](skills/ai-sdlc-change-impact.md)
 
 -   **`ai-sdlc-change-set`**
 
-    `core`
+    `core` · Controlled change intake · 4 package helper(s)
 
-    AI SDLC controlled change-workspace and specification-delta workflow. Use when an AI assistant needs to create or validate an isolated proposal workspace, author and validate requirement deltas, preview canonical changes, or apply and archive an explicitly approved change with rollback evidence. Supports `--quick-flow` for assumption-driven drafts and `--full-flow` for strict owner, target, evidence, and authority checks.
+    Create and validate an isolated, reviewable workspace before any authoritative specification mutation.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-change-set/SKILL.md)
+    **Output:** `changes/<change-id>/` with proposal, design, tasks, delta and evidence indexes, lifecycle records, preview, approval, and recovery evidence
+
+    [Open the complete guide →](skills/ai-sdlc-change-set.md)
 
 -   **`ai-sdlc-code-review`**
 
-    `core`
+    `core` · Code review quality gate · 1 package helper(s)
 
-    AI SDLC code review workflow. Use when an AI assistant is asked to review a diff, PR, branch, commit, staged changes, or completed implementation against SDD requirements, tests, API contracts, security, and scope discipline. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
+    Review AI SDLC code, diffs, branches, commits, or completed implementations for correctness, regressions, contract drift, missing tests, SDD drift, and material maintainability risks.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-code-review/SKILL.md)
+    **Output:** Findings-first review with severity, path, impact, fix, validation gaps, and residual risk
+
+    [Open the complete guide →](skills/ai-sdlc-code-review.md)
 
 -   **`ai-sdlc-commit-prep`**
 
-    `core`
+    `core` · Commit readiness / traceability · 1 package helper(s)
 
-    AI SDLC commit preparation workflow. Use when an AI assistant is asked to commit repository changes, prepare an auditable commit message, stage files safely, include SDD traceability, verify branch/spec alignment, or verify the working tree before committing. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
+    Prepare and create a safe AI SDLC commit by reviewing the branch and working tree, staging only related files, validating SDD evidence, using a valid Conventional Commit message, and reporting post-commit traceability.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-commit-prep/SKILL.md)
+    **Output:** Safe staged set, validated commit readiness, conventional commit message, and post-commit traceability
+
+    [Open the complete guide →](skills/ai-sdlc-commit-prep.md)
 
 -   **`ai-sdlc-conventional-commit`**
 
-    `core`
+    `core` · Commit message drafting · 1 package helper(s)
 
-    AI SDLC Conventional Commit workflow. Use when an AI assistant drafts, validates, reviews, or fixes commit messages in this repository, especially when commits must include SDD spec references, validation summaries, or safe conventional commit subjects. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
+    Draft, validate, or repair an AI SDLC commit message that uses Conventional Commit syntax and includes SDD, business, implementation, testing, and validation traceability when the change is medium or large.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-conventional-commit/SKILL.md)
+    **Output:** Conventional Commit subject/body with traceability and validation summary
+
+    [Open the complete guide →](skills/ai-sdlc-conventional-commit.md)
 
 -   **`ai-sdlc-delivery-graph`**
 
-    `core`
+    `core` · Traceability and readiness · 2 package helper(s)
 
-    AI SDLC repository delivery-graph and evidence-freshness workflow. Use when an AI assistant needs to index lifecycle traceability, resolve end-to-end paths, report gaps or orphans, register evidence identity, propagate stale dependencies, or calculate fresh evidence coverage. Supports `--quick-flow` for deterministic local analysis and `--full-flow` for strict trace and evidence review.
+    Build a deterministic repository-wide lifecycle graph and answer trace, gap, coverage, and orphan questions from stable evidence anchors.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-delivery-graph/SKILL.md)
+    **Output:** complete `_ai_sdlc/delivery-graph.toon` for agents, plus `_ai_sdlc/delivery-graph.json` for schema/interoperability and `_ai_sdlc/delivery-graph.md` for human review when `--write` is requested
+
+    [Open the complete guide →](skills/ai-sdlc-delivery-graph.md)
 
 -   **`ai-sdlc-delivery-handoff-review`**
 
-    `core`
+    `core` · Engineering handoff quality gate · 1 package helper(s)
 
-    Use after story and spec synthesis to perform a strict delivery handoff review, identify remaining gaps or contradictions, and score readiness for engineering and cross-functional execution. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Run the final quality gate on the delivery package before it is treated as ready for implementation planning or handoff.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-delivery-handoff-review/SKILL.md)
+    **Output:** Handoff readiness score, remaining blockers, contradictions, and execution risks
+
+    [Open the complete guide →](skills/ai-sdlc-delivery-handoff-review.md)
 
 -   **`ai-sdlc-delivery-package-gap-review`**
 
-    `core`
+    `core` · Pre-delivery gap review · 1 package helper(s)
 
-    Use when a PRFAQ, BRD, or equivalent discovery package exists and you need to review it for delivery gaps, contradictions, missing business rules, and insufficient implementation handoff detail before writing user stories or specs. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Review an upstream discovery package and decide whether it is specific enough to decompose into delivery artifacts.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-delivery-package-gap-review/SKILL.md)
+    **Output:** Delivery gaps, contradictions, missing business rules, and handoff blockers
+
+    [Open the complete guide →](skills/ai-sdlc-delivery-package-gap-review.md)
 
 -   **`ai-sdlc-delivery-spec-synthesis`**
 
-    `core`
+    `core` · Delivery specification · 1 package helper(s)
 
-    Use when stories and clarified delivery context are ready and you need to produce a structured delivery specification that engineering and cross-functional teams can use for implementation planning and handoff. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Convert the clarified package and story set into a structured delivery specification.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-delivery-spec-synthesis/SKILL.md)
+    **Output:** Structured delivery specification for engineering and cross-functional planning
+
+    [Open the complete guide →](skills/ai-sdlc-delivery-spec-synthesis.md)
 
 -   **`ai-sdlc-doctor`**
 
-    `core`
+    `core` · Installation and upgrade operations · 1 package helper(s)
 
-    AI SDLC installation diagnostics and safe upgrade planning. Use when an AI assistant needs to inspect harness prerequisites, repository layout, module and skill registration, detect actionable installation problems, compare versioned file inventories, preview additions/modifications/removals/schema migrations, or produce backup and rollback plans without applying an upgrade. Supports `--quick-flow` and `--full-flow`.
+    Explain installation health and upgrade impact before mutation.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-doctor/SKILL.md)
+    **Output:** `_ai_sdlc/doctor/report.{toon,json,md}` or `_ai_sdlc/upgrades/<id>/plan.{toon,json,md}`
+
+    [Open the complete guide →](skills/ai-sdlc-doctor.md)
 
 -   **`ai-sdlc-evidence-council`**
 
-    `evidence-council`
+    `evidence-council` · Cross-lifecycle high-impact review · 1 package helper(s)
 
-    Optional AI SDLC evidence-council workflow. Use when an AI assistant needs to review a high-impact topic through several explicit perspectives, orchestrate simulated lenses or truly independent reviewer executions, and synthesize evidence-backed agreements, conflicts, proposals, owners, and unresolved questions without allowing panel members to rewrite authoritative artifacts. Supports `--quick-flow` for labeled simulated review and `--full-flow` for stricter panel and evidence coverage.
+    Combine multiple evidence perspectives while preserving authority.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-evidence-council/SKILL.md)
+    **Output:** `evidence-council.md` and `_ai_sdlc/evidence-council.toon`
+
+    [Open the complete guide →](skills/ai-sdlc-evidence-council.md)
 
 -   **`ai-sdlc-goal-capability-and-epic-mapping`**
 
-    `core`
+    `core` · Planning architecture · 1 package helper(s)
 
-    Use when planning inputs are clear enough and you need to map business goals, roles, capabilities, and outcome-oriented epics before detailed backlog decomposition. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Turn a clarified initiative package into a structured planning model of goals, roles, capabilities, and epics.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-goal-capability-and-epic-mapping/SKILL.md)
+    **Output:** Goal-to-capability map and outcome-oriented epics
+
+    [Open the complete guide →](skills/ai-sdlc-goal-capability-and-epic-mapping.md)
 
 -   **`ai-sdlc-host-adapter`**
 
-    `core`
+    `core` · Portable execution handoff · 1 package helper(s)
 
-    AI SDLC host adapter and capability negotiation workflow. Use when an AI assistant needs to validate a host adapter manifest, map portable workflow operations to host-native operations, negotiate capabilities and limits, select deterministic semantic-preserving fallbacks, or explain why a host cannot run a plan. Supports `--quick-flow` and `--full-flow`.
+    Preserve workflow semantics across hosts with explicit mappings and safe fallbacks.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-host-adapter/SKILL.md)
+    **Output:** `_ai_sdlc/adapters/<adapter-id>/negotiation.{toon,json,md}`
+
+    [Open the complete guide →](skills/ai-sdlc-host-adapter.md)
 
 -   **`ai-sdlc-navigator`**
 
-    `core`
+    `core` · Cross-lifecycle navigation · 1 package helper(s)
 
-    AI SDLC context-aware navigation workflow. Use when an AI assistant needs to determine what to do next, select the right installed skill, start or resume a feature, explain blockers, inspect available capabilities, or provide evidence-backed required and optional next actions from repository state. Supports `--quick-flow` for compact guidance and `--full-flow` for stricter context verification.
+    Inspect compact repository control records and recommend one ranked required action plus relevant optional actions with reasons, exact invocations, expected artifacts, and blockers.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-navigator/SKILL.md)
+    **Output:** Read-only Markdown or TOON navigation report
+
+    [Open the complete guide →](skills/ai-sdlc-navigator.md)
 
 -   **`ai-sdlc-package-trust`**
 
-    `core`
+    `core` · Package trust and local observability · 2 package helper(s)
 
-    AI SDLC package trust and privacy-preserving local metrics workflow. Use when an AI assistant needs to verify package origin, file integrity, harness compatibility, declared capabilities, provenance evidence, or generate reproducible aggregate run, retry, budget, coverage, and freshness metrics without collecting source, prompts, commands, or diffs. Supports `--quick-flow` and `--full-flow`.
+    Fail closed on untrusted packages and measure delivery without content collection.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-package-trust/SKILL.md)
+    **Output:** `_ai_sdlc/trust/<package-id>/decision.{toon,json,md}` or `_ai_sdlc/metrics/local.{toon,json,md}`
+
+    [Open the complete guide →](skills/ai-sdlc-package-trust.md)
 
 -   **`ai-sdlc-policy`**
 
-    `core`
+    `core` · Governance and control evaluation · 1 package helper(s)
 
-    AI SDLC versioned policy-as-code workflow. Use when an AI assistant needs to resolve layered delivery policy, evaluate an action with explainable rules and gates, protect organization minimums from weaker overrides, apply or reject an expiring waiver, or select a reusable assurance profile. Supports `--quick-flow` for deterministic evaluation and `--full-flow` for strict owner and exception review.
+    Resolve policy layers with provenance and evaluate actions against protected, versioned, waiver-aware rules.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-policy/SKILL.md)
+    **Output:** `_ai_sdlc/policy-resolution.{toon,json}` or fingerprint-addressed TOON/JSON records below `_ai_sdlc/policy-decisions/` when `--write` is requested
+
+    [Open the complete guide →](skills/ai-sdlc-policy.md)
 
 -   **`ai-sdlc-prfaq-package-synthesis`**
 
-    `core`
+    `core` · PRFAQ / business requirements synthesis · 1 package helper(s)
 
-    Use when working-backwards discovery is complete and you need to synthesize a PRFAQ, FAQ package, and business requirements document tied to business value, scenarios, and testable acceptance logic. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Convert validated discovery notes into a decision-ready PRFAQ package and business requirements document.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-prfaq-package-synthesis/SKILL.md)
+    **Output:** PRFAQ, FAQ package, and BRD-style requirements summary
+
+    [Open the complete guide →](skills/ai-sdlc-prfaq-package-synthesis.md)
 
 -   **`ai-sdlc-project-context`**
 
-    `core`
+    `core` · Cross-feature repository context · 2 package helper(s)
 
-    AI SDLC evidence-backed project context and bounded task-pack workflow. Use when an AI assistant needs to onboard to a repository, detect stack and commands, map ownership and test topology, check context drift, conditionally select task sources, exclude secrets, or allocate a freshness-aware context pack within an explicit token budget. Supports `--quick-flow` for focused evidence and `--full-flow` for stricter repository coverage.
+    Generate durable repository memory and task-specific, bounded, freshness-aware context from explained safe sources.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-project-context/SKILL.md)
+    **Output:** `project-context.md`, `_ai_sdlc/project-context.toon`, and optional topology and task-pack records below `_ai_sdlc/context/`
+
+    [Open the complete guide →](skills/ai-sdlc-project-context.md)
 
 -   **`ai-sdlc-qa`**
 
-    `core`
+    `core` · QA planning and refinement · 1 package helper(s)
 
-    AI SDLC QA workflow. Use when an AI assistant is asked for QA planning, acceptance validation, regression scope, exploratory checks, smoke tests, release verification, or change-focused manual validation evidence. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Produce QA acceptance, regression, manual-check, and signoff evidence for AI SDLC changes and place QA refinement artifacts under `specs-refiniment/<feature-name>/<file.md>` when writing files.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-qa/SKILL.md)
+    **Output:** QA acceptance plan, regression targets, manual checks, validation evidence, and residual risks
+
+    [Open the complete guide →](skills/ai-sdlc-qa.md)
 
 -   **`ai-sdlc-qa-requirements-gap-review`**
 
-    `core`
+    `core` · Pre-QA requirements review · 1 package helper(s)
 
-    Use when stories, specs, BRDs, APIs, workflows, or equivalent delivery artifacts exist and you need to review them for testability, missing business rules, unclear behavior, scope ambiguity, and QA blocking gaps before generating tests. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Review the incoming delivery package and determine whether it is specific enough to support rigorous test design.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-qa-requirements-gap-review/SKILL.md)
+    **Output:** QA-blocking gaps, missing business rules, ambiguity, and testability risks
+
+    [Open the complete guide →](skills/ai-sdlc-qa-requirements-gap-review.md)
 
 -   **`ai-sdlc-qa-traceability-and-readiness-review`**
 
-    `core`
+    `core` · QA execution readiness gate · 1 package helper(s)
 
-    Use after QA strategy and test-case synthesis to build the requirements-to-test traceability matrix, identify missing coverage and test blockers, and score readiness for QA execution. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Run the final QA gate on the generated test pack before execution starts.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-qa-traceability-and-readiness-review/SKILL.md)
+    **Output:** Requirements-to-test traceability matrix, coverage gaps, blockers, and readiness score
+
+    [Open the complete guide →](skills/ai-sdlc-qa-traceability-and-readiness-review.md)
 
 -   **`ai-sdlc-quality-lenses`**
 
-    `core`
+    `core` · Cross-lifecycle quality review · 1 package helper(s)
 
-    AI SDLC reusable quality-lens workflow. Use when an AI assistant needs to challenge a requirement, design, plan, test strategy, change, or delivery artifact through pre-mortem, adversarial, edge-case, stakeholder-conflict, reversibility, abuse-case, operational-failure, or assumption lenses and finalize evidence-backed findings with ownership and traceability. Supports `--quick-flow` for selected high-value lenses and `--full-flow` for the complete applicable registry.
+    Apply reusable challenge lenses and finalize evidence-backed findings.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-quality-lenses/SKILL.md)
+    **Output:** `quality-lens-report.md` and `_ai_sdlc/quality-lens-report.toon`
+
+    [Open the complete guide →](skills/ai-sdlc-quality-lenses.md)
 
 -   **`ai-sdlc-release-slicing-and-backlog-readiness-review`**
 
-    `core`
+    `core` · Release planning / backlog readiness · 1 package helper(s)
 
-    Use after backlog decomposition to define prioritization, MVP and release slices, sequencing, readiness, traceability, and JIRA-ready outputs, then score backlog quality for planning and estimation. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Run the final planning gate on the backlog package before estimation, roadmap slicing, or execution planning.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-release-slicing-and-backlog-readiness-review/SKILL.md)
+    **Output:** MVP/release slices, sequencing, readiness score, and planning risks
+
+    [Open the complete guide →](skills/ai-sdlc-release-slicing-and-backlog-readiness-review.md)
 
 -   **`ai-sdlc-requirements-readiness-review`**
 
-    `core`
+    `core` · Requirements quality gate · 1 package helper(s)
 
-    Use after PRFAQ and BRD creation to run a strict final quality review, identify gaps or contradictions, and assign a readiness score before design or development starts. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Run the final gate on a PRFAQ package and business requirements document before they are treated as ready for alignment or handoff.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-requirements-readiness-review/SKILL.md)
+    **Output:** Readiness score, blockers, contradictions, and required clarifications before design or development
+
+    [Open the complete guide →](skills/ai-sdlc-requirements-readiness-review.md)
 
 -   **`ai-sdlc-research`**
 
-    `research`
+    `research` · Discovery, refinement, and design evidence · 1 package helper(s)
 
-    Optional AI SDLC research workflow. Use when an AI assistant needs to investigate a customer, market, domain, technology, regulation, competitor, operational question, or implementation uncertainty and produce a routed source inventory plus synthesized findings with confidence, limitations, open questions, and delivery trace targets. Supports `--quick-flow` for focused evidence and `--full-flow` for multi-source and source-diversity gates.
+    Preserve questions, sources, findings, confidence, and limitations.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-research/SKILL.md)
+    **Output:** `research.md` and `_ai_sdlc/research.toon`
+
+    [Open the complete guide →](skills/ai-sdlc-research.md)
 
 -   **`ai-sdlc-retrospective`**
 
-    `core`
+    `core` · Post-delivery learning · 1 package helper(s)
 
-    AI SDLC evidence-backed retrospective workflow. Use when delivery work is complete or paused and an AI assistant needs to capture observations, connect them to validation or artifact evidence, formulate reviewable process or policy improvement proposals, assign ownership, and preserve the rule that policy changes require an accepted decision. Supports `--quick-flow` for focused learning and `--full-flow` for strict evidence and decision gates.
+    Separate evidence-backed observations from governed improvements.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-retrospective/SKILL.md)
+    **Output:** `retrospective.md` and `_ai_sdlc/retrospective.toon`
+
+    [Open the complete guide →](skills/ai-sdlc-retrospective.md)
 
 -   **`ai-sdlc-runtime`**
 
-    `core`
+    `core` · Controlled execution · 1 package helper(s)
 
-    AI SDLC resumable task-runtime workflow. Use when an AI assistant needs to start or resume a versioned delivery run, select dependency-ready work, enforce step, failure, and token budgets, retry safely, persist exact stop reasons, recover state from an append-only journal, or require commit evidence at task boundaries. Supports `--quick-flow` for deterministic local runs and `--full-flow` for strict transition review.
+    Persist task selection and outcomes so interrupted delivery can resume without duplicate work or unsupported completion claims.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-runtime/SKILL.md)
+    **Output:** `_ai_sdlc/runs/<run-id>/journal.jsonl`, exact `state.json`, and complete token-efficient `state.toon`
+
+    [Open the complete guide →](skills/ai-sdlc-runtime.md)
 
 -   **`ai-sdlc-sdd`**
 
-    `core`
+    `core` · Repository SDD workflow · 11 package helper(s)
 
-    AI SDLC repository spec-driven development workflow. Use when an AI assistant receives a medium or large feature, refactor, API change, architecture change, provider integration change, or any request that must follow requirements, design, test cases, QA planning, tasks, implementation, and validation. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
+    Create, update, validate, and enforce the AI SDLC SDD package for medium and large changes before implementation expands.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-sdd/SKILL.md)
+    **Output:** SDD package, Markdown execution plan, TOON machine plan, validation status, task alignment, and implementation handoff
+
+    [Open the complete guide →](skills/ai-sdlc-sdd.md)
 
 -   **`ai-sdlc-security-testing`**
 
-    `core`
+    `core` · Security review / abuse-case validation · 1 package helper(s)
 
-    AI SDLC security testing workflow. Use when an AI assistant is asked for OWASP review, security testing, abuse-case analysis, authz/authn review, input validation review, secret exposure review, or security-focused validation of a diff, endpoint, workflow, or subsystem. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
+    Review AI SDLC diffs, endpoints, workflows, provider integrations, and configs for concrete security findings, abuse paths, trust-boundary failures, and missing security validation. When the output makes OWASP- or standards-based claims, verify them against current primary sources before presenting them as authoritative guidance.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-security-testing/SKILL.md)
+    **Output:** Security findings, trust-boundary analysis, standards-backed notes, validation gaps, and fixes
+
+    [Open the complete guide →](skills/ai-sdlc-security-testing.md)
 
 -   **`ai-sdlc-shared-runtime`**
 
-    `core`
+    `core` · Installation and cross-lifecycle runtime support · 17 package helper(s)
 
-    Portable AI SDLC shared-helper runtime. Use when an AI assistant installs, verifies, diagnoses, or repairs project-scoped AI SDLC skills whose deterministic scripts depend on shared state, artifact, context, path, TOON, migration, or index modules. This is an installation dependency, not a lifecycle entry point.
+    Make the deterministic shared Python runtime portable when Skills CLI installs individual skill directories without the source-only `skills/_shared/` directory.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-shared-runtime/SKILL.md)
+    **Output:** Read-only runtime verification or an explicit installation blocker
+
+    [Open the complete guide →](skills/ai-sdlc-shared-runtime.md)
 
 -   **`ai-sdlc-test-case-and-suite-synthesis`**
 
-    `core`
+    `core` · Detailed test design · 1 package helper(s)
 
-    Use when QA scope and strategy are defined and you need to generate detailed, executable test cases plus smoke, regression, and user acceptance suites tied to requirements, roles, workflows, and risks. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Generate the detailed QA artifacts used for structured execution.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-test-case-and-suite-synthesis/SKILL.md)
+    **Output:** Executable test cases plus smoke, regression, and UAT suites
+
+    [Open the complete guide →](skills/ai-sdlc-test-case-and-suite-synthesis.md)
 
 -   **`ai-sdlc-test-cases`**
 
-    `core`
+    `core` · Implementation test design · 1 package helper(s)
 
-    AI SDLC test-case-driven testing workflow. Use when an AI assistant is asked to derive test cases, create a test plan, expand coverage, or write tests from explicit scenarios before implementing unit, service, transport, or integration tests. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Derive executable AI SDLC test scenarios from requirements or delivery context and place QA refinement artifacts under `specs-refiniment/<feature-name>/<file.md>` when writing files.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-test-cases/SKILL.md)
+    **Output:** Scenario matrix with requirement refs, verifiable outcomes, automation paths, and execution order
+
+    [Open the complete guide →](skills/ai-sdlc-test-cases.md)
 
 -   **`ai-sdlc-test-scope-and-strategy-design`**
 
-    `core`
+    `core` · QA strategy · 1 package helper(s)
 
-    Use when requirements are testable enough and you need to define QA scope, coverage priorities, test strategy, suite intent, test data needs, environment dependencies, and risk-based execution focus. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Turn a clarified delivery package into a structured QA scope and strategy.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-test-scope-and-strategy-design/SKILL.md)
+    **Output:** QA scope, coverage priorities, suite strategy, data needs, and risk-based execution plan
+
+    [Open the complete guide →](skills/ai-sdlc-test-scope-and-strategy-design.md)
 
 -   **`ai-sdlc-user-story-decomposition`**
 
-    `core`
+    `core` · Story decomposition · 1 package helper(s)
 
-    Use when the delivery gap review is complete and you need to convert a clarified initiative package into epics, user stories, acceptance criteria, scenario coverage, and priority signals tied to business value. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Turn a clarified delivery package into implementable, actor-based user stories with acceptance logic and scenario coverage.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-user-story-decomposition/SKILL.md)
+    **Output:** Epics, user stories, acceptance criteria, scenario coverage, and priority signals
+
+    [Open the complete guide →](skills/ai-sdlc-user-story-decomposition.md)
 
 -   **`ai-sdlc-ux`**
 
-    `ux`
+    `ux` · Discovery, refinement, and design · 1 package helper(s)
 
-    Optional AI SDLC user-experience workflow. Use when an AI assistant needs to define actors, goals, user journeys, interaction steps, loading/empty/error/success states, recovery behavior, content intent, accessibility requirements, or UX acceptance evidence and route them into traceable human and machine artifacts. Supports `--quick-flow` for a focused journey slice and `--full-flow` for strict state, accessibility, and acceptance coverage.
+    Preserve testable journeys, states, recovery, and accessibility.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-ux/SKILL.md)
+    **Output:** `ux-spec.md` and `_ai_sdlc/ux-spec.toon`
+
+    [Open the complete guide →](skills/ai-sdlc-ux.md)
 
 -   **`ai-sdlc-validation`**
 
-    `core`
+    `core` · Implementation validation · 1 package helper(s)
 
-    AI SDLC backend validation workflow. Use when an AI assistant needs to validate Go, SQL, API, provider integration, SDD, or documentation changes in this repository and choose focused deterministic checks without running unrelated expensive tests by default. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
+    Select, run, and report focused deterministic validation checks for AI SDLC code, SQL, API, provider, SDD, documentation, and tool-governance changes.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-validation/SKILL.md)
+    **Output:** Focused validation commands, outcomes, coverage notes, and residual risk
+
+    [Open the complete guide →](skills/ai-sdlc-validation.md)
 
 -   **`ai-sdlc-workflow`**
 
-    `core`
+    `core` · Controlled execution planning · 1 package helper(s)
 
-    AI SDLC declarative workflow planning. Use when an AI assistant needs to validate a versioned workflow, plan typed dependency steps, evaluate bounded conditions, enforce approval gates, attach deterministic hooks, detect cycles, or create safe dependency waves with sequential fallback when host concurrency or isolation is unavailable. Supports `--quick-flow` and `--full-flow`.
+    Compile portable workflow intent into deterministic, gated, host-safe waves.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-workflow/SKILL.md)
+    **Output:** `_ai_sdlc/workflows/<workflow-id>/plan.{toon,json,md}`
+
+    [Open the complete guide →](skills/ai-sdlc-workflow.md)
 
 -   **`ai-sdlc-working-backwards-discovery`**
 
-    `core`
+    `core` · Discovery / initiative framing · 1 package helper(s)
 
-    Use when a user needs a staged working-backwards interview to clarify the customer problem, audience, value proposition, business case, MVP, requirements, risks, and success metrics before any PRFAQ is written. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
+    Run the discovery interview that turns an initiative idea into a structured, business-grounded definition.
 
-    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-working-backwards-discovery/SKILL.md)
+    **Output:** Structured discovery notes, clarified assumptions, open questions, and PRFAQ-ready facts
+
+    [Open the complete guide →](skills/ai-sdlc-working-backwards-discovery.md)
 
 </div>
+
+Need an executable helper rather than a lifecycle guide? Use the [complete script reference](scripts.md).

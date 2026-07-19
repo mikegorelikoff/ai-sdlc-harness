@@ -165,7 +165,8 @@ at that stage and reuse valid upstream evidence.
 - [Onboarding](docs/onboarding/index.md): guided first use and persona paths.
 - [Tutorials](docs/tutorials/index.md): learn by completing delivery journeys.
 - [Workflow map](docs/reference/workflow-map.md): lifecycle stages and handoffs.
-- [Skill catalog](docs/reference/skills.md): all installed capabilities.
+- [Skill catalog](docs/reference/skills.md): complete operating guides for all installed capabilities.
+- [Script catalog](docs/reference/scripts.md): every helper path, safe starting point, repository effect, and generated-mirror boundary.
 - [How-to guides](docs/how-to/index.md): bounded operational procedures.
 - [Reference](docs/reference/index.md): paths, flags, schemas, and validation.
 

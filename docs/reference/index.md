@@ -10,7 +10,8 @@ Reference pages state the contracts precisely. Use them while configuring automa
 <div class="grid cards" markdown>
 
 - [**Workflow map**](workflow-map.md) — lifecycle stages, entry points, and artifacts.
-- [**Skill catalog**](skills.md) — every installed skill and authoritative package.
+- [**Skill catalog**](skills.md) — every installed capability and its complete human-facing operating guide.
+- [**Script catalog**](scripts.md) — every helper, runner, packaging utility, and installed runtime mirror with safe starting point and repository effect.
 - [**Module catalog**](modules.md) — optional capability groups and compatibility.
 - [**Artifact routing**](artifact-routing.md) — canonical paths by work type.
 - [**Flow flags**](flow-flags.md) — exact quick/full execution semantics.
@@ -22,5 +23,10 @@ Reference pages state the contracts precisely. Use them while configuring automa
 - [**Release 1.1 audit**](release-1.1.md) — task-to-commit and validation evidence.
 
 </div>
+
+The generated [coverage manifest](catalog-coverage.toon) closes the current
+44-skill and 106-script source inventories against their documentation. It is
+TOON because agents consume it for drift checks; the Markdown catalogs remain
+the human navigation surface.
 
 For rationale, use [Explanation](../explanation/index.md). For a bounded procedure, use [How-to guides](../how-to/index.md).

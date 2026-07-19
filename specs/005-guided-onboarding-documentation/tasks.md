@@ -66,7 +66,7 @@ artifact_metadata:
   Output: Copyable small-change and full-feature walkthroughs, explicit prompts/terminal actions/expected artifacts/checkpoints/recovery, all 18 refinement stages, implementation/control-plane journeys, entry/exit/reopen matrices, decision tree, navigation, tests, and one focused commit.
   Refs: AC-004, AC-005, AC-006, AC-009, AC-012, AC-018
   Depends on: T003
-- [ ] T005. Generate complete human-facing skill and script documentation.
+- [x] T005. Generate complete human-facing skill and script documentation.
   Output: Enhanced deterministic catalog generator, inventory-complete per-skill guides, complete in-scope script inventory, coverage manifest, required detail fields, navigation/discovery surfaces, parser/render/coverage tests, and one focused commit.
   Refs: AC-007, AC-008, AC-014, AC-015, AC-018
   Depends on: T004

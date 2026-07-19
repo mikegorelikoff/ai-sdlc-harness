@@ -155,6 +155,52 @@ nav:
       - Overview: reference/index.md
       - Workflow map: reference/workflow-map.md
       - Skill catalog: reference/skills.md
+      - Skill guides:
+          - Approvals and sandbox: reference/skills/ai-sdlc-approvals-sandbox.md
+          - Architecture: reference/skills/ai-sdlc-architecture.md
+          - Business analysis: reference/skills/ai-sdlc-ba.md
+          - Backlog decomposition: reference/skills/ai-sdlc-backlog-decomposition-and-task-planning.md
+          - Backlog gap review: reference/skills/ai-sdlc-backlog-requirements-gap-review.md
+          - Branching: reference/skills/ai-sdlc-branching.md
+          - Change impact: reference/skills/ai-sdlc-change-impact.md
+          - Change set: reference/skills/ai-sdlc-change-set.md
+          - Code review: reference/skills/ai-sdlc-code-review.md
+          - Commit preparation: reference/skills/ai-sdlc-commit-prep.md
+          - Conventional commit: reference/skills/ai-sdlc-conventional-commit.md
+          - Delivery graph: reference/skills/ai-sdlc-delivery-graph.md
+          - Delivery handoff review: reference/skills/ai-sdlc-delivery-handoff-review.md
+          - Delivery package gap review: reference/skills/ai-sdlc-delivery-package-gap-review.md
+          - Delivery spec synthesis: reference/skills/ai-sdlc-delivery-spec-synthesis.md
+          - Doctor and upgrade: reference/skills/ai-sdlc-doctor.md
+          - Evidence council: reference/skills/ai-sdlc-evidence-council.md
+          - Goal capability and epic mapping: reference/skills/ai-sdlc-goal-capability-and-epic-mapping.md
+          - Host adapter: reference/skills/ai-sdlc-host-adapter.md
+          - Navigator: reference/skills/ai-sdlc-navigator.md
+          - Package trust and metrics: reference/skills/ai-sdlc-package-trust.md
+          - Policy: reference/skills/ai-sdlc-policy.md
+          - PRFAQ package synthesis: reference/skills/ai-sdlc-prfaq-package-synthesis.md
+          - Project context: reference/skills/ai-sdlc-project-context.md
+          - QA planning: reference/skills/ai-sdlc-qa.md
+          - QA requirements gap review: reference/skills/ai-sdlc-qa-requirements-gap-review.md
+          - QA traceability and readiness: reference/skills/ai-sdlc-qa-traceability-and-readiness-review.md
+          - Quality lenses: reference/skills/ai-sdlc-quality-lenses.md
+          - Release slicing and backlog readiness: reference/skills/ai-sdlc-release-slicing-and-backlog-readiness-review.md
+          - Requirements readiness: reference/skills/ai-sdlc-requirements-readiness-review.md
+          - Research: reference/skills/ai-sdlc-research.md
+          - Retrospective: reference/skills/ai-sdlc-retrospective.md
+          - Runtime: reference/skills/ai-sdlc-runtime.md
+          - Spec-driven development: reference/skills/ai-sdlc-sdd.md
+          - Security testing: reference/skills/ai-sdlc-security-testing.md
+          - Shared runtime: reference/skills/ai-sdlc-shared-runtime.md
+          - Test suite synthesis: reference/skills/ai-sdlc-test-case-and-suite-synthesis.md
+          - Test cases: reference/skills/ai-sdlc-test-cases.md
+          - Test strategy: reference/skills/ai-sdlc-test-scope-and-strategy-design.md
+          - User story decomposition: reference/skills/ai-sdlc-user-story-decomposition.md
+          - UX: reference/skills/ai-sdlc-ux.md
+          - Validation: reference/skills/ai-sdlc-validation.md
+          - Workflow: reference/skills/ai-sdlc-workflow.md
+          - Working-backwards discovery: reference/skills/ai-sdlc-working-backwards-discovery.md
+      - Script catalog: reference/scripts.md
       - Module catalog: reference/modules.md
       - Artifact routing: reference/artifact-routing.md
       - Flow flags: reference/flow-flags.md
