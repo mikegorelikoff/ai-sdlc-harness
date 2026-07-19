@@ -35,6 +35,7 @@ artifact_metadata:
   related_artifacts:
     - "specs/005-guided-onboarding-documentation/decision-log.md"
     - "specs/005-guided-onboarding-documentation/design.md"
+    - "specs/005-guided-onboarding-documentation/plan.md"
     - "specs/005-guided-onboarding-documentation/qa.md"
     - "specs/005-guided-onboarding-documentation/requirements.md"
     - "specs/005-guided-onboarding-documentation/test-cases.md"
@@ -53,7 +54,7 @@ artifact_metadata:
 - [x] T001. Define the guided onboarding documentation program and persona acceptance gates.
   Output: Complete SDD package, accepted information architecture, persona findings, generated plan/indexes, focused validation, and one planning commit.
   Refs: AC-001, AC-002, AC-014, AC-016, AC-018
-- [ ] T002. Build the beginner-first foundations and first-use path.
+- [x] T002. Build the beginner-first foundations and first-use path.
   Output: Canonical product story and naming, AI SDLC/SDD foundations, fit/non-fit, mental model, responsibilities, glossary, canonical install/verification, first 30 minutes, action labels, Home/README/Start integration, navigation, tests, and one focused commit.
   Refs: AC-001, AC-002, AC-003, AC-009, AC-013, AC-017, AC-018
   Depends-On: T001

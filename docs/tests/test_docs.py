@@ -16,6 +16,7 @@ from validate_docs import (  # noqa: E402
     parse_frontmatter,
     validate_links,
     validate_navigation,
+    validate_onboarding,
 )
 
 
@@ -68,6 +69,42 @@ class DocumentationValidationTests(unittest.TestCase):
             pages = [Page(page_path, {"title": "Home", "description": "Home"}, "Body")]
             errors = validate_navigation(pages, docs, config)
             self.assertTrue(any("duplicate pages" in error for error in errors))
+
+    def test_onboarding_rejects_nonexistent_installer(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            docs = root / "docs"
+            for relative in (
+                "foundations/index.md",
+                "foundations/ai-sdlc.md",
+                "foundations/sdd.md",
+                "foundations/why-harness.md",
+                "foundations/mental-model.md",
+                "foundations/responsibilities.md",
+                "foundations/glossary.md",
+                "onboarding/index.md",
+                "onboarding/first-30-minutes.md",
+                "index.md",
+                "how-to/install.md",
+            ):
+                path = docs / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(
+                    "software development lifecycle AI SDLC spec-driven development artifact evidence gate handoff "
+                    "Tell your agent Run in terminal Agent does automatically Human checkpoint",
+                    encoding="utf-8",
+                )
+            (root / "README.md").write_text("./scripts/install.sh\n", encoding="utf-8")
+            errors = validate_onboarding(root)
+            self.assertTrue(any("nonexistent scripts/install.sh" in error for error in errors))
+
+    def test_onboarding_requires_foundation_pages(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "docs").mkdir()
+            (root / "README.md").write_text("AI SDLC Harness", encoding="utf-8")
+            errors = validate_onboarding(root)
+            self.assertTrue(any("missing foundation/onboarding pages" in error for error in errors))
 
 
 if __name__ == "__main__":

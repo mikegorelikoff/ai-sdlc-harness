@@ -22,6 +22,27 @@ REQUIRED_FILES = {
 MODE_MINIMUMS = {"tutorials": 4, "how-to": 13, "explanation": 13, "reference": 10}
 GENERATED_PAGES = {"reference/skills.md", "reference/modules.md"}
 LEGACY_TOKENS = ("{%", "{{", "relative_url", "jekyll-build-pages", "layout: default")
+FOUNDATION_PAGES = {
+    "foundations/index.md",
+    "foundations/ai-sdlc.md",
+    "foundations/sdd.md",
+    "foundations/why-harness.md",
+    "foundations/mental-model.md",
+    "foundations/responsibilities.md",
+    "foundations/glossary.md",
+    "onboarding/index.md",
+    "onboarding/first-30-minutes.md",
+}
+BEGINNER_TERMS = (
+    "software development lifecycle",
+    "AI SDLC",
+    "spec-driven development",
+    "artifact",
+    "evidence",
+    "gate",
+    "handoff",
+)
+CANONICAL_INSTALL = "npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all"
 
 
 @dataclass(frozen=True)
@@ -140,6 +161,48 @@ def validate_content(pages: list[Page], docs: Path = DOCS) -> list[str]:
     return errors
 
 
+def validate_onboarding(root: Path = ROOT) -> list[str]:
+    """Validate the beginner-first entry path and canonical install contract."""
+    errors: list[str] = []
+    docs = root / "docs"
+    missing = sorted(relative for relative in FOUNDATION_PAGES if not (docs / relative).is_file())
+    if missing:
+        errors.append("missing foundation/onboarding pages: " + ", ".join(missing))
+
+    public_sources = [root / "README.md"] + sorted(docs.rglob("*.md"))
+    for path in public_sources:
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        if "scripts/install.sh" in text:
+            errors.append(f"{display_path(path)}: references nonexistent scripts/install.sh")
+        if "AI SDLC Skill Library" in text:
+            errors.append(f"{display_path(path)}: uses non-canonical product name AI SDLC Skill Library")
+
+    for relative in ("README.md", "docs/index.md", "docs/how-to/install.md"):
+        path = root / relative
+        if not path.is_file() or CANONICAL_INSTALL not in path.read_text(encoding="utf-8"):
+            errors.append(f"{relative}: missing canonical project-scoped install command")
+
+    foundations = "\n".join(
+        (docs / relative).read_text(encoding="utf-8")
+        for relative in sorted(FOUNDATION_PAGES)
+        if (docs / relative).is_file()
+    )
+    lowered = foundations.lower()
+    for term in BEGINNER_TERMS:
+        if term.lower() not in lowered:
+            errors.append(f"foundations missing beginner definition term: {term}")
+
+    first_session = docs / "onboarding/first-30-minutes.md"
+    if first_session.is_file():
+        text = first_session.read_text(encoding="utf-8")
+        for label in ("Tell your agent", "Run in terminal", "Agent does automatically", "Human checkpoint"):
+            if label not in text:
+                errors.append(f"docs/onboarding/first-30-minutes.md: missing action label {label}")
+    return errors
+
+
 def validate_material(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     for relative in sorted(REQUIRED_FILES):
@@ -202,6 +265,7 @@ def validate(root: Path = ROOT) -> list[str]:
     errors.extend(validate_navigation(pages, docs, root / "mkdocs.yml"))
     errors.extend(validate_links(pages, docs))
     errors.extend(validate_content(pages, docs))
+    errors.extend(validate_onboarding(root))
     errors.extend(validate_material(root))
     errors.extend(validate_workflow(root))
     return errors

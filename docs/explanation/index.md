@@ -7,6 +7,9 @@ description: Understand why the harness is structured around evidence, adaptive 
 
 These pages explain the design reasoning behind the harness. Use them when you need the mental model, not a step-by-step procedure.
 
+If AI SDLC, SDD, artifacts, gates, or handoffs are new terms, begin with
+[Foundations](../foundations/index.md). Explanation pages assume that vocabulary.
+
 <div class="grid cards" markdown>
 
 - [**System model**](system-model.md) — how skills, artifacts, modules, and state fit together.
@@ -17,9 +20,11 @@ These pages explain the design reasoning behind the harness. Use them when you n
 - [**Context and quality**](context-quality.md) — how grounded context improves decisions.
 - [**Decision continuity**](decisions.md) — why decisions survive assistant and session changes.
 - [**Workflow handoffs**](handoffs.md) — how every stage leaves an actionable next step.
+- [**TOON-first artifacts**](toon-first.md) — why agents read complete token-efficient projections.
 - [**Layered configuration**](configuration.md) — how defaults stay customizable but safe.
 - [**Optional modules**](modules.md) — how capabilities compose without bloating the core.
 - [**Change and learning**](change-learning.md) — how delivery evidence supports recovery and improvement.
+- [**Controlled changes**](controlled-changes.md) — how proposals remain isolated until approved apply.
 - [**Agent portability**](agent-portability.md) — why instructions live beside the work.
 
 </div>

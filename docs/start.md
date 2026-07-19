@@ -1,60 +1,70 @@
 ---
 title: Start here
-description: Install the harness and route your first piece of work in a few deliberate steps.
+description: Choose the shortest guided path from first principles to a safe first AI SDLC workflow.
 ---
 
-The harness is a library of repository-local skills, scripts, and evidence contracts. You bring it into a project, then ask your AI assistant to use the workflow that matches the work in front of you.
+# Start here
 
-!!! tip "Adopt only what you need"
+You do not need to understand all 43 skills before using the harness. You do
+need a clear mental model, a working installation, and one bounded request.
 
-    Start with navigation, validation, or one role-specific workflow. The artifacts remain compatible as your use expands.
+## If AI SDLC or SDD is new
 
-## Install
+Read these pages in order. They take you from ordinary software delivery to the
+repository evidence loop used by the harness:
 
-1. **Clone the library.** Keep a local source checkout so updates remain explicit and reviewable.
-2. **Install into a project.** Copy the skill packages and shared runtime using the repository installer.
-3. **Ask for the next action.** Use the navigator when you know the goal but not the correct lifecycle entry point.
+1. [What is AI SDLC?](foundations/ai-sdlc.md)
+2. [What is SDD?](foundations/sdd.md)
+3. [Why use a harness?](foundations/why-harness.md)
+4. [Mental model](foundations/mental-model.md)
+5. [Human and agent responsibilities](foundations/responsibilities.md)
 
-```bash
-git clone https://github.com/mikegorelikoff/ai-sdlc-harness.git
-cd ai-sdlc-harness
-./scripts/install.sh /path/to/your-project
-```
+You are ready to install when you can explain why an AI-generated code diff is
+not, by itself, evidence that the right thing was built safely.
 
-For update modes, compatibility behavior, and installation layout, read the [complete install and update guide](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/guides/install-and-update.md).
+## If you understand the model and want to use it
 
-## Route the first request
+1. Check the [prerequisites and installation scope](how-to/install.md).
+2. Install into a disposable or low-risk consumer repository.
+3. Complete [your first 30 minutes](onboarding/first-30-minutes.md).
+4. Follow [Ship a first feature](tutorials/first-feature.md).
 
-Give your assistant a concrete request and name the navigator:
+## If you are evaluating it for a team
 
-```text
-Use ai-sdlc-navigator --quick-flow.
-I need to add organization-level SSO to this service.
-Inspect the repository context and tell me the smallest safe next action.
-```
+Begin with [fit, non-goals, and adoption questions](foundations/why-harness.md).
+Do not start with a global rollout. A decision-grade evaluation needs one team,
+one repository, one bounded change, an accountable owner, a baseline, explicit
+stop conditions, and review of the resulting evidence.
 
-The response should include detected context, a required next action, optional actions, reasons, exact commands, expected artifacts, and blockers.
+## The four action labels
 
-## Choose a flow mode
+Every guided procedure uses these labels:
 
-| Mode | Best for | Behavior |
-| --- | --- | --- |
-| `--quick-flow` | Low-risk, well-bounded work | Makes documented assumptions and runs focused checks. |
-| `--full-flow` | Ambiguous, high-risk, or signoff-sensitive work | Stops on missing decisions and verifies the complete handoff chain. |
-| Adaptive rigor | Teams using policy profiles | Explains risk factors and selects patch, standard, assured, or regulated controls. |
+!!! example "Tell your agent"
 
-Explicit quick or full flow always wins over automatic selection. Organization minimums can raise rigor, but customization cannot silently weaken protected gates.
+    Natural-language instructions belong in the conversation with your AI
+    assistant. A skill name in this block is not a shell command.
 
-## Pick a direct entry point
+!!! terminal "Run in terminal"
 
-You can skip navigation when the need is already clear:
+    These commands run in a shell. Check the stated working directory first.
 
-- Product discovery: `ai-sdlc-working-backwards-discovery`
-- Requirements and design: `ai-sdlc-sdd`
-- Test design: `ai-sdlc-test-cases`
-- QA acceptance: `ai-sdlc-qa`
-- Change validation: `ai-sdlc-validation`
-- Review: `ai-sdlc-code-review`
-- Commit preparation: `ai-sdlc-commit-prep`
+!!! info "Agent does automatically"
 
-Next, see how these entry points connect in the [workflow map](reference/workflow-map.md).
+    The selected skill tells the agent which deterministic helpers and reads it
+    should perform. You normally do not need to copy those internal commands.
+
+!!! warning "Human checkpoint"
+
+    Stop and review. The agent may present evidence and options, but a person
+    owns the decision, approval, exception, or risk acceptance.
+
+## The safest default
+
+When you know the outcome but not the workflow, tell the agent to use
+`ai-sdlc-navigator --quick-flow`. The navigator is read-only: it should inspect
+evidence and recommend one required action rather than mutate the project.
+
+When observable behavior or architecture will change, use SDD before code. When
+the request is only a review, validation, or recovery task, enter directly at
+that stage and reuse valid upstream evidence.

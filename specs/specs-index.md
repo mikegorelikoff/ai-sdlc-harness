@@ -1,18 +1,18 @@
 # Specs Index
 
 - Workspace: `implementation`
-- Root: `specs`
+- Root: `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs`
 - Updated: `2026-07-19`
 
 ## Feature Summary
 
 | Feature | Current Stage | Active Skill | Flow | Artifacts | Decision Log | State | Tags |
 | --- | --- | --- | --- | ---: | --- | --- | --- |
-| 001-adaptive-harness-roadmap | sdd | - | quick | 7 | `specs/001-adaptive-harness-roadmap/decision-log.md` | `specs/001-adaptive-harness-roadmap/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated |
-| 002-github-pages-docs | code_review | - | quick | 9 | `specs/002-github-pages-docs/decision-log.md` | `specs/002-github-pages-docs/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-code-review;ai-sdlc-sdd;ai-sdlc-validation;approved;code-review;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated;validation |
-| 003-mkdocs-material-site | commit_prep | - | quick | 8 | `specs/003-mkdocs-material-site/decision-log.md` | `specs/003-mkdocs-material-site/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;ai-sdlc-validation;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated;validation |
-| 004-executable-delivery-control-plane | sdd | - | quick | 7 | `specs/004-executable-delivery-control-plane/decision-log.md` | `specs/004-executable-delivery-control-plane/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases |
-| 005-guided-onboarding-documentation | - | - | - | 7 | `specs/005-guided-onboarding-documentation/decision-log.md` | `specs/005-guided-onboarding-documentation/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;decision-log;design;draft;implementation;plan;qa;requirements;review;tasks;test-cases |
+| 001-adaptive-harness-roadmap | sdd | - | quick | 7 | `specs/001-adaptive-harness-roadmap/decision-log.md` | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/001-adaptive-harness-roadmap/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated |
+| 002-github-pages-docs | code_review | - | quick | 9 | `specs/002-github-pages-docs/decision-log.md` | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/002-github-pages-docs/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-code-review;ai-sdlc-sdd;ai-sdlc-validation;approved;code-review;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated;validation |
+| 003-mkdocs-material-site | commit_prep | - | quick | 8 | `specs/003-mkdocs-material-site/decision-log.md` | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/003-mkdocs-material-site/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;ai-sdlc-validation;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated;validation |
+| 004-executable-delivery-control-plane | sdd | - | quick | 7 | `specs/004-executable-delivery-control-plane/decision-log.md` | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/004-executable-delivery-control-plane/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases |
+| 005-guided-onboarding-documentation | - | - | - | 7 | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/005-guided-onboarding-documentation/decision-log.md` | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/005-guided-onboarding-documentation/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;decision-log;design;draft;implementation;plan;qa;requirements;review;tasks;test-cases |
 
 ## Artifact Index
 

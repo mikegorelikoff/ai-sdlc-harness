@@ -19,17 +19,22 @@ python3 skills/_shared/ai_sdlc_compatibility.py --skip-git-audit --format toon
 
 ## Install
 
-Install every core and optional skill:
+Install every core and optional skill into the current consumer project using
+the pinned Skills CLI version verified by the public docs:
 
 ```bash
-npx skills add mikegorelikoff/ai-sdlc-harness -g --all
+npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all
 ```
+
+The generic CLI shape remains `npx skills add`; pinning the CLI makes the
+documented behavior reproducible. Add `-g` only after an explicit team decision
+to install user-wide rather than project-scoped skills.
 
 Install a specific core or optional capability:
 
 ```bash
-npx skills add mikegorelikoff/ai-sdlc-harness/skills/ai-sdlc-navigator -g
-npx skills add mikegorelikoff/ai-sdlc-harness/skills/ai-sdlc-architecture -g
+npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --skill ai-sdlc-navigator --agent '*' -y
+npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --skill ai-sdlc-architecture --agent '*' -y
 ```
 
 `--all` includes optional capabilities. A minimal installation selects only

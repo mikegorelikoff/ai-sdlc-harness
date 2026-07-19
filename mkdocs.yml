@@ -89,6 +89,17 @@ exclude_docs: |
 nav:
   - Home: index.md
   - Start here: start.md
+  - Foundations:
+      - Overview: foundations/index.md
+      - What is AI SDLC?: foundations/ai-sdlc.md
+      - What is SDD?: foundations/sdd.md
+      - Why use a harness?: foundations/why-harness.md
+      - Mental model: foundations/mental-model.md
+      - Human and agent responsibilities: foundations/responsibilities.md
+      - Glossary: foundations/glossary.md
+  - Onboarding:
+      - Overview: onboarding/index.md
+      - Your first 30 minutes: onboarding/first-30-minutes.md
   - Tutorials:
       - Overview: tutorials/index.md
       - Ship a first feature: tutorials/first-feature.md

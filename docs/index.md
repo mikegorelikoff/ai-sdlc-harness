@@ -1,99 +1,126 @@
 ---
 title: AI SDLC Harness
-description: A traceable, adaptive delivery harness for teams building software with AI assistants.
+description: Understand, evaluate, and use a repository-native operating system for software delivery with AI agents.
 hide:
   - navigation
 ---
 
 <div class="hero" markdown>
 
-<p class="hero__eyebrow">Repository-native delivery system</p>
+<p class="hero__eyebrow">Repository-native AI delivery</p>
 
-# Ship with AI. <span class="hero__accent">Keep the evidence.</span>
+# Move at AI speed. <span class="hero__accent">Keep human control.</span>
 
-<p class="hero__copy">Turn AI-assisted work into traceable decisions, durable context, testable requirements, and reviewable delivery—without locking your team into one assistant.</p>
+<p class="hero__copy">AI SDLC Harness turns requests, decisions, requirements, tests, implementation, and validation into durable repository evidence—so a person or another agent can understand what happened and continue safely.</p>
 
-[Start in five minutes](start.md){ .md-button .md-button--primary }
-[Explore the repository](https://github.com/mikegorelikoff/ai-sdlc-harness){ .md-button }
+[Learn the foundations](foundations/index.md){ .md-button .md-button--primary }
+[Evaluate adoption](foundations/why-harness.md){ .md-button }
 
 <div class="metric-strip">
   <div class="metric"><strong>43</strong><span>Focused lifecycle skills</span></div>
-  <div class="metric"><strong>5</strong><span>Composable modules</span></div>
-  <div class="metric"><strong>2</strong><span>Human + machine artifact layers</span></div>
+  <div class="metric"><strong>18</strong><span>Traceable refinement stages</span></div>
+  <div class="metric"><strong>1</strong><span>Accountable evidence chain</span></div>
 </div>
 
 </div>
 
-## AI speed without delivery amnesia
+## The problem in one minute
 
-Every workflow leaves enough structured evidence for the next person—or the next assistant—to continue safely.
+AI can generate code faster than teams can reconstruct why that code should
+exist, which decisions shaped it, what proves it works, and who approved the
+risk. Important context stays in chats, tickets, reviews, and individual memory.
+When the session ends, the next person or agent rediscovers the work—or guesses.
 
-<div class="grid cards" markdown>
+The harness applies the software development lifecycle (SDLC) in a form AI
+agents can follow. It gives them bounded skills, deterministic helpers, visible
+artifacts, explicit state, and protected gates. Humans retain authority over
+intent, trade-offs, exceptions, and approval.
 
--   **Enter anywhere**
-
-    ---
-
-    Start from notes, a requirement, a diff, a QA gap, or a release question. The navigator recommends the smallest safe next action.
-
--   **Trace everything**
-
-    ---
-
-    Requirements, decisions, tests, tasks, evidence, and handoffs stay linked in repository-local Markdown and complete token-efficient TOON.
-
--   **Scale the rigor**
-
-    ---
-
-    Move quickly on low-risk work and add stronger gates when security, data, compliance, or rollout risk demands it.
-
-</div>
-
-## One continuous delivery loop
-
-<div class="grid cards" markdown>
-
--   **1 · Discover**
-
-    Frame the customer problem, audience, value, and measurable outcome.
-
--   **2 · Specify**
-
-    Connect requirements, design, decisions, tests, and bounded tasks.
-
--   **3 · Build**
-
-    Execute on a verified branch with repository context and scope discipline.
-
--   **4 · Validate**
-
-    Run risk-focused tests, review findings, and record release evidence.
-
--   **5 · Learn**
-
-    Capture impact, recovery decisions, and governed improvement proposals.
-
-</div>
-
-## Start with the work in front of you
-
-=== "New to the harness"
-
-    Follow [Ship a first feature](tutorials/first-feature.md) to learn the complete evidence loop.
-
-=== "Need one outcome"
-
-    Open the [how-to guides](how-to/index.md) and choose the bounded result you need now.
-
-=== "Looking up a contract"
-
-    Use the [reference](reference/index.md) for paths, flags, schemas, skills, modules, and validation commands.
-
-```bash
-git clone https://github.com/mikegorelikoff/ai-sdlc-harness.git
-cd ai-sdlc-harness
-./scripts/install.sh /path/to/your-project
+```text
+intent -> requirement -> design -> task -> code -> test -> evidence -> handoff
 ```
 
-[Read the quick start →](start.md){ .md-button .md-button--primary }
+New to these ideas? Read [What is AI SDLC?](foundations/ai-sdlc.md) and
+[What is SDD?](foundations/sdd.md) before installing anything.
+
+## Choose your path
+
+<div class="grid cards" markdown>
+
+-   **I need to understand it**
+
+    ---
+
+    Learn SDLC, AI SDLC, SDD, artifacts, evidence, gates, and handoffs from
+    first principles.
+
+    [Start Foundations →](foundations/index.md)
+
+-   **I want to use it**
+
+    ---
+
+    Install project-scoped skills, ask the navigator for a safe entry point,
+    and complete a guided first session.
+
+    [Start onboarding →](onboarding/index.md)
+
+-   **I am evaluating adoption**
+
+    ---
+
+    Check fit, prerequisites, non-goals, authority boundaries, maturity, and
+    the evidence you should require before a pilot.
+
+    [Evaluate the harness →](foundations/why-harness.md)
+
+-   **I need an exact contract**
+
+    ---
+
+    Look up lifecycle stages, skills, scripts, schemas, routes, flags,
+    compatibility, and validation commands.
+
+    [Open Reference →](reference/index.md)
+
+</div>
+
+## What it is—and is not
+
+| It is | It is not |
+| --- | --- |
+| Portable instructions for AI delivery workflows. | A new IDE or autonomous developer. |
+| Deterministic helpers for repeatable repository mechanics. | A replacement for product, engineering, QA, security, or legal judgment. |
+| Human-readable artifacts plus complete agent state. | A hidden SaaS database or hosted telemetry service. |
+| Evidence-backed gates, handoffs, and recovery. | A guarantee of correctness, compliance, or business impact. |
+| A layer that can complement Git, issue tracking, CI, and agent hosts. | A project-management system, CI platform, or deployment authority. |
+
+## A safe first experience
+
+1. Read [the mental model](foundations/mental-model.md).
+2. Check [fit, prerequisites, and non-goals](foundations/why-harness.md).
+3. [Install project-scoped skills](how-to/install.md).
+4. Complete [your first 30 minutes](onboarding/first-30-minutes.md).
+5. Follow the runnable [first feature tutorial](tutorials/first-feature.md).
+
+At every step, the documentation labels what to tell the agent, what to run in
+a terminal, what the agent does automatically, and where a human must decide.
+
+The canonical project-scoped installation command is:
+
+```bash
+npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all
+```
+
+Run it from the consumer repository only after reviewing the
+[installation prerequisites and trust boundary](how-to/install.md).
+
+## What the evidence proves
+
+Repository tests verify skill contracts, schemas, state transitions, generated
+artifacts, compatibility, recovery, and documentation mechanics. This proves
+the harness mechanisms behave as specified. It does **not** prove a causal
+improvement in your cycle time, quality, or cost. Treat those outcomes as pilot
+hypotheses and evaluate them with your own baseline and review.
+
+[Begin with Foundations →](foundations/index.md){ .md-button .md-button--primary }
