@@ -5,25 +5,6 @@ hide:
   - navigation
 ---
 
-<div class="hero" markdown>
-
-<p class="hero__eyebrow">Repository-native AI delivery</p>
-
-# Move at AI speed. <span class="hero__accent">Keep human control.</span>
-
-<p class="hero__copy">AI SDLC Harness turns requests, decisions, requirements, tests, implementation, and validation into durable repository evidence—so a person or another agent can understand what happened and continue safely.</p>
-
-[Learn the foundations](foundations/index.md){ .md-button .md-button--primary }
-[Evaluate adoption](adoption/index.md){ .md-button }
-
-<div class="metric-strip">
-  <div class="metric"><strong>44</strong><span>Installed capabilities</span></div>
-  <div class="metric"><strong>18</strong><span>Traceable refinement stages</span></div>
-  <div class="metric"><strong>1</strong><span>Accountable evidence chain</span></div>
-</div>
-
-</div>
-
 ## The problem in one minute
 
 AI can generate code faster than teams can reconstruct why that code should
