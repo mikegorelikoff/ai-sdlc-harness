@@ -46,6 +46,8 @@ description: AI SDLC versioned policy-as-code workflow. Use when an AI assistant
 - Report resolved policy fingerprint, layer provenance, action decision, matched
   rules, required gates, reason codes, and applied or rejected waivers.
 - Return validation and handoff summaries directly in the Codex response.
+- Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
+  `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
 
 ### 0.4 Artifact Routing
@@ -85,7 +87,7 @@ description: AI SDLC versioned policy-as-code workflow. Use when an AI assistant
 
 ```bash
 python3 skills/ai-sdlc-policy/scripts/policy.py . --resolve --profile high-assurance --format toon
-python3 skills/ai-sdlc-policy/scripts/policy.py . --evaluate change.apply --context policy-context.json --profile regulated --format json
+python3 skills/ai-sdlc-policy/scripts/policy.py . --evaluate change.apply --context policy-context.json --profile regulated --format toon
 python3 skills/ai-sdlc-policy/scripts/policy.py . --explain release.publish --context release-context.json --waiver waiver.json --format markdown
 ```
 

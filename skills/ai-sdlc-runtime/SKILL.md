@@ -7,7 +7,7 @@ description: AI SDLC resumable task-runtime workflow. Use when an AI assistant n
 
 > Internal AI SDLC skill, not client-facing by default.
 > Every rule below is important to follow. None of it can be skipped.
-> The journal is authoritative; summarized state is recoverable projection.
+> The journal is authoritative; complete state is a recoverable TOON-first projection.
 
 ## 0. Skill Card
 
@@ -44,6 +44,8 @@ description: AI SDLC resumable task-runtime workflow. Use when an AI assistant n
 - Report run status, sequence, current task, ready tasks, budgets, stop reason,
   recovery status, and next command.
 - Return validation and handoff summaries directly in the Codex response.
+- Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
+  `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
 
 ### 0.4 Artifact Routing
@@ -84,7 +86,7 @@ description: AI SDLC resumable task-runtime workflow. Use when an AI assistant n
 
 ```bash
 python3 skills/ai-sdlc-runtime/scripts/runtime.py . --start --run-id delivery-004 --plan run-plan.json --format toon
-python3 skills/ai-sdlc-runtime/scripts/runtime.py . --next --run-id delivery-004 --format json
+python3 skills/ai-sdlc-runtime/scripts/runtime.py . --next --run-id delivery-004 --format toon
 python3 skills/ai-sdlc-runtime/scripts/runtime.py . --record --run-id delivery-004 --task T001 --outcome succeeded --result-fingerprint <sha256> --tokens 420 --commit <sha>
 python3 skills/ai-sdlc-runtime/scripts/runtime.py . --resume --run-id delivery-004 --format toon
 ```
@@ -115,8 +117,8 @@ the durable task state to one agent host or chat session.
 ## Output Spec
 
 The hash-chained JSONL journal stores contiguous sequence numbers and transition
-payloads. Exact JSON state supports deterministic replay comparison. Compact
-TOON state exposes the complete plan identity, task states and attempts, running and ready
+payloads. Exact JSON state supports deterministic replay comparison. Complete
+TOON state exposes the plan identity, task states and attempts, running and ready
 tasks, budgets, stop reason, sequence, and fingerprint to agents. Replay must
 reproduce both projections.
 

@@ -2,10 +2,14 @@
 
 ## Compatibility Baseline
 
-Release `1.0.0` uses harness API `1.0.0`, configuration schema
+Release `1.1.0` uses harness API `1.0.0`, configuration schema
 `ai-sdlc-config/v1`, module schema `ai-sdlc-module/v1`, canonical feature roots
 `specs-refiniment/<feature>` and `specs/<feature>`, and machine records under
 `_ai_sdlc`. Python 3.10 is the minimum runtime; CI also validates Python 3.13.
+Release `1.1.0` is additive over `1.0.0`: existing skill names, Markdown
+authority, flow flags, state paths, configuration, and module contracts remain
+valid. New control-plane commands are TOON-first; JSON remains available only
+where a schema, external integration, recovery record, or JSONL journal needs it.
 
 Before install or update, run the repository compatibility validator:
 
@@ -48,6 +52,9 @@ become core dependencies.
 Existing skill names, quick/full flags, state paths, artifact routes, config
 schema, and module contracts remain stable within harness API `1.x`. A future
 breaking release must publish a new baseline and migration path.
+
+For the exact additive steps, see the public
+[1.1 migration guide](../docs/how-to/migrate-1.1.md).
 
 ## Rollback
 

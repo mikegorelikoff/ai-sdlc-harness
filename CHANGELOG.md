@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+No unreleased changes.
+
+## v1.1.0 - 2026-07-19
+
+### Added
+
+- Added isolated change sets with semantic deltas, non-mutating preview,
+  policy-gated atomic apply, recovery evidence, and archive.
+- Added a repository delivery graph, evidence ledger, freshness propagation,
+  policy-as-code, waivers, and bounded Context Engine v2 task packs.
+- Added resumable task execution, append-only journals, deterministic TOON
+  state, declarative workflows, approval gates, hooks, dependency waves, and
+  one-task-one-commit enforcement.
+- Added portable host capability negotiation, installation doctor and upgrade
+  planning, package integrity and provenance checks, and content-free local
+  metrics.
+- Added versioned release navigation, a `1.1` migration guide, and an exact
+  T001–T015 task-to-commit audit.
+
+### Changed
+
+- Made complete deterministic TOON the default agent-facing representation for
+  the new control plane. JSON is limited to schema, external interoperability,
+  recovery, and JSONL journal boundaries.
+- Expanded the compatibility gate to protect all 43 skills, public flags,
+  routes, module contracts, handoff fields, and the release commit sequence.
+- Migrated the public documentation to Material for MkDocs and expanded its
+  task-oriented navigation.
+
+### Compatibility
+
+- Release `1.1.0` remains on harness API `1.0.0` and is additive over `v1.0.0`.
+
+## v1.0.0 - 2026-07-19
+
 ### Added
 
 - Expanded `concepts/` with detailed system architecture, the canonical

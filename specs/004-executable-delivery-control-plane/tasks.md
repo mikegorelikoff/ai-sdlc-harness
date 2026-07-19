@@ -92,7 +92,7 @@ artifact_metadata:
 - [x] T014. Implement package trust and privacy-preserving local metrics.
   Output: Package origin, integrity, compatibility, capability and provenance validation; local run and quality aggregates; privacy tests; and documentation.
   Refs: AC-011, AC-012, AC-013
-- [ ] T015. Complete versioned documentation, compatibility, release, and commit audit.
+- [x] T015. Complete versioned documentation, compatibility, release, and commit audit.
   Output: Final integration docs, release-version navigation, migration guide, generated catalogs, full validation evidence, task-to-commit audit, branch publication, main integration, and release tag.
   Refs: AC-013, AC-014
 

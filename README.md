@@ -62,7 +62,7 @@ Open the Skills CLI:
 npx skills
 ```
 
-Validate a checkout against the `1.0.0` compatibility baseline:
+Validate a checkout against the `1.1.0` compatibility baseline:
 
 ```bash
 python3 skills/_shared/ai_sdlc_compatibility.py --skip-git-audit --format toon
@@ -134,6 +134,10 @@ machine-readable indexes.
   authoritative state.
 - `ai-sdlc-change-set` creates and validates atomic proposal workspaces under
   `changes/` while canonical specifications and policy remain untouched.
+- The executable control plane adds a delivery graph, evidence freshness,
+  policy evaluation, bounded context packs, resumable runs, declarative
+  workflows, portable host adapters, installation diagnostics, package trust,
+  and content-free local metrics.
 - `ai-sdlc-retrospective` separates delivery observations from governed
   improvement proposals and requires an accepted decision before policy can
   change.
@@ -149,7 +153,9 @@ machine-readable indexes.
 - Profile scripts keep Markdown for people and can emit bounded
   `ai-sdlc-context/v2` TOON packs with exact evidence locations and targeted
   follow-up reads for agents.
-- Markdown stays readable for humans; TOON files stay cheap for AI to inspect.
+- Markdown stays readable for humans; complete deterministic TOON is the
+  default agent-facing representation. JSON remains at schema,
+  interoperability, recovery, and JSONL journal boundaries.
 - Default and full refinement context and generated artifacts are bounded at
   24,000 estimated tokens per file; quick context uses a 4,000-token budget.
 - Legacy paths are read during the v0.4 transition and safely migrated on the

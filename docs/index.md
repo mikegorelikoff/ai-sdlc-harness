@@ -17,7 +17,7 @@ hide:
 [Explore the repository](https://github.com/mikegorelikoff/ai-sdlc-harness){ .md-button }
 
 <div class="metric-strip">
-  <div class="metric"><strong>35</strong><span>Focused lifecycle skills</span></div>
+  <div class="metric"><strong>43</strong><span>Focused lifecycle skills</span></div>
   <div class="metric"><strong>5</strong><span>Composable modules</span></div>
   <div class="metric"><strong>2</strong><span>Human + machine artifact layers</span></div>
 </div>

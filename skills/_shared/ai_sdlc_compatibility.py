@@ -11,6 +11,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from ai_sdlc_toon import encode_toon
+
 
 SCHEMA = "ai-sdlc-compatibility-baseline/v1"
 
@@ -117,7 +119,7 @@ def validate_routes_and_docs(root: Path, baseline: dict[str, Any]) -> list[str]:
 
 def validate_git_audit(root: Path, baseline: dict[str, Any], base: str, allow_pending_last: bool) -> list[str]:
     """Validate the released roadmap as one ordered historical sequence."""
-    result = subprocess.run(["git", "log", "--reverse", "--format=%s", base], cwd=root, check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    result = subprocess.run(["git", "log", "--reverse", "--format=%s", f"{base}..HEAD"], cwd=root, check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode:
         return ["cannot audit roadmap commits: " + result.stderr.strip()]
     actual = result.stdout.splitlines()
@@ -130,20 +132,15 @@ def validate_git_audit(root: Path, baseline: dict[str, Any], base: str, allow_pe
     return []
 
 
-def toon(value: object) -> str:
-    """Escape a summary scalar."""
-    return re.sub(r"[\r\n,]+", "; ", str(value)).strip()
-
-
 def main() -> int:
     """Run release compatibility and optional Git audit gates."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--baseline", type=Path, default=Path("compatibility/baseline-v1.json"))
-    parser.add_argument("--git-base", default="main")
+    parser.add_argument("--git-base")
     parser.add_argument("--skip-git-audit", action="store_true")
     parser.add_argument("--allow-pending-last", action="store_true")
-    parser.add_argument("--format", choices=("markdown", "toon"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "toon"), default="toon")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")
     parser.add_argument("--feature", default="<feature-name>")
@@ -166,23 +163,29 @@ def main() -> int:
         errors.extend(validate_modules(root, baseline))
         errors.extend(validate_routes_and_docs(root, baseline))
         if not args.skip_git_audit:
-            errors.extend(validate_git_audit(root, baseline, args.git_base, args.allow_pending_last))
+            errors.extend(validate_git_audit(root, baseline, args.git_base or str(baseline.get("roadmap_git_base", "main")), args.allow_pending_last))
     if errors:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
+    result = {
+        "schema": "ai-sdlc-compatibility-result/v1",
+        "release": baseline["release"],
+        "harness_api_version": baseline["harness_api_version"],
+        "skills": len([path for path in (root / "skills").iterdir() if path.is_dir() and path.name != "_shared"]),
+        "modules": len(baseline["modules"]["ids"]),
+        "protected_skill_names": baseline["required_skill_names"],
+        "protected_cli_flags": baseline["required_cli_flags"],
+        "protected_routes": baseline["routes"],
+        "result": "compatible",
+    }
     if args.format == "toon":
-        print("schema: ai-sdlc-compatibility-result/v1")
-        print(f"release: {toon(baseline['release'])}")
-        print(f"harness_api_version: {toon(baseline['harness_api_version'])}")
-        print(f"skills: {len([path for path in (root / 'skills').iterdir() if path.is_dir() and path.name != '_shared'])}")
-        print(f"modules: {len(baseline['modules']['ids'])}")
-        print("result: compatible")
+        print(encode_toon(result), end="")
     else:
         print("# AI SDLC Compatibility\n")
         print(f"- Release: `{baseline['release']}`")
         print(f"- Harness API: `{baseline['harness_api_version']}`")
-        print(f"- Skills: `{len([path for path in (root / 'skills').iterdir() if path.is_dir() and path.name != '_shared'])}`")
+        print(f"- Skills: `{result['skills']}`")
         print(f"- Modules: `{len(baseline['modules']['ids'])}`")
         print("- Result: `compatible`")
     return 0

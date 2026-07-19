@@ -41,6 +41,8 @@ description: AI SDLC host adapter and capability negotiation workflow. Use when 
 - Default to complete TOON with mappings, missing requirements, fallbacks,
   effective limits, compatibility, source fingerprint, and result fingerprint.
 - Return summaries directly in the Codex response.
+- Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
+  `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
 
 ### 0.4 Artifact Routing

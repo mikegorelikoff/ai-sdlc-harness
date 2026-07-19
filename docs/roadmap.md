@@ -7,31 +7,30 @@ The harness evolves around one goal: make AI-assisted delivery faster without ma
 
 ## Now
 
-- Deliver controlled specification evolution through isolated change sets, semantic deltas, non-mutating preview, policy-gated apply, and evidence-preserving archive.
-- Build a repository-wide delivery graph with trace queries, gap detection, evidence coverage, and freshness propagation.
-- Add versioned policy evaluation and bounded task-specific context packs without weakening existing artifact authority.
+- Release and support the completed executable delivery control plane: controlled change sets, delivery graph, evidence freshness, policy, bounded context, resumable runtime, declarative workflows, portable adapters, safe upgrades, package trust, and private local metrics.
+- Keep the `1.1.0` release additive over harness API `1.0.0`, with complete deterministic TOON as the agent representation and explicit JSON boundaries.
+- Measure adoption, compatibility failures, recovery outcomes, and documentation gaps without collecting source content.
 
 ## Next
 
-- Add a resumable task runtime with durable journals, budgets, retries, stop reasons, and one-task-one-commit boundaries.
-- Add declarative workflows with gates, hooks, dependency waves, cycle detection, and safe sequential fallbacks.
-- Publish a portable host adapter SDK with capability negotiation and deterministic fallback behavior.
-- Add installation diagnostics, upgrade previews, migration backups, and rollback planning.
+- Connect host adapters to real execution surfaces while preserving capability negotiation, policy checks, and deterministic fallbacks.
+- Add signed package attestations and configurable organization trust roots on top of existing digest and provenance validation.
+- Add local longitudinal trend reports and regression thresholds without exporting repository content.
 
 ## Later
 
-- Validate module and workflow trust through origin, integrity, compatibility, declared capability, and update provenance.
-- Publish privacy-preserving local delivery metrics and reusable regulated or high-assurance policy profiles.
-- Complete versioned documentation, release migration guidance, and additional evidence-council execution adapters.
+- Add reusable regulated and high-assurance policy profiles with maintained evidence mappings.
+- Add more evidence-council execution adapters and reproducible research evidence ingestion.
+- Evaluate a future harness API major only when additive contracts can no longer preserve existing consumers.
 
 ## Active program
 
 The executable delivery control-plane program is tracked in the
 [implementation specification](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/specs/004-executable-delivery-control-plane/requirements.md).
-Its ordered tasks move from controlled spec evolution through delivery graph,
-policy, context, runtime, interoperability, operations, and release. Each task
-must pass focused validation and land as exactly one commit before the next task
-starts.
+Its ordered T001–T015 tasks are complete. They move from controlled spec
+evolution through delivery graph, policy, context, runtime, interoperability,
+operations, and release. The [release audit](reference/release-1.1.md) maps each
+task to exactly one focused commit.
 
 ## Roadmap rules
 

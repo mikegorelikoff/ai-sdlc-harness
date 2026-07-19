@@ -18,8 +18,9 @@ description: AI SDLC repository delivery-graph and evidence-freshness workflow. 
 - SDLC stage: Traceability and readiness
 - Purpose: Build a deterministic repository-wide lifecycle graph and answer
   trace, gap, coverage, and orphan questions from stable evidence anchors.
-- Output: `_ai_sdlc/delivery-graph.toon`, `_ai_sdlc/delivery-graph.json`, and
-  `_ai_sdlc/delivery-graph.md` when `--write` is requested
+- Output: complete `_ai_sdlc/delivery-graph.toon` for agents, plus
+  `_ai_sdlc/delivery-graph.json` for schema/interoperability and
+  `_ai_sdlc/delivery-graph.md` for human review when `--write` is requested
 
 ### 0.1 Required Inputs
 
@@ -46,6 +47,8 @@ description: AI SDLC repository delivery-graph and evidence-freshness workflow. 
   coverage, gaps, and orphans.
 - Return query paths as ordered node and edge evidence, not prose-only claims.
 - Return the validation and handoff summary directly in the Codex response.
+- Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
+  `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
 - Do not create ad hoc summaries outside the canonical graph outputs.
 
@@ -101,11 +104,11 @@ description: AI SDLC repository delivery-graph and evidence-freshness workflow. 
 
 ```bash
 python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . --index --write --format toon --quick-flow
-python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . --trace AC-004 --to T006 --format json
+python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . --trace AC-004 --to T006 --format toon
 python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . --gaps --format markdown
 python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . --orphans --format toon
 python3 skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py . --index --as-of 2026-07-19 --write --format toon
-python3 skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py . --coverage --as-of 2026-07-19 --format json
+python3 skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py . --coverage --as-of 2026-07-19 --format toon
 python3 skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py . --stale --as-of 2026-07-19 --format markdown
 ```
 

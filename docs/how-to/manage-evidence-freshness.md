@@ -44,7 +44,7 @@ python3 skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py . \
 
 ```bash
 python3 skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py . \
-  --stale --as-of 2026-07-19 --format json
+  --stale --as-of 2026-07-19 --format toon
 
 python3 skills/ai-sdlc-delivery-graph/scripts/evidence_ledger.py . \
   --coverage --as-of 2026-07-19 --format markdown

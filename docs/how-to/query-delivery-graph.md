@@ -12,9 +12,10 @@ python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . \
   --index --write --format toon --quick-flow
 ```
 
-The command writes deterministic human and JSON projections below
-`_ai_sdlc/`. These files are generated views; source Markdown, commit messages,
-and tags remain authoritative.
+The command writes complete deterministic TOON for agents, Markdown for human
+review, and JSON only for schema/interoperability consumers below `_ai_sdlc/`.
+These files are generated views; source Markdown, commit messages, and tags
+remain authoritative.
 
 ## Follow a trace
 
@@ -22,7 +23,7 @@ Use stable short IDs when they are unique:
 
 ```bash
 python3 skills/ai-sdlc-delivery-graph/scripts/delivery_graph.py . \
-  --trace AC-004 --to T006 --format json
+  --trace AC-004 --to T006 --format toon
 ```
 
 If the same ID exists in multiple features, use the reported scoped ID, for

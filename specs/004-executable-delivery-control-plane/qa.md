@@ -37,7 +37,7 @@ Introduce an additive executable control plane across the existing harness: isol
 QA will exercise a representative feature from proposal through delta preview, approval, canonical apply, archive, graph refresh, context-pack creation, task execution, validation, commit recording, metrics, and upgrade preview. Negative paths cover conflict, stale evidence, expired waiver, denied capability, interruption, cycle, unsafe package, incompatible migration, and partial filesystem failure.
 
 ## Regression Targets
-Existing 35 skills and 5 module manifests; quick and full flow precedence; state.toon and plan.toon semantics; Markdown artifact authority; decision and evidence ownership; navigator and handoff routes; configuration protection; project context secret exclusions; compatibility checks; generated documentation catalogs; MkDocs build and public navigation.
+Existing 43 skills and 5 module manifests; quick and full flow precedence; state.toon and plan.toon semantics; Markdown artifact authority; complete TOON-first control-plane projections; JSON boundary compatibility; decision and evidence ownership; navigator and handoff routes; configuration protection; project context secret exclusions; compatibility checks; generated documentation catalogs; MkDocs build and public navigation.
 
 ## Risk Notes
 Highest risks are accidental canonical mutation during preview, partial apply, policy weakening, runtime work duplication after resume, context leakage, untrusted workflow execution, graph drift, and oversized complexity. Gates require byte-identity preview tests, staged atomic writes, fail-closed evaluation, idempotency, secret fixtures, declared capabilities, fingerprints, modular packages, and focused per-task commits.
@@ -49,11 +49,11 @@ Highest risks are accidental canonical mutation during preview, partial apply, p
 - python3 skills/ai-sdlc-sdd/scripts/analyze_spec.py specs/004-executable-delivery-control-plane --quick-flow
 - python3 skills/ai-sdlc-sdd/scripts/validate_spec.py specs/004-executable-delivery-control-plane --quick-flow
 - python3 skills/_shared/test_all_skill_scripts.py
-- python3 skills/_shared/validate_compatibility.py
+- python3 skills/_shared/ai_sdlc_compatibility.py --git-base v1.0.0 --allow-pending-last --format toon
 - python3 docs/scripts/build_catalog.py --check
 - python3 docs/scripts/validate_docs.py
-- python3 -m unittest discover -s docs/tests -v
-- mkdocs build --strict
+- python3 docs/tests/test_docs.py
+- UV_CACHE_DIR=/tmp/ai-sdlc-uv-cache uv run --offline --with-requirements requirements-docs.txt mkdocs build --strict
 - git diff --check
 
 ## Manual Checks

@@ -18,6 +18,8 @@ Reference pages state the contracts precisely. Use them while configuring automa
 - [**Validation commands**](validation.md) — deterministic repository checks.
 - [**Directory layout**](directory-layout.md) — source tree ownership.
 - [**Compatibility contract**](compatibility.md) — release and extension boundaries.
+- [**Supported versions**](versions.md) — release, API, migration, and support matrix.
+- [**Release 1.1 audit**](release-1.1.md) — task-to-commit and validation evidence.
 
 </div>
 

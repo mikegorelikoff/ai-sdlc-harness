@@ -5,6 +5,9 @@ description: Public surfaces protected across additive harness releases and the 
 
 ## Protected surfaces
 
+Release `1.1.0` implements harness API `1.0.0` and protects the public surface
+established by `v1.0.0`. The executable control plane is additive.
+
 - Installed skill names and package identity.
 - Stable `--quick-flow` and `--full-flow` support.
 - Canonical refinement and implementation artifact routes.
@@ -23,4 +26,8 @@ New skills, optional modules, fields, and documentation may be added when old co
 python3 skills/_shared/ai_sdlc_compatibility.py --format toon
 ```
 
-A compatible result reports the release, harness API version, skill/module counts, and `result: compatible`. Release notes must still explain meaningful additive behavior; passing structure alone does not replace human review.
+A compatible result reports the release, harness API version, complete protected
+skill, flag, and route inventories, skill/module counts, and
+`result: compatible`. The gate also audits the contiguous T001–T015 commit
+sequence from `v1.0.0`. Release notes must still explain meaningful additive
+behavior; passing structure alone does not replace human review.

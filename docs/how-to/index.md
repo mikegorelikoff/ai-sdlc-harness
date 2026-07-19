@@ -11,9 +11,12 @@ Choose the result you need now. Each guide is task-oriented and assumes basic Gi
 
 - [**Install the harness**](install.md) — add the skill library to a project.
 - [**Update safely**](update.md) — preview, merge, and validate upstream changes.
+- [**Migrate to 1.1**](migrate-1.1.md) — adopt the additive control plane without rewriting existing work.
 - [**Choose a flow mode**](choose-flow.md) — select quick, full, or adaptive rigor.
 - [**Navigate a request**](navigate-request.md) — find the smallest safe next action.
 - [**Build project context**](project-context.md) — capture evidence without invention.
+- [**Resume a delivery run**](resume-runtime.md) — continue safely from the durable journal and TOON state.
+- [**Plan a workflow**](plan-workflow.md) — validate gates, hooks, dependencies, and execution waves.
 - [**Customize team policy**](customize.md) — layer safe organization and project defaults.
 - [**Add a module**](add-module.md) — register optional capabilities compatibly.
 - [**Recover from change**](recover-change.md) — reopen affected work from evidence.

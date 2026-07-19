@@ -23,10 +23,13 @@ class CompatibilityTests(unittest.TestCase):
         return subprocess.run(["python3", str(SCRIPT), "--root", str(ROOT), *args], cwd=ROOT, check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     def test_current_release_matches_baseline(self) -> None:
-        """Names, flags, routes, config, and modules should remain compatible."""
-        result = self.run_check("--skip-git-audit", "--format", "toon")
+        """The default complete TOON result should expose protected contracts."""
+        result = self.run_check("--skip-git-audit")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("result: compatible", result.stdout)
+        self.assertIn("protected_skill_names", result.stdout)
+        self.assertIn("protected_cli_flags", result.stdout)
+        self.assertIn("protected_routes", result.stdout)
         expected = len(list((ROOT / "skills").glob("*/SKILL.md")))
         self.assertIn(f"skills: {expected}", result.stdout)
 
@@ -54,7 +57,7 @@ class CompatibilityTests(unittest.TestCase):
             self.assertIn("missing stable flag --future-required-flag", result.stdout)
 
     def test_roadmap_audit_allows_completed_roadmap_and_maintenance(self) -> None:
-        """The roadmap prefix remains exact after later maintenance commits."""
+        """The roadmap sequence may omit only its not-yet-created release commit."""
         result = self.run_check("--allow-pending-last", "--format", "toon")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 

@@ -42,6 +42,8 @@ description: AI SDLC declarative workflow planning. Use when an AI assistant nee
 - Default to complete TOON with workflow fingerprint, step decisions, waves,
   gates, hooks, fallbacks, host capabilities, and plan fingerprint.
 - Return validation and handoff summaries directly in the Codex response.
+- Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
+  `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
 
 ### 0.4 Artifact Routing
