@@ -64,11 +64,13 @@ def validate(site: Path) -> tuple[list[str], int]:
             "mkdocs-material-9.7.7",
             'data-md-component="search"',
             'data-md-color-scheme="default"',
-            "hero__accent",
-            "metric-strip",
+            'id="the-problem-in-one-minute"',
+            'id="choose-your-path"',
         ):
             if token not in text:
                 errors.append(f"index.html: missing rendered Material contract {token}")
+        if 'class="hero"' in text:
+            errors.append("index.html: removed homepage hero block is still rendered")
     for relative in ("search/search_index.json", "assets/stylesheets/extra.css"):
         if not (site / relative).exists():
             errors.append(f"rendered asset missing: {relative}")
