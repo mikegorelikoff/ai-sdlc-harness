@@ -59,7 +59,7 @@ artifact_metadata:
 - [ ] T001: - [x] T001. Establish the GitHub Pages SDD package and execution plan.; refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, DEC-001, DEC-002, DEC-003; output: Requirements, design, test cases, QA plan, tasks, decision log, registry entry, and linked machine/human plans.
 - [ ] T002: - [x] T002. Build the responsive Jekyll shell and intent-based information architecture.; refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-009, AC-011; output: Configuration, layouts, grouped navigation, local outline behavior, visual system, landing page, start path, and documented forty-page content map.
 - [ ] T003: - [x] T003. Author the complete documentation corpus and generated capability catalogs.; refs: AC-003, AC-004, AC-006, AC-007, AC-008; output: Tutorials, how-to guides, explanations, references, roadmap, section indexes, deterministic catalog generator, and generated data.
-- [ ] T004: - [ ] T004. Add docs validation, Pages deployment, responsive QA, and release evidence.; refs: AC-002, AC-005, AC-008, AC-009, AC-010, AC-011; output: Validator, unit tests, official Pages workflow, README link, browser smoke evidence, and passing release gates.
+- [ ] T004: - [x] T004. Add docs validation, Pages deployment, responsive QA, and release evidence.; refs: AC-002, AC-005, AC-008, AC-009, AC-010, AC-011; output: Validator, unit tests, official Pages workflow, README link, responsive contract and HTTP smoke evidence, and passing release gates.
 
 ## Task Dependencies
 - T001: depends on previous applicable task / none

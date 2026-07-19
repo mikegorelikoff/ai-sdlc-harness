@@ -30,7 +30,7 @@
           {% if page.description %}<p class="page-lead">{{ page.description }}</p>{% endif %}
           {{ content }}
           <nav class="page-footer-nav" aria-label="Page actions">
-            <a href="https://github.com/{{ site.repository }}/edit/{{ site.github.source.branch | default: 'main' }}/docs{{ page.path | remove_first: 'docs' | prepend: '/' }}">Edit this page</a>
+            <a href="https://github.com/{{ site.repository }}/edit/main/docs/{{ page.path }}">Edit this page</a>
             <a href="#main-content">Back to top ↑</a>
           </nav>
         </main>

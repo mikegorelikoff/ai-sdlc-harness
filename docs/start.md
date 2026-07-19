@@ -73,4 +73,4 @@ You can skip navigation when the need is already clear:
 - Review: `ai-sdlc-code-review`
 - Commit preparation: `ai-sdlc-commit-prep`
 
-Next, see how these entry points connect in the [delivery workflow]({{ '/workflow/' | relative_url }}).
+Next, see how these entry points connect in the [workflow map]({{ '/reference/workflow-map/' | relative_url }}).

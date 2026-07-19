@@ -1,6 +1,6 @@
 feature: 002-github-pages-docs
 workspace: implementation
-current_stage: sdd
+current_stage: code_review
 active_skill:
 flow_mode: quick
 updated_at: 2026-07-19
@@ -28,12 +28,13 @@ stages[26]{id,skill,status,workspace,artifacts,decision_ref}:
   delivery_handoff,ai-sdlc-delivery-handoff-review,not_started,refinement,delivery-handoff-review.md,
   sdd,ai-sdlc-sdd,done,implementation,specs/002-github-pages-docs/requirements.md;specs/002-github-pages-docs/design.md;specs/002-github-pages-docs/test-cases.md;specs/002-github-pages-docs/qa.md;specs/002-github-pages-docs/tasks.md;specs/002-github-pages-docs/_ai_sdlc/plan.toon;specs/002-github-pages-docs/plan.md,DEC-001
   branching,ai-sdlc-branching,not_started,implementation,branch-plan.md,
-  validation,ai-sdlc-validation,not_started,implementation,validation.md,
-  code_review,ai-sdlc-code-review,not_started,implementation,code-review.md,
+  validation,ai-sdlc-validation,done,implementation,specs/002-github-pages-docs/validation.md,
+  code_review,ai-sdlc-code-review,done,implementation,specs/002-github-pages-docs/code-review.md,
   security_testing,ai-sdlc-security-testing,not_started,implementation,security-review.md,
   commit_prep,ai-sdlc-commit-prep,not_started,implementation,commit-readiness.md,
   conventional_commit,ai-sdlc-conventional-commit,not_started,implementation,commit-message.md,
   approvals_sandbox,ai-sdlc-approvals-sandbox,not_applicable,utility,approval-plan.md,
 
-skips[1]{stage,reason,decision_ref,flow_mode}:
+skips[2]{stage,reason,decision_ref,flow_mode}:
   sdd,User requested direct implementation; Pages documentation is a reversible repository feature with requirements derivable from existing docs and official GitHub deployment contracts.,,quick
+  validation,The feature branch is already verified and contains one focused commit per completed task; retroactive branch-plan generation would not improve validation evidence.,,quick

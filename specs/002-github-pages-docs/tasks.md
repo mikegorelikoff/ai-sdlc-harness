@@ -35,6 +35,7 @@ artifact_metadata:
     - "specs/002-github-pages-docs/qa.md"
     - "specs/002-github-pages-docs/requirements.md"
     - "specs/002-github-pages-docs/test-cases.md"
+    - "specs/002-github-pages-docs/validation.md"
   validation: []
   metatags:
     - "ai-sdlc"
@@ -58,8 +59,8 @@ artifact_metadata:
   Output: Tutorials, how-to guides, explanations, references, roadmap, section indexes, deterministic catalog generator, and generated data.
   Refs: AC-003, AC-004, AC-006, AC-007, AC-008
   Depends on: T002
-- [ ] T004. Add docs validation, Pages deployment, responsive QA, and release evidence.
-  Output: Validator, unit tests, official Pages workflow, README link, browser smoke evidence, and passing release gates.
+- [x] T004. Add docs validation, Pages deployment, responsive QA, and release evidence.
+  Output: Validator, unit tests, official Pages workflow, README link, responsive contract and HTTP smoke evidence, and passing release gates.
   Refs: AC-002, AC-005, AC-008, AC-009, AC-010, AC-011
   Depends on: T002, T003
 
