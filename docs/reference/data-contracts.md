@@ -10,6 +10,7 @@ description: Core versioned records used for artifacts, handoffs, modules, compa
 | `ai-sdlc-module/v1` | Register compatible core or optional capabilities. |
 | `ai-sdlc-compatibility-result/v1` | Report release contract validation. |
 | `ai-sdlc-change-set/v1` | Identify an isolated draft change, its canonical targets, authority boundary, artifacts, and deterministic fingerprint. |
+| `ai-sdlc-spec-delta/v1` | Project validated requirement operations, stable IDs, source hashes, scenarios, and non-mutation authority. |
 | Project context contracts | Preserve evidence-backed repository memory and drift identity. |
 | Quality finding contracts | Record evidence, severity, owner, resolution, and trace targets. |
 

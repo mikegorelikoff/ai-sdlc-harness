@@ -56,7 +56,7 @@ artifact_metadata:
 - [x] T002. Implement the isolated ChangeSet workspace contract.
   Output: ChangeSet skill, versioned schemas, deterministic workspace creator and validator, fixtures, tests, and documentation.
   Refs: AC-001, AC-013, DEC-001
-- [ ] T003. Implement requirement delta parsing and semantic validation.
+- [x] T003. Implement requirement delta parsing and semantic validation.
   Output: Added, modified, removed, and renamed operation parser; scenario and target validation; overlap detection; tests; and documentation.
   Refs: AC-001, AC-002, AC-013
 - [ ] T004. Implement non-mutating apply preview and conflict analysis.

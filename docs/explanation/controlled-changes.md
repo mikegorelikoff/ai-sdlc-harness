@@ -52,3 +52,23 @@ python3 skills/ai-sdlc-change-set/scripts/change_set.py . \
 
 Use `--emit` first when a reviewer needs to inspect the planned identity and
 fingerprint without creating files.
+
+## Semantic deltas
+
+After intake, add Markdown delta documents below the workspace `deltas/`
+directory. Each file declares one canonical target and groups stable
+requirement IDs under `ADDED`, `MODIFIED`, `REMOVED`, or `RENAMED Requirements`.
+
+Added and modified requirements carry their complete normative statement plus
+WHEN/THEN scenarios. Removed requirements require a reason and migration path;
+renames retain the existing stable ID and declare distinct old and new names.
+
+```bash
+python3 skills/ai-sdlc-change-set/scripts/spec_delta.py . \
+  --change-id add-session-timeout \
+  --validate --write --format toon
+```
+
+Validation proves target declaration, stable-ID presence or absence, scenario
+completeness, source hashes, and absence of overlapping operations. The
+generated `delta-set.json` is still non-authoritative and cannot apply itself.

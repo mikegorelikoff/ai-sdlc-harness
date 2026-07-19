@@ -1,6 +1,6 @@
 ---
 name: ai-sdlc-change-set
-description: AI SDLC controlled change-workspace workflow. Use when an AI assistant needs to create or validate an isolated proposal workspace before changing canonical requirements, designs, policies, APIs, or other authoritative artifacts. Supports `--quick-flow` for assumption-driven drafts and `--full-flow` for strict owner, target, and authority checks.
+description: AI SDLC controlled change-workspace and specification-delta workflow. Use when an AI assistant needs to create or validate an isolated proposal workspace, or author and validate ADDED, MODIFIED, REMOVED, or RENAMED requirement deltas before changing canonical requirements, designs, policies, APIs, or other authoritative artifacts. Supports `--quick-flow` for assumption-driven drafts and `--full-flow` for strict owner, target, evidence, and authority checks.
 ---
 
 # ai-sdlc-change-set: Isolated Change Workspace
@@ -98,6 +98,9 @@ description: AI SDLC controlled change-workspace workflow. Use when an AI assist
   workspace.
 - Use `references/change-set.schema.json` for the versioned machine contract.
 - Use `scripts/change_set.py` for deterministic emit, create, and validation.
+- Read `references/spec-delta-contract.md` before authoring or reviewing delta
+  Markdown and use `references/spec-delta.schema.json` for its projection.
+- Use `scripts/spec_delta.py` to validate and project semantic deltas.
 
 ## Script Usage
 
@@ -105,6 +108,7 @@ description: AI SDLC controlled change-workspace workflow. Use when an AI assist
 python3 skills/ai-sdlc-change-set/scripts/change_set.py . --change-id add-session-timeout --title "Add session timeout" --summary "Expire inactive sessions." --owner Security --target specs/auth/requirements.md --emit --quick-flow
 python3 skills/ai-sdlc-change-set/scripts/change_set.py . --change-id add-session-timeout --title "Add session timeout" --summary "Expire inactive sessions." --owner Security --target specs/auth/requirements.md --create --full-flow
 python3 skills/ai-sdlc-change-set/scripts/change_set.py . --change-id add-session-timeout --validate --format json
+python3 skills/ai-sdlc-change-set/scripts/spec_delta.py . --change-id add-session-timeout --validate --write --format toon
 ```
 
 `--emit` renders the planned record without writes. `--create` builds the
@@ -132,13 +136,18 @@ canonical mutation is possible.
 4. Run `--create`; confirm canonical target bytes did not change.
 5. Edit proposal sections through normal reviewed repository changes.
 6. Run `--validate` before authoring semantic deltas.
-7. Hand the validated workspace to the delta workflow; do not apply it.
+7. Author delta Markdown with stable requirement IDs and operation-specific
+   evidence, then run `spec_delta.py --validate`.
+8. Hand the validated delta projection to preview; do not apply it.
 
 ## Output Spec
 
 The JSON schema `ai-sdlc-change-set/v1` contains `change_id`, `title`,
 `summary`, `status`, `owner`, `flow_mode`, dates, canonical targets, workspace
 artifact paths, authority rules, and `contract_fingerprint`.
+
+The JSON schema `ai-sdlc-spec-delta/v1` contains normalized operations, target
+and source evidence, exact source hashes, and a deterministic fingerprint.
 
 Quality gate:
 
@@ -168,7 +177,7 @@ must remain repository-relative and cannot traverse outside the repository.
 
 ## Scope Boundary
 
-- Do not parse or approve requirement delta semantics; use the delta workflow.
+- Do not treat valid requirement delta semantics as approval or compatibility.
 - Do not compute downstream impact; use `$ai-sdlc-change-impact` and preview.
 - Do not mutate canonical artifacts, policy, feature state, or specs indexes.
 - Do not approve, apply, archive, merge, commit, or release a change.

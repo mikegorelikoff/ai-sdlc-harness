@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-spec-delta-v1",
+  "title": "AI SDLC Specification Delta Set",
+  "type": "object",
+  "required": ["schema", "change_id", "status", "operations", "sources", "contract_fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-spec-delta/v1"},
+    "change_id": {"type": "string"},
+    "status": {"const": "validated"},
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["operation", "target", "requirement_id", "name", "source", "source_line", "source_hash"],
+        "properties": {
+          "operation": {"enum": ["ADDED", "MODIFIED", "REMOVED", "RENAMED"]},
+          "target": {"type": "string"},
+          "requirement_id": {"type": "string"},
+          "name": {"type": "string"},
+          "source": {"type": "string"},
+          "source_line": {"type": "integer", "minimum": 1},
+          "source_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        }
+      }
+    },
+    "sources": {"type": "array", "minItems": 1},
+    "contract_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
