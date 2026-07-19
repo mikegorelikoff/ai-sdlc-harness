@@ -79,11 +79,14 @@ class ChangeApplyTests(unittest.TestCase):
             recovery = json.loads((workspace / "_ai_sdlc/recovery-manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(recovery["status"], "complete")
             self.assertTrue((workspace / "evidence/approval.json").is_file())
+            self.assertTrue((workspace / "evidence/approval.toon").is_file())
+            self.assertIn("status: complete", (workspace / "_ai_sdlc/recovery-manifest.toon").read_text(encoding="utf-8"))
             archived = self.cli(APPLY, repository, "--change-id", "add-audit", "--archive", "--archive-date", "2026-07-19", "--format", "json")
             self.assertEqual(archived.returncode, 0, archived.stdout + archived.stderr)
             archive = repository / "changes/archive/2026-07-19-add-audit"
             self.assertTrue(archive.is_dir())
             self.assertEqual(json.loads((archive / "_ai_sdlc/change-set.json").read_text(encoding="utf-8"))["status"], "archived")
+            self.assertIn("status: archived", (archive / "_ai_sdlc/change-set.toon").read_text(encoding="utf-8"))
             self.assertTrue((archive / "_ai_sdlc/backups/specs/audit/requirements.md").is_file())
 
     def test_stale_or_partial_approval_cannot_write_targets(self) -> None:

@@ -57,7 +57,7 @@ class ChangeSetTests(unittest.TestCase):
             workspace = repository / "changes/add-session-timeout"
             required = {
                 "proposal.md", "design.md", "tasks.md", "deltas/index.md",
-                "evidence/index.md", "_ai_sdlc/change-set.json",
+                "evidence/index.md", "_ai_sdlc/change-set.json", "_ai_sdlc/change-set.toon",
             }
             self.assertEqual(required, {path.relative_to(workspace).as_posix() for path in workspace.rglob("*") if path.is_file()})
             self.assertEqual(target.read_bytes(), before)
@@ -65,6 +65,9 @@ class ChangeSetTests(unittest.TestCase):
             self.assertEqual(record["schema"], "ai-sdlc-change-set/v1")
             self.assertFalse(record["authority"]["canonical_mutation_allowed"])
             self.assertEqual(record["canonical_targets"], ["docs/security.md", "specs/auth/requirements.md"])
+            toon = (workspace / "_ai_sdlc/change-set.toon").read_text(encoding="utf-8")
+            self.assertIn("canonical_targets[2]: docs/security.md,specs/auth/requirements.md", toon)
+            self.assertIn("authority:\n  canonical_mutation_allowed: false", toon)
 
     def test_emit_is_deterministic_and_non_mutating(self) -> None:
         """Emit produces stable identity without creating changes/."""

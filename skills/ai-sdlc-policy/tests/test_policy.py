@@ -41,7 +41,7 @@ class PolicyTests(unittest.TestCase):
     def test_profile_resolution_is_deterministic_with_provenance(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             repository = Path(temp)
-            first = self.cli(repository, "--resolve", "--profile", "high-assurance", "--format", "json")
+            first = self.cli(repository, "--resolve", "--profile", "high-assurance", "--write", "--format", "json")
             second = self.cli(repository, "--resolve", "--profile", "high-assurance", "--format", "json")
             self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
             self.assertEqual(first.stdout, second.stdout)
@@ -49,6 +49,9 @@ class PolicyTests(unittest.TestCase):
             self.assertEqual(resolution["schema"], "ai-sdlc-policy-resolution/v1")
             self.assertTrue(any(rule["provenance"].startswith("organization:high-assurance") for rule in resolution["rules"]))
             self.assertIn("base-change-apply", resolution["protected_rules"])
+            toon = (repository / "_ai_sdlc/policy-resolution.toon").read_text(encoding="utf-8")
+            self.assertIn("rules[", toon)
+            self.assertIn("required_gates[", toon)
 
     def test_protected_rule_cannot_be_weakened_or_rescoped(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

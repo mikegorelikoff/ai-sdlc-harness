@@ -25,6 +25,9 @@ description: Core versioned records used for artifacts, handoffs, modules, compa
 | `ai-sdlc-repository-topology/v2` | Map ownership, source-to-test links, manifests, stack, commands, revision, and topology identity. |
 | `ai-sdlc-context-selectors/v2` | Declare conditional task, path, and tag selectors with include globs, priority, caps, and exclusions. |
 | `ai-sdlc-context-pack/v2` | Return bounded explained source ranges, budget allocation, exclusions, freshness warnings, and task identity. |
+| `ai-sdlc-run-plan/v1` | Define immutable dependency tasks, input fingerprints, retry limits, budgets, and commit boundaries. |
+| `ai-sdlc-run-event/v1` | Append one hash-chained runtime transition with contiguous sequence and evidence payload. |
+| `ai-sdlc-run-state/v1` | Project replayable task status, attempts, readiness, budgets, stop reason, and run identity. |
 | Project context contracts | Preserve evidence-backed repository memory and drift identity. |
 | Quality finding contracts | Record evidence, severity, owner, resolution, and trace targets. |
 
@@ -33,3 +36,11 @@ description: Core versioned records used for artifacts, handoffs, modules, compa
 Required metadata includes feature, artifact, path, workspace, skill, flow mode, state file, decision log, status, owner, timestamps, trace IDs, related artifacts, validation, and metatags.
 
 Versioned schemas evolve additively within a major harness API. Breaking field or authority changes require migration documentation and compatibility review.
+
+## Representation strategy
+
+Agent-facing records are TOON-first and preserve the complete logical record.
+Generated control-plane artifacts write deterministic `.toon` projections;
+human review uses Markdown. JSON remains for JSON Schema validation, external
+interoperability, exact recovery comparison, and the append-only JSONL runtime
+journal. See [TOON-first agent artifacts](../explanation/toon-first.md).

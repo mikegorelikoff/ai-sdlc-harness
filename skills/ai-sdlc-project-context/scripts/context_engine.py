@@ -10,11 +10,15 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
 from project_context import SECRET_PATTERN, revision, saved_identity, scan
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_toon import encode_toon
 
 
 PACK_SCHEMA = "ai-sdlc-context-pack/v2"
@@ -419,7 +423,7 @@ def main() -> int:
     parser.add_argument("--budget", type=int, default=2000)
     parser.add_argument("--selector-config", type=Path)
     parser.add_argument("--write", action="store_true")
-    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="toon")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")
     parser.add_argument("--feature", default="<feature-name>")
@@ -464,21 +468,12 @@ def main() -> int:
         output_path = root / "_ai_sdlc/context/topology.json"
     if args.write:
         atomic_write(output_path, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+        atomic_write(output_path.with_suffix(".toon"), encode_toon(value))
         atomic_write(output_path.with_suffix(".md"), markdown(value))
     if args.format == "json":
         print(json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False))
     elif args.format == "toon":
-        print(f"schema: {value['schema']}")
-        print(f"fingerprint: {value['fingerprint']}")
-        if value["schema"] == PACK_SCHEMA:
-            print(f"task: {value['task']['id']}")
-            print(f"budget: {value['budget']['used_tokens']}/{value['budget']['limit_tokens']}")
-            print(f"selected: {len(value['selected'])}")
-            print(f"exclusions: {len(value['exclusions'])}")
-            print(f"freshness_warnings: {len(value['freshness']['warnings'])}")
-        else:
-            print(f"files: {len(value['files'])}")
-            print(f"ownership_rules: {len(value['ownership'])}")
+        print(encode_toon(value), end="")
     else:
         print(markdown(value), end="")
     return 0

@@ -70,6 +70,9 @@ class DeliveryGraphTests(unittest.TestCase):
             self.assertIn("trace:payments:DEC-001", graph["orphans"])
             self.assertEqual((repository / "_ai_sdlc/delivery-graph.json").read_text(encoding="utf-8"), second.stdout)
             self.assertTrue((repository / "_ai_sdlc/delivery-graph.md").is_file())
+            toon = (repository / "_ai_sdlc/delivery-graph.toon").read_text(encoding="utf-8")
+            self.assertIn("nodes[", toon)
+            self.assertIn("edges[", toon)
 
     def test_end_to_end_requirement_commit_and_release_paths(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

@@ -77,7 +77,7 @@ artifact_metadata:
 - [x] T009. Implement Context Engine v2 and bounded task packs.
   Output: Repository ownership and test topology, conditional selectors, token budget allocator, freshness-aware context packs, secret exclusions, tests, and documentation.
   Refs: AC-008, AC-013
-- [ ] T010. Implement the resumable task runtime core.
+- [x] T010. Implement the resumable task runtime core.
   Output: Versioned run state and journal, ready-task selection, budgets, retries, stop reasons, resume and idempotency behavior, commit-boundary contract, tests, and documentation.
   Refs: AC-005, AC-015, AC-014
 - [ ] T011. Implement declarative workflows, gates, hooks, and dependency waves.

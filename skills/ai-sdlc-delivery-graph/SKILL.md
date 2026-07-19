@@ -18,7 +18,7 @@ description: AI SDLC repository delivery-graph and evidence-freshness workflow. 
 - SDLC stage: Traceability and readiness
 - Purpose: Build a deterministic repository-wide lifecycle graph and answer
   trace, gap, coverage, and orphan questions from stable evidence anchors.
-- Output: `_ai_sdlc/delivery-graph.json` and
+- Output: `_ai_sdlc/delivery-graph.toon`, `_ai_sdlc/delivery-graph.json`, and
   `_ai_sdlc/delivery-graph.md` when `--write` is requested
 
 ### 0.1 Required Inputs
@@ -141,9 +141,9 @@ what verifies it, what shipped it, and where delivery evidence is missing.
 
 The graph contains sorted nodes, edges, gaps, orphans, coverage counters, source
 hashes, and fingerprints. Rebuilding identical inputs produces byte-identical
-JSON and Markdown.
+TOON, JSON, and Markdown.
 
-The evidence ledger contains recalculated file identities, resolved subjects,
+The TOON/JSON evidence ledger contains recalculated file identities, resolved subjects,
 freshness states, reason codes, upstream state, stale paths, and fresh-only
 requirement coverage.
 

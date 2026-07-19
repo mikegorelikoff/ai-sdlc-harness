@@ -40,7 +40,7 @@ Every workflow leaves enough structured evidence for the next person—or the ne
 
     ---
 
-    Requirements, decisions, tests, tasks, evidence, and handoffs stay linked in repository-local Markdown and compact TOON.
+    Requirements, decisions, tests, tasks, evidence, and handoffs stay linked in repository-local Markdown and complete token-efficient TOON.
 
 -   **Scale the rigor**
 

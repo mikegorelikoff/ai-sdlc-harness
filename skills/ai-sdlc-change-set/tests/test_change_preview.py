@@ -119,6 +119,9 @@ To: Named session
             self.assertEqual(target.read_bytes(), before)
             self.assertTrue((workspace / "apply-preview.md").is_file())
             self.assertTrue((workspace / "_ai_sdlc/apply-preview.json").is_file())
+            toon = (workspace / "_ai_sdlc/apply-preview.toon").read_text(encoding="utf-8")
+            self.assertIn("targets[1]", toon)
+            self.assertIn("required_gates", toon)
 
     def test_preview_is_deterministic(self) -> None:
         """Unchanged inputs yield the same fingerprint and output."""

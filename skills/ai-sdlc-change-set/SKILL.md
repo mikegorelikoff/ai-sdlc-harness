@@ -61,7 +61,8 @@ description: AI SDLC controlled change-workspace and specification-delta workflo
 - Route every change to `<repository>/changes/<change-id>/`.
 - Keep human intent in `proposal.md`, `design.md`, `tasks.md`,
   `deltas/index.md`, and `evidence/index.md`.
-- Keep the bounded machine projection in `_ai_sdlc/change-set.json`.
+- Keep complete agent-facing TOON beside interoperable JSON for the change set,
+  delta set, apply preview, approval, and recovery records.
 - Never store a change workspace inside `specs/`, `specs-refiniment/`, or a
   canonical target directory.
 
@@ -158,14 +159,14 @@ canonical mutation is possible.
 
 ## Output Spec
 
-The JSON schema `ai-sdlc-change-set/v1` contains `change_id`, `title`,
+The `ai-sdlc-change-set/v1` record is written as complete TOON plus JSON and contains `change_id`, `title`,
 `summary`, `status`, `owner`, `flow_mode`, dates, canonical targets, workspace
 artifact paths, authority rules, and `contract_fingerprint`.
 
-The JSON schema `ai-sdlc-spec-delta/v1` contains normalized operations, target
+The `ai-sdlc-spec-delta/v1` TOON/JSON pair contains normalized operations, target
 and source evidence, exact source hashes, and a deterministic fingerprint.
 
-The JSON schema `ai-sdlc-change-preview/v1` contains virtual target hashes and
+The `ai-sdlc-change-preview/v1` TOON/JSON pair contains virtual target hashes and
 diffs, conservative conflicts, stale references, reopen actions, gates, and a
 fingerprint that becomes invalid when any input drifts.
 

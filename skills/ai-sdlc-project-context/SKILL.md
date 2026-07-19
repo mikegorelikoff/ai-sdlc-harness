@@ -64,8 +64,8 @@ description: AI SDLC evidence-backed project context and bounded task-pack workf
 - Write the machine projection to `<root>/_ai_sdlc/project-context.toon`.
 - Do not place project-wide context inside one feature folder.
 - Do not overwrite either output when `--check` or `--emit` is used.
-- Route topology to `_ai_sdlc/context/topology.{json,md}` and task packs to
-  `_ai_sdlc/context/task-packs/<task>.{json,md}` only with `--write`.
+- Route topology to `_ai_sdlc/context/topology.{toon,json,md}` and task packs to
+  `_ai_sdlc/context/task-packs/<task>.{toon,json,md}` only with `--write`.
 
 ## 0.5 Feature State Machine
 
@@ -156,7 +156,7 @@ The TOON schema `ai-sdlc-project-context/v1` includes repository, revision,
 fingerprint, drift status, stack, commands, architecture paths, and evidence
 rows with exact `path`, `line`, `kind`, and `detail` fields.
 
-The JSON schema `ai-sdlc-context-pack/v2` includes task identity, topology and
+The complete TOON/JSON `ai-sdlc-context-pack/v2` record includes task identity, topology and
 revision identity, deterministic budget use, selector outcomes, bounded source
 ranges and content, exclusions, freshness warnings, and fingerprint.
 

@@ -71,6 +71,9 @@ class EvidenceLedgerTests(unittest.TestCase):
             self.assertEqual(ledger["records"][0]["status"], "fresh")
             self.assertEqual(ledger["coverage"]["requirements_with_fresh_evidence"], 1)
             self.assertEqual((repository / "_ai_sdlc/evidence-ledger.json").read_text(encoding="utf-8"), second.stdout)
+            toon = (repository / "_ai_sdlc/evidence-ledger.toon").read_text(encoding="utf-8")
+            self.assertIn("records[1]:", toon)
+            self.assertIn("depends_on[0]:", toon)
 
     def test_artifact_and_dependency_drift_are_stale(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

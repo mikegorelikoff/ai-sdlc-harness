@@ -12,7 +12,10 @@ description: Stable execution-mode flags and their precedence rules across AI SD
 
 ## Common output modes
 
-Human-facing commands normally return Markdown. Deterministic helpers may support `--format toon` for compact agent consumption. Machine output must preserve the same result, blocker, and trace meaning as the human view.
+Human-facing commands may return Markdown. Deterministic control-plane helpers
+default to complete `--format toon` output for token-efficient agent
+consumption. Machine output must preserve every logical field as well as the
+same result, blocker, and trace meaning as the human view.
 
 ## Precedence
 

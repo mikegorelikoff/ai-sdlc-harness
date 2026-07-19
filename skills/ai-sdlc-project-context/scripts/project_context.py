@@ -150,7 +150,7 @@ def main() -> int:
     action.add_argument("--write", action="store_true")
     action.add_argument("--check", action="store_true")
     parser.add_argument("--root", type=Path, default=Path.cwd())
-    parser.add_argument("--format", choices=("markdown", "toon"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "toon"), default="toon")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")
     parser.add_argument("--feature", default="<feature-name>")

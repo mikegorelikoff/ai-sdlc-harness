@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -16,6 +17,9 @@ from typing import Any
 from change_preview import apply_virtual, build_preview, digest
 from change_set import REQUIRED_ARTIFACTS, fingerprint, validate_workspace
 from spec_delta import analyze_delta_set
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_toon import encode_toon
 
 
 APPROVAL_SCHEMA = "ai-sdlc-change-approval/v1"
@@ -41,8 +45,9 @@ def atomic_write(path: Path, content: str) -> None:
 
 
 def atomic_json(path: Path, value: dict[str, Any]) -> None:
-    """Write deterministic JSON atomically."""
+    """Write interoperable JSON and a complete agent-facing TOON mirror."""
     atomic_write(path, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+    atomic_write(path.with_suffix(".toon"), encode_toon(value))
 
 
 def load_approval(path: Path, change_id: str, preview: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
@@ -290,7 +295,7 @@ def main() -> int:
     actions.add_argument("--archive", action="store_true")
     parser.add_argument("--approval", type=Path)
     parser.add_argument("--archive-date")
-    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="toon")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")
     parser.add_argument("--feature", default="<feature-name>")
@@ -326,7 +331,7 @@ def main() -> int:
     if args.format == "json":
         print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
     elif args.format == "toon":
-        print("\n".join(f"{key}: {value if not isinstance(value, list) else '/'.join(value)}" for key, value in result.items()))
+        print(encode_toon(result), end="")
     else:
         print(f"Change: {result['change_id']}")
         print(f"Status: {result['status']}")

@@ -102,6 +102,7 @@ nav:
       - Navigate a new request: how-to/navigate-request.md
       - Build project context: how-to/project-context.md
       - Build a task context pack: how-to/build-context-pack.md
+      - Resume a delivery run: how-to/resume-runtime.md
       - Customize team policy: how-to/customize.md
       - Evaluate delivery policy: how-to/evaluate-policy.md
       - Add a capability module: how-to/add-module.md
@@ -122,6 +123,7 @@ nav:
       - Context and quality: explanation/context-quality.md
       - Decision continuity: explanation/decisions.md
       - Workflow handoffs: explanation/handoffs.md
+      - TOON-first artifacts: explanation/toon-first.md
       - Layered configuration: explanation/configuration.md
       - Optional modules: explanation/modules.md
       - Change and learning: explanation/change-learning.md

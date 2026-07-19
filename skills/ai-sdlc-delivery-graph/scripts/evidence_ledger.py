@@ -8,12 +8,16 @@ import hashlib
 import json
 import os
 import re
+import sys
 import tempfile
 from datetime import date, datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any
 
 from delivery_graph import build_graph, digest, resolve
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_toon import encode_toon
 
 
 SOURCE_SCHEMA = "ai-sdlc-evidence-source/v1"
@@ -276,7 +280,7 @@ def main() -> int:
     actions.add_argument("--stale", action="store_true")
     parser.add_argument("--as-of", default=date.today().isoformat())
     parser.add_argument("--write", action="store_true")
-    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="toon")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")
     parser.add_argument("--feature", default="<feature-name>")
@@ -306,6 +310,7 @@ def main() -> int:
         return 1
     if args.write:
         atomic_write(repository / "_ai_sdlc/evidence-ledger.json", json.dumps(ledger, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+        atomic_write(repository / "_ai_sdlc/evidence-ledger.toon", encode_toon(ledger))
         atomic_write(repository / "_ai_sdlc/evidence-ledger.md", markdown(ledger))
     if args.coverage:
         value = {"schema": "ai-sdlc-evidence-coverage/v1", "ledger_fingerprint": ledger["fingerprint"], "coverage": ledger["coverage"]}
@@ -316,13 +321,7 @@ def main() -> int:
     if args.format == "json":
         print(json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False))
     elif args.format == "toon":
-        print(f"schema: {value['schema']}")
-        print(f"fingerprint: {value.get('fingerprint') or value.get('ledger_fingerprint')}")
-        if "records" in value:
-            print(f"records_count: {len(value['records'])}")
-            print(f"stale_paths_count: {len(value['stale_paths'])}")
-        elif "stale_paths" in value:
-            print(f"stale_paths_count: {len(value['stale_paths'])}")
+        print(encode_toon(value), end="")
     elif value.get("schema") == LEDGER_SCHEMA:
         print(markdown(value), end="")
     else:

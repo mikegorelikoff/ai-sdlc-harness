@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-run-state-v1",
+  "title": "AI SDLC Run State",
+  "type": "object",
+  "required": ["schema", "run_id", "plan", "status", "sequence", "running_task", "ready_tasks", "tasks", "budgets", "stop_reason", "fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-run-state/v1"},
+    "run_id": {"type": "string"},
+    "plan": {"type": "object"},
+    "status": {"enum": ["running", "paused", "completed", "stopped"]},
+    "sequence": {"type": "integer", "minimum": 1},
+    "running_task": {"type": "string"},
+    "ready_tasks": {"type": "array", "items": {"type": "string"}},
+    "tasks": {"type": "array", "items": {"type": "object"}},
+    "budgets": {"type": "object"},
+    "stop_reason": {"type": "string"},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

@@ -241,6 +241,14 @@ This page is generated from each package's `SKILL.md` frontmatter. The linked so
 
     [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-retrospective/SKILL.md)
 
+-   **`ai-sdlc-runtime`**
+
+    `core`
+
+    AI SDLC resumable task-runtime workflow. Use when an AI assistant needs to start or resume a versioned delivery run, select dependency-ready work, enforce step, failure, and token budgets, retry safely, persist exact stop reasons, recover state from an append-only journal, or require commit evidence at task boundaries. Supports `--quick-flow` for deterministic local runs and `--full-flow` for strict transition review.
+
+    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-runtime/SKILL.md)
+
 -   **`ai-sdlc-sdd`**
 
     `core`

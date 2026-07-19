@@ -8,11 +8,15 @@ import hashlib
 import json
 import os
 import re
+import sys
 import tempfile
 from pathlib import Path
 from typing import Any
 
 from change_set import validate_workspace
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_toon import encode_toon
 
 
 SCHEMA = "ai-sdlc-spec-delta/v1"
@@ -224,19 +228,8 @@ def atomic_write(path: Path, content: str) -> None:
 
 
 def render_toon(record: dict[str, Any]) -> str:
-    """Render a compact operation table."""
-    lines = [
-        f"schema: {SCHEMA}",
-        f"change_id: {record['change_id']}",
-        f"status: {record['status']}",
-        f"fingerprint: {record['contract_fingerprint']}",
-        "",
-        f"operations[{len(record['operations'])}]{{operation,target,requirement_id,name,source,source_line}}:",
-    ]
-    for item in record["operations"]:
-        values = [str(item[field]).replace(",", ";").replace("\n", " ") for field in ("operation", "target", "requirement_id", "name", "source", "source_line")]
-        lines.append("  " + ",".join(values))
-    return "\n".join(lines).rstrip() + "\n"
+    """Render the complete delta projection as TOON."""
+    return encode_toon(record)
 
 
 def analyze_delta_set(repository: Path, change_id: str) -> tuple[dict[str, Any], list[str]]:
@@ -267,7 +260,7 @@ def main() -> int:
     parser.add_argument("--change-id", required=True)
     parser.add_argument("--validate", action="store_true", required=True)
     parser.add_argument("--write", action="store_true")
-    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="toon")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")
     parser.add_argument("--feature", default="<feature-name>")
@@ -290,6 +283,7 @@ def main() -> int:
         return 1
     if args.write:
         atomic_write(workspace / "_ai_sdlc/delta-set.json", json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+        atomic_write(workspace / "_ai_sdlc/delta-set.toon", encode_toon(record))
     if args.format == "json":
         print(json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False))
     elif args.format == "toon":

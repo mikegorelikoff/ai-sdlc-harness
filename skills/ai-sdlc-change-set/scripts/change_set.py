@@ -9,10 +9,14 @@ import json
 import os
 import re
 import shutil
+import sys
 import tempfile
 from datetime import date
 from pathlib import Path, PurePosixPath
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_toon import encode_toon
 
 
 SCHEMA = "ai-sdlc-change-set/v1"
@@ -245,6 +249,7 @@ locator, freshness, credibility, and trace targets.
         "deltas/index.md": deltas.rstrip() + "\n",
         "evidence/index.md": evidence.rstrip() + "\n",
         "_ai_sdlc/change-set.json": json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        "_ai_sdlc/change-set.toon": encode_toon(record),
     }
 
 
@@ -341,6 +346,9 @@ def validate_record(record: dict[str, Any], expected_id: str) -> list[str]:
 def validate_workspace(workspace: Path, change_id: str) -> tuple[dict[str, Any], list[str]]:
     """Validate required files, record, metadata, and proposal headings."""
     errors = [f"missing required artifact: {relative}" for relative in REQUIRED_ARTIFACTS.values() if not (workspace / relative).is_file()]
+    toon_path = workspace / "_ai_sdlc/change-set.toon"
+    if not toon_path.is_file():
+        errors.append("missing required artifact: _ai_sdlc/change-set.toon")
     if errors:
         return {}, errors
     record, load_errors = load_record(workspace)
@@ -348,6 +356,8 @@ def validate_workspace(workspace: Path, change_id: str) -> tuple[dict[str, Any],
     if load_errors:
         return {}, errors
     errors.extend(validate_record(record, change_id))
+    if toon_path.read_text(encoding="utf-8") != encode_toon(record):
+        errors.append("change-set TOON projection is stale or invalid")
     for name, relative in REQUIRED_ARTIFACTS.items():
         if name == "record":
             continue
@@ -371,18 +381,8 @@ def validate_workspace(workspace: Path, change_id: str) -> tuple[dict[str, Any],
 
 
 def render_toon(record: dict[str, Any], workspace: Path, valid: bool) -> str:
-    """Render a compact machine result."""
-    targets = "/".join(record.get("canonical_targets", []))
-    return (
-        f"schema: {SCHEMA}\n"
-        f"change_id: {record.get('change_id', '')}\n"
-        f"workspace: {workspace.as_posix()}\n"
-        f"status: {record.get('status', '')}\n"
-        f"owner: {record.get('owner', '')}\n"
-        f"targets: {targets}\n"
-        f"fingerprint: {record.get('contract_fingerprint', '')}\n"
-        f"valid: {str(valid).lower()}\n"
-    )
+    """Render the complete machine result as TOON."""
+    return encode_toon({"workspace": workspace.as_posix(), "valid": valid, **record})
 
 
 def emit_result(record: dict[str, Any], workspace: Path, valid: bool, output_format: str) -> None:
@@ -414,7 +414,7 @@ def main() -> int:
     actions.add_argument("--emit", action="store_true")
     actions.add_argument("--create", action="store_true")
     actions.add_argument("--validate", action="store_true")
-    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="toon")
     parser.add_argument("--date", help="Override the creation date for deterministic fixtures")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")

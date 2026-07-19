@@ -119,6 +119,9 @@ To: Named user session
             second = self.validate(repository, "--format", "json")
             self.assertEqual(json.loads(first.stdout)["contract_fingerprint"], json.loads(second.stdout)["contract_fingerprint"])
             self.assertFalse(projection["authority"]["canonical_mutation_allowed"])
+            toon = (workspace / "_ai_sdlc/delta-set.toon").read_text(encoding="utf-8")
+            self.assertIn("operations[4]:", toon)
+            self.assertIn("scenarios[1]", toon)
 
     def test_behavior_change_requires_complete_scenario(self) -> None:
         """ADDED and MODIFIED operations require WHEN and THEN."""

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-run-event-v1",
+  "title": "AI SDLC Run Event",
+  "type": "object",
+  "required": ["schema", "seq", "type", "payload", "previous", "fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-run-event/v1"},
+    "seq": {"type": "integer", "minimum": 1},
+    "type": {"enum": ["run-started", "task-started", "task-succeeded", "task-failed", "task-blocked", "task-retry-requested", "run-paused", "run-stopped"]},
+    "payload": {"type": "object"},
+    "previous": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

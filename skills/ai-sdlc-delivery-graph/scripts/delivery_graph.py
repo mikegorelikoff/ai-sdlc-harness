@@ -9,10 +9,14 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from collections import deque
 from pathlib import Path
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_toon import encode_toon
 
 
 NODE_SCHEMA = "ai-sdlc-delivery-node/v1"
@@ -341,18 +345,11 @@ def markdown_graph(graph: dict[str, Any]) -> str:
 
 
 def render(value: dict[str, Any], output_format: str) -> str:
-    """Render JSON, compact TOON-like summary, or Markdown."""
+    """Render JSON, full TOON, or Markdown."""
     if output_format == "json":
         return json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
     if output_format == "toon":
-        lines = [f"schema: {value.get('schema', '')}"]
-        for key in ("fingerprint", "graph_fingerprint", "source_fingerprint", "start", "end"):
-            if key in value:
-                lines.append(f"{key}: {value[key]}")
-        for key in ("nodes", "edges", "gaps", "orphans", "reachable"):
-            if key in value:
-                lines.append(f"{key}_count: {len(value[key])}")
-        return "\n".join(lines) + "\n"
+        return encode_toon(value)
     if value.get("schema") == GRAPH_SCHEMA:
         return markdown_graph(value)
     return "```json\n" + json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n```\n"
@@ -369,7 +366,7 @@ def main() -> int:
     actions.add_argument("--orphans", action="store_true")
     parser.add_argument("--to")
     parser.add_argument("--write", action="store_true")
-    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="toon")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")
     parser.add_argument("--feature", default="<feature-name>")
@@ -393,6 +390,7 @@ def main() -> int:
     graph = build_graph(repository)
     if args.write:
         atomic_write(repository / "_ai_sdlc/delivery-graph.json", json.dumps(graph, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+        atomic_write(repository / "_ai_sdlc/delivery-graph.toon", encode_toon(graph))
         atomic_write(repository / "_ai_sdlc/delivery-graph.md", markdown_graph(graph))
     errors: list[str] = []
     if args.trace:

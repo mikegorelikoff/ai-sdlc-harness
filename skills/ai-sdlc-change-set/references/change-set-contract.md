@@ -17,6 +17,7 @@ changes/<change-id>/
   deltas/index.md
   evidence/index.md
   _ai_sdlc/change-set.json
+  _ai_sdlc/change-set.toon
 ```
 
 The ID uses lowercase letters, digits, and single hyphens. Targets use
@@ -38,7 +39,7 @@ cannot point into `changes/`.
 - Sort and deduplicate targets before fingerprinting.
 - Write every artifact inside a temporary sibling directory and rename the
   directory only after validation succeeds.
-- Treat `_ai_sdlc/change-set.json` as a projection of the human proposal, not
+- Treat `_ai_sdlc/change-set.{toon,json}` as complete projections of the human proposal, not
   permission to alter canonical truth.
 - Require a later preview, policy gate, approval, and atomic apply workflow for
   any authoritative mutation.

@@ -67,6 +67,9 @@ class ContextEngineTests(unittest.TestCase):
             self.assertEqual(pack["budget"]["used_tokens"] + pack["budget"]["remaining_tokens"], 128)
             self.assertTrue(any(item["truncated"] for item in pack["selected"]))
             self.assertEqual((repository / "_ai_sdlc/context/task-packs/T009.json").read_text(encoding="utf-8"), second.stdout)
+            toon = (repository / "_ai_sdlc/context/task-packs/T009.toon").read_text(encoding="utf-8")
+            self.assertIn("selected[", toon)
+            self.assertIn("selected[2]{content,", toon)
 
     def test_conditional_selector_explains_match_and_skip(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

@@ -18,7 +18,7 @@ description: AI SDLC versioned policy-as-code workflow. Use when an AI assistant
 - SDLC stage: Governance and control evaluation
 - Purpose: Resolve policy layers with provenance and evaluate actions against
   protected, versioned, waiver-aware rules.
-- Output: `_ai_sdlc/policy-resolution.json` or fingerprint-addressed records
+- Output: `_ai_sdlc/policy-resolution.{toon,json}` or fingerprint-addressed TOON/JSON records
   below `_ai_sdlc/policy-decisions/` when `--write` is requested
 
 ### 0.1 Required Inputs
@@ -116,7 +116,7 @@ accountable, expiring exceptions without silently weakening organization rules.
 
 ## Output Spec
 
-Resolution records contain normalized rules, provenance, source hashes,
+Complete TOON/JSON resolution records contain normalized rules, provenance, source hashes,
 protected rule IDs, and a deterministic fingerprint. Decision records contain
 the exact action and context fingerprint, matched and waived rules, gates,
 reasons, result, evaluation time, and policy fingerprint.

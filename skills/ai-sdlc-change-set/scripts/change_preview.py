@@ -9,11 +9,15 @@ import hashlib
 import json
 import os
 import re
+import sys
 import tempfile
 from pathlib import Path
 from typing import Any
 
 from spec_delta import analyze_delta_set, semantic_fingerprint
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_toon import encode_toon
 
 
 SCHEMA = "ai-sdlc-change-preview/v1"
@@ -234,13 +238,8 @@ def render_markdown(record: dict[str, Any]) -> str:
 
 
 def render_toon(record: dict[str, Any]) -> str:
-    """Render bounded preview signals."""
-    return "\n".join([
-        f"schema: {SCHEMA}", f"change_id: {record['change_id']}", f"status: {record['status']}",
-        f"preview_fingerprint: {record['preview_fingerprint']}", f"targets: {len(record['targets'])}",
-        f"conflicts: {len(record['conflicts'])}", f"stale_references: {len(record['stale_references'])}",
-        "required_gates: " + "/".join(item["gate"] for item in record["required_gates"]),
-    ]) + "\n"
+    """Render the complete preview projection as TOON."""
+    return encode_toon(record)
 
 
 def main() -> int:
@@ -250,7 +249,7 @@ def main() -> int:
     parser.add_argument("--change-id", required=True)
     parser.add_argument("--preview", action="store_true", required=True)
     parser.add_argument("--write", action="store_true")
-    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="toon")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")
     parser.add_argument("--feature", default="<feature-name>")
@@ -276,6 +275,7 @@ def main() -> int:
     if args.write:
         workspace = repository / "changes" / args.change_id
         atomic_write(workspace / "_ai_sdlc/apply-preview.json", json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+        atomic_write(workspace / "_ai_sdlc/apply-preview.toon", encode_toon(record))
         atomic_write(workspace / "apply-preview.md", render_markdown(record))
     if args.format == "json":
         print(json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False))

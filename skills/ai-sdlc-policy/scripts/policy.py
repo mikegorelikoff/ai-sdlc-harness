@@ -8,10 +8,14 @@ import hashlib
 import json
 import os
 import re
+import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+from ai_sdlc_toon import encode_toon
 
 
 LAYER_SCHEMA = "ai-sdlc-policy-layer/v1"
@@ -345,7 +349,7 @@ def main() -> int:
     parser.add_argument("--waiver", type=Path, action="append", default=[])
     parser.add_argument("--as-of", default=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))
     parser.add_argument("--write", action="store_true")
-    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "json", "toon"), default="toon")
     parser.add_argument("--quick-flow", action="store_true")
     parser.add_argument("--full-flow", action="store_true")
     parser.add_argument("--feature", default="<feature-name>")
@@ -429,23 +433,18 @@ def main() -> int:
             return 1
         value = evaluate(resolution, action, context, waiver_values, as_of)
         if args.write:
-            atomic_write(repository / f"_ai_sdlc/policy-decisions/{value['fingerprint']}.json", json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+            decision_path = repository / f"_ai_sdlc/policy-decisions/{value['fingerprint']}.json"
+            atomic_write(decision_path, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+            atomic_write(decision_path.with_suffix(".toon"), encode_toon(value))
     else:
         value = resolution
         if args.write:
             atomic_write(repository / "_ai_sdlc/policy-resolution.json", json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+            atomic_write(repository / "_ai_sdlc/policy-resolution.toon", encode_toon(value))
     if args.format == "json":
         print(json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False))
     elif args.format == "toon":
-        print(f"schema: {value['schema']}")
-        print(f"fingerprint: {value['fingerprint']}")
-        if "result" in value:
-            print(f"result: {value['result']}")
-            print(f"required_gates: {'/'.join(value['required_gates'])}")
-            print(f"matched_rules: {len(value['matched_rules'])}")
-        else:
-            print(f"rules: {len(value['rules'])}")
-            print(f"protected_rules: {len(value['protected_rules'])}")
+        print(encode_toon(value), end="")
     else:
         print(markdown(value), end="")
     return 0

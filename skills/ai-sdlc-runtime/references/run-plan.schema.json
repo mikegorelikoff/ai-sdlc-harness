@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-run-plan-v1",
+  "title": "AI SDLC Run Plan",
+  "type": "object",
+  "required": ["schema", "id", "version", "budgets", "tasks"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-run-plan/v1"},
+    "id": {"type": "string"},
+    "version": {"type": "string"},
+    "budgets": {"type": "object"},
+    "tasks": {"type": "array", "minItems": 1, "items": {"type": "object"}}
+  },
+  "additionalProperties": false
+}
