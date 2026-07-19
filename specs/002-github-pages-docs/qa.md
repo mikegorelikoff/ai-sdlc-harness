@@ -17,7 +17,9 @@ artifact_metadata:
   related_artifacts:
     - "specs/002-github-pages-docs/decision-log.md"
     - "specs/002-github-pages-docs/design.md"
+    - "specs/002-github-pages-docs/plan.md"
     - "specs/002-github-pages-docs/requirements.md"
+    - "specs/002-github-pages-docs/tasks.md"
     - "specs/002-github-pages-docs/test-cases.md"
   validation: []
   metatags:
@@ -35,7 +37,9 @@ Add a public GitHub Pages documentation experience and automated deployment whil
 
 ## Acceptance Scenarios
 - New visitor understands the harness and can reach installation in one action.
-- Role-based user can find the relevant workflow and authoritative guide.
+- Reader can choose learning, task, explanation, or reference material from grouped navigation.
+- Every substantive public page is navigated once and exposes a local outline when headings exist.
+- Role-based user can find the relevant workflow and authoritative repository guide.
 - Maintainer can regenerate catalogs and detect drift before commit.
 - GitHub Actions can build and deploy the site under the repository base path.
 

@@ -43,20 +43,23 @@ artifact_metadata:
 - Decision log: `decision-log.md`
 
 ## Cross-Artifact Trace Map
-- AC-001: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T002) -> qa.md -> decision-log.md
-- AC-002: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T002, T004) -> qa.md -> decision-log.md
-- AC-003: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T003) -> qa.md -> decision-log.md
-- AC-004: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T003) -> qa.md -> decision-log.md
-- AC-005: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T003, T004) -> qa.md -> decision-log.md
-- AC-006: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T002, T004) -> qa.md -> decision-log.md
-- AC-007: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T004) -> qa.md -> decision-log.md
-- AC-008: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T002, T004) -> qa.md -> decision-log.md
+- AC-001: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T002) -> qa.md -> decision-log.md
+- AC-002: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T002, T004) -> qa.md -> decision-log.md
+- AC-003: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T002, T003) -> qa.md -> decision-log.md
+- AC-004: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T002, T003) -> qa.md -> decision-log.md
+- AC-005: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T002, T004) -> qa.md -> decision-log.md
+- AC-006: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T003) -> qa.md -> decision-log.md
+- AC-007: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T003) -> qa.md -> decision-log.md
+- AC-008: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T003, T004) -> qa.md -> decision-log.md
+- AC-009: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T002, T004) -> qa.md -> decision-log.md
+- AC-010: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T004) -> qa.md -> decision-log.md
+- AC-011: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012) -> tasks.md (T001, T002, T004) -> qa.md -> decision-log.md
 
 ## Task Execution Plan
-- [ ] T001: - [x] T001. Establish the GitHub Pages SDD package and execution plan.; refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, DEC-001, DEC-002, DEC-003; output: Requirements, design, test cases, QA plan, tasks, decision log, registry entry, and linked machine/human plans.
-- [ ] T002: - [ ] T002. Build the responsive Jekyll site shell and visual system.; refs: AC-001, AC-002, AC-006, AC-008; output: Configuration, layout, navigation includes, assets, landing page, and getting-started experience.
-- [ ] T003: - [ ] T003. Add curated documentation pages and generated skill/module catalogs.; refs: AC-003, AC-004, AC-005; output: Workflow, skills, modules, concepts, and contributing pages plus deterministic catalog generator and data.
-- [ ] T004: - [ ] T004. Add docs validation, Pages deployment, responsive QA, and release evidence.; refs: AC-002, AC-005, AC-006, AC-007, AC-008; output: Validator, unit tests, official Pages workflow, README link, browser smoke evidence, and passing release gates.
+- [ ] T001: - [x] T001. Establish the GitHub Pages SDD package and execution plan.; refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, DEC-001, DEC-002, DEC-003; output: Requirements, design, test cases, QA plan, tasks, decision log, registry entry, and linked machine/human plans.
+- [ ] T002: - [x] T002. Build the responsive Jekyll shell and intent-based information architecture.; refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-009, AC-011; output: Configuration, layouts, grouped navigation, local outline behavior, visual system, landing page, start path, and documented forty-page content map.
+- [ ] T003: - [ ] T003. Author the complete documentation corpus and generated capability catalogs.; refs: AC-003, AC-004, AC-006, AC-007, AC-008; output: Tutorials, how-to guides, explanations, references, roadmap, section indexes, deterministic catalog generator, and generated data.
+- [ ] T004: - [ ] T004. Add docs validation, Pages deployment, responsive QA, and release evidence.; refs: AC-002, AC-005, AC-008, AC-009, AC-010, AC-011; output: Validator, unit tests, official Pages workflow, README link, browser smoke evidence, and passing release gates.
 
 ## Task Dependencies
 - T001: depends on previous applicable task / none

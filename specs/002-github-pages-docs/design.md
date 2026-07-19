@@ -16,7 +16,11 @@ artifact_metadata:
   trace_ids: []
   related_artifacts:
     - "specs/002-github-pages-docs/decision-log.md"
+    - "specs/002-github-pages-docs/plan.md"
+    - "specs/002-github-pages-docs/qa.md"
     - "specs/002-github-pages-docs/requirements.md"
+    - "specs/002-github-pages-docs/tasks.md"
+    - "specs/002-github-pages-docs/test-cases.md"
   validation: []
   metatags:
     - "ai-sdlc"
@@ -29,22 +33,26 @@ artifact_metadata:
 # Design
 
 ## Overview
-Create a Jekyll site rooted at `docs/`. Liquid layouts and includes provide the shared shell; SCSS/CSS and a small progressive-enhancement script provide the visual system and mobile navigation. Python generation converts skill frontmatter and module JSON into Jekyll data files.
+Create a Jekyll site rooted at `docs/` with an intent-based information architecture. Liquid layouts and includes provide the shared shell, grouped sidebar, local outline, and learning-path navigation; SCSS/CSS and a small progressive-enhancement script provide the visual system and mobile behavior. Python generation converts skill frontmatter and module JSON into Jekyll data files.
 
 ## Architecture
-Source content lives in `docs/`, curated from existing public documentation. `_layouts/default.html` owns the document shell, `_includes/` owns navigation and reusable sections, `_data/` owns generated catalogs, and `assets/` owns local presentation resources. A standard-library Python tool refreshes catalogs and validates source contracts. GitHub Actions builds with the official Pages Jekyll action and deploys the resulting artifact.
+Source content lives in `docs/` across four modes: `tutorials/` for learning journeys, `how-to/` for bounded tasks, `explanation/` for rationale and mental models, and `reference/` for exact contracts. `_layouts/default.html` owns the document shell, `_includes/` owns navigation and reusable sections, `_data/navigation.yml` owns the complete public information architecture, `_data/` owns generated catalogs, and `assets/` owns local presentation resources. A standard-library Python tool refreshes catalogs and validates source contracts. GitHub Actions builds with the official Pages Jekyll action and deploys the resulting artifact.
 
 ## Components
-- Site shell: default layout, header, sidebar, footer, skip link, SEO/social metadata.
-- Information architecture: landing, start, workflow, skills, modules, concepts, contributing.
+- Site shell: default layout, header, grouped sidebar, local outline, footer, skip link, SEO/social metadata.
+- Information architecture: welcome, roadmap, four section indexes, and approximately 36 detailed content pages.
+- Learning paths: section-purpose framing plus previous/next actions on detailed pages.
 - Design system: color, typography, spacing, cards, callouts, code, tables, responsive navigation.
 - Catalog generator: parses skill YAML-lite frontmatter and module JSON into deterministic YAML.
-- Documentation validator: checks frontmatter, local links, anchors, required assets, and catalog parity.
+- Documentation validator: checks frontmatter, local links, anchors, required assets, page count, navigation membership, and catalog parity.
 - Pages workflow: build artifact and environment-bound deploy job.
 
 ## Interfaces and Contracts
 - Every public page has Jekyll frontmatter with `layout`, `title`, `description`, `nav_order`, and `permalink`.
-- Navigation entries use `relative_url` so project base paths work.
+- Every public page except the error page appears exactly once in `_data/navigation.yml`.
+- Navigation groups use `title`, `url`, and `children`; child entries use `title` and `url`.
+- Navigation entries and assets use `relative_url` so project base paths work.
+- Local outlines are progressive enhancement generated from visible `h2` and `h3` elements.
 - Generated `_data/skills.yml` records `id`, `name`, `description`, `path`, and optional module ownership.
 - Generated `_data/modules.yml` records manifest identity, version, compatibility, description, and skills.
 - Validation exits non-zero with path-scoped diagnostics.
@@ -84,7 +92,8 @@ Source content lives in `docs/`, curated from existing public documentation. `_l
 ## Validation Strategy
 - Unit-test catalog parsing and documentation link checks with temporary fixtures.
 - Run generator in check mode to detect catalog drift.
-- Run validator against `docs/`.
+- Run validator against `docs/`, requiring at least 38 navigated public pages.
+- Validate that every public page is listed exactly once and every navigation target exists.
 - Validate YAML workflow shape and required action/permission contracts.
 - Build with Jekyll locally when available and rely on the official Pages build action in CI.
 - Perform responsive browser smoke checks at mobile and desktop widths.

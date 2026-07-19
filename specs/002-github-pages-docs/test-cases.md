@@ -22,6 +22,9 @@ artifact_metadata:
     - "AC-006"
     - "AC-007"
     - "AC-008"
+    - "AC-009"
+    - "AC-010"
+    - "AC-011"
     - "TC-001"
     - "TC-002"
     - "TC-003"
@@ -31,10 +34,16 @@ artifact_metadata:
     - "TC-007"
     - "TC-008"
     - "TC-009"
+    - "TC-010"
+    - "TC-011"
+    - "TC-012"
   related_artifacts:
     - "specs/002-github-pages-docs/decision-log.md"
     - "specs/002-github-pages-docs/design.md"
+    - "specs/002-github-pages-docs/plan.md"
+    - "specs/002-github-pages-docs/qa.md"
     - "specs/002-github-pages-docs/requirements.md"
+    - "specs/002-github-pages-docs/tasks.md"
   validation: []
   metatags:
     - "ai-sdlc"
@@ -53,14 +62,17 @@ Validate the generated catalogs, site structure, internal navigation, accessibil
 | ID | Scenario | Expected Result | Refs |
 | --- | --- | --- | --- |
 | TC-001 | Load landing page content | Promise, workflow, start, and repository actions are present | AC-001 |
-| TC-002 | Validate responsive shell contracts | Mobile toggle, semantic navigation, viewport metadata, and desktop sidebar hooks exist | AC-002, AC-008 |
-| TC-003 | Generate skill catalog | Every skill package appears exactly once with valid repository path | AC-003 |
-| TC-004 | Generate module catalog | Every manifest appears and references existing skills | AC-004 |
-| TC-005 | Validate clean documentation tree | Frontmatter, local links, anchors, and required assets pass | AC-005 |
-| TC-006 | Introduce broken local target in fixture | Validator exits non-zero with source and missing target | AC-005 |
-| TC-007 | Inspect project-base URL usage | Internal template links use Jekyll URL filters and no root-only asset paths exist | AC-006 |
-| TC-008 | Inspect Pages workflow | Official action versions, permissions, environment, build dependency, and main trigger exist | AC-007 |
-| TC-009 | Disable JavaScript/reduced motion | Core links remain in markup and reduced-motion CSS disables nonessential transitions | AC-008 |
+| TC-002 | Validate responsive shell contracts | Grouped mobile navigation, semantic landmarks, viewport metadata, and desktop sidebar hooks exist | AC-002, AC-011 |
+| TC-003 | Validate information architecture | At least 38 substantive public pages exist and every page appears exactly once in navigation | AC-003 |
+| TC-004 | Inspect documentation modes | Tutorials, how-to, explanation, and reference pages satisfy their distinct content contracts | AC-004 |
+| TC-005 | Generate local page outline | Multiple headings produce outline links while no-JS content remains intact | AC-005, AC-011 |
+| TC-006 | Generate skill catalog | Every skill package appears exactly once with valid repository path | AC-006 |
+| TC-007 | Generate module catalog | Every manifest appears and references existing skills | AC-007 |
+| TC-008 | Validate clean documentation tree | Frontmatter, local links, anchors, navigation, and required assets pass | AC-008 |
+| TC-009 | Introduce broken local target in fixture | Validator exits non-zero with source and missing target | AC-008 |
+| TC-010 | Inspect project-base URL usage | Internal template links use Jekyll URL filters and no root-only asset paths exist | AC-009 |
+| TC-011 | Inspect Pages workflow | Official action versions, permissions, environment, build dependency, and main trigger exist | AC-010 |
+| TC-012 | Disable JavaScript or request reduced motion | Core links remain in markup and reduced-motion CSS disables nonessential transitions | AC-011 |
 
 ## Layer Mapping
 - Unit: catalog parser, frontmatter parsing, local path and anchor resolution.

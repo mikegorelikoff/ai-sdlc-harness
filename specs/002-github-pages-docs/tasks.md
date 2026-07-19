@@ -22,6 +22,9 @@ artifact_metadata:
     - "AC-006"
     - "AC-007"
     - "AC-008"
+    - "AC-009"
+    - "AC-010"
+    - "AC-011"
     - "DEC-001"
     - "DEC-002"
     - "DEC-003"
@@ -46,18 +49,18 @@ artifact_metadata:
 ## Implementation
 - [x] T001. Establish the GitHub Pages SDD package and execution plan.
   Output: Requirements, design, test cases, QA plan, tasks, decision log, registry entry, and linked machine/human plans.
-  Refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, DEC-001, DEC-002, DEC-003
-- [ ] T002. Build the responsive Jekyll site shell and visual system.
-  Output: Configuration, layout, navigation includes, assets, landing page, and getting-started experience.
-  Refs: AC-001, AC-002, AC-006, AC-008
+  Refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, DEC-001, DEC-002, DEC-003
+- [x] T002. Build the responsive Jekyll shell and intent-based information architecture.
+  Output: Configuration, layouts, grouped navigation, local outline behavior, visual system, landing page, start path, and documented forty-page content map.
+  Refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-009, AC-011
   Depends on: T001
-- [ ] T003. Add curated documentation pages and generated skill/module catalogs.
-  Output: Workflow, skills, modules, concepts, and contributing pages plus deterministic catalog generator and data.
-  Refs: AC-003, AC-004, AC-005
+- [ ] T003. Author the complete documentation corpus and generated capability catalogs.
+  Output: Tutorials, how-to guides, explanations, references, roadmap, section indexes, deterministic catalog generator, and generated data.
+  Refs: AC-003, AC-004, AC-006, AC-007, AC-008
   Depends on: T002
 - [ ] T004. Add docs validation, Pages deployment, responsive QA, and release evidence.
   Output: Validator, unit tests, official Pages workflow, README link, browser smoke evidence, and passing release gates.
-  Refs: AC-002, AC-005, AC-006, AC-007, AC-008
+  Refs: AC-002, AC-005, AC-008, AC-009, AC-010, AC-011
   Depends on: T002, T003
 
 ## Testing

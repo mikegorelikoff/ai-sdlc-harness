@@ -22,6 +22,9 @@ artifact_metadata:
     - "AC-006"
     - "AC-007"
     - "AC-008"
+    - "AC-009"
+    - "AC-010"
+    - "AC-011"
     - "DEC-001"
     - "DEC-002"
     - "DEC-003"
@@ -57,9 +60,11 @@ The repository contains strong Markdown documentation but it is optimized for so
 
 ## Scope
 - Add a Jekyll site under `docs/` with a responsive custom theme.
-- Add landing, getting-started, workflow, skills, modules, concepts, and contributing pages.
+- Organize approximately forty pages by reader intent: tutorials, how-to guides, explanation, and reference.
+- Add grouped sidebar navigation, local page outlines, and previous/next learning paths.
+- Cover onboarding, established-project adoption, lifecycle execution, customization, recovery, governance, core concepts, and technical contracts.
 - Generate navigable skill and module catalog data from repository sources.
-- Add local deterministic validation for links, metadata, catalog coverage, and critical HTML/CSS assets.
+- Add local deterministic validation for links, metadata, navigation coverage, catalog coverage, and critical HTML/CSS assets.
 - Add a GitHub Actions workflow that builds and deploys the Pages artifact from `main`.
 
 ## Actors
@@ -81,13 +86,15 @@ The repository contains strong Markdown documentation but it is optimized for so
 
 ## Functional Requirements
 - FR-001: The site shall present a clear value proposition and a start-here path from the landing page.
-- FR-002: The site shall provide persistent desktop and mobile navigation across all primary sections.
-- FR-003: Role and workflow pages shall link users to the authoritative repository guides and concepts.
-- FR-004: A generated catalog shall list every installed skill with purpose and package link.
-- FR-005: A generated catalog shall list every module with compatibility and capability metadata.
-- FR-006: Internal links and referenced local files shall be validated deterministically.
-- FR-007: GitHub Actions shall build a Pages artifact and deploy it only from `main` or manual dispatch.
-- FR-008: The site shall work under the repository Pages base path, not only at domain root.
+- FR-002: Every documentation page shall expose persistent desktop/mobile navigation grouped by reader intent.
+- FR-003: Tutorials shall provide end-to-end learning paths; how-to guides shall solve bounded tasks; explanations shall teach system reasoning; references shall state exact contracts.
+- FR-004: The published source shall contain roughly forty substantive pages across the four documentation modes, including section indexes.
+- FR-005: Grouped navigation shall expose every public page exactly once and local page outlines shall expose meaningful headings.
+- FR-006: A generated catalog shall list every installed skill with purpose and package link.
+- FR-007: A generated catalog shall list every module with compatibility and capability metadata.
+- FR-008: Internal links, referenced local files, navigation membership, and page metadata shall be validated deterministically.
+- FR-009: GitHub Actions shall build a Pages artifact and deploy it only from `main` or manual dispatch.
+- FR-010: The site shall work under the repository Pages base path, not only at domain root.
 
 ## Non-Functional Requirements
 - NFR-001: The site shall be usable at mobile, tablet, and desktop widths.
@@ -99,19 +106,23 @@ The repository contains strong Markdown documentation but it is optimized for so
 
 ## Constraints
 - GitHub Pages and GitHub Actions are the hosting and delivery targets.
-- Repository Markdown remains the authoritative detailed source; web pages curate and link rather than fork every document.
+- Repository Markdown remains the authoritative detailed source; web pages reorganize, explain, and link rather than silently replacing delivery contracts.
+- Public pages must contain project-specific substance rather than placeholder summaries.
 - The current feature branch is based on the completed adaptive harness roadmap because no `dev` branch exists.
 - Pages must support the project path `/ai-sdlc-harness/`.
 
 ## Acceptance Criteria
 - AC-001: Given a new visitor, when the landing page loads, then the product promise, primary workflow, start action, and repository action are visible without opening source files.
-- AC-002: Given any primary page, when viewed at 360px and 1280px widths, then navigation and content remain readable and operable.
-- AC-003: Given the repository skills, when catalog generation runs, then every `skills/*/SKILL.md` package is represented exactly once.
-- AC-004: Given module manifests, when catalog generation runs, then every module is represented with declared skills and compatibility.
-- AC-005: Given site source changes, when documentation validation runs, then broken local links, missing frontmatter, missing critical assets, and catalog drift fail with actionable diagnostics.
-- AC-006: Given a Pages build, when deployed under the repository base path, then styles, scripts, navigation, and canonical links resolve correctly.
-- AC-007: Given a push to `main`, when the Pages workflow runs, then it builds, uploads, and deploys through the `github-pages` environment with least-required permissions.
-- AC-008: Given JavaScript is unavailable or reduced motion is requested, then primary content/navigation remain accessible and animations do not block use.
+- AC-002: Given any primary page, when viewed at 360px and 1280px widths, then grouped navigation and content remain readable and operable.
+- AC-003: Given the documentation source, when navigation validation runs, then at least 38 substantive public pages are present and every non-error page is represented exactly once in grouped navigation.
+- AC-004: Given a reader goal, when the matching section is opened, then tutorials teach complete journeys, how-to pages provide bounded procedures, explanations provide rationale, and references provide exact contracts.
+- AC-005: Given a content page with multiple headings, when it loads with JavaScript, then a local page outline is generated; without JavaScript the content and primary navigation remain usable.
+- AC-006: Given the repository skills, when catalog generation runs, then every `skills/*/SKILL.md` package is represented exactly once.
+- AC-007: Given module manifests, when catalog generation runs, then every module is represented with declared skills and compatibility.
+- AC-008: Given site source changes, when documentation validation runs, then broken local links, missing frontmatter, missing critical assets, unlisted pages, and catalog drift fail with actionable diagnostics.
+- AC-009: Given a Pages build, when deployed under the repository base path, then styles, scripts, navigation, and canonical links resolve correctly.
+- AC-010: Given a push to `main`, when the Pages workflow runs, then it builds, uploads, and deploys through the `github-pages` environment with least-required permissions.
+- AC-011: Given JavaScript is unavailable or reduced motion is requested, then primary content/navigation remain accessible and animations do not block use.
 
 ## Out of Scope
 - Full-text search service or hosted analytics.
