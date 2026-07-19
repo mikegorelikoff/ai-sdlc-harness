@@ -1,3 +1,7 @@
+<!-- public-docs-canonical: ../docs/index.md -->
+
+> **Internal, non-canonical design note.** The maintained public documentation starts at [AI SDLC Harness docs](../docs/index.md). This file is retained for repository history and maintainer context only.
+
 # Skill Anatomy
 
 Each skill is a self-contained instruction folder that an AI assistant reads to

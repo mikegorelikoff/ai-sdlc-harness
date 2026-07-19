@@ -26,6 +26,7 @@ If AI SDLC, SDD, artifacts, gates, or handoffs are new terms, begin with
 - [**Change and learning**](change-learning.md) — how delivery evidence supports recovery and improvement.
 - [**Controlled changes**](controlled-changes.md) — how proposals remain isolated until approved apply.
 - [**Agent portability**](agent-portability.md) — why instructions live beside the work.
+- [**Maturity and limitations**](maturity-limitations.md) — what is verified, expected, unsupported, and not claimed.
 
 </div>
 

@@ -14,7 +14,7 @@ hide:
 <p class="hero__copy">AI SDLC Harness turns requests, decisions, requirements, tests, implementation, and validation into durable repository evidence—so a person or another agent can understand what happened and continue safely.</p>
 
 [Learn the foundations](foundations/index.md){ .md-button .md-button--primary }
-[Evaluate adoption](foundations/why-harness.md){ .md-button }
+[Evaluate adoption](adoption/index.md){ .md-button }
 
 <div class="metric-strip">
   <div class="metric"><strong>44</strong><span>Installed capabilities</span></div>
@@ -72,7 +72,7 @@ New to these ideas? Read [What is AI SDLC?](foundations/ai-sdlc.md) and
     Check fit, prerequisites, non-goals, authority boundaries, maturity, and
     the evidence you should require before a pilot.
 
-    [Evaluate the harness →](foundations/why-harness.md)
+    [Evaluate the harness →](adoption/index.md)
 
 -   **I need an exact contract**
 
@@ -124,3 +124,4 @@ improvement in your cycle time, quality, or cost. Treat those outcomes as pilot
 hypotheses and evaluate them with your own baseline and review.
 
 [Begin with Foundations →](foundations/index.md){ .md-button .md-button--primary }
+[Evaluate a bounded pilot →](adoption/index.md){ .md-button }

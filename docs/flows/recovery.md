@@ -50,5 +50,5 @@ improvements. Proposals may change a skill, policy, workflow, test suite, or
 ownership model only after review. Metrics help find patterns; qualitative
 context explains them. Neither substitutes for accountable adoption decisions.
 
-For symptom-level commands, use the operational troubleshooting runbook when it
-is introduced in the adoption and operations section.
+For symptom-level diagnosis, safe repair, verification, and escalation, use the
+[operational troubleshooting runbook](../operations/troubleshooting.md).

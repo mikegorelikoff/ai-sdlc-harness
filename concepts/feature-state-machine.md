@@ -1,3 +1,7 @@
+<!-- public-docs-canonical: ../docs/index.md -->
+
+> **Internal, non-canonical design note.** The maintained public documentation starts at [AI SDLC Harness docs](../docs/index.md). This file is retained for repository history and maintainer context only.
+
 # Feature State Machine
 
 The feature state machine prevents agents from violating the skill chain for a

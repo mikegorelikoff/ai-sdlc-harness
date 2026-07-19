@@ -31,12 +31,22 @@ from validate_docs import (  # noqa: E402
     navigation_paths,
     parse_frontmatter,
     validate_contract_matrix,
+    validate_adoption_operations,
+    validate_governance_contract,
     validate_links,
     validate_flows,
     validate_full_lifecycle_contract,
+    validate_maintainer_contract,
+    validate_maturity_contract,
     validate_navigation,
     validate_onboarding,
+    validate_pilot_contract,
     validate_refinement_contract,
+    validate_raci_contract,
+    validate_role_paths,
+    validate_root_source_text,
+    validate_section_index,
+    validate_troubleshooting_contract,
 )
 
 
@@ -204,6 +214,115 @@ class DocumentationValidationTests(unittest.TestCase):
                     "control",
                     CONTROL_PLANE_CONTRACT,
                 )
+            )
+        )
+
+    def test_adoption_operations_contracts_and_mutations(self) -> None:
+        self.assertEqual(validate_adoption_operations(DOCS_ROOT.parent), [])
+
+        role_paths = (DOCS_ROOT / "onboarding/role-paths.md").read_text(encoding="utf-8")
+        self.assertTrue(
+            validate_role_paths(role_paths.replace("## New or junior engineer", "## Newcomer", 1))
+        )
+        self.assertTrue(
+            validate_role_paths(
+                role_paths.replace("`goal-capability-map.md`", "`wrong-map.md`", 1)
+            )
+        )
+
+        raci = (DOCS_ROOT / "operations/operating-model.md").read_text(encoding="utf-8")
+        self.assertTrue(
+            validate_raci_contract(
+                raci.replace("| Problem/value accepted |", "| Wrong gate |", 1)
+            )
+        )
+
+        def replace_table_cell(
+            text: str, row_label: str, column: int, replacement: str
+        ) -> str:
+            lines = text.splitlines()
+            for index, line in enumerate(lines):
+                if not line.startswith(f"| {row_label} |"):
+                    continue
+                cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+                cells[column] = replacement
+                lines[index] = "| " + " | ".join(cells) + " |"
+                return "\n".join(lines) + ("\n" if text.endswith("\n") else "")
+            self.fail(f"missing table row {row_label}")
+
+        for authority_column in (1, 2, 3, 4):
+            self.assertTrue(
+                validate_raci_contract(
+                    replace_table_cell(
+                        raci, "Problem/value accepted", authority_column, ""
+                    )
+                )
+            )
+
+        pilot = (DOCS_ROOT / "adoption/pilot.md").read_text(encoding="utf-8")
+        self.assertTrue(
+            validate_pilot_contract(pilot.replace("| Baseline |", "| Before |", 1))
+        )
+
+        governance = (DOCS_ROOT / "operations/governance.md").read_text(encoding="utf-8")
+        self.assertTrue(
+            validate_governance_contract(
+                governance.replace("## Incident response", "## Incident notes", 1)
+            )
+        )
+
+        troubleshooting = (DOCS_ROOT / "operations/troubleshooting.md").read_text(encoding="utf-8")
+        self.assertTrue(
+            validate_troubleshooting_contract(
+                troubleshooting.replace("| Invalid or corrupt state |", "| Bad state |", 1)
+            )
+        )
+        troubleshooting_mutations = {
+            1: "Inspect prerequisites.",
+            2: "Retry later.",
+            3: "Looks good.",
+            4: "Avoid unsafe action.",
+            5: "",
+        }
+        for column, replacement in troubleshooting_mutations.items():
+            self.assertTrue(
+                validate_troubleshooting_contract(
+                    replace_table_cell(
+                        troubleshooting, "Install command fails", column, replacement
+                    )
+                )
+            )
+
+        maturity = (DOCS_ROOT / "explanation/maturity-limitations.md").read_text(encoding="utf-8")
+        self.assertTrue(
+            validate_maturity_contract(
+                maturity.replace("## Known limitations", "## Caveats", 1)
+            )
+        )
+
+        maintainer = (
+            (DOCS_ROOT / "maintainers/extend.md").read_text(encoding="utf-8")
+            + (DOCS_ROOT / "maintainers/release.md").read_text(encoding="utf-8")
+        )
+        self.assertTrue(validate_maintainer_contract(maintainer.replace("module.json", "manifest", 1)))
+
+        internal = (DOCS_ROOT.parent / "concepts/README.md").read_text(encoding="utf-8")
+        self.assertTrue(
+            validate_root_source_text(
+                internal.replace("<!-- public-docs-canonical:", "<!-- old-source:", 1),
+                "concepts/README.md",
+            )
+        )
+
+        adoption_index = parse_frontmatter(DOCS_ROOT / "adoption/index.md")
+        broken_index = Page(
+            adoption_index.path,
+            adoption_index.metadata,
+            adoption_index.body.replace("pilot.md", "missing-pilot.md"),
+        )
+        self.assertTrue(
+            validate_section_index(
+                broken_index, DOCS_ROOT / "adoption", "docs/adoption/index.md"
             )
         )
 

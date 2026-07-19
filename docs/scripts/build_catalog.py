@@ -749,6 +749,8 @@ def render_skill_guide(
         "",
         "## Deterministic helpers",
         "",
+        "Paths beginning with `skills/` below are canonical **source-checkout** forms for maintainers and CI. In a consumer repository, normally tell the installed skill to act; for human diagnosis, use the matching project-scoped `.agents/skills/<skill>/...` path reported by your host. Do not expect source-only `skills/_shared` to exist after installation.",
+        "",
         *helper_lines,
         "",
         "The owning agent normally runs these helpers. A human uses the direct starting point for diagnosis or reproduction after inspecting `--help` and repository policy.",
@@ -877,7 +879,15 @@ def validate_skill_guide(content: str, skill_id: str) -> list[str]:
     )
     if "### 0." in content.split("## Why it exists", 1)[0]:
         errors.append(f"{skill_id}: Skill Card summary absorbed nested contract sections")
-    for token in (skill_id, "ai-sdlc-handoff/v1", "SKILL.md", "--quick-flow", "--full-flow"):
+    for token in (
+        skill_id,
+        "ai-sdlc-handoff/v1",
+        "SKILL.md",
+        "--quick-flow",
+        "--full-flow",
+        "source-checkout",
+        ".agents/skills/<skill>/...",
+    ):
         if token not in content:
             errors.append(f"{skill_id}: missing guide contract token {token}")
     selection = section_body(content, "## Do not use it when")
@@ -942,6 +952,8 @@ def validate_script_catalog(content: str, records: list[ScriptRecord]) -> list[s
         "Repository effect",
         "Direct-use safety rule",
         "Installed runtime mirrors",
+        "harness source checkout",
+        ".agents/skills/<skill>/...",
     ):
         if token not in content:
             errors.append(f"script catalog missing field {token}")
@@ -1045,6 +1057,8 @@ def render_scripts(records: list[ScriptRecord]) -> str:
         "# Script reference",
         "",
         f"This page documents all {len(records)} Python paths in scope. Scripts are agent internals unless a guide explicitly tells a human to run one. Start with the owning skill and `--help`; a helper never grants filesystem, network, approval, policy, or release authority.",
+        "",
+        "Every inventory path is relative to a **harness source checkout**. Consumer repositories normally invoke an installed skill through the agent; direct diagnosis uses the corresponding project-scoped `.agents/skills/<skill>/...` path. Source-only `skills/_shared` validation and packaging runners are not consumer commands.",
         "",
         "## How to read the inventory",
         "",

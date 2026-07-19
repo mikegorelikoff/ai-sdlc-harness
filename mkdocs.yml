@@ -100,6 +100,12 @@ nav:
   - Onboarding:
       - Overview: onboarding/index.md
       - Your first 30 minutes: onboarding/first-30-minutes.md
+      - Role-based paths: onboarding/role-paths.md
+  - Adoption:
+      - Evaluate and adopt: adoption/index.md
+      - Run a bounded pilot: adoption/pilot.md
+      - Interpret pilot metrics: adoption/metrics.md
+      - Maturity and limitations: explanation/maturity-limitations.md
   - Tutorials:
       - Overview: tutorials/index.md
       - Ship a first feature: tutorials/first-feature.md
@@ -135,6 +141,11 @@ nav:
       - Research with sources: how-to/research.md
       - Prepare a commit: how-to/prepare-commit.md
       - Validate a release: how-to/validate-release.md
+  - Operations:
+      - Overview: operations/index.md
+      - Operating model and RACI: operations/operating-model.md
+      - Governance and trust: operations/governance.md
+      - Troubleshooting and recovery: operations/troubleshooting.md
   - Explanation:
       - Overview: explanation/index.md
       - System model: explanation/system-model.md
@@ -151,6 +162,10 @@ nav:
       - Change and learning: explanation/change-learning.md
       - Controlled changes: explanation/controlled-changes.md
       - Agent portability: explanation/agent-portability.md
+  - Maintainers:
+      - Maintain and contribute: maintainers/index.md
+      - Extend skills and modules: maintainers/extend.md
+      - Prepare and release: maintainers/release.md
   - Reference:
       - Overview: reference/index.md
       - Workflow map: reference/workflow-map.md

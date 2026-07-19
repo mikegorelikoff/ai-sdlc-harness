@@ -3,25 +3,61 @@ title: Update safely
 description: Upgrade the installed harness while protecting team configuration, user overrides, and public compatibility contracts.
 ---
 
-## Establish the baseline
+# Update safely
 
-Commit or stash project work, record the installed harness version, and run compatibility validation before updating. A failing baseline makes post-update diagnosis ambiguous.
+This page separates two execution contexts. **Consumer repository** commands
+update installed skills in a software project. **Source checkout** commands test
+and publish the harness itself. Do not run source-only paths in a consumer
+repository.
 
-## Preview the update
+## Consumer repository: establish the baseline
 
-Fetch the desired release in the harness source checkout. Use the installer update or merge mode described by the release, and review which base files will change. Team and user configuration layers must remain separate from installer-owned defaults.
-
-## Apply and validate
-
-Run the update, then execute:
+Commit or preserve project work, record installed inventory, and verify selected
+helper imports before updating. A failing baseline makes post-update diagnosis
+ambiguous.
 
 ```bash
-python3 skills/_shared/ai_sdlc_compatibility.py --format toon
-python3 skills/_shared/test_all_skill_scripts.py
+npx -y skills@1.5.19 list --json
+git status --short
+python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
+python3 .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
 ```
 
-Review renamed skills, flag changes, module API ranges, artifact routes, and migrations. Protected gates must not be weakened by an override that happened to survive syntactically.
+## Consumer repository: preview and apply
 
-## Commit the upgrade alone
+Review the target release, migration, package origin, and expected changed skill
+inventory. Then use the pinned Skills CLI from the consumer repository:
 
-Keep the harness update in its own commit so teams can audit, revert, or bisect it independently from product behavior.
+```bash
+npx -y skills@1.5.19 update
+git status --short
+```
+
+Review every added, changed, or removed installed file before acceptance. Team
+and project artifacts are not installer-owned and must not be overwritten.
+Re-run the inventory and portable helper checks. Commit the accepted update
+alone so it can be audited, reverted, or bisected independently from product
+behavior.
+
+## Source checkout: release validation
+
+Maintainers validate the full repository only from a clone of this source:
+
+```bash
+python3 skills/_shared/ai_sdlc_compatibility.py --skip-git-audit --format toon
+python3 skills/_shared/test_all_skill_scripts.py
+python3 skills/_shared/test_each_skill_tests.py
+python3 skills/_shared/sync_installed_runtime.py --check
+```
+
+Review renamed skills, flag changes, module API ranges, artifact routes,
+migrations, deprecations, installed-runtime drift, and documentation. Protected
+gates must not be weakened by an override that merely survived syntactically.
+
+## Roll back
+
+Stop new agent writes, capture the inventory and Git status, and restore the
+last accepted project-scoped installation through reviewed Git changes or the
+pinned prior release. Preserve product specs, decisions, state, evidence, and
+the update failure record. Removing a skill is not permission to delete
+artifacts it produced.

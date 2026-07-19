@@ -7,6 +7,8 @@ description: Complete generated inventory of every Python helper, runner, packag
 
 This page documents all 106 Python paths in scope. Scripts are agent internals unless a guide explicitly tells a human to run one. Start with the owning skill and `--help`; a helper never grants filesystem, network, approval, policy, or release authority.
 
+Every inventory path is relative to a **harness source checkout**. Consumer repositories normally invoke an installed skill through the agent; direct diagnosis uses the corresponding project-scoped `.agents/skills/<skill>/...` path. Source-only `skills/_shared` validation and packaging runners are not consumer commands.
+
 ## How to read the inventory
 
 - **Skill package helper:** behavior owned by one installable capability.

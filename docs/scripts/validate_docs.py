@@ -91,6 +91,104 @@ CONTRACT_HEADERS = (
     "Next consumer / handoff",
     "Reopen condition",
 )
+T006_PAGES = {
+    "adoption/index.md",
+    "adoption/pilot.md",
+    "adoption/metrics.md",
+    "onboarding/role-paths.md",
+    "operations/index.md",
+    "operations/operating-model.md",
+    "operations/governance.md",
+    "operations/troubleshooting.md",
+    "explanation/maturity-limitations.md",
+    "maintainers/index.md",
+    "maintainers/extend.md",
+    "maintainers/release.md",
+}
+ROLE_PATHS = (
+    "New or junior engineer",
+    "PM or product owner",
+    "Business analyst",
+    "QA or test owner",
+    "Developer or engineering lead",
+    "Architecture or platform",
+    "Security, privacy, or compliance",
+    "Delivery, release, or operations",
+    "Harness maintainer",
+    "Engineering manager or VP",
+)
+PM_REFINEMENT_STAGE_IDS = (
+    "discovery",
+    "prfaq",
+    "requirements_readiness",
+    "goal_epic_mapping",
+    "backlog_decomposition",
+    "release_slicing",
+)
+RACI_GATES = (
+    "Problem/value accepted",
+    "Requirements ready",
+    "UX/architecture accepted",
+    "QA strategy ready",
+    "Release slice approved",
+    "Branch/task start",
+    "SDD ready",
+    "Implementation accepted",
+    "Security/privacy accepted",
+    "Validation complete",
+    "Review findings resolved",
+    "Policy/waiver accepted",
+    "Commit ready",
+    "Release/deployment approved",
+    "Incident contained/resumed",
+    "Pilot scale/stop decision",
+)
+PILOT_STAGES = ("Baseline", "Kickoff", "Week 1", "Midpoint", "Final")
+TROUBLESHOOTING_FAILURES = (
+    "Install command fails",
+    "Helper import fails after install",
+    "Invalid or corrupt state",
+    "Stale specs index",
+    "State/artifact contradiction",
+    "Interrupted write",
+    "Divergent refinement/implementation paths",
+    "Predecessor blocked",
+    "Dirty Git worktree",
+    "Unsupported host/capability",
+    "Exhausted runtime budget",
+    "Non-zero helper exit",
+)
+GOVERNANCE_HEADINGS = (
+    "## Authority hierarchy",
+    "## Data and secrets",
+    "## Permissions and sandbox",
+    "## Package and supply-chain trust",
+    "## Policy, waivers, and exceptions",
+    "## Retention and deletion",
+    "## Enforcement map",
+    "## Incident response",
+    "## Regulatory and contractual boundary",
+)
+MATURITY_HEADINGS = (
+    "## What is verified today",
+    "## Expected but not yet proven generally",
+    "## Known limitations",
+    "## Support boundary",
+    "## Non-goals",
+    "## External governance context",
+    "## How to make a defensible claim",
+)
+MAINTAINER_TOKENS = (
+    "SKILL.md",
+    "module.json",
+    "skills/_shared",
+    "sync_installed_runtime.py",
+    "build_catalog.py",
+    "compatibility",
+    "Deprecation",
+    "rollback",
+    "one-task/one-commit",
+)
 
 
 @dataclass(frozen=True)
@@ -531,6 +629,267 @@ def validate_flows(root: Path = ROOT) -> list[str]:
     return errors
 
 
+def validate_role_paths(text: str) -> list[str]:
+    """Require one explicit onboarding route for every target persona."""
+    errors = [
+        f"docs/onboarding/role-paths.md: missing persona path {role}"
+        for role in ROLE_PATHS
+        if f"## {role}" not in text
+    ]
+    profiles = {profile.stage_id: profile for profile in PROFILES}
+    for stage_id in PM_REFINEMENT_STAGE_IDS:
+        artifact = profiles[stage_id].artifact_name
+        if f"`{artifact}`" not in text:
+            errors.append(
+                "docs/onboarding/role-paths.md: PM path missing canonical refinement "
+                f"artifact {stage_id}/{artifact}"
+            )
+    normalized = " ".join(text.split())
+    for token in (
+        "BRD) is a section inside `prfaq.md`",
+        "`specs/<feature>/requirements.md`",
+        "not a refinement output",
+    ):
+        if token not in normalized:
+            errors.append(f"docs/onboarding/role-paths.md: missing artifact boundary {token}")
+    if "`brd.md`" in text:
+        errors.append("docs/onboarding/role-paths.md: invents standalone refinement artifact brd.md")
+    return errors
+
+
+def validate_raci_contract(text: str) -> list[str]:
+    """Validate the ordered gate-level human/agent authority matrix."""
+    table = markdown_table(text, "## Lifecycle gate matrix")
+    if len(table) < 3:
+        return ["docs/operations/operating-model.md: missing parseable lifecycle gate matrix"]
+    errors: list[str] = []
+    expected_header = (
+        "Gate",
+        "Accountable (A)",
+        "Responsible (R)",
+        "Consulted (C)",
+        "Informed (I)",
+        "Agent may",
+        "Agent must not",
+        "Required evidence",
+        "Escalation owner",
+    )
+    if tuple(plain_cell(cell) for cell in table[0]) != expected_header:
+        errors.append("docs/operations/operating-model.md: RACI headers are incomplete")
+    rows = table[2:]
+    actual = [plain_cell(row[0]) for row in rows if len(row) == 9]
+    if actual != list(RACI_GATES):
+        errors.append("docs/operations/operating-model.md: gate inventory/order is incomplete")
+    for gate, row in zip(RACI_GATES, rows):
+        if len(row) != 9 or any(not plain_cell(cell) for cell in row):
+            errors.append(f"docs/operations/operating-model.md: gate {gate} must populate R, A, C, I, agent boundaries, evidence, and escalation")
+    return errors
+
+
+def validate_pilot_contract(text: str) -> list[str]:
+    """Validate baseline-to-scale pilot decision records."""
+    table = markdown_table(text, "## Pilot decision contract")
+    if len(table) < 3:
+        return ["docs/adoption/pilot.md: missing parseable pilot decision contract"]
+    errors: list[str] = []
+    expected_header = (
+        "Stage",
+        "Evidence",
+        "Threshold / trigger",
+        "Accountable owner",
+        "Allowed result",
+    )
+    if tuple(plain_cell(cell) for cell in table[0]) != expected_header:
+        errors.append("docs/adoption/pilot.md: pilot decision headers are incomplete")
+    rows = table[2:]
+    actual = [plain_cell(row[0]) for row in rows if len(row) == 5]
+    if actual != list(PILOT_STAGES):
+        errors.append("docs/adoption/pilot.md: pilot stage inventory/order is incomplete")
+    for stage, row in zip(PILOT_STAGES, rows):
+        if len(row) != 5 or any(not plain_cell(cell) for cell in row):
+            errors.append(f"docs/adoption/pilot.md: stage {stage} must populate all five fields")
+    for token in ("two to four weeks", "one team", "one repository", "Roll back", "Stop", "Scale"):
+        if token.lower() not in text.lower():
+            errors.append(f"docs/adoption/pilot.md: missing pilot contract {token}")
+    return errors
+
+
+def validate_troubleshooting_contract(text: str) -> list[str]:
+    """Validate every required safe diagnosis and recovery class."""
+    table = markdown_table(text, "## Failure matrix")
+    if len(table) < 3:
+        return ["docs/operations/troubleshooting.md: missing parseable failure matrix"]
+    errors: list[str] = []
+    expected_header = (
+        "Failure",
+        "Diagnose safely",
+        "Safe repair or blocker",
+        "Validate / expected result",
+        "Do not do",
+        "Escalate when",
+    )
+    if tuple(plain_cell(cell) for cell in table[0]) != expected_header:
+        errors.append("docs/operations/troubleshooting.md: recovery headers are incomplete")
+    rows = table[2:]
+    actual = [plain_cell(row[0]) for row in rows if len(row) == 6]
+    missing = [failure for failure in TROUBLESHOOTING_FAILURES if failure not in actual]
+    if missing:
+        errors.append(
+            "docs/operations/troubleshooting.md: missing failure classes "
+            + ", ".join(missing)
+        )
+    for row in rows:
+        if len(row) != 6 or any(not plain_cell(cell) for cell in row):
+            errors.append("docs/operations/troubleshooting.md: every failure must populate diagnosis, repair/blocker, validation, do-not, and escalation")
+            continue
+        failure, diagnose, repair, verify, prohibited, _escalation = row
+        if "`" not in diagnose and "](" not in diagnose:
+            errors.append(f"docs/operations/troubleshooting.md: {failure} diagnosis lacks an exact command or guide")
+        if "`" not in verify and "](" not in verify:
+            errors.append(f"docs/operations/troubleshooting.md: {failure} validation lacks an exact command or guide")
+        if "expected" not in verify.lower():
+            errors.append(f"docs/operations/troubleshooting.md: {failure} validation lacks an expected result")
+        if "`" not in repair and "](" not in repair and "blocker" not in repair.lower():
+            errors.append(f"docs/operations/troubleshooting.md: {failure} repair lacks an executable path or explicit blocker")
+        if not prohibited.strip().startswith("Do not"):
+            errors.append(f"docs/operations/troubleshooting.md: {failure} lacks explicit do-not guidance")
+    if "Never delete an authoritative artifact" not in text:
+        errors.append("docs/operations/troubleshooting.md: missing authoritative-evidence protection")
+    return errors
+
+
+def validate_governance_contract(text: str) -> list[str]:
+    """Require every governance and enforcement topic."""
+    return [
+        f"docs/operations/governance.md: missing governance topic {heading}"
+        for heading in GOVERNANCE_HEADINGS
+        if heading not in text
+    ]
+
+
+def validate_maturity_contract(text: str) -> list[str]:
+    """Keep proof, hypotheses, limitations, support, and non-goals explicit."""
+    return [
+        f"docs/explanation/maturity-limitations.md: missing maturity topic {heading}"
+        for heading in MATURITY_HEADINGS
+        if heading not in text
+    ]
+
+
+def validate_maintainer_contract(text: str) -> list[str]:
+    """Require the complete extension-to-release lifecycle."""
+    return [
+        f"maintainer path missing lifecycle contract {token}"
+        for token in MAINTAINER_TOKENS
+        if token not in text
+    ]
+
+
+def validate_root_source_text(text: str, label: str) -> list[str]:
+    """Validate one internal authoring note's public-docs marker."""
+    errors: list[str] = []
+    if not text.startswith("<!-- public-docs-canonical: ../docs/index.md -->"):
+        errors.append(f"{label}: missing non-canonical source marker")
+    if "../docs/" not in "\n".join(text.splitlines()[:8]):
+        errors.append(f"{label}: missing canonical public destination")
+    return errors
+
+
+def validate_canonical_sources(root: Path = ROOT) -> list[str]:
+    """Keep root authoring notes explicitly subordinate to public docs."""
+    errors: list[str] = []
+    for folder in ("concepts", "guides"):
+        for path in sorted((root / folder).glob("*.md")):
+            text = path.read_text(encoding="utf-8")
+            errors.extend(validate_root_source_text(text, display_path(path, root)))
+    pages, _ = collect_pages(root / "docs")
+    for page in pages:
+        for target in internal_links(page):
+            path_text = unquote(urlsplit(target).path)
+            if not path_text:
+                continue
+            resolved = (page.path.parent / path_text).resolve()
+            for folder in (root / "concepts", root / "guides"):
+                try:
+                    resolved.relative_to(folder.resolve())
+                except ValueError:
+                    continue
+                errors.append(
+                    f"{display_path(page.path, root)}: public docs depend on non-canonical {folder.name} target {target}"
+                )
+    return errors
+
+
+def validate_section_index(page: Page, folder: Path, label: str) -> list[str]:
+    """Validate one section landing page against its sibling pages."""
+    linked: set[str] = set()
+    for target in internal_links(page):
+        path_text = unquote(urlsplit(target).path)
+        if not path_text:
+            continue
+        resolved = (page.path.parent / path_text).resolve()
+        if resolved.parent == folder.resolve() and resolved.suffix == ".md":
+            linked.add(resolved.name)
+    expected = {path.name for path in folder.glob("*.md") if path.name != "index.md"}
+    missing = sorted(expected - linked)
+    return [f"{label}: missing sibling links " + ", ".join(missing)] if missing else []
+
+
+def validate_section_indexes(root: Path = ROOT) -> list[str]:
+    """Require section landing pages to expose every sibling public page."""
+    errors: list[str] = []
+    for relative in ("adoption", "operations", "maintainers", "onboarding", "how-to", "explanation"):
+        folder = root / "docs" / relative
+        index = folder / "index.md"
+        if not index.is_file():
+            errors.append(f"docs/{relative}/index.md: missing section index")
+            continue
+        page = parse_frontmatter(index)
+        errors.extend(validate_section_index(page, folder, f"docs/{relative}/index.md"))
+    return errors
+
+
+def validate_adoption_operations(root: Path = ROOT) -> list[str]:
+    """Validate T006 persona, adoption, governance, operations, and maintainer closure."""
+    docs = root / "docs"
+    errors: list[str] = []
+    missing = sorted(relative for relative in T006_PAGES if not (docs / relative).is_file())
+    if missing:
+        errors.append("missing adoption/operations pages: " + ", ".join(missing))
+
+    def read(relative: str) -> str:
+        path = docs / relative
+        return path.read_text(encoding="utf-8") if path.is_file() else ""
+
+    errors.extend(validate_role_paths(read("onboarding/role-paths.md")))
+    errors.extend(validate_raci_contract(read("operations/operating-model.md")))
+    errors.extend(validate_pilot_contract(read("adoption/pilot.md")))
+    errors.extend(validate_troubleshooting_contract(read("operations/troubleshooting.md")))
+
+    errors.extend(validate_governance_contract(read("operations/governance.md")))
+    errors.extend(validate_maturity_contract(read("explanation/maturity-limitations.md")))
+    maintainer = read("maintainers/extend.md") + read("maintainers/release.md")
+    errors.extend(validate_maintainer_contract(maintainer))
+
+    for relative in ("README.md", "docs/index.md"):
+        text = (root / relative).read_text(encoding="utf-8") if (root / relative).is_file() else ""
+        for target in ("adoption/index.md", "onboarding/index.md"):
+            if target not in text:
+                errors.append(f"{relative}: missing distinct evaluate/use route {target}")
+
+    update = read("how-to/update.md")
+    versions = read("reference/versions.md")
+    for token in ("Consumer repository", "Source checkout", ".agents/skills", "skills/_shared"):
+        if token not in update:
+            errors.append(f"docs/how-to/update.md: missing execution-context contract {token}")
+    if "source checkout" not in versions.lower() or "Consumer repositories" not in versions:
+        errors.append("docs/reference/versions.md: compatibility execution context remains ambiguous")
+
+    errors.extend(validate_canonical_sources(root))
+    errors.extend(validate_section_indexes(root))
+    return errors
+
+
 def validate_material(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     for relative in sorted(REQUIRED_FILES):
@@ -596,6 +955,7 @@ def validate(root: Path = ROOT) -> list[str]:
     errors.extend(validate_content(pages, docs))
     errors.extend(validate_onboarding(root))
     errors.extend(validate_flows(root))
+    errors.extend(validate_adoption_operations(root))
     errors.extend(validate_material(root))
     errors.extend(validate_workflow(root))
     return errors

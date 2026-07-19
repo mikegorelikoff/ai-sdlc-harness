@@ -15,5 +15,13 @@ harness API version protects public skill names, flags, routes, configuration,
 module ranges, handoffs, and artifact authority. Release `1.1.0` therefore adds
 the executable control plane without forcing an API-major migration.
 
-Run `skills/_shared/ai_sdlc_compatibility.py` from the installed release before
-and after an update. Pin a release tag when reproducibility matters.
+The full compatibility helper requires a **harness source checkout**, including
+`compatibility/`, `modules/`, `concepts/`, and `skills/_shared`. Maintainers run:
+
+```bash
+python3 skills/_shared/ai_sdlc_compatibility.py --skip-git-audit --format toon
+```
+
+Consumer repositories instead verify the installed inventory and portable
+helper entry points described in [Update safely](../how-to/update.md). Pin a
+release tag when reproducibility matters.

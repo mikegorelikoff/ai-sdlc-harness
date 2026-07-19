@@ -1,6 +1,10 @@
+<!-- public-docs-canonical: ../docs/index.md -->
+
+> **Internal, non-canonical design note.** The maintained public documentation starts at [AI SDLC Harness docs](../docs/index.md). This file is retained for repository history and maintainer context only.
+
 # Concepts
 
-This folder explains the reusable concepts behind the AI SDLC skill library.
+This folder explains the reusable concepts behind the AI SDLC Harness.
 The concepts describe the system design behind artifact routing, flow modes,
 decision logs, lifecycle state, indexes, helper scripts, metadata, and
 traceability.

@@ -91,6 +91,8 @@ Humans accept or reject material product, security, QA, policy, rollout, release
 
 ## Deterministic helpers
 
+Paths beginning with `skills/` below are canonical **source-checkout** forms for maintainers and CI. In a consumer repository, normally tell the installed skill to act; for human diagnosis, use the matching project-scoped `.agents/skills/<skill>/...` path reported by your host. Do not expect source-only `skills/_shared` to exist after installation.
+
 | Helper | Purpose | Direct starting point | Repository effect |
 | --- | --- | --- | --- |
 | [`ai_sdlc_artifact_helper.py`](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_artifact_helper.py) | Shared artifact compression helpers for AI SDLC skill scripts. | `python3 skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_artifact_helper.py --help` | Generated copy; repository behavior is defined by its canonical shared source. |

@@ -161,13 +161,21 @@ at that stage and reuse valid upstream evidence.
 
 ## Explore the system
 
-- [Foundations](docs/foundations/index.md): vocabulary and mental model.
-- [Onboarding](docs/onboarding/index.md): guided first use and persona paths.
+- **Learn and use:** [Foundations](docs/foundations/index.md) →
+  [Onboarding](docs/onboarding/index.md) →
+  [Role-based paths](docs/onboarding/role-paths.md) →
+  [Tutorials](docs/tutorials/index.md).
+- **Evaluate and adopt:** [fit decision](docs/adoption/index.md) →
+  [bounded pilot](docs/adoption/pilot.md) →
+  [metrics](docs/adoption/metrics.md) →
+  [maturity and limitations](docs/explanation/maturity-limitations.md).
 - [Tutorials](docs/tutorials/index.md): learn by completing delivery journeys.
 - [Workflow map](docs/reference/workflow-map.md): lifecycle stages and handoffs.
 - [Skill catalog](docs/reference/skills.md): complete operating guides for all installed capabilities.
 - [Script catalog](docs/reference/scripts.md): every helper path, safe starting point, repository effect, and generated-mirror boundary.
 - [How-to guides](docs/how-to/index.md): bounded operational procedures.
+- [Operations](docs/operations/index.md): RACI, governance, incidents, troubleshooting, and recovery.
+- [Maintainers](docs/maintainers/index.md): extend, validate, deprecate, release, and roll back.
 - [Reference](docs/reference/index.md): paths, flags, schemas, and validation.
 
 ## Maintainer checkout
@@ -200,4 +208,6 @@ artifacts, compatibility, documentation, and recovery behavior. Those tests
 show that the mechanisms behave as specified; they do not prove that every
 team will reduce cycle time or defects. Treat organizational benefits as pilot
 hypotheses, establish a baseline, and decide to scale or stop from local
-evidence. See the public adoption and limitations guidance before broad rollout.
+evidence. Read [Evaluate and adopt](docs/adoption/index.md) and
+[Maturity and limitations](docs/explanation/maturity-limitations.md) before
+broad rollout.

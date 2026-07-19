@@ -29,4 +29,7 @@ The generated [coverage manifest](catalog-coverage.toon) closes the current
 TOON because agents consume it for drift checks; the Markdown catalogs remain
 the human navigation surface.
 
-For rationale, use [Explanation](../explanation/index.md). For a bounded procedure, use [How-to guides](../how-to/index.md).
+For rationale, use [Explanation](../explanation/index.md). For a bounded procedure,
+use [How-to guides](../how-to/index.md). For ownership, governance, incidents,
+and recovery, use [Operations](../operations/index.md). Contributors start with
+[Maintainers](../maintainers/index.md).

@@ -83,6 +83,8 @@ Humans accept or reject material product, security, QA, policy, rollout, release
 
 ## Deterministic helpers
 
+Paths beginning with `skills/` below are canonical **source-checkout** forms for maintainers and CI. In a consumer repository, normally tell the installed skill to act; for human diagnosis, use the matching project-scoped `.agents/skills/<skill>/...` path reported by your host. Do not expect source-only `skills/_shared` to exist after installation.
+
 | Helper | Purpose | Direct starting point | Repository effect |
 | --- | --- | --- | --- |
 | [`change_impact.py`](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-change-impact/scripts/change_impact.py) | Trace changed references to stale artifacts and safe recovery actions. | `python3 skills/ai-sdlc-change-impact/scripts/change_impact.py --help` | May write only through an explicit mutation mode; start with `--help`, check, preview, or emit. |

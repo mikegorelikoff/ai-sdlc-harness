@@ -1,8 +1,12 @@
+<!-- public-docs-canonical: ../docs/index.md -->
+
+> **Internal, non-canonical design note.** The maintained public documentation starts at [AI SDLC Harness docs](../docs/index.md). This file is retained for repository history and maintainer context only.
+
 # AI-Ready Delivery Workflow
 
 ## Purpose
 
-This guide explains the end-to-end role workflow for the AI SDLC skill library.
+This guide explains the end-to-end role workflow for the AI SDLC Harness.
 It shows how PM, BA, QA, Dev, Delivery, and the AI assistant cooperate to turn
 fragmented context into traceable delivery artifacts and validated software.
 

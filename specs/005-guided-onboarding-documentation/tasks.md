@@ -70,7 +70,7 @@ artifact_metadata:
   Output: Enhanced deterministic catalog generator, inventory-complete per-skill guides, complete in-scope script inventory, coverage manifest, required detail fields, navigation/discovery surfaces, parser/render/coverage tests, and one focused commit.
   Refs: AC-007, AC-008, AC-014, AC-015, AC-018
   Depends on: T004
-- [ ] T006. Publish adoption, governance, operations, and maintainer guidance.
+- [x] T006. Publish adoption, governance, operations, and maintainer guidance.
   Output: Persona/role paths, pilot playbook, metrics interpretation, operating model, human/agent RACI, trust/governance, maturity/limitations, troubleshooting runbook, contributor/extension path, canonical-source reconciliation, full navigation/index consistency, tests, and one focused commit.
   Refs: AC-002, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014, AC-017, AC-018
   Depends on: T005

@@ -102,6 +102,8 @@ Humans accept or reject material product, security, QA, policy, rollout, release
 
 ## Deterministic helpers
 
+Paths beginning with `skills/` below are canonical **source-checkout** forms for maintainers and CI. In a consumer repository, normally tell the installed skill to act; for human diagnosis, use the matching project-scoped `.agents/skills/<skill>/...` path reported by your host. Do not expect source-only `skills/_shared` to exist after installation.
+
 | Helper | Purpose | Direct starting point | Repository effect |
 | --- | --- | --- | --- |
 | [`discovery_interview_plan.py`](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-working-backwards-discovery/scripts/discovery_interview_plan.py) | Compress discovery notes into working-backwards interview gaps. | `python3 skills/ai-sdlc-working-backwards-discovery/scripts/discovery_interview_plan.py --feature <feature-name> --quick-flow <input.md>...` | Read-only/reporting by default; inspect `--help` and the owning skill before direct use. |

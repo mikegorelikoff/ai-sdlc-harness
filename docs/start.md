@@ -32,10 +32,11 @@ not, by itself, evidence that the right thing was built safely.
 
 ## If you are evaluating it for a team
 
-Begin with [fit, non-goals, and adoption questions](foundations/why-harness.md).
-Do not start with a global rollout. A decision-grade evaluation needs one team,
-one repository, one bounded change, an accountable owner, a baseline, explicit
-stop conditions, and review of the resulting evidence.
+Begin with [Evaluate and adopt](adoption/index.md), then define a
+[bounded pilot](adoption/pilot.md). Do not start with a global rollout. A
+decision-grade evaluation needs one team, one repository, representative
+changes, an accountable owner, a baseline, explicit stop conditions, and review
+of the resulting evidence.
 
 ## The four action labels
 

@@ -8,6 +8,7 @@ description: Canonical definitions for AI SDLC, SDD, lifecycle roles, artifacts,
 | Term | Meaning in this harness |
 | --- | --- |
 | Acceptance criterion (AC) | Observable condition that must be true for a requirement to be accepted. |
+| Adoption owner | Human accountable for pilot scope, evidence, stop/scale decision, and rollout proposal. |
 | Agent | AI assistant acting through available tools and selected skill instructions. |
 | AI SDLC | A software development lifecycle expressed as durable evidence, bounded agent capabilities, deterministic helpers, explicit state, and human authority. |
 | Artifact | Repository file that preserves delivery context or evidence, such as requirements, design, QA, decisions, or plans. |
@@ -17,6 +18,7 @@ description: Canonical definitions for AI SDLC, SDD, lifecycle roles, artifacts,
 | Capability | A bounded operation an installed skill, module, adapter, or host can support. |
 | Change set | Isolated proposal workspace used to preview and approve specification changes before canonical apply. |
 | Control plane | Policy, state, runtime, graph, context, adapter, trust, and recovery mechanisms that coordinate delivery without replacing authoritative artifacts. |
+| Consumer repository | Software project receiving installed skills and preserving its own delivery artifacts; not the harness source checkout. |
 | Decision log | Markdown record of material choices, context, options, owner, status, affected artifacts, and validation links. |
 | Delivery | Role accountable for coordination, readiness, handoff, ownership, and release confidence. |
 | Drift | Difference between a stored identity/projection and current authoritative source content. |
@@ -38,9 +40,11 @@ description: Canonical definitions for AI SDLC, SDD, lifecycle roles, artifacts,
 | QA | Quality assurance role responsible for testability, risk-based coverage, environments, evidence, and acceptance signoff. |
 | Quick flow | Fast execution mode for low-risk bounded work using explicit assumptions and focused checks. |
 | Rigor | Strength of clarification, traceability, review, evidence, and approval controls applied to work. |
+| RACI | Responsibility model: Responsible performs work, Accountable accepts the decision, Consulted provides input, and Informed receives the result. |
 | SDLC | Software development lifecycle: the path from problem and intent through planning, building, testing, release, operation, and learning. |
 | SDD | Spec-driven development: establishing a testable requirement/design/QA/task contract before implementation grows. |
 | Skill | Portable `SKILL.md` workflow contract telling an agent when and how to perform one bounded capability. |
+| Source checkout | Clone of this harness repository used by maintainers for canonical skill, shared runtime, compatibility, documentation, and release work. |
 | State | Versioned machine record of lifecycle or runtime progress; it must agree with authoritative evidence. |
 | Test case (TC) | Explicit setup, action, and expected result used to verify acceptance or risk behavior. |
 | TOON | Token-Oriented Object Notation used for complete token-efficient agent state, indexes, plans, and results. |
