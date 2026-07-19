@@ -1,17 +1,18 @@
 # Specs Index
 
 - Workspace: `implementation`
-- Root: `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs`
+- Root: `specs`
 - Updated: `2026-07-19`
 
 ## Feature Summary
 
 | Feature | Current Stage | Active Skill | Flow | Artifacts | Decision Log | State | Tags |
 | --- | --- | --- | --- | ---: | --- | --- | --- |
-| 001-adaptive-harness-roadmap | sdd | - | quick | 7 | `specs/001-adaptive-harness-roadmap/decision-log.md` | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/001-adaptive-harness-roadmap/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated |
-| 002-github-pages-docs | code_review | - | quick | 9 | `specs/002-github-pages-docs/decision-log.md` | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/002-github-pages-docs/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-code-review;ai-sdlc-sdd;ai-sdlc-validation;approved;code-review;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated;validation |
-| 003-mkdocs-material-site | commit_prep | - | quick | 8 | `specs/003-mkdocs-material-site/decision-log.md` | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/003-mkdocs-material-site/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;ai-sdlc-validation;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated;validation |
-| 004-executable-delivery-control-plane | sdd | - | quick | 7 | `specs/004-executable-delivery-control-plane/decision-log.md` | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/004-executable-delivery-control-plane/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases |
+| 001-adaptive-harness-roadmap | sdd | - | quick | 7 | `specs/001-adaptive-harness-roadmap/decision-log.md` | `specs/001-adaptive-harness-roadmap/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated |
+| 002-github-pages-docs | code_review | - | quick | 9 | `specs/002-github-pages-docs/decision-log.md` | `specs/002-github-pages-docs/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-code-review;ai-sdlc-sdd;ai-sdlc-validation;approved;code-review;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated;validation |
+| 003-mkdocs-material-site | commit_prep | - | quick | 8 | `specs/003-mkdocs-material-site/decision-log.md` | `specs/003-mkdocs-material-site/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;ai-sdlc-validation;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated;validation |
+| 004-executable-delivery-control-plane | sdd | - | quick | 7 | `specs/004-executable-delivery-control-plane/decision-log.md` | `specs/004-executable-delivery-control-plane/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases |
+| 005-guided-onboarding-documentation | - | - | - | 7 | `specs/005-guided-onboarding-documentation/decision-log.md` | `specs/005-guided-onboarding-documentation/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;decision-log;design;draft;implementation;plan;qa;requirements;review;tasks;test-cases |
 
 ## Artifact Index
 
@@ -48,3 +49,10 @@
 | 004-executable-delivery-control-plane | `specs/004-executable-delivery-control-plane/requirements.md` | approved | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;AC-011;AC-012;AC-013;AC-014;DEC-001;DEC-002;NFR-001;NFR-002;NFR-003;NFR-004;NFR-005;NFR-006;NFR-007;NFR-008 | ai-sdlc;implementation;ai-sdlc-sdd;requirements;approved |
 | 004-executable-delivery-control-plane | `specs/004-executable-delivery-control-plane/tasks.md` | approved | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;AC-011;AC-012;AC-013;AC-014;AC-015;DEC-001;DEC-002 | ai-sdlc;implementation;ai-sdlc-sdd;tasks;approved |
 | 004-executable-delivery-control-plane | `specs/004-executable-delivery-control-plane/test-cases.md` | approved | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;AC-011;AC-012;AC-013;AC-014;TC-001;TC-002;TC-003;TC-004;TC-005;TC-006;TC-007;TC-008;TC-009;TC-010;TC-011;TC-012;TC-013;TC-014;TC-015 | ai-sdlc;implementation;ai-sdlc-sdd;test-cases;approved |
+| 005-guided-onboarding-documentation | `specs/005-guided-onboarding-documentation/decision-log.md` | draft | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-018;DEC-001;TC-001;TC-018 | ai-sdlc;implementation;ai-sdlc-sdd;decision-log;draft |
+| 005-guided-onboarding-documentation | `specs/005-guided-onboarding-documentation/design.md` | review | ai-sdlc-sdd | quick | 2026-07-19 | - | ai-sdlc;implementation;ai-sdlc-sdd;design;review |
+| 005-guided-onboarding-documentation | `/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/005-guided-onboarding-documentation/plan.md` | draft | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;AC-011;AC-012;AC-013;AC-014;AC-015;AC-016;AC-017;AC-018;TC-001;TC-002;TC-003;TC-004;TC-005;TC-006;TC-007;TC-008;TC-009;TC-010;TC-011;TC-012;TC-013;TC-014;TC-015;TC-016;TC-017;TC-018 | ai-sdlc;implementation;ai-sdlc-sdd;plan;draft |
+| 005-guided-onboarding-documentation | `specs/005-guided-onboarding-documentation/qa.md` | review | ai-sdlc-sdd | quick | 2026-07-19 | - | ai-sdlc;implementation;ai-sdlc-sdd;qa;review |
+| 005-guided-onboarding-documentation | `specs/005-guided-onboarding-documentation/requirements.md` | review | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;AC-011;AC-012;AC-013;AC-014;AC-015;AC-016;AC-017;AC-018;DEC-001 | ai-sdlc;implementation;ai-sdlc-sdd;requirements;review |
+| 005-guided-onboarding-documentation | `specs/005-guided-onboarding-documentation/tasks.md` | review | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;AC-011;AC-012;AC-013;AC-014;AC-015;AC-016;AC-017;AC-018 | ai-sdlc;implementation;ai-sdlc-sdd;tasks;review |
+| 005-guided-onboarding-documentation | `specs/005-guided-onboarding-documentation/test-cases.md` | review | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;AC-011;AC-012;AC-013;AC-014;AC-015;AC-016;AC-017;AC-018;TC-001;TC-002;TC-003;TC-004;TC-005;TC-006;TC-007;TC-008;TC-009;TC-010;TC-011;TC-012;TC-013;TC-014;TC-015;TC-016;TC-017;TC-018 | ai-sdlc;implementation;ai-sdlc-sdd;test-cases;review |
