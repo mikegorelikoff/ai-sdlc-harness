@@ -39,4 +39,10 @@ Runtime state is intentionally host-neutral. It does not execute commands or
 create commits; later workflow and adapter layers perform those actions and
 return exact evidence to the journaled state machine.
 
+Declarative workflow planning validates typed steps and capabilities, evaluates
+bounded conditions, preserves approval gates and hooks, and compiles dependency
+waves. Parallel waves exist only when isolation and host concurrency are
+explicit; otherwise the handoff carries sequential waves and reason-coded
+fallbacks.
+
 Handoffs keep delivery continuous across roles, assistants, sessions, and context compaction without turning the conversation transcript into a dependency.

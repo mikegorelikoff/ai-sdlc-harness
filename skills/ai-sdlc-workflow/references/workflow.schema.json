@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-sdlc-workflow/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "version", "capabilities", "steps", "hooks"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-workflow/v1"},
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "capabilities": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "steps": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/step"}},
+    "hooks": {"type": "array", "items": {"$ref": "#/$defs/hook"}}
+  },
+  "$defs": {
+    "condition": {"type": ["object", "null"], "properties": {"field": {"type": "string"}, "operator": {"enum": ["eq", "in", "exists"]}, "value": {}}, "required": ["field", "operator", "value"], "additionalProperties": false},
+    "step": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "depends_on", "action", "capabilities", "condition", "isolation", "approval_owner"],
+      "properties": {"id": {"type": "string"}, "type": {"enum": ["task", "validation", "approval", "decision"]}, "depends_on": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}, "action": {"type": "string"}, "capabilities": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}, "condition": {"$ref": "#/$defs/condition"}, "isolation": {"enum": ["none", "workspace"]}, "approval_owner": {"type": "string"}}
+    },
+    "hook": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "phase", "target", "action", "capabilities"],
+      "properties": {"id": {"type": "string"}, "phase": {"enum": ["before", "after", "on_failure"]}, "target": {"type": "string"}, "action": {"type": "string"}, "capabilities": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}}
+    }
+  }
+}

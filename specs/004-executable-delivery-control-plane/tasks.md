@@ -80,7 +80,7 @@ artifact_metadata:
 - [x] T010. Implement the resumable task runtime core.
   Output: Versioned run state and journal, ready-task selection, budgets, retries, stop reasons, resume and idempotency behavior, commit-boundary contract, tests, and documentation.
   Refs: AC-005, AC-015, AC-014
-- [ ] T011. Implement declarative workflows, gates, hooks, and dependency waves.
+- [x] T011. Implement declarative workflows, gates, hooks, and dependency waves.
   Output: Workflow schema and validator, typed step planner, conditions, approval gates, deterministic hooks, cycle detection, safe wave planning and fallbacks, tests, and documentation.
   Refs: AC-005, AC-006, AC-007, AC-013
 - [ ] T012. Implement the host adapter SDK and capability negotiation.

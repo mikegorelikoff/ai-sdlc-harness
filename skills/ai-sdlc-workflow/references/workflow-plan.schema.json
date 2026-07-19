@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-sdlc-workflow-plan/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "workflow", "host", "step_decisions", "waves", "gates", "hooks", "fallbacks", "executable", "fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-workflow-plan/v1"},
+    "workflow": {"type": "object"},
+    "host": {"type": "object"},
+    "step_decisions": {"type": "array"},
+    "waves": {"type": "array"},
+    "gates": {"type": "array"},
+    "hooks": {"type": "array"},
+    "fallbacks": {"type": "array"},
+    "executable": {"type": "boolean"},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

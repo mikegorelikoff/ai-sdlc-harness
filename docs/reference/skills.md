@@ -313,6 +313,14 @@ This page is generated from each package's `SKILL.md` frontmatter. The linked so
 
     [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-validation/SKILL.md)
 
+-   **`ai-sdlc-workflow`**
+
+    `core`
+
+    AI SDLC declarative workflow planning. Use when an AI assistant needs to validate a versioned workflow, plan typed dependency steps, evaluate bounded conditions, enforce approval gates, attach deterministic hooks, detect cycles, or create safe dependency waves with sequential fallback when host concurrency or isolation is unavailable. Supports `--quick-flow` and `--full-flow`.
+
+    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-workflow/SKILL.md)
+
 -   **`ai-sdlc-working-backwards-discovery`**
 
     `core`

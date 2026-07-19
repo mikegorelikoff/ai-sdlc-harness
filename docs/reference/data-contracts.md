@@ -28,6 +28,8 @@ description: Core versioned records used for artifacts, handoffs, modules, compa
 | `ai-sdlc-run-plan/v1` | Define immutable dependency tasks, input fingerprints, retry limits, budgets, and commit boundaries. |
 | `ai-sdlc-run-event/v1` | Append one hash-chained runtime transition with contiguous sequence and evidence payload. |
 | `ai-sdlc-run-state/v1` | Project replayable task status, attempts, readiness, budgets, stop reason, and run identity. |
+| `ai-sdlc-workflow/v1` | Declare capabilities, typed steps, dependencies, bounded conditions, approval gates, isolation, and deterministic hooks. |
+| `ai-sdlc-workflow-plan/v1` | Record condition decisions, safe dependency waves, gates, hooks, host capabilities, and sequential fallbacks. |
 | Project context contracts | Preserve evidence-backed repository memory and drift identity. |
 | Quality finding contracts | Record evidence, severity, owner, resolution, and trace targets. |
 
