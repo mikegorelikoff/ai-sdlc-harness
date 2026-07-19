@@ -141,6 +141,13 @@ button, input { font: inherit; }
 .prose pre { overflow-x: auto; padding: 1.15rem; border: 1px solid var(--line); border-radius: 12px; background: #070b13; }.prose pre code{padding:0;border:0;background:none;color:#cbd8ee}
 .prose table { display: block; overflow-x: auto; width: 100%; border-collapse: collapse; font-size: .86rem; }.prose th,.prose td{padding:.7rem .8rem;border-bottom:1px solid var(--line);text-align:left}.prose th{color:var(--ink)}
 .callout { margin: 1.5rem 0; padding: 1rem 1.1rem; border: 1px solid rgba(118,168,255,.24); border-radius: 12px; background: rgba(118,168,255,.06); }.callout strong{display:block;margin-bottom:.2rem}.callout p{margin:0}
+.doc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin: 1.5rem 0 2.5rem; }
+.doc-card { display: block; padding: 1rem; color: var(--ink); border: 1px solid var(--line); border-radius: 12px; background: rgba(17,26,44,.5); text-decoration: none; }
+.doc-card:hover { border-color: var(--line-strong); background: rgba(25,38,62,.75); transform: translateY(-1px); }
+.doc-card strong { display: block; margin-bottom: .2rem; }.doc-card span { color: var(--muted); font-size: .8rem; }
+.catalog { display: grid; gap: .7rem; margin: 1.5rem 0; }
+.catalog-item { padding: 1rem; border: 1px solid var(--line); border-radius: 12px; background: rgba(17,26,44,.46); }
+.catalog-item header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }.catalog-item h3{margin:0}.catalog-item p{margin:.45rem 0 0;font-size:.86rem}.catalog-item .meta{color:var(--cyan);font:700 .68rem var(--mono)}
 .steps { display: grid; gap: 1rem; margin: 1.5rem 0; counter-reset: docs-step; }.step { position: relative; padding: 1.1rem 1.1rem 1.1rem 3.8rem; border: 1px solid var(--line); border-radius: 12px; background: rgba(17,26,44,.55); }.step::before { counter-increment: docs-step; content: counter(docs-step); position:absolute;left:1rem;top:1rem;display:grid;place-items:center;width:28px;height:28px;color:#07111d;border-radius:8px;background:var(--cyan);font:800 .78rem var(--mono)}.step h3{margin:0 0 .3rem}.step p{margin:0}
 .page-footer-nav { display: flex; justify-content: space-between; margin-top: 5rem; padding-top: 1.2rem; border-top: 1px solid var(--line); font-size: .78rem; }
 .site-footer { display: flex; justify-content: space-between; gap: 2rem; width: min(1180px, calc(100% - 2rem)); margin: auto; padding: 2.3rem 0 3rem; border-top: 1px solid var(--line); }.footer-brand{color:var(--ink);font-weight:800;text-decoration:none}.site-footer p{margin:.3rem 0 0;color:var(--faint);font-size:.78rem}.footer-links{display:flex;gap:1.2rem;align-items:center}.footer-links a{color:var(--muted);font-size:.78rem;text-decoration:none}.footer-links a:hover{color:var(--ink)}
@@ -151,7 +158,7 @@ button, input { font: inherit; }
   .docs-shell{grid-template-columns:1fr}.docs-sidebar,.page-outline{display:none}
 }
 @media (max-width: 620px) {
-  .header-inner{min-height:64px}.brand-copy small,.github-link span{display:none}.github-link{padding:.6rem}.hero{padding:5.5rem 1rem 4rem}.hero h1{font-size:clamp(2.8rem,15vw,4.2rem)}.hero-proof{grid-template-columns:1fr;text-align:center}.hero-proof div+div{border-left:0;border-top:1px solid var(--line)}.home-section{padding:4.2rem 0}.flow-strip{grid-template-columns:1fr}.cta-panel{align-items:flex-start;flex-direction:column;padding:1.5rem}.docs-shell{padding:2.7rem 0 5rem}.site-footer{flex-direction:column}.footer-links{flex-wrap:wrap}
+  .header-inner{min-height:64px}.brand-copy small,.github-link span{display:none}.github-link{padding:.6rem}.hero{padding:5.5rem 1rem 4rem}.hero h1{font-size:clamp(2.8rem,15vw,4.2rem)}.hero-proof{grid-template-columns:1fr;text-align:center}.hero-proof div+div{border-left:0;border-top:1px solid var(--line)}.home-section{padding:4.2rem 0}.flow-strip{grid-template-columns:1fr}.cta-panel{align-items:flex-start;flex-direction:column;padding:1.5rem}.docs-shell{padding:2.7rem 0 5rem}.site-footer{flex-direction:column}.footer-links{flex-wrap:wrap}.doc-grid{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }

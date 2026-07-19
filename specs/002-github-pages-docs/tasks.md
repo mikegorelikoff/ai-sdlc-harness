@@ -54,7 +54,7 @@ artifact_metadata:
   Output: Configuration, layouts, grouped navigation, local outline behavior, visual system, landing page, start path, and documented forty-page content map.
   Refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-009, AC-011
   Depends on: T001
-- [ ] T003. Author the complete documentation corpus and generated capability catalogs.
+- [x] T003. Author the complete documentation corpus and generated capability catalogs.
   Output: Tutorials, how-to guides, explanations, references, roadmap, section indexes, deterministic catalog generator, and generated data.
   Refs: AC-003, AC-004, AC-006, AC-007, AC-008
   Depends on: T002
