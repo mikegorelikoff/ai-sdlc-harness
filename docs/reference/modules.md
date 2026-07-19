@@ -19,7 +19,7 @@ description: Installed capability modules, compatibility ranges, dependencies, a
 
     [Open manifest →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/modules/architecture/module.json)
 
--   **Core** · `core` · `v1.4.0`
+-   **Core** · `core` · `v1.5.0`
 
     Core AI SDLC lifecycle, control-plane, and delivery skills.
 

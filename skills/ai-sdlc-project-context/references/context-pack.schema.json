@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-context-pack-v2",
+  "title": "AI SDLC Context Pack",
+  "type": "object",
+  "required": ["schema", "task", "repository", "budget", "selectors", "selected", "exclusions", "freshness", "fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-context-pack/v2"},
+    "task": {"type": "object"},
+    "repository": {"type": "object"},
+    "budget": {"type": "object"},
+    "selectors": {"type": "array", "items": {"type": "object"}},
+    "selected": {"type": "array", "items": {"type": "object"}},
+    "exclusions": {"type": "array", "items": {"type": "object"}},
+    "freshness": {"type": "object"},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

@@ -74,7 +74,7 @@ artifact_metadata:
 - [x] T008. Implement versioned policy-as-code and waiver lifecycle.
   Output: Layered policy schema and resolver, protected rules, action evaluator, explain output, expiring waiver contract, organization profiles, tests, and documentation.
   Refs: AC-007, AC-015, AC-013, DEC-002
-- [ ] T009. Implement Context Engine v2 and bounded task packs.
+- [x] T009. Implement Context Engine v2 and bounded task packs.
   Output: Repository ownership and test topology, conditional selectors, token budget allocator, freshness-aware context packs, secret exclusions, tests, and documentation.
   Refs: AC-008, AC-013
 - [ ] T010. Implement the resumable task runtime core.

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-context-selectors-v2",
+  "title": "AI SDLC Context Selectors",
+  "type": "object",
+  "required": ["schema", "selectors", "exclusions"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-context-selectors/v2"},
+    "selectors": {"type": "array", "items": {"type": "object"}},
+    "exclusions": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

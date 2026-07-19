@@ -17,4 +17,22 @@ A lens names a review perspective—testability, accessibility, operability, sec
 
 Context describes current evidence. Lenses evaluate it. Neither silently changes the underlying requirement or policy. That separation keeps repeated reviews consistent while preserving the responsible owner’s decision authority.
 
+## Context Engine v2
+
+Project memory is intentionally broad; implementation context should be narrow.
+Context Engine v2 maps repository ownership, source-to-test topology, stack,
+commands, and feature traces, then selects a task pack from explicit task paths,
+tags, and conditional selector rules.
+
+Every candidate has a priority, per-source cap, and explanation. Allocation is
+deterministic and cannot exceed the pack budget. Exact content ranges carry
+current hashes; skipped candidates retain exclusion reasons. Secret-named
+paths, symlinks, generated output, binaries, oversized files, configured globs,
+and credential-like assignments are removed before content is returned.
+
+A pack also compares saved project-context identity with current repository
+evidence and intersects selected paths with non-fresh evidence ledger records.
+Missing freshness sources produce warnings, not optimistic assumptions. The
+result is small enough for one task but still explains what was omitted and why.
+
 Good context reduces tokens by increasing selectivity, not by deleting the evidence needed to challenge a conclusion.

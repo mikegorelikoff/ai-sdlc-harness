@@ -1,6 +1,6 @@
 ---
 name: ai-sdlc-project-context
-description: AI SDLC evidence-backed project context workflow. Use when an AI assistant needs to onboard to an established repository, capture implementation conventions, detect stack and validation commands, preserve architecture constraints, generate human and machine project memory, or check whether saved project context drifted from the current codebase. Supports `--quick-flow` for focused evidence and `--full-flow` for stricter repository coverage.
+description: AI SDLC evidence-backed project context and bounded task-pack workflow. Use when an AI assistant needs to onboard to a repository, detect stack and commands, map ownership and test topology, check context drift, conditionally select task sources, exclude secrets, or allocate a freshness-aware context pack within an explicit token budget. Supports `--quick-flow` for focused evidence and `--full-flow` for stricter repository coverage.
 ---
 
 # ai-sdlc-project-context: Evidence-Backed Repository Memory
@@ -17,13 +17,16 @@ description: AI SDLC evidence-backed project context workflow. Use when an AI as
 - Supporting audience: QA, BA, Delivery, AI assistants
 - Audience tags: Dev, QA, BA, Delivery
 - SDLC stage: Cross-feature repository context
-- Purpose: Generate durable, evidence-backed project rules and detect when they become stale.
-- Output: `project-context.md` and `_ai_sdlc/project-context.toon`
+- Purpose: Generate durable repository memory and task-specific, bounded,
+  freshness-aware context from explained safe sources.
+- Output: `project-context.md`, `_ai_sdlc/project-context.toon`, and optional
+  topology and task-pack records below `_ai_sdlc/context/`
 
 ### 0.1 Required Inputs
 
 - Repository root.
 - Readable repository manifests, guidance, and validation configuration.
+- Task ID, goal, relevant paths or tags, and explicit token budget for a pack.
 - Write authorization when `--write` is requested.
 
 ### 0.2 Clarification Rules
@@ -40,6 +43,8 @@ description: AI SDLC evidence-backed project context workflow. Use when an AI as
 - Full flow also treats missing guidance, validation commands, or revision
   identity as blockers in the returned report.
 - Both modes use the same deterministic fingerprint and secret exclusions.
+- Full-flow task packs require ownership and test topology plus explicit review
+  of every freshness warning and budget exclusion.
 
 ### 0.3 Output Rules
 
@@ -50,6 +55,8 @@ description: AI SDLC evidence-backed project context workflow. Use when an AI as
   includes `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or ad hoc context files.
 - Keep Markdown readable and TOON bounded and machine-oriented.
+- For task packs, report every selection reason, exclusion reason, token
+  allocation, current hash, and freshness warning.
 
 ### 0.4 Artifact Routing
 
@@ -57,6 +64,8 @@ description: AI SDLC evidence-backed project context workflow. Use when an AI as
 - Write the machine projection to `<root>/_ai_sdlc/project-context.toon`.
 - Do not place project-wide context inside one feature folder.
 - Do not overwrite either output when `--check` or `--emit` is used.
+- Route topology to `_ai_sdlc/context/topology.{json,md}` and task packs to
+  `_ai_sdlc/context/task-packs/<task>.{json,md}` only with `--write`.
 
 ## 0.5 Feature State Machine
 
@@ -74,6 +83,9 @@ description: AI SDLC evidence-backed project context workflow. Use when an AI as
 - Include `metatags` for `ai-sdlc`, `project-context`, `project`, and
   `evidence-backed`.
 - Metadata records revision, fingerprint, generation date, and source paths.
+- Task packs use `ai-sdlc-context-pack/v2`; selectors use
+  `ai-sdlc-context-selectors/v2`; topology uses
+  `ai-sdlc-repository-topology/v2`.
 
 ## 0.7 Specs Index
 
@@ -89,6 +101,11 @@ description: AI SDLC evidence-backed project context workflow. Use when an AI as
 - Use `scripts/project_context.py` to emit, write, or check context.
 - Read `references/context-contract.md` when changing source precedence,
   exclusions, or the drift schema.
+- Read `references/context-engine-v2-contract.md` before building or reviewing
+  topology, selectors, budgets, exclusions, or freshness.
+- Validate custom selectors with `references/context-selector.schema.json` and
+  task packs with `references/context-pack.schema.json`.
+- Use `scripts/context_engine.py` for topology and task-pack generation.
 
 ## Script Usage
 
@@ -96,6 +113,8 @@ description: AI SDLC evidence-backed project context workflow. Use when an AI as
 python3 skills/ai-sdlc-project-context/scripts/project_context.py --emit --format toon --quick-flow
 python3 skills/ai-sdlc-project-context/scripts/project_context.py --write --full-flow
 python3 skills/ai-sdlc-project-context/scripts/project_context.py --check --format toon
+python3 skills/ai-sdlc-project-context/scripts/context_engine.py --topology --write --format toon
+python3 skills/ai-sdlc-project-context/scripts/context_engine.py --build-pack --task T009 --goal "Build bounded context" --path specs/example/tasks.md --tag implementation --budget 2000 --write --format toon
 ```
 
 `--check` exits non-zero when revision or evidence fingerprint drifted.
@@ -124,12 +143,22 @@ depending on chat history or unsupported generic claims.
 5. Run `--check` before reusing saved context after repository changes.
 6. Regenerate when drift is reported; never patch the fingerprint manually.
 7. Route feature-specific work through Navigator and the owning skill.
+8. Build repository ownership and source-to-test topology before a medium or
+   large task pack.
+9. Apply built-in and optional conditional selectors, then allocate sources by
+   priority within the explicit token budget.
+10. Inspect secret, unsafe, binary, oversized, configured, and budget
+    exclusions plus project-context and evidence-ledger freshness warnings.
 
 ## Output Spec
 
 The TOON schema `ai-sdlc-project-context/v1` includes repository, revision,
 fingerprint, drift status, stack, commands, architecture paths, and evidence
 rows with exact `path`, `line`, `kind`, and `detail` fields.
+
+The JSON schema `ai-sdlc-context-pack/v2` includes task identity, topology and
+revision identity, deterministic budget use, selector outcomes, bounded source
+ranges and content, exclusions, freshness warnings, and fingerprint.
 
 Quality gate:
 
@@ -161,6 +190,10 @@ Reject unsupported inference without repository evidence.
 - An empty repository produces explicit not-detected values.
 - Untracked high-signal files participate in the fingerprint when readable.
 - Symlinked or secret-named sources are skipped.
+- Credential-like assignment content is excluded even when its filename looks safe.
+- Custom selectors that do not match remain visible with the failed condition.
+- Budget exhaustion records skipped candidates instead of silently truncating
+  the candidate list.
 - A Git revision change without evidence-content change still reports revision
   drift so consumers can consciously accept regeneration.
 
@@ -170,4 +203,6 @@ Reject unsupported inference without repository evidence.
 - Do not modify repository source or configuration.
 - Do not read secret values or production credentials.
 - Do not replace state, indexes, decisions, or validation evidence.
+- Do not return secret-like content, follow symlinks, or exceed the requested
+  task-pack budget.
 - Use `$ai-sdlc-navigator` for downstream workflow selection.

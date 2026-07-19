@@ -22,6 +22,9 @@ description: Core versioned records used for artifacts, handoffs, modules, compa
 | `ai-sdlc-policy-layer/v1` | Declare versioned action rules, predicates, effects, gates, protection, and waiver eligibility. |
 | `ai-sdlc-policy-waiver/v1` | Bind one accountable, constrained, expiring exception to an exact rule and decision. |
 | `ai-sdlc-policy-decision/v1` | Explain the resolved allow, require, or deny result with provenance, gates, reasons, and waiver outcomes. |
+| `ai-sdlc-repository-topology/v2` | Map ownership, source-to-test links, manifests, stack, commands, revision, and topology identity. |
+| `ai-sdlc-context-selectors/v2` | Declare conditional task, path, and tag selectors with include globs, priority, caps, and exclusions. |
+| `ai-sdlc-context-pack/v2` | Return bounded explained source ranges, budget allocation, exclusions, freshness warnings, and task identity. |
 | Project context contracts | Preserve evidence-backed repository memory and drift identity. |
 | Quality finding contracts | Record evidence, severity, owner, resolution, and trace targets. |
 

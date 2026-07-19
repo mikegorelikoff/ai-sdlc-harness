@@ -173,7 +173,7 @@ This page is generated from each package's `SKILL.md` frontmatter. The linked so
 
     `core`
 
-    AI SDLC evidence-backed project context workflow. Use when an AI assistant needs to onboard to an established repository, capture implementation conventions, detect stack and validation commands, preserve architecture constraints, generate human and machine project memory, or check whether saved project context drifted from the current codebase. Supports `--quick-flow` for focused evidence and `--full-flow` for stricter repository coverage.
+    AI SDLC evidence-backed project context and bounded task-pack workflow. Use when an AI assistant needs to onboard to a repository, detect stack and commands, map ownership and test topology, check context drift, conditionally select task sources, exclude secrets, or allocate a freshness-aware context pack within an explicit token budget. Supports `--quick-flow` for focused evidence and `--full-flow` for stricter repository coverage.
 
     [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-project-context/SKILL.md)
 
