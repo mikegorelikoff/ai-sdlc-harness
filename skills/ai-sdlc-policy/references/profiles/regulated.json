@@ -1,0 +1,38 @@
+{
+  "schema": "ai-sdlc-policy-layer/v1",
+  "id": "regulated",
+  "version": "1.0.0",
+  "scope": "organization",
+  "rules": [
+    {
+      "id": "org-regulated-change",
+      "actions": ["change.apply"],
+      "effect": "require",
+      "when": [],
+      "required_gates": ["audit-evidence", "fresh-evidence", "privacy-review", "security-review"],
+      "protected": true,
+      "waivable": true,
+      "description": "Require auditable, current, privacy-reviewed, and security-reviewed canonical changes."
+    },
+    {
+      "id": "org-regulated-release",
+      "actions": ["release.publish"],
+      "effect": "require",
+      "when": [],
+      "required_gates": ["audit-evidence", "fresh-evidence", "privacy-review", "security-review", "signed-provenance"],
+      "protected": true,
+      "waivable": false,
+      "description": "Require regulated release evidence and signed provenance."
+    },
+    {
+      "id": "org-regulated-production-data",
+      "actions": ["data.production.read"],
+      "effect": "deny",
+      "when": [{"field": "purpose", "operator": "eq", "value": "ai-context"}],
+      "required_gates": [],
+      "protected": true,
+      "waivable": false,
+      "description": "Deny production data use as AI task context."
+    }
+  ]
+}

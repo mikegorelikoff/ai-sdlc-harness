@@ -102,6 +102,7 @@ nav:
       - Navigate a new request: how-to/navigate-request.md
       - Build project context: how-to/project-context.md
       - Customize team policy: how-to/customize.md
+      - Evaluate delivery policy: how-to/evaluate-policy.md
       - Add a capability module: how-to/add-module.md
       - Recover from change: how-to/recover-change.md
       - Query the delivery graph: how-to/query-delivery-graph.md

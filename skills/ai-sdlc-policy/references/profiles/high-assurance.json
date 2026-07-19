@@ -1,0 +1,28 @@
+{
+  "schema": "ai-sdlc-policy-layer/v1",
+  "id": "high-assurance",
+  "version": "1.0.0",
+  "scope": "organization",
+  "rules": [
+    {
+      "id": "org-high-assurance-change",
+      "actions": ["change.apply"],
+      "effect": "require",
+      "when": [],
+      "required_gates": ["fresh-evidence", "security-review"],
+      "protected": true,
+      "waivable": true,
+      "description": "Require fresh evidence and security review for canonical changes."
+    },
+    {
+      "id": "org-high-assurance-release",
+      "actions": ["release.publish"],
+      "effect": "require",
+      "when": [],
+      "required_gates": ["fresh-evidence", "security-review", "signed-provenance"],
+      "protected": true,
+      "waivable": false,
+      "description": "Require current evidence, security review, and provenance for release."
+    }
+  ]
+}

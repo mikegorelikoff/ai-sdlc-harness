@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-policy-decision-v1",
+  "title": "AI SDLC Policy Decision",
+  "type": "object",
+  "required": ["schema", "action", "as_of", "result", "required_gates", "reason_codes", "matched_rules", "waivers", "policy_fingerprint", "context_fingerprint", "fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-policy-decision/v1"},
+    "action": {"type": "string"},
+    "as_of": {"type": "string", "format": "date-time"},
+    "result": {"enum": ["allow", "require", "deny"]},
+    "required_gates": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "reason_codes": {"type": "array", "items": {"type": "string"}},
+    "matched_rules": {"type": "array", "items": {"type": "object"}},
+    "waivers": {"type": "array", "items": {"type": "object"}},
+    "policy_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "context_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

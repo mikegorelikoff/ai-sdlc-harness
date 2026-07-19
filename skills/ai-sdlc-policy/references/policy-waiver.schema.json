@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-policy-waiver-v1",
+  "title": "AI SDLC Policy Waiver",
+  "type": "object",
+  "required": ["schema", "id", "rule_id", "actions", "subject", "constraints", "owner", "approved_by", "decision_ref", "reason", "issued_at", "expires_at"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-policy-waiver/v1"},
+    "id": {"type": "string", "minLength": 1},
+    "rule_id": {"type": "string", "minLength": 1},
+    "actions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "subject": {"type": "string", "minLength": 1},
+    "constraints": {"type": "object"},
+    "owner": {"type": "string", "minLength": 1},
+    "approved_by": {"type": "string", "minLength": 1},
+    "decision_ref": {"type": "string", "minLength": 1},
+    "reason": {"type": "string", "minLength": 1},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": false
+}

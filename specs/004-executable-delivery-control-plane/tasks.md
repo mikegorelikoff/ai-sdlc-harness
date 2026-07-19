@@ -71,7 +71,7 @@ artifact_metadata:
 - [x] T007. Implement the evidence ledger and freshness propagation.
   Output: Evidence identity and fingerprint contract, dependency-aware staleness propagation, coverage queries, tests, and documentation.
   Refs: AC-004, AC-008, AC-013
-- [ ] T008. Implement versioned policy-as-code and waiver lifecycle.
+- [x] T008. Implement versioned policy-as-code and waiver lifecycle.
   Output: Layered policy schema and resolver, protected rules, action evaluator, explain output, expiring waiver contract, organization profiles, tests, and documentation.
   Refs: AC-007, AC-015, AC-013, DEC-002
 - [ ] T009. Implement Context Engine v2 and bounded task packs.

@@ -153,6 +153,14 @@ This page is generated from each package's `SKILL.md` frontmatter. The linked so
 
     [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-navigator/SKILL.md)
 
+-   **`ai-sdlc-policy`**
+
+    `core`
+
+    AI SDLC versioned policy-as-code workflow. Use when an AI assistant needs to resolve layered delivery policy, evaluate an action with explainable rules and gates, protect organization minimums from weaker overrides, apply or reject an expiring waiver, or select a reusable assurance profile. Supports `--quick-flow` for deterministic evaluation and `--full-flow` for strict owner and exception review.
+
+    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-policy/SKILL.md)
+
 -   **`ai-sdlc-prfaq-package-synthesis`**
 
     `core`

@@ -1,7 +1,7 @@
 {
   "schema": "ai-sdlc-module/v1",
   "id": "core",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "kind": "core",
   "harness_api": {"min": "1.0.0", "max_exclusive": "2.0.0"},
   "requires": [],
@@ -23,6 +23,7 @@
     {"name": "ai-sdlc-delivery-spec-synthesis", "path": "skills/ai-sdlc-delivery-spec-synthesis"},
     {"name": "ai-sdlc-goal-capability-and-epic-mapping", "path": "skills/ai-sdlc-goal-capability-and-epic-mapping"},
     {"name": "ai-sdlc-navigator", "path": "skills/ai-sdlc-navigator"},
+    {"name": "ai-sdlc-policy", "path": "skills/ai-sdlc-policy"},
     {"name": "ai-sdlc-prfaq-package-synthesis", "path": "skills/ai-sdlc-prfaq-package-synthesis"},
     {"name": "ai-sdlc-project-context", "path": "skills/ai-sdlc-project-context"},
     {"name": "ai-sdlc-qa", "path": "skills/ai-sdlc-qa"},

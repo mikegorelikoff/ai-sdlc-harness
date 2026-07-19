@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-policy-layer-v1",
+  "title": "AI SDLC Policy Layer",
+  "type": "object",
+  "required": ["schema", "id", "version", "scope", "rules"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-policy-layer/v1"},
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "scope": {"enum": ["base", "organization", "project", "user"]},
+    "rules": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": false
+}

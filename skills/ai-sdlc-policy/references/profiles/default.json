@@ -1,0 +1,58 @@
+{
+  "schema": "ai-sdlc-policy-layer/v1",
+  "id": "harness-default",
+  "version": "1.0.0",
+  "scope": "base",
+  "rules": [
+    {
+      "id": "base-change-preview",
+      "actions": ["change.preview"],
+      "effect": "allow",
+      "when": [],
+      "required_gates": [],
+      "protected": true,
+      "waivable": false,
+      "description": "Allow non-mutating change preview."
+    },
+    {
+      "id": "base-delivery-index",
+      "actions": ["delivery.graph.index", "delivery.evidence.index"],
+      "effect": "allow",
+      "when": [],
+      "required_gates": [],
+      "protected": true,
+      "waivable": false,
+      "description": "Allow read-only delivery indexing."
+    },
+    {
+      "id": "base-change-apply",
+      "actions": ["change.apply"],
+      "effect": "require",
+      "when": [],
+      "required_gates": ["delta-validation", "owner-approval", "policy-evaluation"],
+      "protected": true,
+      "waivable": false,
+      "description": "Require validated deltas, owner approval, and policy evaluation before canonical apply."
+    },
+    {
+      "id": "base-release-publish",
+      "actions": ["release.publish"],
+      "effect": "require",
+      "when": [],
+      "required_gates": ["full-validation", "traceability"],
+      "protected": true,
+      "waivable": false,
+      "description": "Require complete validation and traceability before publication."
+    },
+    {
+      "id": "base-destructive-command",
+      "actions": ["command.destructive"],
+      "effect": "deny",
+      "when": [],
+      "required_gates": [],
+      "protected": true,
+      "waivable": false,
+      "description": "Deny destructive command execution through policy automation."
+    }
+  ]
+}
