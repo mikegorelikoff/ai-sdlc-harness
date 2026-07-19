@@ -8,7 +8,10 @@ import os
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+_SHARED = Path(__file__).resolve().parents[2] / "_shared"
+if not _SHARED.is_dir():
+    _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
+sys.path.insert(0, str(_SHARED))
 from ai_sdlc_artifact_helper import emit_profile_report
 from ai_sdlc_context import positive_int
 from ai_sdlc_state_machine import add_state_arguments

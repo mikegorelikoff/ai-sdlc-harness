@@ -17,7 +17,10 @@ from typing import Any
 
 from project_context import SECRET_PATTERN, revision, saved_identity, scan
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+_SHARED = Path(__file__).resolve().parents[2] / "_shared"
+if not _SHARED.is_dir():
+    _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
+sys.path.insert(0, str(_SHARED))
 from ai_sdlc_toon import encode_toon
 
 

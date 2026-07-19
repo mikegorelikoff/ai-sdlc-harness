@@ -17,7 +17,7 @@ hide:
 [Evaluate adoption](foundations/why-harness.md){ .md-button }
 
 <div class="metric-strip">
-  <div class="metric"><strong>43</strong><span>Focused lifecycle skills</span></div>
+  <div class="metric"><strong>44</strong><span>Installed capabilities</span></div>
   <div class="metric"><strong>18</strong><span>Traceable refinement stages</span></div>
   <div class="metric"><strong>1</strong><span>Accountable evidence chain</span></div>
 </div>

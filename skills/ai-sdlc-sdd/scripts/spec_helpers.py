@@ -14,7 +14,10 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+_SHARED = Path(__file__).resolve().parents[2] / "_shared"
+if not _SHARED.is_dir():
+    _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
+sys.path.insert(0, str(_SHARED))
 from ai_sdlc_paths import first_existing, internal_dir
 
 

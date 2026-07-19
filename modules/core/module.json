@@ -1,7 +1,7 @@
 {
   "schema": "ai-sdlc-module/v1",
   "id": "core",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "kind": "core",
   "harness_api": {"min": "1.0.0", "max_exclusive": "2.0.0"},
   "requires": [],
@@ -40,6 +40,7 @@
     {"name": "ai-sdlc-workflow", "path": "skills/ai-sdlc-workflow"},
     {"name": "ai-sdlc-sdd", "path": "skills/ai-sdlc-sdd"},
     {"name": "ai-sdlc-security-testing", "path": "skills/ai-sdlc-security-testing"},
+    {"name": "ai-sdlc-shared-runtime", "path": "skills/ai-sdlc-shared-runtime"},
     {"name": "ai-sdlc-test-case-and-suite-synthesis", "path": "skills/ai-sdlc-test-case-and-suite-synthesis"},
     {"name": "ai-sdlc-test-cases", "path": "skills/ai-sdlc-test-cases"},
     {"name": "ai-sdlc-test-scope-and-strategy-design", "path": "skills/ai-sdlc-test-scope-and-strategy-design"},

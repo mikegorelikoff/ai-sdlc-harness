@@ -5,7 +5,8 @@ description: Choose the shortest guided path from first principles to a safe fir
 
 # Start here
 
-You do not need to understand all 43 skills before using the harness. You do
+You do not need to understand all 44 currently installed capabilities before
+using the harness. You do
 need a clear mental model, a working installation, and one bounded request.
 
 ## If AI SDLC or SDD is new

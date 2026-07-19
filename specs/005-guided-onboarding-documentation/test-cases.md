@@ -77,7 +77,7 @@ Validate that the public site teaches the product from first principles, provide
 | TC-004 | AC-004 | Complete the small-change tutorial using only public docs. | Every terminal action, agent prompt, expected file/result, checkpoint, recovery, validation, and commit result is available. |
 | TC-005 | AC-005 | Trace the full-feature tutorial across roles. | Discovery through learning has explicit evidence, owners, approvals, SDD, QA, release, and handoffs. |
 | TC-006 | AC-006 | Compare lifecycle inventory with the canonical profile registry and control-plane packages. | All 18 refinement stages and implementation/control branches have complete entry/exit/reopen fields. |
-| TC-007 | AC-007 | Add a fixture skill or remove a required detail field. | Generation or validation fails; current repository reports 43/43 complete guides. |
+| TC-007 | AC-007 | Add a fixture skill or remove a required detail field. | Generation or validation fails; current repository reports complete guides for every discovered capability. |
 | TC-008 | AC-008 | Add a fixture script or omit its generated coverage. | Validation fails; every in-scope helper appears with the required operational fields. |
 | TC-009 | AC-009 | Inspect lifecycle gates and authority matrix. | Accountable human, allowed agent work, prohibited action, evidence, and escalation are explicit. |
 | TC-010 | AC-010 | Evaluate and design a pilot as VP Engineering. | Fit, baseline, metrics, thresholds, checkpoints, stop/rollback, and scale decision are actionable without invented ROI. |
@@ -93,7 +93,7 @@ Validate that the public site teaches the product from first principles, provide
 ## Layer Mapping
 - Unit: catalog parser, section extraction, inventory discovery, renderer, validation predicates, local-command parsing.
 - Integration: source inventories → generated pages/manifest → navigation → strict MkDocs output.
-- Contract: 43/43 skill closure, complete script closure, 18-stage lifecycle closure, canonical install path, public page metadata, stable URLs.
+- Contract: inventory-complete skill closure, complete script closure, 18-stage lifecycle closure, canonical install path, public page metadata, stable URLs.
 - Smoke: canonical install/version commands that are safe in CI, documentation validation, Material build, rendered target verification.
 - Human acceptance: junior, lead, and VP read-only persona gates.
 - Regression: shared skill tests, compatibility validator, SDD gates, Git whitespace, prohibited-name scan.

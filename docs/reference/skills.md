@@ -289,6 +289,14 @@ This page is generated from each package's `SKILL.md` frontmatter. The linked so
 
     [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-security-testing/SKILL.md)
 
+-   **`ai-sdlc-shared-runtime`**
+
+    `core`
+
+    Portable AI SDLC shared-helper runtime. Use when an AI assistant installs, verifies, diagnoses, or repairs project-scoped AI SDLC skills whose deterministic scripts depend on shared state, artifact, context, path, TOON, migration, or index modules. This is an installation dependency, not a lifecycle entry point.
+
+    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-shared-runtime/SKILL.md)
+
 -   **`ai-sdlc-test-case-and-suite-synthesis`**
 
     `core`

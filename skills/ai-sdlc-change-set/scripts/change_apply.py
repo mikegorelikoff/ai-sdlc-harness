@@ -18,7 +18,10 @@ from change_preview import apply_virtual, build_preview, digest
 from change_set import REQUIRED_ARTIFACTS, fingerprint, validate_workspace
 from spec_delta import analyze_delta_set
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+_SHARED = Path(__file__).resolve().parents[2] / "_shared"
+if not _SHARED.is_dir():
+    _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
+sys.path.insert(0, str(_SHARED))
 from ai_sdlc_toon import encode_toon
 
 

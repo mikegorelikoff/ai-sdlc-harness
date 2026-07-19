@@ -33,13 +33,20 @@ to install user-wide rather than project-scoped skills.
 Install a specific core or optional capability:
 
 ```bash
+npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --skill ai-sdlc-shared-runtime --agent '*' -y
 npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --skill ai-sdlc-navigator --agent '*' -y
 npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --skill ai-sdlc-architecture --agent '*' -y
 ```
 
 `--all` includes optional capabilities. A minimal installation selects only
 skills owned by `modules/core/module.json`; optional module manifests never
-become core dependencies.
+become core dependencies. Install `ai-sdlc-shared-runtime` with every selected
+helper-backed skill. Verify portability from the consumer root with:
+
+```bash
+python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
+python3 .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
+```
 
 ## Update
 

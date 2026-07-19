@@ -45,15 +45,18 @@ reproducible.
     npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all
     ```
 
-`--all` selects every skill and every detected supported agent. Because `-g`
-is absent, the intended scope is the current project. Review the CLI summary
-before accepting any unexpected target.
+`--all` selects every capability—including the portable shared runtime—and
+every detected supported agent. Because `-g` is absent, the intended scope is
+the current project. Review the CLI summary before accepting any unexpected
+target.
 
 For a smaller installation, omit `--all` and select exact skills/agents in the
 interactive prompt, or use the CLI's `--skill` and `--agent` options. A useful
-starter set is navigator, project context, SDD, validation, and commit prep;
+starter set is shared runtime, navigator, project context, SDD, validation, and commit prep;
 installing all skills is easier when you want the navigator to expose every
-role and control-plane path.
+role and control-plane path. Any selected helper-backed skill must be installed
+with `ai-sdlc-shared-runtime`; a skill inventory without its runtime is not a
+healthy installation.
 
 ## Verify the result
 
@@ -63,6 +66,8 @@ role and control-plane path.
     npx -y skills@1.5.19 list --json
     git status --short
     python3 --version
+    python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
+    python3 .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
     ```
 
 Expected result:
@@ -70,12 +75,14 @@ Expected result:
 - the list contains AI SDLC skill names;
 - Git shows only the agent/skill files you intended to add;
 - Python reports 3.10 or newer;
+- navigator and SDD helper usage render without an import traceback;
 - no application source, secrets, or existing project artifacts were replaced.
 
 !!! warning "Human checkpoint"
 
-    Review the installed diff before committing it. Installation is not
-    approval for an agent to modify product code, policy, or delivery evidence.
+    Review and commit the accepted installation baseline before starting a
+    feature branch. Installation is not approval for an agent to modify product
+    code, policy, or delivery evidence.
 
 ## Verify first use
 

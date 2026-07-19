@@ -43,7 +43,7 @@ QA follows four reader journeys:
 For each journey, verify terms precede use, actions identify the actor, links stay within two-click targets where required, expected results are concrete, and no hidden root guide is needed.
 
 ## Regression Targets
-Material navigation and search; canonical release/install/update pages; 43 skill package names; module ownership; all Python helpers; 18-stage refinement order; SDD artifacts and state paths; TOON-first contracts; quick/full/adaptive semantics; artifact authority; handoffs; policy, approvals, package trust, host capability, runtime, recovery, compatibility, and Pages deployment. Preserve old public URLs unless an explicit replacement is linked.
+Material navigation and search; canonical release/install/update pages; every discovered skill package name; module ownership; all Python helpers; 18-stage refinement order; SDD artifacts and state paths; TOON-first contracts; quick/full/adaptive semantics; artifact authority; handoffs; policy, approvals, package trust, host capability, runtime, recovery, compatibility, and Pages deployment. Preserve old public URLs unless an explicit replacement is linked.
 
 ## Risk Notes
 Highest risks are overwhelming beginners, generating misleading detail from prose contracts, duplicating canonical sources, publishing unsafe commands, hiding human approval boundaries, overstating ROI, and passing shallow word-count tests despite semantic gaps. Mitigations are progressive disclosure, stable guide templates, source links, deterministic inventory closure, local-command checks, actor labels, governance/RACI, explicit proof levels, runnable examples, and persona rereads.

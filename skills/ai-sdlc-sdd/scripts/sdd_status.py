@@ -12,7 +12,10 @@ import argparse
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+_SHARED = Path(__file__).resolve().parents[2] / "_shared"
+if not _SHARED.is_dir():
+    _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
+sys.path.insert(0, str(_SHARED))
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
 from ai_sdlc_context import toon_row, toon_scalar
 from analyze_spec import validate as analyze_validate

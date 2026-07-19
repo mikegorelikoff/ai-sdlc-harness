@@ -11,7 +11,10 @@ import sys
 import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "_shared"))
+_SHARED = Path(__file__).resolve().parents[2] / "_shared"
+if not _SHARED.is_dir():
+    _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
+sys.path.insert(0, str(_SHARED))
 from ai_sdlc_toon import encode_toon
 
 PACKAGE_SCHEMA = "ai-sdlc-package/v1"

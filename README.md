@@ -88,7 +88,14 @@ reported by the CLI, then verify the installed inventory:
 ```bash
 npx -y skills@1.5.19 list --json
 git status --short
+python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
+python3 .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
 ```
+
+The complete installation includes `ai-sdlc-shared-runtime`, which makes
+deterministic helpers executable outside this source checkout. Both `--help`
+commands must complete without an import traceback. Review and commit the
+accepted installation baseline before starting feature work.
 
 To inspect available skills before installing:
 

@@ -64,7 +64,7 @@ In scope:
 - Define SDLC, AI SDLC, SDD, the harness, skills, flows, artifacts, evidence, gates, handoffs, TOON, policy, runtime, and recovery before operational use.
 - Publish beginner, practitioner, maintainer, and executive reading paths.
 - Provide reproducible small-change and full-feature walkthroughs.
-- Cover all 43 installed skills and all executable Python helpers through generated, validated references.
+- Cover the complete discovered skill inventory (44 capabilities after the portable runtime addition) and all executable Python helpers through generated, validated references.
 - Document the 18-stage refinement lifecycle, implementation SDD, control-plane flows, role authority, governance, adoption metrics, limitations, troubleshooting, extension, and release operations.
 - Add deterministic completeness and command-existence validation.
 - Use independent junior, lead, and VP persona reviews as release gates.
@@ -99,7 +99,7 @@ FR-003: Provide one canonical, executable install path and clearly distinguish s
 FR-004: Label instructions as Tell your agent, Run in terminal, Agent does automatically, or Human checkpoint.
 FR-005: Provide a runnable small-change tutorial and a medium/full-feature tutorial with setup, exact prompts, expected artifacts, checkpoints, failure/recovery, validation, and cleanup.
 FR-006: Publish the exact 18-stage refinement lifecycle plus implementation, validation/release, controlled-change, runtime/automation, recovery/learning, and operations flows. Each flow defines entry, owner, inputs, sequence, artifacts, gates, exit, handoff, and reopen conditions.
-FR-007: Generate a detail page for all 43 skills with why/when, do-not-use, roles, prerequisites, prompt, inputs, outputs/paths, mutability/authority, modes, scripts, success, blockers, recovery, handoff, and examples.
+FR-007: Generate a detail page for every discovered capability with why/when, do-not-use, roles, prerequisites, prompt, inputs, outputs/paths, mutability/authority, modes, scripts, success, blockers, recovery, handoff, and examples.
 FR-008: Inventory all package and shared Python scripts with owner, purpose, caller, mutability, inputs, important flags/defaults, outputs, exit behavior, retry/recovery, and copyable invocation.
 FR-009: Publish role paths and a human/agent RACI covering every material lifecycle gate, approvals, escalation, and small-team role collapse.
 FR-010: Publish an adoption playbook for a bounded one-team/one-repo pilot with baseline, owner, 2–4 week checkpoints, leading/lagging metrics, qualitative evidence, thresholds, rollback, and scale decision.
@@ -113,7 +113,7 @@ FR-016: Preserve exact technical references and TOON-first/JSON-boundary contrac
 ## Non-Functional Requirements
 - Clarity: core beginner pages use plain English, define acronyms, and avoid requiring `SKILL.md` reads.
 - Discoverability: any skill is reachable within two navigation actions from the skill index; executive and practitioner paths are separated from Home.
-- Completeness: generated coverage is 43/43 skills and 100% of in-scope executable Python helpers.
+- Completeness: generated coverage is inventory-complete for skills and 100% of in-scope executable Python helpers.
 - Determinism: catalogs and coverage checks fail on drift, missing pages, stale navigation, undocumented scripts, or nonexistent local commands.
 - Safety: no page instructs an agent to approve protected actions, erase authoritative evidence, expose secrets, or guess missing decisions.
 - Consistency: `docs/` is the canonical public source; README, concepts, and guides point to it or are explicitly repository-internal sources without competing user guidance.
@@ -161,7 +161,7 @@ AC-018: All completed implementation tasks map one-to-one to focused commits.
 ## Assumptions
 - The public documentation language remains English because the repository and existing site are English.
 - `npx skills add/use` is the canonical consumer installation mechanism; source checkout is for contributors and local preview.
-- The 43 current skill packages and current Python helpers are authoritative inventory sources.
+- The discovered skill packages and current Python helpers are authoritative inventory sources; fixed counts are evidence, not configuration.
 - Material for MkDocs remains the site generator and GitHub Pages remains the publishing target.
 - Existing concepts and guides may be migrated, consolidated, or converted into pointers when public `docs/` becomes canonical.
 - Persona reviewers represent usability gates, not claims of formal user research.

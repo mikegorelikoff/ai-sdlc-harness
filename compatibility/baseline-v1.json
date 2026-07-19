@@ -39,6 +39,7 @@
     "ai-sdlc-runtime",
     "ai-sdlc-sdd",
     "ai-sdlc-security-testing",
+    "ai-sdlc-shared-runtime",
     "ai-sdlc-test-case-and-suite-synthesis",
     "ai-sdlc-test-cases",
     "ai-sdlc-test-scope-and-strategy-design",

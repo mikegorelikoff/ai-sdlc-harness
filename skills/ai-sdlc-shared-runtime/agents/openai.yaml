@@ -1,0 +1,6 @@
+interface:
+  display_name: "AI SDLC Shared Runtime"
+  short_description: "Portable helpers required by installed AI SDLC skills"
+  default_prompt: "Use $ai-sdlc-shared-runtime to diagnose or verify the installed shared runtime."
+policy:
+  allow_implicit_invocation: false

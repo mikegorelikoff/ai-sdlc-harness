@@ -67,7 +67,7 @@ The repository mechanically tests contracts, schemas, helpers, state,
 compatibility, documentation, and recovery paths. This is evidence that the
 implemented mechanisms behave as specified. Organizational outcomes—cycle time,
 rework, escaped defects, handoff delay, or cost—depend on team behavior and must
-be evaluated in a bounded pilot. Inventory counts such as 43 skills describe
+be evaluated in a bounded pilot. Inventory counts such as 44 capabilities describe
 coverage, not business value.
 
 ## A sensible first decision
