@@ -22,10 +22,33 @@ sys.path.insert(0, str(_SHARED))
 from ai_sdlc_artifact_helper import build_parser, emit_profile_report, flow_mode
 
 
-def git_status() -> str:
+def git_status(repo_root: Path | None = None) -> str:
     """Return short git status output; an empty string means clean tree."""
-    result = subprocess.run(["git", "status", "--short"], text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False)
+    result = subprocess.run(["git", "status", "--short"], cwd=repo_root, text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False)
     return result.stdout.strip()
+
+
+def git_lines(*args: str, repo_root: Path | None = None) -> list[str]:
+    """Return non-empty Git output for a read-only repository probe."""
+    result = subprocess.run(["git", *args], cwd=repo_root, text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False)
+    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+
+
+def resolve_base_branch(repo_root: Path | None = None) -> tuple[str, str]:
+    """Resolve an explicit/configured or repository-default base branch."""
+    configured = subprocess.run(
+        ["git", "config", "--get", "ai-sdlc.baseBranch"], text=True,
+        cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False,
+    ).stdout.strip()
+    if configured:
+        return configured, "repository config ai-sdlc.baseBranch"
+    remote_head = git_lines("symbolic-ref", "--short", "refs/remotes/origin/HEAD", repo_root=repo_root)
+    if remote_head:
+        return remote_head[0].removeprefix("origin/"), "origin/HEAD"
+    for candidate in ("dev", "main", "master"):
+        if git_lines("show-ref", "--verify", f"refs/heads/{candidate}", repo_root=repo_root):
+            return candidate, "local branch"
+    return "", "no declared base branch"
 
 
 def main() -> int:
@@ -38,7 +61,9 @@ def main() -> int:
 
     # Capture git state before printing the profile so the final report can
     # warn about unrelated or unstaged changes.
-    status = git_status()
+    repo_root = Path.cwd()
+    status = git_status(repo_root)
+    base_branch, base_source = resolve_base_branch(repo_root)
 
     # Skill-specific profile: required sections and keywords describe the
     # branch-planning evidence the agent should preserve.
@@ -62,6 +87,11 @@ def main() -> int:
     print()
     print("## Git Working Tree")
     print(f"- Dirty tree: {'yes' if status else 'no'}")
+    print(f"- Base branch: {base_branch or 'BLOCKED'} ({base_source})")
+    if status:
+        print("- Branch creation blocker: resolve related/unrelated changes before carrying them to a new branch.")
+    if not base_branch:
+        print("- Branch creation blocker: declare ai-sdlc.baseBranch or configure origin/HEAD before branching.")
     if status:
         # Count status rows instead of parsing porcelain details; the agent only
         # needs a cheap signal that multiple paths may require separation.

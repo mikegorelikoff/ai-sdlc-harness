@@ -17,7 +17,7 @@ helper imports before updating. A failing baseline makes post-update diagnosis
 ambiguous.
 
 ```bash
-npx -y skills@1.5.19 list --json
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
 git status --short
 python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
 python3 .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
@@ -29,7 +29,7 @@ Review the target release, migration, package origin, and expected changed skill
 inventory. Then use the pinned Skills CLI from the consumer repository:
 
 ```bash
-npx -y skills@1.5.19 update
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 update
 git status --short
 ```
 

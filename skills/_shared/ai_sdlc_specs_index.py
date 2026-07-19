@@ -137,14 +137,14 @@ def artifact_entry(path: Path, workspace_root: Path, feature: str) -> ArtifactEn
     """Build one artifact index row from Markdown metadata plus fallbacks."""
     text = path.read_text(encoding="utf-8", errors="replace")
     metadata = parse_artifact_metadata(text)
-    rel_path = path.as_posix()
+    rel_path = path.resolve().relative_to(workspace_root.parent.resolve()).as_posix()
     workspace = str(metadata.get("workspace") or workspace_for_root(workspace_root))
     tags = tuple(metadata.get("metatags", ())) or ("unindexed",)
     trace_ids = tuple(metadata.get("trace_ids", ())) or trace_ids_from_text(text)
     return ArtifactEntry(
         feature=str(metadata.get("feature") or feature),
         workspace=workspace,
-        path=str(metadata.get("path") or rel_path),
+        path=rel_path,
         artifact=str(metadata.get("artifact") or path.name),
         skill=str(metadata.get("skill") or "unknown"),
         status=str(metadata.get("status") or "unknown"),
@@ -175,8 +175,8 @@ def feature_entry(feature_dir: Path, workspace_root: Path, artifacts: list[Artif
         flow_mode=str(state.get("flow_mode") or ""),
         updated_at=str(state.get("updated_at") or ""),
         artifact_count=len(artifacts),
-        decision_log=str(state.get("decision_log") or (feature_dir / "decision-log.md").as_posix()),
-        state_file=state_file.as_posix(),
+        decision_log=str(state.get("decision_log") or (feature_dir / "decision-log.md").resolve().relative_to(workspace_root.parent.resolve()).as_posix()),
+        state_file=state_file.resolve().relative_to(workspace_root.parent.resolve()).as_posix(),
         metatags=tags,
     )
 
@@ -210,7 +210,7 @@ def render_toon(workspace_root: Path, features: list[FeatureEntry], artifacts: l
     """Render a compact LLM-oriented specs index in TOON."""
     lines = [
         f"workspace: {workspace_for_root(workspace_root)}",
-        f"root: {workspace_root.as_posix()}",
+        f"root: {workspace_root.resolve().relative_to(workspace_root.parent.resolve()).as_posix()}",
         f"updated_at: {date.today().isoformat()}",
         "",
         f"features[{len(features)}]{{feature,workspace,current_stage,active_skill,flow_mode,updated_at,artifact_count,decision_log,state_file,metatags}}:",
@@ -268,7 +268,7 @@ def render_markdown(workspace_root: Path, features: list[FeatureEntry], artifact
         "# Specs Index",
         "",
         f"- Workspace: `{workspace_for_root(workspace_root)}`",
-        f"- Root: `{workspace_root.as_posix()}`",
+        f"- Root: `{workspace_root.resolve().relative_to(workspace_root.parent.resolve()).as_posix()}`",
         f"- Updated: `{date.today().isoformat()}`",
         "",
         "## Feature Summary",

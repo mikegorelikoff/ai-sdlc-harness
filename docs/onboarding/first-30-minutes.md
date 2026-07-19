@@ -16,7 +16,7 @@ recommendation, explain its authority, and leave a usable handoff.
     ```bash
     git status --short
     python3 --version
-    npx -y skills@1.5.19 list --json
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
     ```
 
 Expected: a clean or understood Git tree, Python 3.10+, and installed AI SDLC

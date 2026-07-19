@@ -7,8 +7,8 @@ The harness evolves around one goal: make AI-assisted delivery faster without ma
 
 ## Now
 
-- Release and support the completed executable delivery control plane: controlled change sets, delivery graph, evidence freshness, policy, bounded context, resumable runtime, declarative workflows, portable adapters, safe upgrades, package trust, and private local metrics.
-- Keep the `1.1.0` release additive over harness API `1.0.0`, with complete deterministic TOON as the agent representation and explicit JSON boundaries.
+- Ship and support guided onboarding release `1.2.0`, making the AI SDLC lifecycle, every skill, and every operating path understandable from first install through release.
+- Preserve the completed `1.1.0` executable delivery control plane as the compatibility foundation, with deterministic TOON as the agent representation and explicit JSON boundaries.
 - Measure adoption, compatibility failures, recovery outcomes, and documentation gaps without collecting source content.
 
 ## Next
@@ -25,12 +25,12 @@ The harness evolves around one goal: make AI-assisted delivery faster without ma
 
 ## Active program
 
-The executable delivery control-plane program is tracked in the
-[implementation specification](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/specs/004-executable-delivery-control-plane/requirements.md).
-Its ordered T001–T015 tasks are complete. They move from controlled spec
-evolution through delivery graph, policy, context, runtime, interoperability,
-operations, and release. The [release audit](reference/release-1.1.md) maps each
-task to exactly one focused commit.
+The guided onboarding program is tracked in the
+[implementation specification](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/specs/005-guided-onboarding-documentation/requirements.md).
+Its ordered T001–T007 tasks close the onboarding, adoption, governance, and
+release evidence loop. The [release 1.2 audit](reference/release-1.2.md) maps
+each task to exactly one focused commit; the 1.1 control-plane audit remains
+available as completed history.
 
 ## Roadmap rules
 

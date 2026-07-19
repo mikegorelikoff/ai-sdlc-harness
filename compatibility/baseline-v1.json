@@ -1,6 +1,6 @@
 {
   "schema": "ai-sdlc-compatibility-baseline/v1",
-  "release": "1.1.0",
+  "release": "1.2.0",
   "harness_api_version": "1.0.0",
   "python": {"min": "3.10", "ci": ["3.10", "3.13"]},
   "required_skill_names": [
@@ -78,22 +78,15 @@
     "ids": ["architecture", "core", "evidence-council", "research", "ux"]
   },
   "install_update_guide": "guides/install-and-update.md",
-  "roadmap_git_base": "v1.0.0",
+  "roadmap_git_base": "v1.1.0",
+  "roadmap_allowed_prelude_subjects": [],
   "roadmap_commit_subjects": [
-    "docs(roadmap): define executable delivery control plane",
-    "feat(change-set): add isolated proposal workspaces",
-    "feat(change-set): validate semantic requirement deltas",
-    "feat(change-set): preview canonical specification changes",
-    "feat(change-set): apply and archive approved changes",
-    "feat(traceability): add repository delivery graph",
-    "feat(evidence): add freshness-aware evidence ledger",
-    "feat(policy): add protected policy evaluation",
-    "feat(context): add bounded task context packs",
-    "feat(runtime): add resumable TOON-first control plane",
-    "feat(workflow): add declarative gated wave planning",
-    "feat(adapter): add portable host capability negotiation",
-    "feat(doctor): add safe installation upgrade planning",
-    "feat(trust): add verified packages and private metrics",
-    "chore(release): validate control plane v1.1.0"
+    "docs(roadmap): define guided onboarding program",
+    "docs(onboarding): add beginner foundations and install path",
+    "fix(install): package portable shared runtime",
+    "docs(workflows): add runnable lifecycle journeys",
+    "docs(reference): document every skill and script",
+    "docs(operations): add adoption and governance guides",
+    "docs(release): close guided onboarding validation"
   ]
 }

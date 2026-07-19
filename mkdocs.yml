@@ -105,6 +105,7 @@ nav:
       - Evaluate and adopt: adoption/index.md
       - Run a bounded pilot: adoption/pilot.md
       - Interpret pilot metrics: adoption/metrics.md
+      - Stage a rollout: adoption/rollout.md
       - Maturity and limitations: explanation/maturity-limitations.md
   - Tutorials:
       - Overview: tutorials/index.md
@@ -168,6 +169,7 @@ nav:
       - Prepare and release: maintainers/release.md
   - Reference:
       - Overview: reference/index.md
+      - Release 1.2: reference/release-1.2.md
       - Workflow map: reference/workflow-map.md
       - Skill catalog: reference/skills.md
       - Skill guides:

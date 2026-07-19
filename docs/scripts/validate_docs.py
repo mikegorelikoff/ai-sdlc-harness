@@ -46,7 +46,7 @@ BEGINNER_TERMS = (
     "gate",
     "handoff",
 )
-CANONICAL_INSTALL = "npx -y skills@1.5.19 add mikegorelikoff/ai-sdlc-harness --all"
+CANONICAL_INSTALL = "DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all"
 FLOW_PAGES = {
     "flows/index.md",
     "flows/refinement.md",
@@ -95,6 +95,7 @@ T006_PAGES = {
     "adoption/index.md",
     "adoption/pilot.md",
     "adoption/metrics.md",
+    "adoption/rollout.md",
     "onboarding/role-paths.md",
     "operations/index.md",
     "operations/operating-model.md",
@@ -105,6 +106,7 @@ T006_PAGES = {
     "maintainers/extend.md",
     "maintainers/release.md",
 }
+ROLLOUT_STAGES = ("Pilot", "Limited cohort", "Broader cohort", "Standard or hold")
 ROLE_PATHS = (
     "New or junior engineer",
     "PM or product owner",
@@ -714,6 +716,25 @@ def validate_pilot_contract(text: str) -> list[str]:
     return errors
 
 
+def validate_rollout_contract(text: str) -> list[str]:
+    """Require reversible cohort promotion after a bounded pilot."""
+    table = markdown_table(text, "## Rollout contract")
+    if len(table) < 3:
+        return ["docs/adoption/rollout.md: missing parseable rollout contract"]
+    errors: list[str] = []
+    actual = [plain_cell(row[0]) for row in table[2:] if row]
+    if actual != list(ROLLOUT_STAGES):
+        errors.append("docs/adoption/rollout.md: rollout stage inventory/order is incomplete")
+    required = ("Accountable", "Entry", "Capacity", "Observation", "Rollback", "Decision")
+    for token in required:
+        if token.lower() not in text.lower():
+            errors.append(f"docs/adoption/rollout.md: missing rollout contract field {token}")
+    for token in ("limited cohort", "broader cohort", "standard or hold", "does not automatically generalize", "observation window"):
+        if token.lower() not in text.lower():
+            errors.append(f"docs/adoption/rollout.md: missing rollout boundary {token}")
+    return errors
+
+
 def validate_troubleshooting_contract(text: str) -> list[str]:
     """Validate every required safe diagnosis and recovery class."""
     table = markdown_table(text, "## Failure matrix")
@@ -864,6 +885,7 @@ def validate_adoption_operations(root: Path = ROOT) -> list[str]:
     errors.extend(validate_role_paths(read("onboarding/role-paths.md")))
     errors.extend(validate_raci_contract(read("operations/operating-model.md")))
     errors.extend(validate_pilot_contract(read("adoption/pilot.md")))
+    errors.extend(validate_rollout_contract(read("adoption/rollout.md")))
     errors.extend(validate_troubleshooting_contract(read("operations/troubleshooting.md")))
 
     errors.extend(validate_governance_contract(read("operations/governance.md")))
@@ -887,6 +909,34 @@ def validate_adoption_operations(root: Path = ROOT) -> list[str]:
 
     errors.extend(validate_canonical_sources(root))
     errors.extend(validate_section_indexes(root))
+    install = read("how-to/install.md")
+    if "https://www.skills.sh/docs/cli#telemetry" not in install or "DISABLE_TELEMETRY=1" not in install:
+        errors.append("docs/how-to/install.md: missing third-party installer telemetry disclosure and opt-out")
+    for relative in ("README.md", "docs/index.md", "docs/how-to/install.md"):
+        text = (root / relative).read_text(encoding="utf-8") if (root / relative).is_file() else ""
+        if "22.20.0" not in text:
+            errors.append(f"{relative}: missing pinned Node.js engine floor 22.20.0")
+    public_paths = ([root / "README.md"] if (root / "README.md").is_file() else [])
+    if (root / "docs").is_dir():
+        public_paths.extend((root / "docs").rglob("*.md"))
+    for path in public_paths:
+        text = path.read_text(encoding="utf-8")
+        powershell_telemetry = False
+        for line in text.splitlines():
+            if "$env:DISABLE_TELEMETRY" in line:
+                powershell_telemetry = True
+            if "npx -y skills@1.5.19" in line and "DISABLE_TELEMETRY=1" not in line:
+                if not powershell_telemetry:
+                    errors.append(f"{display_path(path, root)}: Skills CLI command lacks telemetry opt-out")
+            if not line.strip() and powershell_telemetry:
+                powershell_telemetry = False
+    state = root / "specs/005-guided-onboarding-documentation/_ai_sdlc/state.toon"
+    if not state.is_file():
+        errors.append("specs/005-guided-onboarding-documentation: authoritative state.toon is missing")
+    spec_paths = (root / "specs").rglob("*.md") if (root / "specs").is_dir() else []
+    for path in spec_paths:
+        if "/Users/" in path.read_text(encoding="utf-8", errors="replace"):
+            errors.append(f"{display_path(path, root)}: tracked metadata contains machine-specific absolute path")
     return errors
 
 

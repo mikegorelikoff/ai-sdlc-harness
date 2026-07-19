@@ -10,22 +10,22 @@ source_artifacts[6]{artifact,path}:
   tasks,tasks.md
   decisions,decision-log.md
 trace[11]{acceptance_id,test_cases,tasks}:
-  AC-001,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T002
-  AC-002,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T002/T004
-  AC-003,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T002/T003
-  AC-004,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T002/T003
-  AC-005,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T002/T004
-  AC-006,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T003
-  AC-007,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T003
-  AC-008,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T003/T004
-  AC-009,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T002/T004
-  AC-010,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T004
-  AC-011,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001/T002/T004
+  AC-001,TC-001,T001/T002
+  AC-002,TC-002,T001/T002/T004
+  AC-003,TC-003,T001/T002/T003
+  AC-004,TC-004,T001/T002/T003
+  AC-005,TC-005,T001/T002/T004
+  AC-006,TC-006,T001/T003
+  AC-007,TC-007,T001/T003
+  AC-008,TC-008/TC-009,T001/T003/T004
+  AC-009,TC-010,T001/T002/T004
+  AC-010,TC-011,T001/T004
+  AC-011,TC-002/TC-005/TC-012,T001/T002/T004
 tasks[4]{id,status,refs,tests,depends_on,artifact,decision_ref}:
   T001,pending,AC-001/AC-002/AC-003/AC-004/AC-005/AC-006/AC-007/AC-008/AC-009/AC-010/AC-011/DEC-001/DEC-002/DEC-003,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,none,Requirements; design; test cases; QA plan; tasks; decision log; registry entry; and linked machine/human plans.,TBD
-  T002,pending,AC-001/AC-002/AC-003/AC-004/AC-005/AC-009/AC-011,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T001,Configuration; layout; navigation includes; assets; landing page; and getting-started experience.,TBD
-  T003,pending,AC-003/AC-004/AC-006/AC-007/AC-008,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T002,Workflow; skills; modules; concepts; and contributing pages plus deterministic catalog generator and data.,TBD
-  T004,pending,AC-002/AC-005/AC-008/AC-009/AC-010/AC-011,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012,T002/T003,Validator; unit tests; official Pages workflow; README link; browser smoke evidence; and passing release gates.,TBD
+  T002,pending,AC-001/AC-002/AC-003/AC-004/AC-005/AC-009/AC-011,TC-001/TC-002/TC-003/TC-004/TC-005/TC-010/TC-012,T001,Configuration; layout; navigation includes; assets; landing page; and getting-started experience.,TBD
+  T003,pending,AC-003/AC-004/AC-006/AC-007/AC-008,TC-003/TC-004/TC-006/TC-007/TC-008/TC-009,T002,Workflow; skills; modules; concepts; and contributing pages plus deterministic catalog generator and data.,TBD
+  T004,pending,AC-002/AC-005/AC-008/AC-009/AC-010/AC-011,TC-002/TC-005/TC-008/TC-009/TC-010/TC-011/TC-012,T002/T003,Validator; unit tests; official Pages workflow; README link; browser smoke evidence; and passing release gates.,TBD
 validation_sequence[5]{step,command}:
   1,check_refinement_context.py --full-flow
   2,check_clarify.py --full-flow

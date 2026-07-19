@@ -17,7 +17,9 @@ flow behavior remain valid; no bulk rewrite is required.
 
 ## Update and verify
 
-1. Install or check out release `v1.1.0` using the same installation method.
+1. Install or check out release `v1.1.0` using the same installation method when
+   reproducing that historical baseline; new consumers should use the tagged
+   `v1.2.0` source in [Install](install.md).
 2. Run the installation doctor and preview any proposed upgrade before applying it.
 3. Run the compatibility gate:
 

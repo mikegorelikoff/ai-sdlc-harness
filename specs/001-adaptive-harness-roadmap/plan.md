@@ -3,12 +3,12 @@ artifact_metadata:
   schema: "ai-sdlc-artifact-metadata/v1"
   feature: "001-adaptive-harness-roadmap"
   artifact: "plan.md"
-  path: "/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/001-adaptive-harness-roadmap/plan.md"
+  path: "specs/001-adaptive-harness-roadmap/plan.md"
   workspace: "implementation"
   skill: "ai-sdlc-sdd"
   flow_mode: "quick"
-  state_file: "/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/001-adaptive-harness-roadmap/_ai_sdlc/state.toon"
-  decision_log: "/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/001-adaptive-harness-roadmap/decision-log.md"
+  state_file: "specs/001-adaptive-harness-roadmap/_ai_sdlc/state.toon"
+  decision_log: "specs/001-adaptive-harness-roadmap/decision-log.md"
   status: "draft"
   owner: "TBD"
   created_at: "2026-07-19"
@@ -43,20 +43,20 @@ artifact_metadata:
 - Decision log: `decision-log.md`
 
 ## Cross-Artifact Trace Map
-- AC-001: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T002) -> qa.md -> decision-log.md
-- AC-002: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T003) -> qa.md -> decision-log.md
-- AC-003: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T004) -> qa.md -> decision-log.md
-- AC-004: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T004) -> qa.md -> decision-log.md
-- AC-005: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T005) -> qa.md -> decision-log.md
-- AC-006: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T006) -> qa.md -> decision-log.md
-- AC-007: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T007) -> qa.md -> decision-log.md
-- AC-008: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T008) -> qa.md -> decision-log.md
-- AC-009: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T009) -> qa.md -> decision-log.md
-- AC-010: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T010) -> qa.md -> decision-log.md
-- AC-011: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T011, T012, T013) -> qa.md -> decision-log.md
-- AC-012: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T014) -> qa.md -> decision-log.md
-- AC-013: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T015) -> qa.md -> decision-log.md
-- AC-014: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014) -> tasks.md (T001, T015) -> qa.md -> decision-log.md
+- AC-001: requirements.md -> test-cases.md (TC-001) -> tasks.md (T002) -> qa.md -> decision-log.md
+- AC-002: requirements.md -> test-cases.md (TC-002) -> tasks.md (T003) -> qa.md -> decision-log.md
+- AC-003: requirements.md -> test-cases.md (TC-003) -> tasks.md (T004) -> qa.md -> decision-log.md
+- AC-004: requirements.md -> test-cases.md (TC-004) -> tasks.md (T004) -> qa.md -> decision-log.md
+- AC-005: requirements.md -> test-cases.md (TC-005) -> tasks.md (T005) -> qa.md -> decision-log.md
+- AC-006: requirements.md -> test-cases.md (TC-006) -> tasks.md (T006) -> qa.md -> decision-log.md
+- AC-007: requirements.md -> test-cases.md (TC-007) -> tasks.md (T007) -> qa.md -> decision-log.md
+- AC-008: requirements.md -> test-cases.md (TC-008) -> tasks.md (T008) -> qa.md -> decision-log.md
+- AC-009: requirements.md -> test-cases.md (TC-009) -> tasks.md (T009) -> qa.md -> decision-log.md
+- AC-010: requirements.md -> test-cases.md (TC-010) -> tasks.md (T010) -> qa.md -> decision-log.md
+- AC-011: requirements.md -> test-cases.md (TC-011) -> tasks.md (T011, T012, T013) -> qa.md -> decision-log.md
+- AC-012: requirements.md -> test-cases.md (TC-012) -> tasks.md (T014) -> qa.md -> decision-log.md
+- AC-013: requirements.md -> test-cases.md (TC-013) -> tasks.md (T015) -> qa.md -> decision-log.md
+- AC-014: requirements.md -> test-cases.md (TC-014) -> tasks.md (T001, T015) -> qa.md -> decision-log.md
 
 ## Task Execution Plan
 - [x] T001: - [x] T001. Establish the roadmap SDD package and traceable execution plan.; refs: AC-014, DEC-001, DEC-002, DEC-003; output: Complete SDD artifacts, decision log, plan.toon, plan.md, registry entry, and passing gates.

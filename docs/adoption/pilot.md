@@ -21,8 +21,10 @@ Complete this table before installation.
 | Workload | Three to eight representative changes, including one defect or recovery case. |
 | Exclusions | Production deployment, live secrets, regulated data, or other prohibited scope. |
 | Pilot owner | Person accountable for schedule, evidence, and final recommendation. |
+| Cost/resource owner | Person accountable for the cost/resource ledger, ranges, missing data, and capacity assumptions. |
 | Role owners | Product/BA, engineering, QA, security, delivery/release, and repository maintainer. |
 | Agent boundary | Approved host, models, tools, network access, filesystem scope, and escalation process. |
+| Installer telemetry decision | Whether the third-party Skills CLI may send its anonymous skill-name/file/timestamp telemetry, opt-out setting, policy owner, and retention decision. |
 | Baseline window | Comparable recent work or at least one pre-pilot observation period. |
 | Checkpoints | Kickoff, end of week one, midpoint, final review, and incident reviews. |
 | Decision date | Date and forum for stop, adjust, continue, or scale. |
@@ -44,6 +46,8 @@ Minimum baseline:
 - rework caused by misunderstood scope or missing context;
 - time needed for another person to resume interrupted work;
 - team confidence and perceived ceremony burden;
+- incremental people, tool, model/API, platform, training, governance, support,
+  upgrade, and incident/remediation cost ranges, with an owner and uncertainty;
 - current deployment throughput and instability signals, if available.
 
 The baseline is a local comparison, not an industry ranking.
@@ -57,7 +61,7 @@ The baseline is a local comparison, not an industry ranking.
 
 1. Choose a disposable branch or low-risk repository slice.
 2. Follow the [canonical project-scoped install](../how-to/install.md).
-3. Record the installed inventory and accepted Git baseline.
+3. Record the installed inventory, telemetry opt-out/approval, and accepted Git baseline.
 4. Complete [the first 30 minutes](../onboarding/first-30-minutes.md).
 5. Run the [first-feature tutorial](../tutorials/first-feature.md) before real work.
 6. Confirm the [troubleshooting runbook](../operations/troubleshooting.md) and incident owner.
@@ -122,8 +126,8 @@ incident records, and review notes according to retention policy.
 | Stop | Controls failed, burden outweighed benefit, or evidence is insufficient and more exposure is unjustified. | Roll back, retain evidence, assign remediation only if worthwhile. |
 | Adjust | The problem remains valid but scope, training, policy, or workflow needs change. | Write a new bounded charter and changed thresholds. |
 | Continue | More representative samples are needed within the same risk boundary. | Extend time, not scope, and name the missing evidence. |
-| Scale | Repeated evidence meets predeclared thresholds and governance can support more teams. | Create a staged rollout proposal with new owners and rollback boundaries. |
+| Scale | Repeated evidence meets predeclared thresholds, the cost/resource ledger is decision-ready, and governance/capacity can support more teams. | Create the [staged rollout proposal](rollout.md) with cohort owners, observation windows, capacity, and rollback boundaries. |
 
-The final report must separate observed facts, participant opinions, inferences,
-and untested hypotheses. “No incident observed” is not proof that an incident
-cannot occur.
+The final report must include the [cost/resource ledger](metrics.md#cost-and-resource-ledger)
+and separate observed facts, participant opinions, inferences, and untested
+hypotheses. “No incident observed” is not proof that an incident cannot occur.

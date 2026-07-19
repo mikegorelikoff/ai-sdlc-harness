@@ -47,9 +47,9 @@ REFINEMENT_STAGES: tuple[StageDef, ...] = tuple(
 
 
 STAGES: tuple[StageDef, ...] = REFINEMENT_STAGES + (
-    StageDef("sdd", "ai-sdlc-sdd", "implementation", "specs/<feature>", ("delivery_spec", "qa_traceability")),
-    StageDef("branching", "ai-sdlc-branching", "implementation", "branch-plan.md", ("sdd",)),
-    StageDef("validation", "ai-sdlc-validation", "implementation", "validation.md", ("branching",)),
+    StageDef("branching", "ai-sdlc-branching", "implementation", "branch-plan.md", ()),
+    StageDef("sdd", "ai-sdlc-sdd", "implementation", "specs/<feature>", ("branching",)),
+    StageDef("validation", "ai-sdlc-validation", "implementation", "validation.md", ("sdd",)),
     StageDef("code_review", "ai-sdlc-code-review", "implementation", "code-review.md", ("validation",)),
     StageDef("security_testing", "ai-sdlc-security-testing", "implementation", "security-review.md", ("sdd",), True),
     StageDef("commit_prep", "ai-sdlc-commit-prep", "implementation", "commit-readiness.md", ("code_review",)),
@@ -64,7 +64,7 @@ STAGE_BY_SKILL = {stage.skill: stage for stage in STAGES}
 
 def initial_state(feature: str, workspace: str, entrypoint: str | None = None) -> dict[str, object]:
     """Create a complete state dictionary with all lifecycle stages."""
-    current_stage = entrypoint or ("sdd" if workspace == "implementation" else "discovery")
+    current_stage = entrypoint or ("branching" if workspace == "implementation" else "discovery")
     stages = []
     for stage in STAGES:
         status = "not_applicable" if stage.workspace == "utility" else "not_started"
@@ -323,7 +323,13 @@ def run_state_action(args: argparse.Namespace, skill: str, workspace: str, artif
     path = state_path(feature, resolved_workspace)
     with write_lock(path.parent):
         read_path = first_existing(path, legacy_state_path(feature, resolved_workspace))
-        state = load_state(read_path) if read_path.exists() else initial_state(feature, resolved_workspace)
+        if read_path.exists():
+            state = load_state(read_path)
+        elif getattr(args, "begin_state", False):
+            state = initial_state(feature, resolved_workspace)
+        else:
+            print(f"STATE ERROR: authoritative state is missing: {path}")
+            return 1
         flow = flow_mode_from_args(args)
         decision_ref = getattr(args, "decision_ref", "")
         assumption = getattr(args, "assumption", "")

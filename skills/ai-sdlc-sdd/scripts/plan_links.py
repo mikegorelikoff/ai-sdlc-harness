@@ -29,6 +29,7 @@ from spec_helpers import (
     ROOT,
     completed_plan_task_ids,
     parse_acceptance_ids,
+    parse_test_case_acceptance_links,
     parse_plan_toon_rows,
     parse_task_entries,
     parse_test_case_ids,
@@ -61,6 +62,7 @@ def build_plan_toon(spec_dir: Path, args: argparse.Namespace) -> str:
     tasks_md = read(spec_dir / "tasks.md")
     acceptance_ids = parse_acceptance_ids(requirements_md)
     test_case_ids = parse_test_case_ids(test_cases_md)
+    test_case_links = parse_test_case_acceptance_links(test_cases_md)
     task_entries = parse_task_entries(tasks_md)
     existing_plan = first_existing(plan_toon_path(spec_dir), legacy_plan_toon_path(spec_dir))
     existing = parse_plan_toon_rows(read(existing_plan))
@@ -81,16 +83,25 @@ def build_plan_toon(spec_dir: Path, args: argparse.Namespace) -> str:
     ]
 
     for acceptance_id in acceptance_ids:
-        linked_tests = [test_id for test_id in test_case_ids if test_id in test_cases_md]
+        linked_tests = [test_id for test_id in test_case_ids if acceptance_id in test_case_links.get(test_id, [])]
         linked_tasks = [entry.task_id for entry in task_entries if acceptance_id in entry.refs]
         lines.append(f"  {acceptance_id},{csv_list(linked_tests)},{csv_list(linked_tasks)}")
 
     lines.append(f"tasks[{len(task_entries)}]{{id,status,refs,tests,depends_on,artifact,decision_ref}}:")
     for entry in task_entries:
         previous = existing.get(entry.task_id, {})
-        status = previous.get("status") or ("done" if "[x]" in entry.line.lower() else "pending")
+        checkbox_status = "done" if "[x]" in entry.line.lower() else "pending"
+        # The checked task list is authoritative; do not preserve stale
+        # pending status from an older generated TOON plan.
+        status = checkbox_status
         refs = csv_list(entry.refs)
-        tests = csv_list(test_case_ids)
+        tests = csv_list(
+            [
+                test_id
+                for test_id in test_case_ids
+                if any(acceptance_id in test_case_links.get(test_id, []) for acceptance_id in entry.refs)
+            ]
+        )
         depends_on = csv_list(entry.depends_on)
         artifact = toon_value(previous.get("artifact") or entry.output or "TBD")
         decision_ref = toon_value(previous.get("decision_ref") or "TBD")
@@ -117,15 +128,22 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
     decision_log = spec_dir / "decision-log.md"
     state_file = internal_dir(spec_dir) / "state.toon"
 
+    def display_path(path: Path) -> str:
+        """Prefer repository-relative paths while keeping temp-fixture tests portable."""
+        try:
+            return path.relative_to(ROOT).as_posix()
+        except ValueError:
+            return path.as_posix()
+
     metadata = artifact_metadata_lines(
         feature=feature,
         artifact_name="plan.md",
-        artifact_path=artifact_path.as_posix(),
+        artifact_path=display_path(artifact_path),
         workspace="implementation",
         skill_name="ai-sdlc-sdd",
         flow_mode=flow,
-        decision_log_path=decision_log.as_posix(),
-        state_file_path=state_file.as_posix(),
+        decision_log_path=display_path(decision_log),
+        state_file_path=display_path(state_file),
         state_args=args,
     )
 
@@ -135,6 +153,7 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
     plan_toon = read(first_existing(plan_toon_path(spec_dir), legacy_plan_toon_path(spec_dir)))
     acceptance_ids = parse_acceptance_ids(requirements_md)
     test_case_ids = parse_test_case_ids(test_cases_md)
+    test_case_links = parse_test_case_acceptance_links(test_cases_md)
     task_entries = parse_task_entries(tasks_md)
     closed_task_ids = completed_plan_task_ids(plan_toon)
 
@@ -161,7 +180,7 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
     ]
     if acceptance_ids:
         for acceptance_id in acceptance_ids:
-            matching_tests = [test_id for test_id in test_case_ids if test_id in test_cases_md]
+            matching_tests = [test_id for test_id in test_case_ids if acceptance_id in test_case_links.get(test_id, [])]
             matching_tasks = [entry.task_id for entry in task_entries if acceptance_id in entry.refs]
             lines.append(
                 f"- {acceptance_id}: requirements.md -> test-cases.md ({', '.join(matching_tests) or 'TBD'}) -> "
@@ -237,6 +256,25 @@ def check_plan(spec_dir: Path) -> list[str]:
             errors.append(f"plan.md missing task link: {entry.task_id}")
         if entry.task_id not in toon_tasks:
             errors.append(f"plan.toon missing task row: {entry.task_id}")
+    test_case_links = parse_test_case_acceptance_links(test_cases_md)
+    acceptance_ids = set(parse_acceptance_ids(requirements_md))
+    for test_case_id, linked_acceptance in test_case_links.items():
+        unknown = sorted(set(linked_acceptance) - acceptance_ids)
+        if unknown:
+            errors.append(f"test case {test_case_id} links unknown acceptance IDs: {', '.join(unknown)}")
+    for acceptance_id in acceptance_ids:
+        # Legacy fixtures may not annotate test cases yet; retain their
+        # generated-plan compatibility while enforcing exact links whenever
+        # explicit AC↔TC links are present.
+        if not test_case_links:
+            continue
+        expected_tests = [test_id for test_id in parse_test_case_ids(test_cases_md) if acceptance_id in test_case_links.get(test_id, [])]
+        if not expected_tests:
+            errors.append(f"acceptance {acceptance_id} has no explicit test-case link")
+        expected = f"- {acceptance_id}: requirements.md -> test-cases.md ({', '.join(expected_tests)})"
+        legacy = f"- {acceptance_id} -> {', '.join(expected_tests)}"
+        if expected not in text and legacy not in text:
+            errors.append(f"plan.md trace for {acceptance_id} is not exact")
     for required_link in ("requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md", "_ai_sdlc/plan.toon", "decision-log.md"):
         if required_link not in text:
             errors.append(f"plan.md missing SDD artifact link: {required_link}")

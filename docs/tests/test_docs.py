@@ -14,6 +14,7 @@ from build_catalog import (  # noqa: E402
     SKILL_SELECTION_BOUNDARIES,
     SKILL_GUIDES,
     generated_outputs,
+    has_cli_entry,
     script_record,
     script_sources,
     skill_frontmatter,
@@ -41,6 +42,7 @@ from validate_docs import (  # noqa: E402
     validate_navigation,
     validate_onboarding,
     validate_pilot_contract,
+    validate_rollout_contract,
     validate_refinement_contract,
     validate_raci_contract,
     validate_role_paths,
@@ -264,6 +266,10 @@ class DocumentationValidationTests(unittest.TestCase):
             validate_pilot_contract(pilot.replace("| Baseline |", "| Before |", 1))
         )
 
+        rollout = (DOCS_ROOT / "adoption/rollout.md").read_text(encoding="utf-8")
+        self.assertEqual(validate_rollout_contract(rollout), [])
+        self.assertTrue(validate_rollout_contract(rollout.replace("| Limited cohort |", "| Cohort |", 1)))
+
         governance = (DOCS_ROOT / "operations/governance.md").read_text(encoding="utf-8")
         self.assertTrue(
             validate_governance_contract(
@@ -462,6 +468,27 @@ class DocumentationValidationTests(unittest.TestCase):
                 )
             )
         )
+
+    def test_published_help_commands_are_real_nonempty_clis(self) -> None:
+        """Every generated direct --help invocation must execute a CLI and print usage."""
+        import subprocess
+
+        records = [script_record(path) for path in script_sources()]
+        for record in records:
+            if not record.invocation.endswith(" --help"):
+                continue
+            source = record.path.read_text(encoding="utf-8")
+            self.assertTrue(has_cli_entry(source), record.path)
+            result = subprocess.run(
+                record.invocation.split(),
+                cwd=DOCS_ROOT.parent,
+                check=False,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            self.assertEqual(result.returncode, 0, record.path)
+            self.assertIn("usage:", (result.stdout + result.stderr).lower(), record.path)
 
 if __name__ == "__main__":
     unittest.main()

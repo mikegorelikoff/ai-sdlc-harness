@@ -24,11 +24,20 @@ from ai_sdlc_state_machine import (
 
 
 def load_or_init(feature: str, workspace: str) -> tuple[object, object]:
-    """Load existing state or create an in-memory initial state."""
+    """Load existing state or create one for an explicit mutating begin."""
     path = state_path(feature, workspace)
     read_path = first_existing(path, legacy_state_path(feature, workspace))
     state = load_state(read_path) if read_path.exists() else initial_state(feature, workspace)
     return path, state
+
+
+def load_existing(feature: str, workspace: str) -> tuple[object, object]:
+    """Load authoritative state and fail closed when it is absent."""
+    path = state_path(feature, workspace)
+    read_path = first_existing(path, legacy_state_path(feature, workspace))
+    if not read_path.exists():
+        raise FileNotFoundError(f"authoritative state is missing: {path}")
+    return path, load_state(read_path)
 
 
 def print_messages(errors: list[str], warnings: list[str]) -> int:
@@ -59,7 +68,11 @@ def command_init(args: argparse.Namespace) -> int:
 
 def command_status(args: argparse.Namespace) -> int:
     """Print current feature state in TOON format."""
-    path, state = load_or_init(args.feature, args.workspace)
+    try:
+        path, state = load_existing(args.feature, args.workspace)
+    except FileNotFoundError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
     print(to_toon(state), end="")
     print(f"# state_path: {path}")
     return 0
@@ -67,7 +80,11 @@ def command_status(args: argparse.Namespace) -> int:
 
 def command_check(args: argparse.Namespace) -> int:
     """Validate whether a skill can run in the current feature state."""
-    path, state = load_or_init(args.feature, args.workspace)
+    try:
+        path, state = load_existing(args.feature, args.workspace)
+    except FileNotFoundError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
     flow = flow_mode_from_args(args)
     errors, warnings = validate_transition(state, args.skill, flow, args.decision_ref, args.assumption)
     rc = print_messages(errors, warnings)
@@ -105,7 +122,11 @@ def command_complete(args: argparse.Namespace) -> int:
         return 2
     path = state_path(args.feature, args.workspace)
     with write_lock(path.parent):
-        path, state = load_or_init(args.feature, args.workspace)
+        try:
+            path, state = load_existing(args.feature, args.workspace)
+        except FileNotFoundError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 1
         flow = flow_mode_from_args(args)
         errors, warnings = complete_stage(state, args.skill, args.artifacts, args.decision_ref, flow, args.assumption)
         rc = print_messages(errors, warnings)

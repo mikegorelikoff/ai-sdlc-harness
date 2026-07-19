@@ -1,0 +1,7 @@
+workspace: refinement
+root: specs-refiniment
+updated_at: 2026-07-19
+
+features[0]{feature,workspace,current_stage,active_skill,flow_mode,updated_at,artifact_count,decision_log,state_file,metatags}:
+
+artifacts[0]{feature,path,artifact,skill,status,flow_mode,updated_at,trace_ids,metatags}:

@@ -10,36 +10,36 @@ source_artifacts[6]{artifact,path}:
   tasks,tasks.md
   decisions,decision-log.md
 trace[14]{acceptance_id,test_cases,tasks}:
-  AC-001,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T002
-  AC-002,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T003
-  AC-003,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T004
-  AC-004,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T004
-  AC-005,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T005
-  AC-006,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T006
-  AC-007,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T007
-  AC-008,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T008
-  AC-009,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T009
-  AC-010,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T010
-  AC-011,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T011/T012/T013
-  AC-012,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T014
-  AC-013,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T015
-  AC-014,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T001/T015
+  AC-001,TC-001,T002
+  AC-002,TC-002,T003
+  AC-003,TC-003,T004
+  AC-004,TC-004,T004
+  AC-005,TC-005,T005
+  AC-006,TC-006,T006
+  AC-007,TC-007,T007
+  AC-008,TC-008,T008
+  AC-009,TC-009,T009
+  AC-010,TC-010,T010
+  AC-011,TC-011,T011/T012/T013
+  AC-012,TC-012,T014
+  AC-013,TC-013,T015
+  AC-014,TC-014,T001/T015
 tasks[15]{id,status,refs,tests,depends_on,artifact,decision_ref}:
-  T001,done,AC-014/DEC-001/DEC-002/DEC-003,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,none,Complete SDD artifacts; decision log; plan.toon; plan.md; registry entry; and passing gates.,TBD
-  T002,done,AC-001,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T001,Navigator skill; deterministic router CLI; Markdown and TOON outputs; tests; and docs.,DEC-001
-  T003,done,AC-002,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T002,Shared handoff schema; emitter; adoption guidance; compatibility tests; and docs.,DEC-001
-  T004,done,AC-003/AC-004,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T002/T003,Policy engine; patch/standard/assured/regulated profiles; safe overrides; tests; and docs.,DEC-002
-  T005,done,AC-005,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T002/T004,Project-context skill; Markdown and TOON generator; evidence anchors; drift checks; tests; and docs.,DEC-001
-  T006,done,AC-006,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T003/T004,Quality-lens skill; registry; traceable finding schema; report generator; tests; and docs.,DEC-001
-  T007,done,AC-007,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T003/T005/T006,Change-impact skill; affected-artifact analysis; reopen plan; evidence gates; tests; and docs.,DEC-001
-  T008,done,AC-008,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T007,Retrospective skill; observation and proposal schemas; policy safety checks; tests; and docs.,DEC-001
-  T009,done,AC-009,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T004/T005,Versioned config schema; deterministic resolver; provenance; protected-gate checks; tests; and docs.,DEC-001
-  T010,done,AC-010,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T002/T009,Versioned module schema; registry and discovery CLI; compatibility checks; tests; and docs.,DEC-001
-  T011,done,AC-011,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T010,Architecture skill; routed design artifact workflow; tests; and module registration.,DEC-001
-  T012,done,AC-011,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T010,UX skill; routed experience artifact workflow; tests; and module registration.,DEC-001
-  T013,done,AC-011,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T010,Research skill; evidence and source artifact workflow; tests; and module registration.,DEC-001
-  T014,done,AC-012,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T006/T010/T011/T012/T013,Council skill; simulated and independent plans; authority-safe report; tests; and docs.,DEC-001
-  T015,done,AC-013/AC-014,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014,T001/T002/T003/T004/T005/T006/T007/T008/T009/T010/T011/T012/T013/T014,Compatibility baseline; validator; install and update docs; full regression evidence; and closed roadmap.,DEC-001
+  T001,done,AC-014/DEC-001/DEC-002/DEC-003,TC-014,none,Complete SDD artifacts; decision log; plan.toon; plan.md; registry entry; and passing gates.,TBD
+  T002,done,AC-001,TC-001,T001,Navigator skill; deterministic router CLI; Markdown and TOON outputs; tests; and docs.,DEC-001
+  T003,done,AC-002,TC-002,T002,Shared handoff schema; emitter; adoption guidance; compatibility tests; and docs.,DEC-001
+  T004,done,AC-003/AC-004,TC-003/TC-004,T002/T003,Policy engine; patch/standard/assured/regulated profiles; safe overrides; tests; and docs.,DEC-002
+  T005,done,AC-005,TC-005,T002/T004,Project-context skill; Markdown and TOON generator; evidence anchors; drift checks; tests; and docs.,DEC-001
+  T006,done,AC-006,TC-006,T003/T004,Quality-lens skill; registry; traceable finding schema; report generator; tests; and docs.,DEC-001
+  T007,done,AC-007,TC-007,T003/T005/T006,Change-impact skill; affected-artifact analysis; reopen plan; evidence gates; tests; and docs.,DEC-001
+  T008,done,AC-008,TC-008,T007,Retrospective skill; observation and proposal schemas; policy safety checks; tests; and docs.,DEC-001
+  T009,done,AC-009,TC-009,T004/T005,Versioned config schema; deterministic resolver; provenance; protected-gate checks; tests; and docs.,DEC-001
+  T010,done,AC-010,TC-010,T002/T009,Versioned module schema; registry and discovery CLI; compatibility checks; tests; and docs.,DEC-001
+  T011,done,AC-011,TC-011,T010,Architecture skill; routed design artifact workflow; tests; and module registration.,DEC-001
+  T012,done,AC-011,TC-011,T010,UX skill; routed experience artifact workflow; tests; and module registration.,DEC-001
+  T013,done,AC-011,TC-011,T010,Research skill; evidence and source artifact workflow; tests; and module registration.,DEC-001
+  T014,done,AC-012,TC-012,T006/T010/T011/T012/T013,Council skill; simulated and independent plans; authority-safe report; tests; and docs.,DEC-001
+  T015,done,AC-013/AC-014,TC-013/TC-014,T001/T002/T003/T004/T005/T006/T007/T008/T009/T010/T011/T012/T013/T014,Compatibility baseline; validator; install and update docs; full regression evidence; and closed roadmap.,DEC-001
 validation_sequence[5]{step,command}:
   1,check_refinement_context.py --full-flow
   2,check_clarify.py --full-flow

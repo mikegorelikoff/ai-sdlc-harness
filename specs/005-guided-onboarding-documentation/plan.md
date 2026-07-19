@@ -3,12 +3,12 @@ artifact_metadata:
   schema: "ai-sdlc-artifact-metadata/v1"
   feature: "005-guided-onboarding-documentation"
   artifact: "plan.md"
-  path: "/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/005-guided-onboarding-documentation/plan.md"
+  path: "specs/005-guided-onboarding-documentation/plan.md"
   workspace: "implementation"
   skill: "ai-sdlc-sdd"
   flow_mode: "quick"
-  state_file: "/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/005-guided-onboarding-documentation/_ai_sdlc/state.toon"
-  decision_log: "/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/005-guided-onboarding-documentation/decision-log.md"
+  state_file: "specs/005-guided-onboarding-documentation/_ai_sdlc/state.toon"
+  decision_log: "specs/005-guided-onboarding-documentation/decision-log.md"
   status: "draft"
   owner: "TBD"
   created_at: "2026-07-19"
@@ -43,24 +43,24 @@ artifact_metadata:
 - Decision log: `decision-log.md`
 
 ## Cross-Artifact Trace Map
-- AC-001: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T001, T002) -> qa.md -> decision-log.md
-- AC-002: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T001, T002, T006) -> qa.md -> decision-log.md
-- AC-003: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T002, T003) -> qa.md -> decision-log.md
-- AC-004: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T004) -> qa.md -> decision-log.md
-- AC-005: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T004) -> qa.md -> decision-log.md
-- AC-006: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T004) -> qa.md -> decision-log.md
-- AC-007: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T003, T005) -> qa.md -> decision-log.md
-- AC-008: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T005) -> qa.md -> decision-log.md
-- AC-009: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T002, T004, T006) -> qa.md -> decision-log.md
-- AC-010: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T006) -> qa.md -> decision-log.md
-- AC-011: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T006) -> qa.md -> decision-log.md
-- AC-012: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T004, T006) -> qa.md -> decision-log.md
-- AC-013: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T002, T006) -> qa.md -> decision-log.md
-- AC-014: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T001, T003, T005, T006, T007) -> qa.md -> decision-log.md
-- AC-015: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T003, T005, T007) -> qa.md -> decision-log.md
-- AC-016: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T001, T007) -> qa.md -> decision-log.md
-- AC-017: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T002, T006) -> qa.md -> decision-log.md
-- AC-018: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009, TC-010, TC-011, TC-012, TC-013, TC-014, TC-015, TC-016, TC-017, TC-018) -> tasks.md (T001, T002, T003, T004, T005, T006, T007) -> qa.md -> decision-log.md
+- AC-001: requirements.md -> test-cases.md (TC-001) -> tasks.md (T001, T002) -> qa.md -> decision-log.md
+- AC-002: requirements.md -> test-cases.md (TC-002) -> tasks.md (T001, T002, T006) -> qa.md -> decision-log.md
+- AC-003: requirements.md -> test-cases.md (TC-003) -> tasks.md (T002, T003) -> qa.md -> decision-log.md
+- AC-004: requirements.md -> test-cases.md (TC-004) -> tasks.md (T004) -> qa.md -> decision-log.md
+- AC-005: requirements.md -> test-cases.md (TC-005) -> tasks.md (T004) -> qa.md -> decision-log.md
+- AC-006: requirements.md -> test-cases.md (TC-006) -> tasks.md (T004) -> qa.md -> decision-log.md
+- AC-007: requirements.md -> test-cases.md (TC-007) -> tasks.md (T003, T005) -> qa.md -> decision-log.md
+- AC-008: requirements.md -> test-cases.md (TC-008) -> tasks.md (T005) -> qa.md -> decision-log.md
+- AC-009: requirements.md -> test-cases.md (TC-009) -> tasks.md (T002, T004, T006) -> qa.md -> decision-log.md
+- AC-010: requirements.md -> test-cases.md (TC-010) -> tasks.md (T006) -> qa.md -> decision-log.md
+- AC-011: requirements.md -> test-cases.md (TC-011) -> tasks.md (T006) -> qa.md -> decision-log.md
+- AC-012: requirements.md -> test-cases.md (TC-012) -> tasks.md (T004, T006) -> qa.md -> decision-log.md
+- AC-013: requirements.md -> test-cases.md (TC-013) -> tasks.md (T002, T006) -> qa.md -> decision-log.md
+- AC-014: requirements.md -> test-cases.md (TC-014) -> tasks.md (T001, T003, T005, T006, T007) -> qa.md -> decision-log.md
+- AC-015: requirements.md -> test-cases.md (TC-015) -> tasks.md (T003, T005, T007) -> qa.md -> decision-log.md
+- AC-016: requirements.md -> test-cases.md (TC-016) -> tasks.md (T001, T007) -> qa.md -> decision-log.md
+- AC-017: requirements.md -> test-cases.md (TC-017) -> tasks.md (T002, T006) -> qa.md -> decision-log.md
+- AC-018: requirements.md -> test-cases.md (TC-018) -> tasks.md (T001, T002, T003, T004, T005, T006, T007) -> qa.md -> decision-log.md
 
 ## Task Execution Plan
 - [x] T001: - [x] T001. Define the guided onboarding documentation program and persona acceptance gates.; refs: AC-001, AC-002, AC-014, AC-016, AC-018; output: Complete SDD package, accepted information architecture, persona findings, generated plan/indexes, focused validation, and one planning commit.
@@ -69,7 +69,7 @@ artifact_metadata:
 - [x] T004: - [x] T004. Publish runnable tutorials and the complete lifecycle flow library.; refs: AC-004, AC-005, AC-006, AC-009, AC-012, AC-018; output: Copyable small-change and full-feature walkthroughs, explicit prompts/terminal actions/expected artifacts/checkpoints/recovery, all 18 refinement stages, implementation/control-plane journeys, entry/exit/reopen matrices, decision tree, navigation, tests, and one focused commit.
 - [x] T005: - [x] T005. Generate complete human-facing skill and script documentation.; refs: AC-007, AC-008, AC-014, AC-015, AC-018; output: Enhanced deterministic catalog generator, inventory-complete per-skill guides, complete in-scope script inventory, coverage manifest, required detail fields, navigation/discovery surfaces, parser/render/coverage tests, and one focused commit.
 - [x] T006: - [x] T006. Publish adoption, governance, operations, and maintainer guidance.; refs: AC-002, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014, AC-017, AC-018; output: Persona/role paths, pilot playbook, metrics interpretation, operating model, human/agent RACI, trust/governance, maturity/limitations, troubleshooting runbook, contributor/extension path, canonical-source reconciliation, full navigation/index consistency, tests, and one focused commit.
-- [ ] T007: - [ ] T007. Close independent persona review and release-quality validation.; refs: AC-014, AC-015, AC-016, AC-018; output: Junior, lead, and VP reread findings, revisions until all return PASS with no P0/P1, complete regression/build/render/compatibility/SDD evidence, exact task-to-commit audit, clean tree, and one focused completion commit.
+- [x] T007: - [x] T007. Close independent persona review and release-quality validation.; refs: AC-014, AC-015, AC-016, AC-018; output: Junior, lead, and VP reread findings, revisions until all return PASS with no P0/P1, complete regression/build/render/compatibility/SDD evidence, exact task-to-commit audit, clean tree, and one focused completion commit.
 
 ## Task Dependencies
 - T001: depends on previous applicable task / none
