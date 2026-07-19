@@ -86,7 +86,7 @@ artifact_metadata:
 - [x] T012. Implement the host adapter SDK and capability negotiation.
   Output: Adapter manifest and operation contract, negotiation and fallback engine, conformance fixtures for representative hosts, tests, and documentation.
   Refs: AC-006, AC-009, AC-013
-- [ ] T013. Implement installation doctor and safe upgrade planning.
+- [x] T013. Implement installation doctor and safe upgrade planning.
   Output: Environment diagnostic registry, compatibility checks, file and schema change preview, backup and rollback plan, migration fixtures, tests, and documentation.
   Refs: AC-010, AC-013
 - [ ] T014. Implement package trust and privacy-preserving local metrics.

@@ -1,0 +1,1 @@
+{"schema":"ai-sdlc-upgrade-inventory/v1","version":"2.0.0","harness_api":{"min":"2.0.0","max_exclusive":"3.0.0"},"files":[{"path":"skills/runtime/SKILL.md","sha256":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff","schema":"skill/v2"}]}
