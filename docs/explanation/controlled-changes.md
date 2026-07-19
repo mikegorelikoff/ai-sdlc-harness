@@ -89,3 +89,29 @@ python3 skills/ai-sdlc-change-set/scripts/change_preview.py . \
 A ready preview still has no write authority. A conflicting preview returns
 `blocked`, preserves the evidence for review, and never guesses which target
 block or proposal should win.
+
+## Controlled apply and archive
+
+Apply accepts only an explicit `ai-sdlc-change-approval/v1` record whose
+fingerprint matches a freshly rebuilt ready preview and whose gate list covers
+every preview requirement. It stages all after-states, backs up existing
+targets, persists a recovery manifest, and uses same-filesystem replacement for
+each write. Any partial failure restores already-written targets before the
+command returns an error.
+
+```bash
+python3 skills/ai-sdlc-change-set/scripts/change_apply.py . \
+  --change-id add-session-timeout \
+  --apply \
+  --approval changes/add-session-timeout/evidence/owner-approval.json \
+  --format toon
+
+python3 skills/ai-sdlc-change-set/scripts/change_apply.py . \
+  --change-id add-session-timeout \
+  --archive --format toon
+```
+
+Archive requires a completed apply manifest and moves the entire workspace to
+`changes/archive/<date>-<change-id>/`. Deltas, preview, approval, backups, and
+rollback evidence remain together. Repeating either lifecycle transition fails
+safely instead of applying target changes twice or replacing history.

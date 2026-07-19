@@ -62,7 +62,7 @@ artifact_metadata:
 - [x] T004. Implement non-mutating apply preview and conflict analysis.
   Output: Deterministic preview plan, target diffs, downstream staleness and reopen analysis, policy gate discovery, conflict reasons, tests, and documentation.
   Refs: AC-002, AC-013
-- [ ] T005. Implement policy-gated atomic apply and archive.
+- [x] T005. Implement policy-gated atomic apply and archive.
   Output: Staged multi-file apply, approval checks, archive record, recovery manifest, repeat protection, fault-injection tests, and documentation.
   Refs: AC-003, AC-015, AC-013
 - [ ] T006. Implement the repository delivery graph and trace queries.

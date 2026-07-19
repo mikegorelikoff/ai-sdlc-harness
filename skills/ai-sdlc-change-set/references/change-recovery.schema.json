@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-change-recovery-v1",
+  "title": "AI SDLC Change Recovery Manifest",
+  "type": "object",
+  "required": ["schema", "change_id", "status", "preview_fingerprint", "created_at", "updated_at", "targets", "applied", "rollback_errors"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-change-recovery/v1"},
+    "change_id": {"type": "string"},
+    "status": {"enum": ["in_progress", "complete", "rolled_back", "rollback_failed"]},
+    "preview_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "existed", "backup", "staging", "before_sha256", "after_sha256"],
+        "properties": {
+          "target": {"type": "string"},
+          "existed": {"type": "boolean"},
+          "backup": {"type": "string"},
+          "staging": {"type": "string"},
+          "before_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "after_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "applied": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "rollback_errors": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

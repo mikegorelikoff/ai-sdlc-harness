@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-change-approval-v1",
+  "title": "AI SDLC Change Approval",
+  "type": "object",
+  "required": ["schema", "change_id", "preview_fingerprint", "decision", "owner", "decided_at", "decision_ref", "approved_gates"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-change-approval/v1"},
+    "change_id": {"type": "string"},
+    "preview_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "decision": {"const": "accepted"},
+    "owner": {"type": "string", "minLength": 1},
+    "decided_at": {"type": "string", "format": "date-time"},
+    "decision_ref": {"type": "string", "minLength": 1},
+    "approved_gates": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

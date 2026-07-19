@@ -69,7 +69,7 @@ This page is generated from each package's `SKILL.md` frontmatter. The linked so
 
     `core`
 
-    AI SDLC controlled change-workspace and specification-delta workflow. Use when an AI assistant needs to create or validate an isolated proposal workspace, or author and validate ADDED, MODIFIED, REMOVED, or RENAMED requirement deltas before changing canonical requirements, designs, policies, APIs, or other authoritative artifacts. Supports `--quick-flow` for assumption-driven drafts and `--full-flow` for strict owner, target, evidence, and authority checks.
+    AI SDLC controlled change-workspace and specification-delta workflow. Use when an AI assistant needs to create or validate an isolated proposal workspace, author and validate requirement deltas, preview canonical changes, or apply and archive an explicitly approved change with rollback evidence. Supports `--quick-flow` for assumption-driven drafts and `--full-flow` for strict owner, target, evidence, and authority checks.
 
     [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-change-set/SKILL.md)
 

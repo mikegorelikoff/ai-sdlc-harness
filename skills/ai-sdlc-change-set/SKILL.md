@@ -1,6 +1,6 @@
 ---
 name: ai-sdlc-change-set
-description: AI SDLC controlled change-workspace and specification-delta workflow. Use when an AI assistant needs to create or validate an isolated proposal workspace, or author and validate ADDED, MODIFIED, REMOVED, or RENAMED requirement deltas before changing canonical requirements, designs, policies, APIs, or other authoritative artifacts. Supports `--quick-flow` for assumption-driven drafts and `--full-flow` for strict owner, target, evidence, and authority checks.
+description: AI SDLC controlled change-workspace and specification-delta workflow. Use when an AI assistant needs to create or validate an isolated proposal workspace, author and validate requirement deltas, preview canonical changes, or apply and archive an explicitly approved change with rollback evidence. Supports `--quick-flow` for assumption-driven drafts and `--full-flow` for strict owner, target, evidence, and authority checks.
 ---
 
 # ai-sdlc-change-set: Isolated Change Workspace
@@ -19,7 +19,7 @@ description: AI SDLC controlled change-workspace and specification-delta workflo
 - Purpose: Create and validate an isolated, reviewable workspace before any
   authoritative specification mutation.
 - Output: `changes/<change-id>/` with proposal, design, tasks, delta and
-  evidence indexes, plus `_ai_sdlc/change-set.json`
+  evidence indexes, lifecycle records, preview, approval, and recovery evidence
 
 ### 0.1 Required Inputs
 
@@ -105,6 +105,10 @@ description: AI SDLC controlled change-workspace and specification-delta workflo
   changes and use `references/change-preview.schema.json` for the projection.
 - Use `scripts/change_preview.py` to compile diffs, conflicts, stale evidence,
   reopen actions, and required gates without target writes.
+- Read `references/controlled-apply-contract.md` before applying or archiving.
+- Validate approval with `references/change-approval.schema.json` and recovery
+  evidence with `references/change-recovery.schema.json`.
+- Use `scripts/change_apply.py` only after a ready preview and explicit approval.
 
 ## Script Usage
 
@@ -114,6 +118,8 @@ python3 skills/ai-sdlc-change-set/scripts/change_set.py . --change-id add-sessio
 python3 skills/ai-sdlc-change-set/scripts/change_set.py . --change-id add-session-timeout --validate --format json
 python3 skills/ai-sdlc-change-set/scripts/spec_delta.py . --change-id add-session-timeout --validate --write --format toon
 python3 skills/ai-sdlc-change-set/scripts/change_preview.py . --change-id add-session-timeout --preview --write --format toon
+python3 skills/ai-sdlc-change-set/scripts/change_apply.py . --change-id add-session-timeout --apply --approval changes/add-session-timeout/evidence/owner-approval.json --format toon
+python3 skills/ai-sdlc-change-set/scripts/change_apply.py . --change-id add-session-timeout --archive --format toon
 ```
 
 `--emit` renders the planned record without writes. `--create` builds the
@@ -143,7 +149,12 @@ canonical mutation is possible.
 6. Run `--validate` before authoring semantic deltas.
 7. Author delta Markdown with stable requirement IDs and operation-specific
    evidence, then run `spec_delta.py --validate`.
-8. Hand the validated delta projection to preview; do not apply it.
+8. Compile preview and resolve every conflict, stale reference, reopen action,
+   and required gate.
+9. Obtain explicit approval tied to the current preview fingerprint and every
+   required gate.
+10. Apply through `change_apply.py`, inspect the completed recovery manifest,
+    then archive the evidence-preserving workspace.
 
 ## Output Spec
 
@@ -157,6 +168,10 @@ and source evidence, exact source hashes, and a deterministic fingerprint.
 The JSON schema `ai-sdlc-change-preview/v1` contains virtual target hashes and
 diffs, conservative conflicts, stale references, reopen actions, gates, and a
 fingerprint that becomes invalid when any input drifts.
+
+The JSON schemas `ai-sdlc-change-approval/v1` and
+`ai-sdlc-change-recovery/v1` bind accountable approval to the current preview
+and preserve transaction, backup, apply, and rollback evidence.
 
 Quality gate:
 
@@ -185,12 +200,15 @@ must remain repository-relative and cannot traverse outside the repository.
   later lifecycle stages.
 - Preview returns status `blocked` and exit code 2 for semantic conflicts while
   still emitting complete review evidence.
+- Interrupted or failed multi-target apply uses the persisted recovery manifest
+  to restore every already-replaced target before another attempt is accepted.
 
 ## Scope Boundary
 
 - Do not treat valid requirement delta semantics as approval or compatibility.
-- Do not apply a preview or mutate a target; the controlled apply workflow owns
-  that later transition.
+- Never mutate a target outside the controlled apply command or without an
+  accepted, current, all-gates approval record.
 - Do not compute downstream impact; use `$ai-sdlc-change-impact` and preview.
 - Do not mutate canonical artifacts, policy, feature state, or specs indexes.
-- Do not approve, apply, archive, merge, commit, or release a change.
+- This skill does not grant approval and does not merge, commit, or release a
+  change. It may apply and archive only after validating external approval.

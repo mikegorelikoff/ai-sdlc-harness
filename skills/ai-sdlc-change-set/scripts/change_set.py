@@ -289,8 +289,9 @@ def validate_record(record: dict[str, Any], expected_id: str) -> list[str]:
     if missing:
         errors.append("record missing fields: " + ", ".join(missing))
         return errors
-    if set(record) != required:
-        errors.append("record contains unsupported fields: " + ", ".join(sorted(set(record) - required)))
+    optional = {"applied_at", "archived_at", "preview_fingerprint", "approval", "archive_path"}
+    if set(record) - required - optional:
+        errors.append("record contains unsupported fields: " + ", ".join(sorted(set(record) - required - optional)))
     if record.get("schema") != SCHEMA:
         errors.append(f"record schema must be {SCHEMA}")
     if record.get("change_id") != expected_id or not isinstance(record.get("change_id"), str) or not ID_PATTERN.fullmatch(record["change_id"]):
@@ -298,8 +299,14 @@ def validate_record(record: dict[str, Any], expected_id: str) -> list[str]:
     for field in ("title", "summary", "owner"):
         if not isinstance(record.get(field), str) or not record[field].strip():
             errors.append(f"record {field} is required")
-    if record.get("status") != "draft":
-        errors.append("intake status must be draft")
+    if record.get("status") not in {"draft", "applied", "archived"}:
+        errors.append("record status must be draft, applied, or archived")
+    if record.get("status") in {"applied", "archived"}:
+        for field_name in ("applied_at", "preview_fingerprint", "approval"):
+            if not record.get(field_name):
+                errors.append(f"record {field_name} is required after apply")
+    if record.get("status") == "archived" and (not record.get("archived_at") or not record.get("archive_path")):
+        errors.append("record archived_at and archive_path are required after archive")
     if record.get("flow_mode") not in {"default", "quick", "full"}:
         errors.append("record flow_mode is invalid")
     for field in ("created_at", "updated_at"):

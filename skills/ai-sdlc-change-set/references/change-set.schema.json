@@ -23,7 +23,7 @@
     "change_id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
     "title": {"type": "string", "minLength": 1},
     "summary": {"type": "string", "minLength": 1},
-    "status": {"const": "draft"},
+    "status": {"enum": ["draft", "applied", "archived"]},
     "owner": {"type": "string", "minLength": 1},
     "flow_mode": {"enum": ["default", "quick", "full"]},
     "created_at": {"type": "string", "format": "date"},
@@ -36,7 +36,12 @@
     },
     "artifacts": {"type": "object"},
     "authority": {"type": "object"},
-    "contract_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+    "contract_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "applied_at": {"type": "string", "format": "date-time"},
+    "archived_at": {"type": "string", "format": "date-time"},
+    "preview_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "approval": {"type": "object"},
+    "archive_path": {"type": "string"}
   },
   "additionalProperties": false
 }
