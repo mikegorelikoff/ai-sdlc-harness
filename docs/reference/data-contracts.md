@@ -14,6 +14,9 @@ description: Core versioned records used for artifacts, handoffs, modules, compa
 | `ai-sdlc-change-preview/v1` | Record virtual target diffs, conflicts, stale evidence, reopen actions, gates, and drift-sensitive preview identity. |
 | `ai-sdlc-change-approval/v1` | Bind an accountable accepted decision and complete gate set to one current preview fingerprint. |
 | `ai-sdlc-change-recovery/v1` | Preserve target hashes, backups, applied paths, transaction state, and rollback evidence. |
+| `ai-sdlc-delivery-node/v1` | Identify one feature-scoped lifecycle object with exact repository or Git anchors. |
+| `ai-sdlc-delivery-edge/v1` | Record one evidence-backed semantic or declaration relationship. |
+| `ai-sdlc-delivery-graph/v1` | Aggregate deterministic nodes, edges, coverage gaps, orphans, source identity, and graph identity. |
 | Project context contracts | Preserve evidence-backed repository memory and drift identity. |
 | Quality finding contracts | Record evidence, severity, owner, resolution, and trace targets. |
 

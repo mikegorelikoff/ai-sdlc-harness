@@ -104,6 +104,7 @@ nav:
       - Customize team policy: how-to/customize.md
       - Add a capability module: how-to/add-module.md
       - Recover from change: how-to/recover-change.md
+      - Query the delivery graph: how-to/query-delivery-graph.md
       - Run an evidence council: how-to/evidence-council.md
       - Research with sources: how-to/research.md
       - Prepare a commit: how-to/prepare-commit.md

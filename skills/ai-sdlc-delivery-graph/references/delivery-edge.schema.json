@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-delivery-edge-v1",
+  "title": "AI SDLC Delivery Graph Edge",
+  "type": "object",
+  "required": ["schema", "id", "source", "target", "relation", "evidence", "fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-delivery-edge/v1"},
+    "id": {"type": "string", "pattern": "^edge:[a-f0-9]{16}$"},
+    "source": {"type": "string"},
+    "target": {"type": "string"},
+    "relation": {"enum": ["declares", "traces-to", "verifies", "implements", "implemented-by", "proves", "releases"]},
+    "evidence": {"type": "object", "required": ["path", "line"], "properties": {"path": {"type": "string"}, "line": {"type": "integer", "minimum": 0}}, "additionalProperties": false},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

@@ -1,7 +1,7 @@
 {
   "schema": "ai-sdlc-module/v1",
   "id": "core",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "kind": "core",
   "harness_api": {"min": "1.0.0", "max_exclusive": "2.0.0"},
   "requires": [],
@@ -18,6 +18,7 @@
     {"name": "ai-sdlc-commit-prep", "path": "skills/ai-sdlc-commit-prep"},
     {"name": "ai-sdlc-conventional-commit", "path": "skills/ai-sdlc-conventional-commit"},
     {"name": "ai-sdlc-delivery-handoff-review", "path": "skills/ai-sdlc-delivery-handoff-review"},
+    {"name": "ai-sdlc-delivery-graph", "path": "skills/ai-sdlc-delivery-graph"},
     {"name": "ai-sdlc-delivery-package-gap-review", "path": "skills/ai-sdlc-delivery-package-gap-review"},
     {"name": "ai-sdlc-delivery-spec-synthesis", "path": "skills/ai-sdlc-delivery-spec-synthesis"},
     {"name": "ai-sdlc-goal-capability-and-epic-mapping", "path": "skills/ai-sdlc-goal-capability-and-epic-mapping"},

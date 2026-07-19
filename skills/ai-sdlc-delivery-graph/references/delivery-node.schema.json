@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-delivery-node-v1",
+  "title": "AI SDLC Delivery Graph Node",
+  "type": "object",
+  "required": ["schema", "id", "kind", "key", "title", "status", "anchors", "fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-delivery-node/v1"},
+    "id": {"type": "string", "minLength": 1},
+    "kind": {"enum": ["goal", "requirement", "decision", "component", "task", "test", "evidence", "commit", "release", "artifact"]},
+    "key": {"type": "string", "minLength": 1},
+    "title": {"type": "string"},
+    "status": {"enum": ["declared", "referenced", "recorded"]},
+    "anchors": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["path", "line"], "properties": {"path": {"type": "string"}, "line": {"type": "integer", "minimum": 0}}, "additionalProperties": false},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

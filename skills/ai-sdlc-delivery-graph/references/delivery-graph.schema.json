@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-delivery-graph-v1",
+  "title": "AI SDLC Delivery Graph",
+  "type": "object",
+  "required": ["schema", "source_fingerprint", "nodes", "edges", "coverage", "gaps", "orphans", "fingerprint"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-delivery-graph/v1"},
+    "source_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "nodes": {"type": "array", "items": {"$ref": "delivery-node.schema.json"}},
+    "edges": {"type": "array", "items": {"$ref": "delivery-edge.schema.json"}},
+    "coverage": {"type": "object"},
+    "gaps": {"type": "array", "items": {"type": "object"}},
+    "orphans": {"type": "array", "items": {"type": "string"}},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

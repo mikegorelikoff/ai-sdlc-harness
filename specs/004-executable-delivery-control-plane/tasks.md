@@ -65,7 +65,7 @@ artifact_metadata:
 - [x] T005. Implement policy-gated atomic apply and archive.
   Output: Staged multi-file apply, approval checks, archive record, recovery manifest, repeat protection, fault-injection tests, and documentation.
   Refs: AC-003, AC-015, AC-013
-- [ ] T006. Implement the repository delivery graph and trace queries.
+- [x] T006. Implement the repository delivery graph and trace queries.
   Output: Versioned node and edge schemas, deterministic indexer, trace and gap queries, orphan detection, tests, and documentation.
   Refs: AC-004, AC-013
 - [ ] T007. Implement the evidence ledger and freshness propagation.

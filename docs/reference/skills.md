@@ -97,6 +97,14 @@ This page is generated from each package's `SKILL.md` frontmatter. The linked so
 
     [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-conventional-commit/SKILL.md)
 
+-   **`ai-sdlc-delivery-graph`**
+
+    `core`
+
+    AI SDLC repository delivery-graph workflow. Use when an AI assistant needs to index goals, requirements, decisions, components, tasks, tests, evidence, commits, and releases; resolve end-to-end trace paths; or report coverage gaps and orphan lifecycle nodes. Supports `--quick-flow` for deterministic local analysis and `--full-flow` for strict trace review.
+
+    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-delivery-graph/SKILL.md)
+
 -   **`ai-sdlc-delivery-handoff-review`**
 
     `core`
