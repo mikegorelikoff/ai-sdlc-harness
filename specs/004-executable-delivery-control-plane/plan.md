@@ -72,7 +72,7 @@ artifact_metadata:
 - [ ] T011: - [x] T011. Implement declarative workflows, gates, hooks, and dependency waves.; refs: AC-005, AC-006, AC-007, AC-013; output: Workflow schema and validator, typed step planner, conditions, approval gates, deterministic hooks, cycle detection, safe wave planning and fallbacks, tests, and documentation.
 - [ ] T012: - [x] T012. Implement the host adapter SDK and capability negotiation.; refs: AC-006, AC-009, AC-013; output: Adapter manifest and operation contract, negotiation and fallback engine, conformance fixtures for representative hosts, tests, and documentation.
 - [ ] T013: - [x] T013. Implement installation doctor and safe upgrade planning.; refs: AC-010, AC-013; output: Environment diagnostic registry, compatibility checks, file and schema change preview, backup and rollback plan, migration fixtures, tests, and documentation.
-- [ ] T014: - [ ] T014. Implement package trust and privacy-preserving local metrics.; refs: AC-011, AC-012, AC-013; output: Package origin, integrity, compatibility, capability and provenance validation; local run and quality aggregates; privacy tests; and documentation.
+- [ ] T014: - [x] T014. Implement package trust and privacy-preserving local metrics.; refs: AC-011, AC-012, AC-013; output: Package origin, integrity, compatibility, capability and provenance validation; local run and quality aggregates; privacy tests; and documentation.
 - [ ] T015: - [ ] T015. Complete versioned documentation, compatibility, release, and commit audit.; refs: AC-013, AC-014; output: Final integration docs, release-version navigation, migration guide, generated catalogs, full validation evidence, task-to-commit audit, branch publication, main integration, and release tag.
 
 ## Task Dependencies

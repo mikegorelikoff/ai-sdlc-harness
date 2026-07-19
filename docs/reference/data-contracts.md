@@ -36,6 +36,9 @@ description: Core versioned records used for artifacts, handoffs, modules, compa
 | `ai-sdlc-doctor-report/v1` | Report deterministic installation checks, evidence, remediation, and health. |
 | `ai-sdlc-upgrade-inventory/v1` | Describe versioned package files with safe paths, hashes, schemas, and harness API range. |
 | `ai-sdlc-upgrade-plan/v1` | Preview file changes, schema migrations, backups, rollback actions, compatibility, and blockers. |
+| `ai-sdlc-package/v1` | Declare package origin, compatibility, capabilities, files, digest, and provenance evidence. |
+| `ai-sdlc-package-trust-decision/v1` | Evaluate origin, compatibility, capabilities, file integrity, and required provenance independently. |
+| `ai-sdlc-local-metrics/v1` | Aggregate content-free local run, task, retry, budget, coverage, and freshness measures. |
 | Project context contracts | Preserve evidence-backed repository memory and drift identity. |
 | Quality finding contracts | Record evidence, severity, owner, resolution, and trace targets. |
 

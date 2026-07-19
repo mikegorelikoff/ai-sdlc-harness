@@ -89,7 +89,7 @@ artifact_metadata:
 - [x] T013. Implement installation doctor and safe upgrade planning.
   Output: Environment diagnostic registry, compatibility checks, file and schema change preview, backup and rollback plan, migration fixtures, tests, and documentation.
   Refs: AC-010, AC-013
-- [ ] T014. Implement package trust and privacy-preserving local metrics.
+- [x] T014. Implement package trust and privacy-preserving local metrics.
   Output: Package origin, integrity, compatibility, capability and provenance validation; local run and quality aggregates; privacy tests; and documentation.
   Refs: AC-011, AC-012, AC-013
 - [ ] T015. Complete versioned documentation, compatibility, release, and commit audit.

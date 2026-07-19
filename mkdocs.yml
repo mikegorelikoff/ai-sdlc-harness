@@ -106,6 +106,7 @@ nav:
       - Plan a declarative workflow: how-to/plan-workflow.md
       - Negotiate a host adapter: how-to/negotiate-host-adapter.md
       - Diagnose and plan an upgrade: how-to/diagnose-and-plan-upgrade.md
+      - Verify a package and local metrics: how-to/verify-package-and-metrics.md
       - Customize team policy: how-to/customize.md
       - Evaluate delivery policy: how-to/evaluate-policy.md
       - Add a capability module: how-to/add-module.md
