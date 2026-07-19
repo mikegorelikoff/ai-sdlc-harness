@@ -1,0 +1,1 @@
+{"schema":"ai-sdlc-host-adapter/v1","id":"read-only-host","version":"1.0.0","host":"conformance-read-only","harness_api":{"min":"1.0.0","max_exclusive":"2.0.0"},"capabilities":["filesystem.read"],"operations":[{"portable":"filesystem.read","host_operation":"host.read","semantics":"equivalent"}],"limits":{"max_concurrency":1,"isolation":false}}

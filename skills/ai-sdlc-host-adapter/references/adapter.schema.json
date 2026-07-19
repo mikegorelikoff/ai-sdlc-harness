@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "ai-sdlc-host-adapter/v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "id", "version", "host", "harness_api", "capabilities", "operations", "limits"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-host-adapter/v1"}, "id": {"type": "string"}, "version": {"type": "string"}, "host": {"type": "string"},
+    "harness_api": {"type": "object", "required": ["min", "max_exclusive"], "additionalProperties": false, "properties": {"min": {"type": "string"}, "max_exclusive": {"type": "string"}}},
+    "capabilities": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "operations": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["portable", "host_operation", "semantics"], "properties": {"portable": {"type": "string"}, "host_operation": {"type": "string"}, "semantics": {"const": "equivalent"}}}},
+    "limits": {"type": "object", "required": ["max_concurrency", "isolation"], "additionalProperties": false, "properties": {"max_concurrency": {"type": "integer", "minimum": 1, "maximum": 64}, "isolation": {"type": "boolean"}}}
+  }
+}

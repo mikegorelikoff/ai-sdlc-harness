@@ -83,7 +83,7 @@ artifact_metadata:
 - [x] T011. Implement declarative workflows, gates, hooks, and dependency waves.
   Output: Workflow schema and validator, typed step planner, conditions, approval gates, deterministic hooks, cycle detection, safe wave planning and fallbacks, tests, and documentation.
   Refs: AC-005, AC-006, AC-007, AC-013
-- [ ] T012. Implement the host adapter SDK and capability negotiation.
+- [x] T012. Implement the host adapter SDK and capability negotiation.
   Output: Adapter manifest and operation contract, negotiation and fallback engine, conformance fixtures for representative hosts, tests, and documentation.
   Refs: AC-006, AC-009, AC-013
 - [ ] T013. Implement installation doctor and safe upgrade planning.

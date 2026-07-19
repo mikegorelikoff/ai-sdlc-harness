@@ -104,6 +104,7 @@ nav:
       - Build a task context pack: how-to/build-context-pack.md
       - Resume a delivery run: how-to/resume-runtime.md
       - Plan a declarative workflow: how-to/plan-workflow.md
+      - Negotiate a host adapter: how-to/negotiate-host-adapter.md
       - Customize team policy: how-to/customize.md
       - Evaluate delivery policy: how-to/evaluate-policy.md
       - Add a capability module: how-to/add-module.md

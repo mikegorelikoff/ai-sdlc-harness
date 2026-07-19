@@ -145,6 +145,14 @@ This page is generated from each package's `SKILL.md` frontmatter. The linked so
 
     [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-goal-capability-and-epic-mapping/SKILL.md)
 
+-   **`ai-sdlc-host-adapter`**
+
+    `core`
+
+    AI SDLC host adapter and capability negotiation workflow. Use when an AI assistant needs to validate a host adapter manifest, map portable workflow operations to host-native operations, negotiate capabilities and limits, select deterministic semantic-preserving fallbacks, or explain why a host cannot run a plan. Supports `--quick-flow` and `--full-flow`.
+
+    [Open package contract →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-host-adapter/SKILL.md)
+
 -   **`ai-sdlc-navigator`**
 
     `core`

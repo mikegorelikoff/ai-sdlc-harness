@@ -30,6 +30,9 @@ description: Core versioned records used for artifacts, handoffs, modules, compa
 | `ai-sdlc-run-state/v1` | Project replayable task status, attempts, readiness, budgets, stop reason, and run identity. |
 | `ai-sdlc-workflow/v1` | Declare capabilities, typed steps, dependencies, bounded conditions, approval gates, isolation, and deterministic hooks. |
 | `ai-sdlc-workflow-plan/v1` | Record condition decisions, safe dependency waves, gates, hooks, host capabilities, and sequential fallbacks. |
+| `ai-sdlc-host-adapter/v1` | Declare host identity, harness API range, capabilities, equivalent operation mappings, concurrency, and isolation. |
+| `ai-sdlc-capability-request/v1` | Request exact portable operations, capabilities, concurrency, and isolation. |
+| `ai-sdlc-capability-negotiation/v1` | Explain native mappings, registered fallbacks, missing requirements, effective limits, and compatibility. |
 | Project context contracts | Preserve evidence-backed repository memory and drift identity. |
 | Quality finding contracts | Record evidence, severity, owner, resolution, and trace targets. |
 

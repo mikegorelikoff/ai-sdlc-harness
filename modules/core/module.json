@@ -1,7 +1,7 @@
 {
   "schema": "ai-sdlc-module/v1",
   "id": "core",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "kind": "core",
   "harness_api": {"min": "1.0.0", "max_exclusive": "2.0.0"},
   "requires": [],
@@ -33,6 +33,7 @@
     {"name": "ai-sdlc-release-slicing-and-backlog-readiness-review", "path": "skills/ai-sdlc-release-slicing-and-backlog-readiness-review"},
     {"name": "ai-sdlc-requirements-readiness-review", "path": "skills/ai-sdlc-requirements-readiness-review"},
     {"name": "ai-sdlc-retrospective", "path": "skills/ai-sdlc-retrospective"},
+    {"name": "ai-sdlc-host-adapter", "path": "skills/ai-sdlc-host-adapter"},
     {"name": "ai-sdlc-runtime", "path": "skills/ai-sdlc-runtime"},
     {"name": "ai-sdlc-workflow", "path": "skills/ai-sdlc-workflow"},
     {"name": "ai-sdlc-sdd", "path": "skills/ai-sdlc-sdd"},
