@@ -1,0 +1,75 @@
+---
+artifact_metadata:
+  schema: "ai-sdlc-artifact-metadata/v1"
+  feature: "002-github-pages-docs"
+  artifact: "plan.md"
+  path: "/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/002-github-pages-docs/plan.md"
+  workspace: "implementation"
+  skill: "ai-sdlc-sdd"
+  flow_mode: "quick"
+  state_file: "/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/002-github-pages-docs/_ai_sdlc/state.toon"
+  decision_log: "/Users/mikegorelikov/Documents/GitHub/ai-sdlc-harness/specs/002-github-pages-docs/decision-log.md"
+  status: "draft"
+  owner: "TBD"
+  created_at: "2026-07-19"
+  updated_at: "2026-07-19"
+  trace_ids: []
+  related_artifacts: []
+  validation: []
+  metatags:
+    - "ai-sdlc"
+    - "implementation"
+    - "ai-sdlc-sdd"
+    - "plan"
+    - "draft"
+---
+
+# plan.md
+
+## Upstream Refinement Sources
+- Refinement index: `specs-refiniment/_ai_sdlc/specs-index.toon`
+- Refinement state: `specs-refiniment/<feature-name>/_ai_sdlc/state.toon`
+- Delivery spec: `specs-refiniment/<feature-name>/delivery-spec.md`
+- QA readiness: `specs-refiniment/<feature-name>/qa-readiness.md`
+- Decision trace: `decision-log.md`
+
+## SDD Artifact Links
+- Requirements: `requirements.md`
+- Design: `design.md`
+- Test cases: `test-cases.md`
+- QA: `qa.md`
+- Tasks: `tasks.md`
+- Machine plan: `_ai_sdlc/plan.toon`
+- Decision log: `decision-log.md`
+
+## Cross-Artifact Trace Map
+- AC-001: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T002) -> qa.md -> decision-log.md
+- AC-002: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T002, T004) -> qa.md -> decision-log.md
+- AC-003: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T003) -> qa.md -> decision-log.md
+- AC-004: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T003) -> qa.md -> decision-log.md
+- AC-005: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T003, T004) -> qa.md -> decision-log.md
+- AC-006: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T002, T004) -> qa.md -> decision-log.md
+- AC-007: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T004) -> qa.md -> decision-log.md
+- AC-008: requirements.md -> test-cases.md (TC-001, TC-002, TC-003, TC-004, TC-005, TC-006, TC-007, TC-008, TC-009) -> tasks.md (T001, T002, T004) -> qa.md -> decision-log.md
+
+## Task Execution Plan
+- [ ] T001: - [x] T001. Establish the GitHub Pages SDD package and execution plan.; refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, DEC-001, DEC-002, DEC-003; output: Requirements, design, test cases, QA plan, tasks, decision log, registry entry, and linked machine/human plans.
+- [ ] T002: - [ ] T002. Build the responsive Jekyll site shell and visual system.; refs: AC-001, AC-002, AC-006, AC-008; output: Configuration, layout, navigation includes, assets, landing page, and getting-started experience.
+- [ ] T003: - [ ] T003. Add curated documentation pages and generated skill/module catalogs.; refs: AC-003, AC-004, AC-005; output: Workflow, skills, modules, concepts, and contributing pages plus deterministic catalog generator and data.
+- [ ] T004: - [ ] T004. Add docs validation, Pages deployment, responsive QA, and release evidence.; refs: AC-002, AC-005, AC-006, AC-007, AC-008; output: Validator, unit tests, official Pages workflow, README link, browser smoke evidence, and passing release gates.
+
+## Task Dependencies
+- T001: depends on previous applicable task / none
+- T002: depends on T001
+- T003: depends on T002
+- T004: depends on T002, T003
+
+## Validation Sequence
+- 1. `python3 skills/ai-sdlc-sdd/scripts/check_clarify.py <spec-dir> --full-flow`
+- 2. `python3 skills/ai-sdlc-sdd/scripts/check_checklist.py <spec-dir> --full-flow`
+- 3. `python3 skills/ai-sdlc-sdd/scripts/analyze_spec.py <spec-dir> --full-flow`
+- 4. `python3 skills/ai-sdlc-sdd/scripts/validate_spec.py <spec-dir> --full-flow`
+- Generated: 2026-07-19
+
+## Open Links And Blockers
+- TBD until every AC/TC/TASK/DEC link is confirmed.
