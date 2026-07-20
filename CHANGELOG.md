@@ -7,7 +7,19 @@
 
 ## Unreleased
 
-No unreleased changes.
+### Added
+
+- Added a modern context, prompt, and personalization guide covering minimum
+  sufficient context, prompt boundaries, evaluation, and safe interaction
+  preferences.
+- Added an opt-in typed interaction profile for preferred name, language,
+  response style, technical depth, and status-update cadence.
+
+### Changed
+
+- Upgraded shared context snapshots and task packs to v3 with goal-relevant
+  range selection, repository-instruction authority labels, explicit context
+  sufficiency, and targeted next reads.
 
 ## v1.1.0 - 2026-07-19
 

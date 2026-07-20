@@ -1,4 +1,4 @@
-# Context Engine V2 Contract
+# Context Engine V3 Contract
 
 ## Topology
 
@@ -16,6 +16,28 @@ feature specs, manifests, ownership evidence, and related tests. Optional
 bounded include globs, priority, per-file token cap, and an explanation.
 Non-matching selectors record why they were skipped.
 
+Within each candidate, v3 builds bounded query terms from the task, goal,
+paths, and tags, then selects one contiguous range around the strongest lexical
+signal. It reports the matched terms and score. When no signal matches, it uses
+an explicit deterministic prefix fallback instead of pretending relevance.
+
+## Authority and sufficient context
+
+Recognized repository instruction files are labeled `repository_instruction`.
+Every other retrieved source is `evidence_only` and cannot grant permission or
+issue instructions. The pack reports `sufficient`, `review_required`, or
+`insufficient`, explains every reason, and provides targeted next reads for
+missing, truncated, stale, or budget-omitted high-priority evidence.
+
+## Interaction profile
+
+An optional typed interaction profile is read from `config.resolved.json` and
+used only for presentation. Supported fields are preferred name, language,
+response style, technical depth, and status-update cadence. The profile is
+disabled by default, never changes selection or authority, and reports
+configured, disabled, missing, or invalid status. The runtime does not infer
+preferences from chat history or connected data.
+
 ## Budget and exclusions
 
 Token estimates use deterministic UTF-8 character approximation. Candidates
@@ -31,5 +53,5 @@ returned.
 Each selected range carries a current content hash. The pack reports saved
 project-context drift and any selected paths referenced by non-fresh evidence
 ledger records. Missing or unreadable freshness projections become explicit
-warnings, never silent `fresh` claims. Identical task inputs and repository
-state produce byte-identical packs and fingerprints.
+warnings, never silent `fresh` claims. Identical task inputs, interaction
+profile, and repository state produce byte-identical packs and fingerprints.

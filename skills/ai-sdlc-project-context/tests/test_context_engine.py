@@ -69,7 +69,123 @@ class ContextEngineTests(unittest.TestCase):
             self.assertEqual((repository / "_ai_sdlc/context/task-packs/T009.json").read_text(encoding="utf-8"), second.stdout)
             toon = (repository / "_ai_sdlc/context/task-packs/T009.toon").read_text(encoding="utf-8")
             self.assertIn("selected[", toon)
-            self.assertIn("selected[2]{content,", toon)
+            self.assertIn("authority", toon)
+            self.assertIn("selection_strategy", toon)
+
+    def test_goal_relevance_selects_a_late_source_range(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            repository = Path(temp)
+            self.setup_repository(repository)
+            lines = [f"background line {index}" for index in range(200)]
+            lines.extend(["## Rollback", "Critical canary rollback threshold is five percent."])
+            (repository / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+            result = self.cli(
+                ENGINE, repository, "--build-pack", "--task", "T009",
+                "--goal", "Find the critical canary rollback threshold.",
+                "--path", "README.md", "--budget", "256", "--format", "json",
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            pack = json.loads(result.stdout)
+            selected = next(item for item in pack["selected"] if item["path"] == "README.md")
+            self.assertGreater(selected["start_line"], 1)
+            self.assertEqual(selected["selection_strategy"], "goal_relevance")
+            self.assertIn("rollback threshold", selected["content"])
+            self.assertIn("rollback", selected["matched_terms"])
+            self.assertEqual(pack["sufficiency"]["status"], "review_required")
+            reads = pack["sufficiency"]["next_reads"]
+            self.assertTrue(any(item["line_start"] == 1 and item["line_end"] == selected["start_line"] - 1 for item in reads))
+            self.assertTrue(any(item["line_start"] == selected["end_line"] + 1 for item in reads))
+
+    def test_no_match_uses_prefix_fallback(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            repository = Path(temp)
+            self.setup_repository(repository)
+            (repository / "README.md").write_text("ordinary material\n" * 400, encoding="utf-8")
+            result = self.cli(
+                ENGINE, repository, "--build-pack", "--task", "T009",
+                "--goal", "zyxwv unmatched vocabulary", "--path", "README.md",
+                "--budget", "128", "--format", "json",
+            )
+            pack = json.loads(result.stdout)
+            selected = next(item for item in pack["selected"] if item["path"] == "README.md")
+            self.assertEqual(selected["start_line"], 1)
+            self.assertEqual(selected["selection_strategy"], "prefix_fallback")
+            self.assertLessEqual(pack["budget"]["used_tokens"], 128)
+
+    def test_authority_and_missing_requested_context_are_explicit(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            repository = Path(temp)
+            self.setup_repository(repository)
+            result = self.cli(
+                ENGINE, repository, "--build-pack", "--task", "T009",
+                "--goal", "Follow guidance and inspect payment code.",
+                "--path", "AGENTS.md", "--path", "src/payments.py",
+                "--path", "missing.md", "--budget", "1000", "--format", "json",
+            )
+            pack = json.loads(result.stdout)
+            authority = {item["path"]: item["authority"] for item in pack["selected"]}
+            self.assertEqual(authority["AGENTS.md"], "repository_instruction")
+            self.assertEqual(authority["src/payments.py"], "evidence_only")
+            self.assertIn("never as instructions", pack["content_handling"]["evidence_only"])
+            self.assertEqual(pack["sufficiency"]["status"], "insufficient")
+            self.assertIn("requested-context-missing", [item["code"] for item in pack["sufficiency"]["reasons"]])
+
+    def test_complete_current_context_is_sufficient(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            repository = Path(temp)
+            self.setup_repository(repository)
+            ledger_dir = repository / "_ai_sdlc"
+            ledger_dir.mkdir()
+            (ledger_dir / "evidence-ledger.json").write_text(json.dumps({
+                "schema": "ai-sdlc-evidence-ledger/v1",
+                "fingerprint": "a" * 64,
+                "records": [],
+            }), encoding="utf-8")
+            written = self.cli(CONTEXT, repository, "--write", "--quick-flow")
+            self.assertEqual(written.returncode, 0, written.stdout + written.stderr)
+            result = self.cli(
+                ENGINE, repository, "--build-pack", "--task", "T009",
+                "--goal", "Inspect payments.", "--path", "src/payments.py",
+                "--budget", "500", "--format", "json",
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            pack = json.loads(result.stdout)
+            self.assertEqual(pack["sufficiency"], {"status": "sufficient", "reasons": [], "next_reads": []})
+
+    def test_typed_interaction_profile_is_presentation_only(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            repository = Path(temp)
+            self.setup_repository(repository)
+            args = (
+                "--build-pack", "--task", "T009", "--goal", "Inspect payments.",
+                "--path", "src/payments.py", "--budget", "500", "--format", "json",
+            )
+            baseline = json.loads(self.cli(ENGINE, repository, *args).stdout)
+            (repository / "config.resolved.json").write_text(json.dumps({
+                "schema": "ai-sdlc-config-resolution/v1",
+                "values": {"interaction": {
+                    "enabled": True,
+                    "preferred_name": "Mike",
+                    "language": "en",
+                    "response_style": "concise",
+                    "technical_depth": "practitioner",
+                    "status_updates": "milestones",
+                }},
+            }), encoding="utf-8")
+            configured = json.loads(self.cli(ENGINE, repository, *args).stdout)
+            self.assertEqual(configured["interaction"]["status"], "configured")
+            self.assertEqual(configured["interaction"]["preferred_name"], "Mike")
+            self.assertEqual(configured["interaction"]["usage"], "presentation_only")
+            baseline_ranges = [(item["path"], item["start_line"], item["end_line"], item["content"]) for item in baseline["selected"]]
+            configured_ranges = [(item["path"], item["start_line"], item["end_line"], item["content"]) for item in configured["selected"]]
+            self.assertEqual(baseline_ranges, configured_ranges)
+
+            payload = json.loads((repository / "config.resolved.json").read_text(encoding="utf-8"))
+            payload["values"]["interaction"]["preferred_name"] = "unsafe\nname"
+            (repository / "config.resolved.json").write_text(json.dumps(payload), encoding="utf-8")
+            invalid = json.loads(self.cli(ENGINE, repository, *args).stdout)
+            self.assertEqual(invalid["interaction"]["status"], "invalid")
+            self.assertEqual(invalid["interaction"]["preferred_name"], "")
 
     def test_conditional_selector_explains_match_and_skip(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

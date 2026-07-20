@@ -34,7 +34,21 @@ from ai_sdlc_paths import (
 )
 
 
-CONTEXT_SCHEMA = "ai-sdlc-context/v2"
+CONTEXT_SCHEMA = "ai-sdlc-context/v3"
+INTERACTION_USAGE = "presentation_only"
+INTERACTION_DEFAULTS = {
+    "enabled": False,
+    "preferred_name": "",
+    "language": "auto",
+    "response_style": "balanced",
+    "technical_depth": "adaptive",
+    "status_updates": "milestones",
+}
+INTERACTION_ENUMS = {
+    "response_style": {"concise", "balanced", "detailed"},
+    "technical_depth": {"adaptive", "foundational", "practitioner", "expert"},
+    "status_updates": {"minimal", "milestones", "frequent"},
+}
 ID_RE = re.compile(
     r"\b(?:(?:REQ|AC|US|TC|TASK|RISK|DEC|EPIC|GOAL|CAP|WF|BR|SC|NFR|DEP)-\d{2,4}|T\d{3,4})\b",
     re.IGNORECASE,
@@ -115,6 +129,67 @@ def positive_int(value: str) -> int:
     if parsed <= 0:
         raise ValueError("context budget must be positive")
     return parsed
+
+
+def resolve_interaction_profile(root: Path) -> dict[str, object]:
+    """Resolve safe, typed presentation preferences from local configuration."""
+    profile: dict[str, object] = {
+        **INTERACTION_DEFAULTS,
+        "status": "not_configured",
+        "usage": INTERACTION_USAGE,
+        "source": "",
+    }
+    path = root / "config.resolved.json"
+    if not path.is_file() or path.is_symlink():
+        return profile
+    profile["source"] = "config.resolved.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        profile["status"] = "invalid"
+        return profile
+    if payload.get("schema") != "ai-sdlc-config-resolution/v1" or not isinstance(payload.get("values"), dict):
+        profile["status"] = "invalid"
+        return profile
+    configured = payload["values"].get("interaction")
+    if configured is None:
+        return profile
+    if not isinstance(configured, dict) or set(configured) - set(INTERACTION_DEFAULTS):
+        profile["status"] = "invalid"
+        return profile
+
+    enabled = configured.get("enabled", False)
+    if not isinstance(enabled, bool):
+        profile["status"] = "invalid"
+        return profile
+    if not enabled:
+        profile["status"] = "disabled"
+        return profile
+
+    candidate = dict(INTERACTION_DEFAULTS)
+    candidate.update(configured)
+    preferred_name = candidate["preferred_name"]
+    language = candidate["language"]
+    if (
+        not isinstance(preferred_name, str)
+        or len(preferred_name) > 80
+        or any(ord(char) < 32 or ord(char) == 127 or char in "\u2028\u2029" for char in preferred_name)
+        or not isinstance(language, str)
+        or language != language.strip()
+        or not re.fullmatch(r"auto|[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*", language)
+    ):
+        profile["status"] = "invalid"
+        return profile
+    for field, allowed in INTERACTION_ENUMS.items():
+        if candidate[field] not in allowed:
+            profile["status"] = "invalid"
+            return profile
+
+    profile.update(candidate)
+    profile["preferred_name"] = preferred_name.strip()
+    profile["language"] = language.strip()
+    profile["status"] = "configured"
+    return profile
 
 
 def _display_path(path: Path, root: Path) -> str:
@@ -360,12 +435,14 @@ def extract_context(
 
 def _fingerprint(
     sources: list[SourceDocument], *, skill: str, flow_mode: str, budget_tokens: int,
-    required_sections: list[str], keywords: list[str]
+    required_sections: list[str], keywords: list[str], interaction: dict[str, object],
 ) -> str:
     digest = hashlib.sha256()
     for value in (CONTEXT_SCHEMA, skill, flow_mode, str(budget_tokens), *required_sections, *keywords):
         digest.update(value.encode("utf-8"))
         digest.update(b"\0")
+    digest.update(json.dumps(interaction, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+    digest.update(b"\0")
     for source in sources:
         digest.update(source.display_path.encode("utf-8"))
         digest.update(b"\0")
@@ -379,6 +456,7 @@ def _render(
     budget_tokens: int, fingerprint: str, cache_status: str,
     sources: list[SourceDocument], selected: list[Evidence], omitted: list[Evidence],
     gaps: list[Gap], trace_ids: list[str], budget_status: str,
+    interaction: dict[str, object],
 ) -> str:
     lines = [
         f"schema: {CONTEXT_SCHEMA}",
@@ -392,6 +470,16 @@ def _render(
         f"cache_status: {cache_status}",
         f"fingerprint: {fingerprint}",
         f"trace_ids: {toon_scalar(';'.join(trace_ids))}",
+        "",
+        "interaction{enabled,status,preferred_name,language,response_style,technical_depth,status_updates,usage,source}:",
+        "  " + toon_row(
+            (
+                str(interaction["enabled"]).lower(), interaction["status"],
+                interaction["preferred_name"], interaction["language"],
+                interaction["response_style"], interaction["technical_depth"],
+                interaction["status_updates"], interaction["usage"], interaction["source"],
+            )
+        ),
         "",
         f"sources[{len(sources)}]{{path,sha256,status}}:",
     ]
@@ -449,9 +537,10 @@ def build_context_pack(
         exclude_paths=exclude_paths,
     )
     evidence, gaps, trace_ids = extract_context(sources, required_sections=required_sections, keywords=keywords)
+    interaction = resolve_interaction_profile(root)
     fingerprint = _fingerprint(
         sources, skill=skill, flow_mode=flow_mode, budget_tokens=budget_tokens,
-        required_sections=required_sections, keywords=keywords,
+        required_sections=required_sections, keywords=keywords, interaction=interaction,
     )
 
     selected: list[Evidence] = []
@@ -465,7 +554,7 @@ def build_context_pack(
             feature=feature, skill=skill, workspace=workspace, flow_mode=flow_mode,
             budget_tokens=budget_tokens, fingerprint=fingerprint, cache_status=cache_status,
             sources=sources, selected=candidate, omitted=omitted, gaps=gaps,
-            trace_ids=trace_ids, budget_status="within_budget",
+            trace_ids=trace_ids, budget_status="within_budget", interaction=interaction,
         )
         if estimate_tokens(trial) <= budget_tokens:
             selected.append(item)
@@ -477,7 +566,7 @@ def build_context_pack(
         feature=feature, skill=skill, workspace=workspace, flow_mode=flow_mode,
         budget_tokens=budget_tokens, fingerprint=fingerprint, cache_status=cache_status,
         sources=sources, selected=selected, omitted=omitted, gaps=gaps,
-        trace_ids=trace_ids, budget_status=status,
+        trace_ids=trace_ids, budget_status=status, interaction=interaction,
     )
     while selected and estimate_tokens(text) > budget_tokens:
         omitted.insert(0, selected.pop())
@@ -486,7 +575,7 @@ def build_context_pack(
             feature=feature, skill=skill, workspace=workspace, flow_mode=flow_mode,
             budget_tokens=budget_tokens, fingerprint=fingerprint, cache_status=cache_status,
             sources=sources, selected=selected, omitted=omitted, gaps=gaps,
-            trace_ids=trace_ids, budget_status=status,
+            trace_ids=trace_ids, budget_status=status, interaction=interaction,
         )
     if estimate_tokens(text) > budget_tokens:
         text = text.replace(f"budget_status: {status}", "budget_status: minimum_overflow", 1)

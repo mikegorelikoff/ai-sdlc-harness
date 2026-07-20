@@ -24,7 +24,8 @@ description: Core versioned records used for artifacts, handoffs, modules, compa
 | `ai-sdlc-policy-decision/v1` | Explain the resolved allow, require, or deny result with provenance, gates, reasons, and waiver outcomes. |
 | `ai-sdlc-repository-topology/v2` | Map ownership, source-to-test links, manifests, stack, commands, revision, and topology identity. |
 | `ai-sdlc-context-selectors/v2` | Declare conditional task, path, and tag selectors with include globs, priority, caps, and exclusions. |
-| `ai-sdlc-context-pack/v2` | Return bounded explained source ranges, budget allocation, exclusions, freshness warnings, and task identity. |
+| `ai-sdlc-context/v3` | Preserve a bounded per-skill evidence snapshot, targeted next reads, gaps, trace IDs, and presentation-only interaction preferences. |
+| `ai-sdlc-context-pack/v3` | Return goal-relevant explained ranges, instruction authority, sufficiency, budget allocation, exclusions, freshness, and task identity. |
 | `ai-sdlc-run-plan/v1` | Define immutable dependency tasks, input fingerprints, retry limits, budgets, and commit boundaries. |
 | `ai-sdlc-run-event/v1` | Append one hash-chained runtime transition with contiguous sequence and evidence payload. |
 | `ai-sdlc-run-state/v1` | Project replayable task status, attempts, readiness, budgets, stop reason, and run identity. |

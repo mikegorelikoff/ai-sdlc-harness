@@ -4,6 +4,14 @@
     "rigor": {"minimum_profile": "patch"},
     "gates": {"require_traceability": true, "require_evidence": true, "allow_state_bypass": false},
     "output": {"human": "markdown", "machine": "toon"},
+    "interaction": {
+      "enabled": false,
+      "preferred_name": "",
+      "language": "auto",
+      "response_style": "balanced",
+      "technical_depth": "adaptive",
+      "status_updates": "milestones"
+    },
     "modules": {"enabled": []}
   },
   "protected": [

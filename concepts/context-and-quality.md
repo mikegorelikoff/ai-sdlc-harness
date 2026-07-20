@@ -39,7 +39,7 @@ Default and full analysis maintain two derived records:
 <feature>/_ai_sdlc/feature-context.toon
 ```
 
-The per-skill file is an `ai-sdlc-context/v2` snapshot containing the exact
+The per-skill file is an `ai-sdlc-context/v3` snapshot containing the exact
 evidence contract used by that skill. The feature context file is a
 skill-neutral, deterministic source inventory. One stage can update the feature
 inventory without replacing another stage's saved anchors or source hashes.
@@ -49,13 +49,15 @@ Git. If removed, rerunning analysis recreates them from durable sources.
 
 ## Context Pack Shape
 
-An `ai-sdlc-context/v2` pack contains:
+An `ai-sdlc-context/v3` pack contains:
 
 - `sources`: path, content hash, and current/missing status;
 - `anchors`: exact source excerpts with section and line location;
 - `gaps`: deterministic missing-source or blocker signals;
 - `next_reads`: targeted source ranges that did not fit the active budget;
 - `trace_ids`: the complete discovered ID set;
+- `interaction`: optional typed presentation preferences with no decision or
+  authority effect;
 - fingerprint and budget status for cache validation.
 
 Anchors are evidence excerpts, not AI-authored summaries. When a range is listed

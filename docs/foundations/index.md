@@ -19,6 +19,9 @@ gate, handoff, or TOON are unfamiliar.
    policy, agents, and humans.
 5. [Human and agent responsibilities](responsibilities.md) shows who may decide,
    write, validate, approve, or escalate.
-6. [Glossary](glossary.md) provides one canonical vocabulary reference.
+6. [Context, prompts, and personalization](context-prompt-personalization.md)
+   explains how to select sufficient evidence, write stable task contracts, and
+   apply user-controlled communication preferences safely.
+7. [Glossary](glossary.md) provides one canonical vocabulary reference.
 
 After this path, continue with [Onboarding](../onboarding/index.md).

@@ -1,19 +1,110 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-context-pack-v2",
+  "$id": "https://github.com/mikegorelikoff/ai-sdlc-harness/schemas/ai-sdlc-context-pack-v3",
   "title": "AI SDLC Context Pack",
   "type": "object",
-  "required": ["schema", "task", "repository", "budget", "selectors", "selected", "exclusions", "freshness", "fingerprint"],
+  "required": [
+    "schema",
+    "task",
+    "interaction",
+    "content_handling",
+    "repository",
+    "budget",
+    "selectors",
+    "selected",
+    "exclusions",
+    "freshness",
+    "sufficiency",
+    "fingerprint"
+  ],
   "properties": {
-    "schema": {"const": "ai-sdlc-context-pack/v2"},
-    "task": {"type": "object"},
+    "schema": {"const": "ai-sdlc-context-pack/v3"},
+    "task": {
+      "type": "object",
+      "required": ["id", "goal", "paths", "tags", "query_terms"],
+      "properties": {
+        "id": {"type": "string"},
+        "goal": {"type": "string"},
+        "paths": {"type": "array", "items": {"type": "string"}},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "query_terms": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "interaction": {"$ref": "#/$defs/interaction"},
+    "content_handling": {
+      "type": "object",
+      "required": ["repository_instruction", "evidence_only"],
+      "properties": {
+        "repository_instruction": {"type": "string"},
+        "evidence_only": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
     "repository": {"type": "object"},
     "budget": {"type": "object"},
     "selectors": {"type": "array", "items": {"type": "object"}},
-    "selected": {"type": "array", "items": {"type": "object"}},
+    "selected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path", "start_line", "end_line", "priority", "reason", "authority",
+          "selection_strategy", "matched_terms", "relevance_score", "estimated_tokens",
+          "sha256", "truncated", "content"
+        ],
+        "properties": {
+          "path": {"type": "string"},
+          "start_line": {"type": "integer", "minimum": 1},
+          "end_line": {"type": "integer", "minimum": 0},
+          "priority": {"type": "integer"},
+          "reason": {"type": "string"},
+          "authority": {"enum": ["repository_instruction", "evidence_only"]},
+          "selection_strategy": {"enum": ["full_source", "goal_relevance", "prefix_fallback"]},
+          "matched_terms": {"type": "array", "items": {"type": "string"}},
+          "relevance_score": {"type": "integer", "minimum": 0},
+          "estimated_tokens": {"type": "integer", "minimum": 0},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "truncated": {"type": "boolean"},
+          "content": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
     "exclusions": {"type": "array", "items": {"type": "object"}},
     "freshness": {"type": "object"},
+    "sufficiency": {
+      "type": "object",
+      "required": ["status", "reasons", "next_reads"],
+      "properties": {
+        "status": {"enum": ["sufficient", "review_required", "insufficient"]},
+        "reasons": {"type": "array", "items": {"type": "object"}},
+        "next_reads": {"type": "array", "items": {"type": "object"}}
+      },
+      "additionalProperties": false
+    },
     "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "$defs": {
+    "interaction": {
+      "type": "object",
+      "required": [
+        "enabled", "status", "preferred_name", "language", "response_style",
+        "technical_depth", "status_updates", "usage", "source"
+      ],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "status": {"enum": ["configured", "disabled", "not_configured", "invalid"]},
+        "preferred_name": {"type": "string", "maxLength": 80},
+        "language": {"type": "string"},
+        "response_style": {"enum": ["concise", "balanced", "detailed"]},
+        "technical_depth": {"enum": ["adaptive", "foundational", "practitioner", "expert"]},
+        "status_updates": {"enum": ["minimal", "milestones", "frequent"]},
+        "usage": {"const": "presentation_only"},
+        "source": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": false
 }

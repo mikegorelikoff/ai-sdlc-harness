@@ -328,7 +328,8 @@ class ScriptContractTests(unittest.TestCase):
                 workspace="refinement", flow_mode="quick", budget_tokens=700,
                 required_sections=["Acceptance Criteria"], keywords=["validation"], root=cwd,
             )
-            self.assertIn("schema: ai-sdlc-context/v2", output)
+            self.assertIn("schema: ai-sdlc-context/v3", output)
+            self.assertIn("interaction{enabled,status,preferred_name", output)
             self.assertIn("AC-001", output)
             self.assertIn("AC-030", output)
             self.assertIn("next_reads[", output)
@@ -356,6 +357,38 @@ class ScriptContractTests(unittest.TestCase):
             changed = emit_context_pack(**kwargs)
             self.assertIn("cache_status: refreshed", changed)
             self.assertIn("REQ-002", changed)
+
+    def test_shared_context_applies_typed_interaction_profile(self) -> None:
+        """Presentation preferences should be visible and invalidate cached context."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            cwd = Path(temp_dir)
+            source = cwd / "input.md"
+            source.write_text("# Input\n\nREQ-001: Keep technical selection stable.\n", encoding="utf-8")
+            (cwd / "config.resolved.json").write_text(
+                '{"schema":"ai-sdlc-config-resolution/v1","values":{"interaction":'
+                '{"enabled":true,"preferred_name":"Mike","language":"en",'
+                '"response_style":"concise","technical_depth":"practitioner",'
+                '"status_updates":"milestones"}}}',
+                encoding="utf-8",
+            )
+            output = emit_context_pack(
+                files=[source], feature="interaction-demo", skill="ai-sdlc-ba",
+                workspace="refinement", flow_mode="quick", budget_tokens=1200,
+                required_sections=[], keywords=["stable"], cache=True, root=cwd,
+            )
+            self.assertIn("true,configured,Mike,en,concise,practitioner,milestones,presentation_only", output)
+
+            (cwd / "config.resolved.json").write_text(
+                '{"schema":"ai-sdlc-config-resolution/v1","values":{"interaction":{"enabled":false}}}',
+                encoding="utf-8",
+            )
+            disabled = emit_context_pack(
+                files=[source], feature="interaction-demo", skill="ai-sdlc-ba",
+                workspace="refinement", flow_mode="quick", budget_tokens=1200,
+                required_sections=[], keywords=["stable"], cache=True, root=cwd,
+            )
+            self.assertIn("false,disabled", disabled)
+            self.assertIn("cache_status: refreshed", disabled)
 
     def test_default_context_unions_explicit_input_with_whole_feature_package(self) -> None:
         """Explicit evidence must not suppress other feature artifacts outside quick flow."""
@@ -392,7 +425,7 @@ class ScriptContractTests(unittest.TestCase):
             self.assertIn("sources[3]", dossier.read_text(encoding="utf-8"))
             snapshot = cwd / f"specs-refiniment/{feature}/_ai_sdlc/context/ai-sdlc-ba.toon"
             self.assertTrue(snapshot.is_file())
-            self.assertIn("schema: ai-sdlc-context/v2", snapshot.read_text(encoding="utf-8"))
+            self.assertIn("schema: ai-sdlc-context/v3", snapshot.read_text(encoding="utf-8"))
 
             quick = emit_context_pack(
                 files=[explicit],
@@ -542,7 +575,7 @@ class ScriptContractTests(unittest.TestCase):
             script, "--feature", "format-demo", "--quick-flow", "--format", "toon", str(README)
         )
         self.assertEqual(compact.returncode, 0, compact.stderr)
-        self.assertTrue(compact.stdout.startswith("schema: ai-sdlc-context/v2"))
+        self.assertTrue(compact.stdout.startswith("schema: ai-sdlc-context/v3"))
         human = run_script(script, "--feature", "format-demo", "--quick-flow", str(README))
         self.assertEqual(human.returncode, 0, human.stderr)
         self.assertIn("## Compact Summary", human.stdout)
@@ -901,7 +934,7 @@ class ScriptContractTests(unittest.TestCase):
             self.assertIn("ready_for_impl", status.stdout)
             context = run_script(ROOT / "skills/ai-sdlc-sdd/scripts/sdd_context.py", str(spec_dir), "--full-flow")
             self.assertEqual(context.returncode, 0, context.stderr)
-            self.assertIn("schema: ai-sdlc-context/v2", context.stdout)
+            self.assertIn("schema: ai-sdlc-context/v3", context.stdout)
             for trace_id in ("AC-001", "TC-001", "T001", "DEC-001"):
                 self.assertIn(trace_id, context.stdout)
             self.assertIn("_ai_sdlc/plan.toon", context.stdout)

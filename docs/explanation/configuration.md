@@ -9,6 +9,51 @@ Customization is necessary for real teams, but unstructured overrides make behav
 
 Base values are shipped and versioned by the harness. Team values are committed and reviewed as organization policy. User values remain local and cover personal presentation or convenience preferences.
 
+## Typed interaction preferences
+
+The optional `interaction` object controls communication presentation without
+creating a persona or granting authority. It is disabled by default and may
+contain a preferred name, response language, response density, technical
+depth, and progress-update cadence.
+
+For example, a local user layer can contain:
+
+```json
+{
+  "schema": "ai-sdlc-config/v1",
+  "values": {
+    "interaction": {
+      "enabled": true,
+      "preferred_name": "Sam",
+      "language": "en",
+      "response_style": "concise",
+      "technical_depth": "practitioner",
+      "status_updates": "milestones"
+    }
+  }
+}
+```
+
+Resolve the layers normally and inspect provenance:
+
+```bash
+python3 skills/_shared/ai_sdlc_config.py \
+  --base config/ai-sdlc.defaults.json \
+  --user ~/.config/ai-sdlc/config.json \
+  --write-root . \
+  --format toon
+```
+
+The resolved profile is attached to context packs as `presentation_only`
+metadata. It cannot alter evidence selection, recognized instruction
+authority, protected gates, approval rules, validation rigor, or safety. Set
+`enabled` to `false`, remove individual values, or delete the local user layer
+and resolve again to stop applying it. No chat history or connected data is
+mined to infer preferences.
+
+See [Context, prompts, and personalization](../foundations/context-prompt-personalization.md)
+for usage guidance and anti-patterns.
+
 ## Deterministic resolution
 
 The resolver applies documented precedence and emits provenance for every effective key. Identical layers produce identical output. Sparse overrides inherit future defaults; full copied configurations tend to drift.

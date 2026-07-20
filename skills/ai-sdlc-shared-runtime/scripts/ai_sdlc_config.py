@@ -16,6 +16,9 @@ from typing import Any
 SCHEMA = "ai-sdlc-config/v1"
 LAYERS = ("base", "team", "user")
 PROFILE_ORDER = ("patch", "standard", "assured", "regulated")
+INTERACTION_FIELDS = {
+    "enabled", "preferred_name", "language", "response_style", "technical_depth", "status_updates"
+}
 
 
 def toon(value: object) -> str:
@@ -111,6 +114,42 @@ def resolve(base: dict[str, Any], team: dict[str, Any], user: dict[str, Any]) ->
     return result, provenance, errors
 
 
+def validate_interaction(values: dict[str, Any]) -> list[str]:
+    """Validate the optional typed presentation profile after layer resolution."""
+    interaction = values.get("interaction")
+    if interaction is None:
+        return []
+    if not isinstance(interaction, dict):
+        return ["interaction must be an object"]
+    unknown = sorted(set(interaction) - INTERACTION_FIELDS)
+    errors = [f"interaction has unknown fields: {', '.join(unknown)}"] if unknown else []
+    if "enabled" in interaction and not isinstance(interaction["enabled"], bool):
+        errors.append("interaction.enabled must be boolean")
+    preferred_name = interaction.get("preferred_name", "")
+    if (
+        not isinstance(preferred_name, str)
+        or len(preferred_name) > 80
+        or any(ord(char) < 32 or ord(char) == 127 or char in "\u2028\u2029" for char in preferred_name)
+    ):
+        errors.append("interaction.preferred_name must be a control-free string of at most 80 characters")
+    language = interaction.get("language", "auto")
+    if (
+        not isinstance(language, str)
+        or language != language.strip()
+        or not re.fullmatch(r"auto|[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*", language)
+    ):
+        errors.append("interaction.language must be auto or a simple BCP-47 language tag")
+    allowed = {
+        "response_style": {"concise", "balanced", "detailed"},
+        "technical_depth": {"adaptive", "foundational", "practitioner", "expert"},
+        "status_updates": {"minimal", "milestones", "frequent"},
+    }
+    for field, choices in allowed.items():
+        if field in interaction and interaction[field] not in choices:
+            errors.append(f"interaction.{field} must be one of: {', '.join(sorted(choices))}")
+    return errors
+
+
 def render_toon(values: dict[str, Any], provenance: dict[str, str], protected: list[str]) -> str:
     """Render bounded machine output with leaf provenance."""
     flat = flatten(values)
@@ -172,6 +211,7 @@ def main() -> int:
             print(f"ERROR: {error}")
         return 1
     values, provenance, resolve_errors = resolve(*layers)
+    resolve_errors.extend(validate_interaction(values))
     if resolve_errors:
         for error in resolve_errors:
             print(f"ERROR: {error}")

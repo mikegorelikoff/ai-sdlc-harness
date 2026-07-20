@@ -67,6 +67,37 @@ class ConfigTests(unittest.TestCase):
             self.assertEqual(allowed.returncode, 0, allowed.stdout + allowed.stderr)
             self.assertIn("rigor.minimum_profile,assured,team,yes", allowed.stdout)
 
+    def test_user_can_set_typed_interaction_preferences(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            user = Path(temp) / "user.json"
+            write(user, {"interaction": {
+                "enabled": True,
+                "preferred_name": "Mike",
+                "language": "en",
+                "response_style": "concise",
+                "technical_depth": "practitioner",
+                "status_updates": "milestones",
+            }})
+            result = self.run_config("--base", str(DEFAULTS), "--user", str(user), "--format", "toon")
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("interaction.preferred_name,Mike,user,no", result.stdout)
+            self.assertIn("interaction.response_style,concise,user,no", result.stdout)
+
+    def test_invalid_interaction_preference_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            user = Path(temp) / "user.json"
+            invalid = [
+                ({"response_style": "telepathic"}, "interaction.response_style must be one of"),
+                ({"language": " en "}, "interaction.language must be auto or a simple BCP-47 language tag"),
+                ({"preferred_name": " " * 81}, "interaction.preferred_name must be a control-free string"),
+            ]
+            for values, expected in invalid:
+                with self.subTest(values=values):
+                    write(user, {"interaction": {"enabled": True, **values}})
+                    result = self.run_config("--base", str(DEFAULTS), "--user", str(user))
+                    self.assertEqual(result.returncode, 1)
+                    self.assertIn(expected, result.stdout)
+
     def test_non_base_layer_cannot_redefine_protection(self) -> None:
         """Protection ownership remains in the base contract."""
         with tempfile.TemporaryDirectory() as temp:

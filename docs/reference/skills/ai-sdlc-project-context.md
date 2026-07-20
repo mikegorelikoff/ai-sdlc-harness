@@ -114,9 +114,11 @@ The TOON schema `ai-sdlc-project-context/v1` includes repository, revision,
 fingerprint, drift status, stack, commands, architecture paths, and evidence
 rows with exact `path`, `line`, `kind`, and `detail` fields.
 
-The complete TOON/JSON `ai-sdlc-context-pack/v2` record includes task identity, topology and
-revision identity, deterministic budget use, selector outcomes, bounded source
-ranges and content, exclusions, freshness warnings, and fingerprint.
+The complete TOON/JSON `ai-sdlc-context-pack/v3` record includes task identity,
+typed presentation preferences, content authority, topology and revision
+identity, deterministic budget use, selector outcomes, relevance-ranked source
+ranges, exclusions, freshness warnings, sufficient-context status, targeted
+next reads, and fingerprint.
 
 Quality gate:
 
@@ -150,8 +152,9 @@ On a blocker, preserve failed/stale evidence, name the accountable owner and exa
   includes `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or ad hoc context files.
 - Keep Markdown readable and TOON bounded and machine-oriented.
-- For task packs, report every selection reason, exclusion reason, token
-  allocation, current hash, and freshness warning.
+- For task packs, report every selection reason, authority label, matched term,
+  sufficiency reason, exclusion reason, token allocation, current hash, and
+  freshness warning.
 
 The downstream consumer rechecks artifacts and freshness; it does not trust a previous chat's completion claim.
 
@@ -173,7 +176,7 @@ The downstream consumer rechecks artifacts and freshness; it does not trust a pr
     - Include `metatags` for `ai-sdlc`, `project-context`, `project`, and
       `evidence-backed`.
     - Metadata records revision, fingerprint, generation date, and source paths.
-    - Task packs use `ai-sdlc-context-pack/v2`; selectors use
+    - Task packs use `ai-sdlc-context-pack/v3`; selectors use
       `ai-sdlc-context-selectors/v2`; topology uses
       `ai-sdlc-repository-topology/v2`.
 

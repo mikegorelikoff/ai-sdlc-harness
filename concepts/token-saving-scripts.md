@@ -56,7 +56,7 @@ skill has a script that can compress or validate the inputs. If a script exists,
 the AI runs it with the active flow flag and reads the compact output first.
 
 Profile scripts keep Markdown as the human-readable default. For agent work,
-the skill invokes `--format toon` to emit an `ai-sdlc-context/v2` evidence
+the skill invokes `--format toon` to emit an `ai-sdlc-context/v3` evidence
 index rather than a generated summary: every anchor carries an
 exact source path, Markdown section, and line number. The AI reads `anchors`
 first and opens only the `next_reads` ranges needed for details that did not fit

@@ -97,6 +97,7 @@ nav:
           - Why use a harness?: foundations/why-harness.md
           - Mental model: foundations/mental-model.md
           - Human and agent responsibilities: foundations/responsibilities.md
+          - Context, prompts, and personalization: foundations/context-prompt-personalization.md
           - Glossary: foundations/glossary.md
       - Onboarding:
           - Overview: onboarding/index.md
