@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-user-story-decomposition, 
 
 # `ai-sdlc-user-story-decomposition`
 
-Use when the delivery gap review is complete and you need to convert a clarified initiative package into epics, user stories, acceptance criteria, scenario coverage, and priority signals tied to business value. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Story decomposition | BA | PM, QA, Dev | `core` | Epics, user stories, acceptance criteria, scenario coverage, and priority signals |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** BA.
-- **Supporting:** PM, QA, Dev.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

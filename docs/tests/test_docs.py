@@ -23,6 +23,7 @@ from build_catalog import (  # noqa: E402
     validate_script_catalog,
     validate_selection_contract,
     validate_skill_guide,
+    validate_role_skill_groups,
 )
 from validate_docs import (  # noqa: E402
     CONTROL_PLANE_CONTRACT,
@@ -45,7 +46,7 @@ from validate_docs import (  # noqa: E402
     validate_rollout_contract,
     validate_refinement_contract,
     validate_raci_contract,
-    validate_role_paths,
+    validate_role_skill_discovery,
     validate_root_source_text,
     validate_section_index,
     validate_troubleshooting_contract,
@@ -104,6 +105,30 @@ class DocumentationValidationTests(unittest.TestCase):
             pages = [Page(page_path, {"title": "Home", "description": "Home"}, "Body")]
             errors = validate_navigation(pages, docs, config)
             self.assertTrue(any("duplicate pages" in error for error in errors))
+
+    def test_navigation_limits_tabs_and_promotes_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            docs = root / "docs"
+            docs.mkdir()
+            page_path = docs / "index.md"
+            page_path.write_text("---\ntitle: Home\ndescription: Home\n---\n", encoding="utf-8")
+            pages = [Page(page_path, {"title": "Home", "description": "Home"}, "Body")]
+            config = root / "mkdocs.yml"
+            config.write_text(
+                "nav:\n"
+                "  - Home: index.md\n"
+                "  - Start:\n"
+                "  - Use:\n"
+                "  - Adopt:\n"
+                "  - About:\n"
+                "  - Maintain:\n"
+                "  - Reference:\n",
+                encoding="utf-8",
+            )
+            errors = validate_navigation(pages, docs, config)
+            self.assertTrue(any("maximum is 6" in error for error in errors))
+            self.assertTrue(any("first three" in error for error in errors))
 
     def test_onboarding_rejects_nonexistent_installer(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -222,16 +247,6 @@ class DocumentationValidationTests(unittest.TestCase):
     def test_adoption_operations_contracts_and_mutations(self) -> None:
         self.assertEqual(validate_adoption_operations(DOCS_ROOT.parent), [])
 
-        role_paths = (DOCS_ROOT / "onboarding/role-paths.md").read_text(encoding="utf-8")
-        self.assertTrue(
-            validate_role_paths(role_paths.replace("## New or junior engineer", "## Newcomer", 1))
-        )
-        self.assertTrue(
-            validate_role_paths(
-                role_paths.replace("`goal-capability-map.md`", "`wrong-map.md`", 1)
-            )
-        )
-
         raci = (DOCS_ROOT / "operations/operating-model.md").read_text(encoding="utf-8")
         self.assertTrue(
             validate_raci_contract(
@@ -340,6 +355,9 @@ class DocumentationValidationTests(unittest.TestCase):
         self.assertEqual(len(records), 106)
         self.assertEqual(len(SKILL_SELECTION_BOUNDARIES), 44)
         self.assertEqual(validate_selection_contract(skills), [])
+        self.assertEqual(validate_role_skill_groups(skills), [])
+        role_page = outputs[CATALOG_DOCS / "reference/skills-by-role.md"]
+        self.assertEqual(validate_role_skill_discovery(role_page), [])
         for source in skills:
             skill_id = skill_frontmatter(source)["name"]
             page = outputs[SKILL_GUIDES / f"{skill_id}.md"]

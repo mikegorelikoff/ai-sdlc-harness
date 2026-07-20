@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-release-slicing-and-backlo
 
 # `ai-sdlc-release-slicing-and-backlog-readiness-review`
 
-Use after backlog decomposition to define prioritization, MVP and release slices, sequencing, readiness, traceability, and JIRA-ready outputs, then score backlog quality for planning and estimation. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Release planning / backlog readiness | PM | Delivery, BA, QA, Dev Lead | `core` | MVP/release slices, sequencing, readiness score, and planning risks |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** PM.
-- **Supporting:** Delivery, BA, QA, Dev Lead.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

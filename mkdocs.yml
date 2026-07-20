@@ -88,88 +88,27 @@ exclude_docs: |
 
 nav:
   - Home: index.md
-  - Start here: start.md
-  - Foundations:
-      - Overview: foundations/index.md
-      - What is AI SDLC?: foundations/ai-sdlc.md
-      - What is SDD?: foundations/sdd.md
-      - Why use a harness?: foundations/why-harness.md
-      - Mental model: foundations/mental-model.md
-      - Human and agent responsibilities: foundations/responsibilities.md
-      - Glossary: foundations/glossary.md
-  - Onboarding:
-      - Overview: onboarding/index.md
-      - Your first 30 minutes: onboarding/first-30-minutes.md
-      - Role-based paths: onboarding/role-paths.md
-  - Adoption:
-      - Evaluate and adopt: adoption/index.md
-      - Run a bounded pilot: adoption/pilot.md
-      - Interpret pilot metrics: adoption/metrics.md
-      - Stage a rollout: adoption/rollout.md
-      - Maturity and limitations: explanation/maturity-limitations.md
-  - Tutorials:
-      - Overview: tutorials/index.md
-      - Ship a first feature: tutorials/first-feature.md
-      - Adopt an existing project: tutorials/existing-project.md
-      - Run the full lifecycle: tutorials/full-lifecycle.md
-  - Workflow journeys:
-      - Choose a journey: flows/index.md
-      - Complete refinement: flows/refinement.md
-      - Implementation: flows/implementation.md
-      - Control plane: flows/control-plane.md
-      - Recovery and learning: flows/recovery.md
-  - How-to guides:
-      - Overview: how-to/index.md
-      - Install the harness: how-to/install.md
-      - Update safely: how-to/update.md
-      - Migrate to 1.1: how-to/migrate-1.1.md
-      - Choose a flow mode: how-to/choose-flow.md
-      - Navigate a new request: how-to/navigate-request.md
-      - Build project context: how-to/project-context.md
-      - Build a task context pack: how-to/build-context-pack.md
-      - Resume a delivery run: how-to/resume-runtime.md
-      - Plan a declarative workflow: how-to/plan-workflow.md
-      - Negotiate a host adapter: how-to/negotiate-host-adapter.md
-      - Diagnose and plan an upgrade: how-to/diagnose-and-plan-upgrade.md
-      - Verify a package and local metrics: how-to/verify-package-and-metrics.md
-      - Customize team policy: how-to/customize.md
-      - Evaluate delivery policy: how-to/evaluate-policy.md
-      - Add a capability module: how-to/add-module.md
-      - Recover from change: how-to/recover-change.md
-      - Query the delivery graph: how-to/query-delivery-graph.md
-      - Manage evidence freshness: how-to/manage-evidence-freshness.md
-      - Run an evidence council: how-to/evidence-council.md
-      - Research with sources: how-to/research.md
-      - Prepare a commit: how-to/prepare-commit.md
-      - Validate a release: how-to/validate-release.md
-  - Operations:
-      - Overview: operations/index.md
-      - Operating model and RACI: operations/operating-model.md
-      - Governance and trust: operations/governance.md
-      - Troubleshooting and recovery: operations/troubleshooting.md
-  - Explanation:
-      - Overview: explanation/index.md
-      - System model: explanation/system-model.md
-      - Adaptive rigor: explanation/adaptive-rigor.md
-      - Artifact authority: explanation/artifact-authority.md
-      - Feature state machine: explanation/state-machine.md
-      - Traceability: explanation/traceability.md
-      - Context and quality: explanation/context-quality.md
-      - Decision continuity: explanation/decisions.md
-      - Workflow handoffs: explanation/handoffs.md
-      - TOON-first artifacts: explanation/toon-first.md
-      - Layered configuration: explanation/configuration.md
-      - Optional modules: explanation/modules.md
-      - Change and learning: explanation/change-learning.md
-      - Controlled changes: explanation/controlled-changes.md
-      - Agent portability: explanation/agent-portability.md
-  - Maintainers:
-      - Maintain and contribute: maintainers/index.md
-      - Extend skills and modules: maintainers/extend.md
-      - Prepare and release: maintainers/release.md
+  - Start:
+      - Start here: start.md
+      - Foundations:
+          - Overview: foundations/index.md
+          - What is AI SDLC?: foundations/ai-sdlc.md
+          - What is SDD?: foundations/sdd.md
+          - Why use a harness?: foundations/why-harness.md
+          - Mental model: foundations/mental-model.md
+          - Human and agent responsibilities: foundations/responsibilities.md
+          - Glossary: foundations/glossary.md
+      - Onboarding:
+          - Overview: onboarding/index.md
+          - Your first 30 minutes: onboarding/first-30-minutes.md
+      - Tutorials:
+          - Overview: tutorials/index.md
+          - Ship a first feature: tutorials/first-feature.md
+          - Adopt an existing project: tutorials/existing-project.md
+          - Run the full lifecycle: tutorials/full-lifecycle.md
   - Reference:
       - Overview: reference/index.md
-      - Release 1.2: reference/release-1.2.md
+      - Skills by role: reference/skills-by-role.md
       - Workflow map: reference/workflow-map.md
       - Skill catalog: reference/skills.md
       - Skill guides:
@@ -226,5 +165,70 @@ nav:
       - Directory layout: reference/directory-layout.md
       - Compatibility contract: reference/compatibility.md
       - Supported versions: reference/versions.md
+      - Release 1.2 audit: reference/release-1.2.md
       - Release 1.1 audit: reference/release-1.1.md
-  - Roadmap: roadmap.md
+  - Use:
+      - Workflow journeys:
+          - Choose a journey: flows/index.md
+          - Complete refinement: flows/refinement.md
+          - Implementation: flows/implementation.md
+          - Control plane: flows/control-plane.md
+          - Recovery and learning: flows/recovery.md
+      - How-to guides:
+          - Overview: how-to/index.md
+          - Install the harness: how-to/install.md
+          - Update safely: how-to/update.md
+          - Migrate to 1.1: how-to/migrate-1.1.md
+          - Choose a flow mode: how-to/choose-flow.md
+          - Navigate a new request: how-to/navigate-request.md
+          - Build project context: how-to/project-context.md
+          - Build a task context pack: how-to/build-context-pack.md
+          - Resume a delivery run: how-to/resume-runtime.md
+          - Plan a declarative workflow: how-to/plan-workflow.md
+          - Negotiate a host adapter: how-to/negotiate-host-adapter.md
+          - Diagnose and plan an upgrade: how-to/diagnose-and-plan-upgrade.md
+          - Verify a package and local metrics: how-to/verify-package-and-metrics.md
+          - Customize team policy: how-to/customize.md
+          - Evaluate delivery policy: how-to/evaluate-policy.md
+          - Add a capability module: how-to/add-module.md
+          - Recover from change: how-to/recover-change.md
+          - Query the delivery graph: how-to/query-delivery-graph.md
+          - Manage evidence freshness: how-to/manage-evidence-freshness.md
+          - Run an evidence council: how-to/evidence-council.md
+          - Research with sources: how-to/research.md
+          - Prepare a commit: how-to/prepare-commit.md
+          - Validate a release: how-to/validate-release.md
+  - Adopt:
+      - Evaluate and adopt:
+          - Overview: adoption/index.md
+          - Run a bounded pilot: adoption/pilot.md
+          - Interpret pilot metrics: adoption/metrics.md
+          - Stage a rollout: adoption/rollout.md
+      - Operate and govern:
+          - Overview: operations/index.md
+          - Operating model and RACI: operations/operating-model.md
+          - Governance and trust: operations/governance.md
+          - Troubleshooting and recovery: operations/troubleshooting.md
+  - About:
+      - Explanation:
+          - Overview: explanation/index.md
+          - System model: explanation/system-model.md
+          - Adaptive rigor: explanation/adaptive-rigor.md
+          - Artifact authority: explanation/artifact-authority.md
+          - Feature state machine: explanation/state-machine.md
+          - Traceability: explanation/traceability.md
+          - Context and quality: explanation/context-quality.md
+          - Decision continuity: explanation/decisions.md
+          - Workflow handoffs: explanation/handoffs.md
+          - TOON-first artifacts: explanation/toon-first.md
+          - Layered configuration: explanation/configuration.md
+          - Optional modules: explanation/modules.md
+          - Change and learning: explanation/change-learning.md
+          - Controlled changes: explanation/controlled-changes.md
+          - Agent portability: explanation/agent-portability.md
+          - Maturity and limitations: explanation/maturity-limitations.md
+      - Maintainers:
+          - Maintain and contribute: maintainers/index.md
+          - Extend skills and modules: maintainers/extend.md
+          - Prepare and release: maintainers/release.md
+      - Roadmap: roadmap.md

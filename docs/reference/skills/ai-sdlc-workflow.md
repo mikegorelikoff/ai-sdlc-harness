@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-workflow, including inputs
 
 # `ai-sdlc-workflow`
 
-AI SDLC declarative workflow planning. Use when an AI assistant needs to validate a versioned workflow, plan typed dependency steps, evaluate bounded conditions, enforce approval gates, attach deterministic hooks, detect cycles, or create safe dependency waves with sequential fallback when host concurrency or isolation is unavailable. Supports `--quick-flow` and `--full-flow`.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Controlled execution planning | Delivery, Dev | QA, Security, Architecture | `core` | `_ai_sdlc/workflows/<workflow-id>/plan.{toon,json,md}` |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Delivery, Dev.
-- **Supporting:** QA, Security, Architecture.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

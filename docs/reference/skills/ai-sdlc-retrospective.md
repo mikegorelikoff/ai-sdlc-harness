@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-retrospective, including i
 
 # `ai-sdlc-retrospective`
 
-AI SDLC evidence-backed retrospective workflow. Use when delivery work is complete or paused and an AI assistant needs to capture observations, connect them to validation or artifact evidence, formulate reviewable process or policy improvement proposals, assign ownership, and preserve the rule that policy changes require an accepted decision. Supports `--quick-flow` for focused learning and `--full-flow` for strict evidence and decision gates.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Post-delivery learning | Delivery, Dev, QA, BA | PM, platform maintainers | `core` | `retrospective.md` and `_ai_sdlc/retrospective.toon` |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Delivery, Dev, QA, BA.
-- **Supporting:** PM, platform maintainers.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

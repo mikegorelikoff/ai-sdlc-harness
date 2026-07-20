@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-commit-prep, including inp
 
 # `ai-sdlc-commit-prep`
 
-AI SDLC commit preparation workflow. Use when an AI assistant is asked to commit repository changes, prepare an auditable commit message, stage files safely, include SDD traceability, verify branch/spec alignment, or verify the working tree before committing. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Commit readiness / traceability | Dev | QA, BA, PM | `core` | Safe staged set, validated commit readiness, conventional commit message, and post-commit traceability |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Dev.
-- **Supporting:** QA, BA, PM.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

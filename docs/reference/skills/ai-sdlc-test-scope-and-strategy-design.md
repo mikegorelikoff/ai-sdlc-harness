@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-test-scope-and-strategy-de
 
 # `ai-sdlc-test-scope-and-strategy-design`
 
-Use when requirements are testable enough and you need to define QA scope, coverage priorities, test strategy, suite intent, test data needs, environment dependencies, and risk-based execution focus. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | QA strategy | QA | BA, PM, Dev Lead | `core` | QA scope, coverage priorities, suite strategy, data needs, and risk-based execution plan |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** QA.
-- **Supporting:** BA, PM, Dev Lead.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

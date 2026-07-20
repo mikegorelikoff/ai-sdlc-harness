@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-evidence-council, includin
 
 # `ai-sdlc-evidence-council`
 
-Optional AI SDLC evidence-council workflow. Use when an AI assistant needs to review a high-impact topic through several explicit perspectives, orchestrate simulated lenses or truly independent reviewer executions, and synthesize evidence-backed agreements, conflicts, proposals, owners, and unresolved questions without allowing panel members to rewrite authoritative artifacts. Supports `--quick-flow` for labeled simulated review and `--full-flow` for stricter panel and evidence coverage.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Cross-lifecycle high-impact review | Delivery, Architecture, QA, Dev, BA | PM, UX, Research, Security | `evidence-council` | `evidence-council.md` and `_ai_sdlc/evidence-council.toon` |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Delivery, Architecture, QA, Dev, BA.
-- **Supporting:** PM, UX, Research, Security.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

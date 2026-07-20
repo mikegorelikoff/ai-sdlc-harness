@@ -9,14 +9,13 @@ Onboarding is the bridge between understanding the harness and using it on real
 work. It assumes you have read the [Foundations](../foundations/index.md), have a
 Git repository, and can use an AI agent that supports installed skills.
 
-## Recommended path
+## Choose the next step
 
-1. [Install the harness](../how-to/install.md) into a low-risk consumer project.
-2. Complete [Your first 30 minutes](first-30-minutes.md).
-3. Follow [Ship a first feature](../tutorials/first-feature.md).
-4. Choose your [role-based path](role-paths.md).
-5. Use the [workflow map](../reference/workflow-map.md) to choose a second path.
-6. Look up exact behavior in the [skill catalog](../reference/skills.md).
+- First session: follow the single canonical sequence on [Start here](../start.md),
+  which includes [Your first 30 minutes](first-30-minutes.md).
+- Known responsibility: open [Skills by role](../reference/skills-by-role.md).
+- Known capability or contract: go directly to [Reference](../reference/index.md).
+- Team evaluation: use [Evaluate and adopt](../adoption/index.md).
 
 ## What onboarding should leave behind
 
@@ -31,6 +30,5 @@ After the first session you should have:
 
 If any of those is missing, stop and diagnose before expanding scope.
 
-Team evaluators should use the separate [adoption path](../adoption/index.md),
-which defines governance, pilot evidence, thresholds, rollback, and a scale or
-stop decision.
+The onboarding pages do not repeat the installation and tutorial sequence;
+that sequence stays on Start so updates have one canonical home.

@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-approvals-sandbox, includi
 
 # `ai-sdlc-approvals-sandbox`
 
-AI SDLC approvals, sandbox, and command rule workflow. Use when an AI assistant needs to decide whether to request escalated permissions, explain sandbox failures, propose prefix_rule approvals, avoid unsafe command patterns, or document why a command was or was not rerun outside the sandbox. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Sandbox escalation decision | Dev | QA | `core` | Sandbox escalation decision record with prefix_rule guidance and residual risk |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Dev.
-- **Supporting:** QA.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

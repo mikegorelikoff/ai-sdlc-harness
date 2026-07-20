@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-qa, including inputs, auth
 
 # `ai-sdlc-qa`
 
-AI SDLC QA workflow. Use when an AI assistant is asked for QA planning, acceptance validation, regression scope, exploratory checks, smoke tests, release verification, or change-focused manual validation evidence. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | QA planning and refinement | QA | BA, Dev, PM | `core` | QA acceptance plan, regression targets, manual checks, validation evidence, and residual risks |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** QA.
-- **Supporting:** BA, Dev, PM.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

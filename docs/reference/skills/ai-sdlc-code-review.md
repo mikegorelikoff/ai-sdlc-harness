@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-code-review, including inp
 
 # `ai-sdlc-code-review`
 
-AI SDLC code review workflow. Use when an AI assistant is asked to review a diff, PR, branch, commit, staged changes, or completed implementation against SDD requirements, tests, API contracts, security, and scope discipline. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Code review quality gate | Dev | QA, BA, Security | `core` | Findings-first review with severity, path, impact, fix, validation gaps, and residual risk |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Dev.
-- **Supporting:** QA, BA, Security.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

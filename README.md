@@ -169,7 +169,7 @@ at that stage and reuse valid upstream evidence.
 
 - **Learn and use:** [Foundations](docs/foundations/index.md) →
   [Onboarding](docs/onboarding/index.md) →
-  [Role-based paths](docs/onboarding/role-paths.md) →
+  [Skills by role](docs/reference/skills-by-role.md) →
   [Tutorials](docs/tutorials/index.md).
 - **Evaluate and adopt:** [fit decision](docs/adoption/index.md) →
   [bounded pilot](docs/adoption/pilot.md) →

@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-shared-runtime, including 
 
 # `ai-sdlc-shared-runtime`
 
-Portable AI SDLC shared-helper runtime. Use when an AI assistant installs, verifies, diagnoses, or repairs project-scoped AI SDLC skills whose deterministic scripts depend on shared state, artifact, context, path, TOON, migration, or index modules. This is an installation dependency, not a lifecycle entry point.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Installation and cross-lifecycle runtime support | agent runners, platform engineers, harness maintainers | AI assistants and repository owners diagnosing install failures | `core` | Read-only runtime verification or an explicit installation blocker |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** agent runners, platform engineers, harness maintainers.
-- **Supporting:** AI assistants and repository owners diagnosing install failures.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-qa-traceability-and-readin
 
 # `ai-sdlc-qa-traceability-and-readiness-review`
 
-Use after QA strategy and test-case synthesis to build the requirements-to-test traceability matrix, identify missing coverage and test blockers, and score readiness for QA execution. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | QA execution readiness gate | QA | BA, PM, Delivery, Dev | `core` | Requirements-to-test traceability matrix, coverage gaps, blockers, and readiness score |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** QA.
-- **Supporting:** BA, PM, Delivery, Dev.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

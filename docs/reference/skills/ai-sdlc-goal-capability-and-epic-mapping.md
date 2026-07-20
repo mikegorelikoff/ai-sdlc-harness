@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-goal-capability-and-epic-m
 
 # `ai-sdlc-goal-capability-and-epic-mapping`
 
-Use when planning inputs are clear enough and you need to map business goals, roles, capabilities, and outcome-oriented epics before detailed backlog decomposition. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Planning architecture | PM | BA, Delivery | `core` | Goal-to-capability map and outcome-oriented epics |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** PM.
-- **Supporting:** BA, Delivery.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

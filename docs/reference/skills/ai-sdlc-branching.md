@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-branching, including input
 
 # `ai-sdlc-branching`
 
-AI SDLC Git-flow branching workflow. Use when an AI assistant starts implementation work, needs to create or verify a task branch, checks branch/spec alignment, or prepares to hand off a completed user-visible task to validation and commit prep. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Git workflow setup | Dev | PM, BA | `core` | Branching decision, branch name, base branch, dirty-tree assessment, and next handoff |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Dev.
-- **Supporting:** PM, BA.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

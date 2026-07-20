@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-host-adapter, including in
 
 # `ai-sdlc-host-adapter`
 
-AI SDLC host adapter and capability negotiation workflow. Use when an AI assistant needs to validate a host adapter manifest, map portable workflow operations to host-native operations, negotiate capabilities and limits, select deterministic semantic-preserving fallbacks, or explain why a host cannot run a plan. Supports `--quick-flow` and `--full-flow`.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Portable execution handoff | Dev, Delivery, Architecture | Security, QA | `core` | `_ai_sdlc/adapters/<adapter-id>/negotiation.{toon,json,md}` |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Dev, Delivery, Architecture.
-- **Supporting:** Security, QA.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-test-case-and-suite-synthe
 
 # `ai-sdlc-test-case-and-suite-synthesis`
 
-Use when QA scope and strategy are defined and you need to generate detailed, executable test cases plus smoke, regression, and user acceptance suites tied to requirements, roles, workflows, and risks. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Detailed test design | QA | BA, Dev, PM | `core` | Executable test cases plus smoke, regression, and UAT suites |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** QA.
-- **Supporting:** BA, Dev, PM.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

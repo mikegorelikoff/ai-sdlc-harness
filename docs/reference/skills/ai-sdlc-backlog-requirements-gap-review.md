@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-backlog-requirements-gap-r
 
 # `ai-sdlc-backlog-requirements-gap-review`
 
-Use when PRFAQ, BRD, PRD, product brief, workflow, or equivalent initiative artifacts exist and you need to review them for planning gaps, unclear scope, weak priorities, missing actors, and backlog-blocking ambiguity before decomposing work. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Pre-backlog planning review | BA | PM, Delivery, QA | `core` | Backlog-blocking gaps, assumptions, open questions, and readiness decision |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** BA.
-- **Supporting:** PM, Delivery, QA.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

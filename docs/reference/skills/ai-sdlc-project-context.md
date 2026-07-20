@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-project-context, including
 
 # `ai-sdlc-project-context`
 
-AI SDLC evidence-backed project context and bounded task-pack workflow. Use when an AI assistant needs to onboard to a repository, detect stack and commands, map ownership and test topology, check context drift, conditionally select task sources, exclude secrets, or allocate a freshness-aware context pack within an explicit token budget. Supports `--quick-flow` for focused evidence and `--full-flow` for stricter repository coverage.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Cross-feature repository context | Dev | QA, BA, Delivery, AI assistants | `core` | `project-context.md`, `_ai_sdlc/project-context.toon`, and optional topology and task-pack records below `_ai_sdlc/context/` |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Dev.
-- **Supporting:** QA, BA, Delivery, AI assistants.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

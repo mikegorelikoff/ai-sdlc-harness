@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-architecture, including in
 
 # `ai-sdlc-architecture`
 
-Optional AI SDLC architecture workflow. Use when an AI assistant needs to define system boundaries, components, interfaces, architectural constraints, alternatives, decisions, tradeoffs, risks, or validation for a feature and produce routed human and machine artifacts linked to requirements and durable decisions. Supports `--quick-flow` for focused design and `--full-flow` for strict decision, risk, and validation coverage.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Design and implementation planning | Architecture, Dev | QA, Security, Delivery, BA | `architecture` | `architecture.md` and `_ai_sdlc/architecture.toon` |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Architecture, Dev.
-- **Supporting:** QA, Security, Delivery, BA.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

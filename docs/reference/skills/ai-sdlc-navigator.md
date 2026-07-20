@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-navigator, including input
 
 # `ai-sdlc-navigator`
 
-AI SDLC context-aware navigation workflow. Use when an AI assistant needs to determine what to do next, select the right installed skill, start or resume a feature, explain blockers, inspect available capabilities, or provide evidence-backed required and optional next actions from repository state. Supports `--quick-flow` for compact guidance and `--full-flow` for stricter context verification.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Cross-lifecycle navigation | PM, BA, QA, Delivery, Dev | AI assistants, agent runners, workflow maintainers | `core` | Read-only Markdown or TOON navigation report |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** PM, BA, QA, Delivery, Dev.
-- **Supporting:** AI assistants, agent runners, workflow maintainers.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

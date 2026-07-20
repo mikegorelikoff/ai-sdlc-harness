@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-working-backwards-discover
 
 # `ai-sdlc-working-backwards-discovery`
 
-Use when a user needs a staged working-backwards interview to clarify the customer problem, audience, value proposition, business case, MVP, requirements, risks, and success metrics before any PRFAQ is written. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Discovery / initiative framing | PM | BA, Delivery | `core` | Structured discovery notes, clarified assumptions, open questions, and PRFAQ-ready facts |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** PM.
-- **Supporting:** BA, Delivery.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

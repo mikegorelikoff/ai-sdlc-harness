@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-change-set, including inpu
 
 # `ai-sdlc-change-set`
 
-AI SDLC controlled change-workspace and specification-delta workflow. Use when an AI assistant needs to create or validate an isolated proposal workspace, author and validate requirement deltas, preview canonical changes, or apply and archive an explicitly approved change with rollback evidence. Supports `--quick-flow` for assumption-driven drafts and `--full-flow` for strict owner, target, evidence, and authority checks.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Controlled change intake | Delivery, Dev, BA | PM, QA, Architecture, Security | `core` | `changes/<change-id>/` with proposal, design, tasks, delta and evidence indexes, lifecycle records, preview, approval, and recovery evidence |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Delivery, Dev, BA.
-- **Supporting:** PM, QA, Architecture, Security.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

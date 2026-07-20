@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-delivery-handoff-review, i
 
 # `ai-sdlc-delivery-handoff-review`
 
-Use after story and spec synthesis to perform a strict delivery handoff review, identify remaining gaps or contradictions, and score readiness for engineering and cross-functional execution. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Engineering handoff quality gate | Delivery | PM, BA, QA, Dev Lead | `core` | Handoff readiness score, remaining blockers, contradictions, and execution risks |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Delivery.
-- **Supporting:** PM, BA, QA, Dev Lead.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

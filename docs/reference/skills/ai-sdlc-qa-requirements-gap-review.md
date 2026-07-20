@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-qa-requirements-gap-review
 
 # `ai-sdlc-qa-requirements-gap-review`
 
-Use when stories, specs, BRDs, APIs, workflows, or equivalent delivery artifacts exist and you need to review them for testability, missing business rules, unclear behavior, scope ambiguity, and QA blocking gaps before generating tests. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Pre-QA requirements review | QA | BA, PM, Dev | `core` | QA-blocking gaps, missing business rules, ambiguity, and testability risks |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** QA.
-- **Supporting:** BA, PM, Dev.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

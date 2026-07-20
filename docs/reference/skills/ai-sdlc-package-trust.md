@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-package-trust, including i
 
 # `ai-sdlc-package-trust`
 
-AI SDLC package trust and privacy-preserving local metrics workflow. Use when an AI assistant needs to verify package origin, file integrity, harness compatibility, declared capabilities, provenance evidence, or generate reproducible aggregate run, retry, budget, coverage, and freshness metrics without collecting source, prompts, commands, or diffs. Supports `--quick-flow` and `--full-flow`.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Package trust and local observability | Security, Delivery, Release | Dev, Architecture | `core` | `_ai_sdlc/trust/<package-id>/decision.{toon,json,md}` or `_ai_sdlc/metrics/local.{toon,json,md}` |
@@ -106,8 +104,7 @@ tasks:
 
 ## Who is involved
 
-- **Accountable/primary:** Security, Delivery, Release.
-- **Supporting:** Dev, Architecture.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

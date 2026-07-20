@@ -194,6 +194,222 @@ SKILL_SELECTION_BOUNDARIES: dict[str, tuple[str, ...]] = {
 }
 
 
+# Public discovery is intentionally many-to-many. A capability keeps one
+# canonical guide while appearing in every role view where it is a useful
+# starting point or a normal cross-role handoff.
+ROLE_SKILL_GROUPS: dict[str, dict[str, object]] = {
+    "QA": {
+        "boundary": "Own testability, coverage strategy, acceptance evidence, and QA readiness; product and release risk acceptance stays with the named human owner.",
+        "start": (
+            "ai-sdlc-qa", "ai-sdlc-qa-requirements-gap-review",
+            "ai-sdlc-test-scope-and-strategy-design", "ai-sdlc-test-cases",
+            "ai-sdlc-test-case-and-suite-synthesis",
+            "ai-sdlc-qa-traceability-and-readiness-review", "ai-sdlc-validation",
+        ),
+        "shared": (
+            "ai-sdlc-navigator", "ai-sdlc-requirements-readiness-review",
+            "ai-sdlc-delivery-handoff-review", "ai-sdlc-quality-lenses",
+            "ai-sdlc-change-impact", "ai-sdlc-delivery-graph",
+            "ai-sdlc-evidence-council", "ai-sdlc-security-testing",
+            "ai-sdlc-sdd", "ai-sdlc-code-review", "ai-sdlc-policy",
+        ),
+    },
+    "BA": {
+        "boundary": "Own actors, workflows, business rules, assumptions, and acceptance logic; product value and implementation design remain with their accountable roles.",
+        "start": (
+            "ai-sdlc-ba", "ai-sdlc-delivery-package-gap-review",
+            "ai-sdlc-requirements-readiness-review",
+            "ai-sdlc-backlog-requirements-gap-review",
+            "ai-sdlc-user-story-decomposition", "ai-sdlc-delivery-spec-synthesis",
+        ),
+        "shared": (
+            "ai-sdlc-navigator", "ai-sdlc-working-backwards-discovery",
+            "ai-sdlc-prfaq-package-synthesis",
+            "ai-sdlc-goal-capability-and-epic-mapping",
+            "ai-sdlc-backlog-decomposition-and-task-planning",
+            "ai-sdlc-release-slicing-and-backlog-readiness-review",
+            "ai-sdlc-research", "ai-sdlc-ux",
+            "ai-sdlc-qa-requirements-gap-review",
+            "ai-sdlc-delivery-handoff-review", "ai-sdlc-change-impact",
+            "ai-sdlc-delivery-graph", "ai-sdlc-quality-lenses",
+        ),
+    },
+    "PM": {
+        "boundary": "Own customer problem, value, outcomes, scope, priority, and product trade-offs; agents may synthesize evidence but never accept these decisions.",
+        "start": (
+            "ai-sdlc-navigator", "ai-sdlc-working-backwards-discovery",
+            "ai-sdlc-prfaq-package-synthesis",
+            "ai-sdlc-goal-capability-and-epic-mapping",
+            "ai-sdlc-backlog-decomposition-and-task-planning",
+            "ai-sdlc-release-slicing-and-backlog-readiness-review",
+        ),
+        "shared": (
+            "ai-sdlc-research", "ai-sdlc-ba",
+            "ai-sdlc-delivery-package-gap-review",
+            "ai-sdlc-requirements-readiness-review",
+            "ai-sdlc-backlog-requirements-gap-review",
+            "ai-sdlc-user-story-decomposition", "ai-sdlc-ux",
+            "ai-sdlc-qa-requirements-gap-review",
+            "ai-sdlc-delivery-handoff-review", "ai-sdlc-change-impact",
+            "ai-sdlc-delivery-graph", "ai-sdlc-evidence-council",
+            "ai-sdlc-quality-lenses", "ai-sdlc-retrospective", "ai-sdlc-policy",
+        ),
+    },
+    "PO": {
+        "boundary": "Own day-to-day backlog readiness, acceptance clarity, sequencing, and product handoffs within delegated product authority.",
+        "start": (
+            "ai-sdlc-navigator", "ai-sdlc-backlog-requirements-gap-review",
+            "ai-sdlc-backlog-decomposition-and-task-planning",
+            "ai-sdlc-user-story-decomposition",
+            "ai-sdlc-requirements-readiness-review",
+            "ai-sdlc-release-slicing-and-backlog-readiness-review",
+        ),
+        "shared": (
+            "ai-sdlc-working-backwards-discovery",
+            "ai-sdlc-prfaq-package-synthesis", "ai-sdlc-ba",
+            "ai-sdlc-delivery-spec-synthesis",
+            "ai-sdlc-qa-requirements-gap-review",
+            "ai-sdlc-test-scope-and-strategy-design",
+            "ai-sdlc-qa-traceability-and-readiness-review",
+            "ai-sdlc-delivery-handoff-review", "ai-sdlc-change-impact",
+            "ai-sdlc-delivery-graph", "ai-sdlc-retrospective",
+            "ai-sdlc-quality-lenses",
+        ),
+    },
+    "Dev": {
+        "boundary": "Own technical design, implementation correctness, testable task boundaries, review resolution, and engineering risk recommendations.",
+        "start": (
+            "ai-sdlc-navigator", "ai-sdlc-project-context", "ai-sdlc-branching",
+            "ai-sdlc-sdd", "ai-sdlc-test-cases", "ai-sdlc-validation",
+            "ai-sdlc-code-review", "ai-sdlc-commit-prep",
+        ),
+        "shared": (
+            "ai-sdlc-conventional-commit", "ai-sdlc-architecture",
+            "ai-sdlc-approvals-sandbox", "ai-sdlc-security-testing",
+            "ai-sdlc-change-set", "ai-sdlc-change-impact",
+            "ai-sdlc-delivery-graph", "ai-sdlc-evidence-council",
+            "ai-sdlc-quality-lenses", "ai-sdlc-runtime", "ai-sdlc-workflow",
+            "ai-sdlc-host-adapter", "ai-sdlc-doctor", "ai-sdlc-package-trust",
+            "ai-sdlc-policy", "ai-sdlc-shared-runtime", "ai-sdlc-retrospective",
+            "ai-sdlc-research", "ai-sdlc-ux", "ai-sdlc-qa",
+            "ai-sdlc-delivery-spec-synthesis", "ai-sdlc-delivery-handoff-review",
+        ),
+    },
+    "VP": {
+        "boundary": "Own fit, accountable operating model, investment and risk tolerance, pilot scope, and stop, hold, or scale decisions.",
+        "start": (
+            "ai-sdlc-navigator", "ai-sdlc-delivery-graph",
+            "ai-sdlc-evidence-council", "ai-sdlc-package-trust",
+            "ai-sdlc-policy", "ai-sdlc-retrospective",
+        ),
+        "shared": (
+            "ai-sdlc-working-backwards-discovery",
+            "ai-sdlc-prfaq-package-synthesis",
+            "ai-sdlc-goal-capability-and-epic-mapping",
+            "ai-sdlc-release-slicing-and-backlog-readiness-review",
+            "ai-sdlc-delivery-handoff-review", "ai-sdlc-quality-lenses",
+            "ai-sdlc-doctor", "ai-sdlc-workflow", "ai-sdlc-research",
+            "ai-sdlc-change-impact", "ai-sdlc-host-adapter",
+        ),
+        "leadership": "Review fit, ownership, governance, cost and capacity, pilot evidence, support boundaries, rollout thresholds, and rollback before a scale decision.",
+    },
+    "Head of AI Practice": {
+        "boundary": "Own the enablement system: approved capability portfolio, host/package standards, governance implementation, support model, measurement, and lifecycle stewardship.",
+        "start": (
+            "ai-sdlc-package-trust", "ai-sdlc-policy", "ai-sdlc-host-adapter",
+            "ai-sdlc-doctor", "ai-sdlc-workflow", "ai-sdlc-delivery-graph",
+            "ai-sdlc-evidence-council", "ai-sdlc-quality-lenses",
+            "ai-sdlc-retrospective",
+        ),
+        "shared": (
+            "ai-sdlc-approvals-sandbox", "ai-sdlc-architecture",
+            "ai-sdlc-change-set", "ai-sdlc-change-impact", "ai-sdlc-navigator",
+            "ai-sdlc-project-context", "ai-sdlc-research", "ai-sdlc-runtime",
+            "ai-sdlc-shared-runtime", "ai-sdlc-security-testing",
+            "ai-sdlc-validation",
+        ),
+        "leadership": "Manage capability inventory and bundles, host and package trust, policy and waivers, enablement and support, metrics, rollout cohorts, compatibility, upgrades, and deprecation.",
+    },
+}
+
+
+# Selection hints are deliberately shorter than the canonical guide. They answer
+# only the routing questions that role metadata cannot: what evidence should
+# already exist and who normally consumes the result next.
+TASK_SELECTION_HINTS: dict[str, tuple[str, str, str]] = {
+    "ai-sdlc-qa": ("Plan acceptance or regression work", "Accepted behavior and changed surface", "QA gap review or test strategy"),
+    "ai-sdlc-qa-requirements-gap-review": ("Find testability blockers", "Stories, specification, or QA scope", "Requirements owner or test strategy"),
+    "ai-sdlc-test-scope-and-strategy-design": ("Choose coverage and execution priorities", "Testable requirements and risk context", "Test-case design"),
+    "ai-sdlc-test-cases": ("Derive verifiable implementation scenarios", "Requirement IDs and expected outcomes", "Automated tests or suite synthesis"),
+    "ai-sdlc-test-case-and-suite-synthesis": ("Assemble executable suites", "Detailed cases and QA strategy", "QA readiness review"),
+    "ai-sdlc-qa-traceability-and-readiness-review": ("Decide whether QA can execute", "Requirements, cases, suites, data, and environment", "QA execution or earliest missing producer"),
+    "ai-sdlc-validation": ("Run focused implementation checks", "Changed files, expected behavior, and available commands", "Code review or release handoff"),
+    "ai-sdlc-ba": ("Clarify actors, rules, and behavior", "Feature request or known business ambiguity", "Gap review or story decomposition"),
+    "ai-sdlc-delivery-package-gap-review": ("Check discovery-package completeness", "Discovery notes or PRFAQ package", "Story decomposition or missing discovery producer"),
+    "ai-sdlc-requirements-readiness-review": ("Gate requirements before planning", "PRFAQ/BRD package and resolved delivery gaps", "Goal/epic mapping or requirements owner"),
+    "ai-sdlc-backlog-requirements-gap-review": ("Check planning inputs before backlog work", "Goals, roles, capabilities, and epics", "Backlog decomposition or planning owner"),
+    "ai-sdlc-user-story-decomposition": ("Turn clarified scope into stories", "Goals/epics and resolved delivery gaps", "Delivery specification"),
+    "ai-sdlc-delivery-spec-synthesis": ("Create the engineering behavior contract", "Clarified stories, rules, and scenarios", "QA strategy and delivery handoff"),
+    "ai-sdlc-navigator": ("Find the smallest safe next action", "Request plus current repository control records", "One owning skill"),
+    "ai-sdlc-working-backwards-discovery": ("Frame an unclear customer problem", "Audience, observed problem, and available evidence", "PRFAQ synthesis"),
+    "ai-sdlc-prfaq-package-synthesis": ("Create a decision-ready product package", "Validated discovery notes", "Requirements readiness"),
+    "ai-sdlc-goal-capability-and-epic-mapping": ("Map outcomes to delivery structure", "Ready requirements package", "Backlog gap review"),
+    "ai-sdlc-backlog-decomposition-and-task-planning": ("Create delivery backlog and stories", "Ready goals, capabilities, and epics", "Release slicing"),
+    "ai-sdlc-release-slicing-and-backlog-readiness-review": ("Define MVP/release sequence", "Decomposed backlog and dependencies", "Delivery handoff or planning approval"),
+    "ai-sdlc-project-context": ("Ground work in repository evidence", "Repository sources and one task intent", "Navigator or SDD"),
+    "ai-sdlc-branching": ("Create or verify the task branch", "Accepted task/spec and Git state", "SDD or implementation"),
+    "ai-sdlc-sdd": ("Specify a behavior or architecture change", "Clear behavior and affected system", "Bounded implementation tasks"),
+    "ai-sdlc-code-review": ("Review a completed change", "Diff plus accepted contract and tests", "Finding resolution or commit prep"),
+    "ai-sdlc-commit-prep": ("Prepare an auditable atomic commit", "Completed scope, validation, and review evidence", "Human commit/release workflow"),
+    "ai-sdlc-delivery-graph": ("Inspect lifecycle coverage and dependencies", "Current indexed lifecycle artifacts", "Missing producer or governance review"),
+    "ai-sdlc-evidence-council": ("Combine independent high-impact reviews", "Named question and complete source evidence", "Accountable human decision"),
+    "ai-sdlc-package-trust": ("Review package trust or local metrics", "One explicitly selected branch and its inputs", "Trust or privacy reviewer"),
+    "ai-sdlc-policy": ("Evaluate an action against layered policy", "Action, resolved policy layers, and provenance", "Allow/deny/waiver owner"),
+    "ai-sdlc-retrospective": ("Learn from a completed delivery run", "Complete run evidence and outcomes", "Improvement proposal or policy/change set"),
+    "ai-sdlc-host-adapter": ("Verify workflow portability to a host", "Validated workflow capability requirements", "Host approval or safe fallback"),
+    "ai-sdlc-doctor": ("Diagnose install or upgrade health", "Installed package and repository state", "Authorized update or support owner"),
+    "ai-sdlc-workflow": ("Plan a reusable controlled execution", "Declared tasks, gates, dependencies, and hooks", "Runtime execution"),
+    "ai-sdlc-quality-lenses": ("Apply a focused cross-lifecycle review", "Existing authoritative artifact and selected lens", "Artifact owner or accountable gate"),
+}
+
+
+PO_START_RELATIONSHIPS = {
+    "ai-sdlc-navigator": "Use to route work",
+    "ai-sdlc-backlog-requirements-gap-review": "Collaborate and review",
+    "ai-sdlc-backlog-decomposition-and-task-planning": "Prioritize and review",
+    "ai-sdlc-user-story-decomposition": "Collaborate and accept clarity",
+    "ai-sdlc-requirements-readiness-review": "Review and resolve product gaps",
+    "ai-sdlc-release-slicing-and-backlog-readiness-review": "Own sequencing within delegation",
+}
+
+
+def start_relationship(role: str, skill_id: str) -> str:
+    """Describe use without implying exclusive ownership or approval."""
+    if role == "PO":
+        return PO_START_RELATIONSHIPS[skill_id]
+    return {
+        "QA": "Own or run QA work",
+        "BA": "Own or produce analysis",
+        "PM": "Own product decision inputs",
+        "Dev": "Own or execute engineering work",
+        "VP": "Review evidence and decide",
+        "Head of AI Practice": "Govern or enable",
+    }[role]
+
+
+def shared_skill_group(skill_id: str) -> tuple[str, str]:
+    """Return a compact discovery group and relationship for a shared skill."""
+    if skill_id in {"ai-sdlc-navigator", "ai-sdlc-project-context", "ai-sdlc-research", "ai-sdlc-working-backwards-discovery"}:
+        return "Entry and context", "Supply intent or evidence"
+    if skill_id in {"ai-sdlc-change-impact", "ai-sdlc-change-set", "ai-sdlc-delivery-graph", "ai-sdlc-delivery-handoff-review", "ai-sdlc-retrospective", "ai-sdlc-commit-prep", "ai-sdlc-conventional-commit"}:
+        return "Handoff and recovery", "Produce, consume, or reopen evidence"
+    if skill_id in {"ai-sdlc-policy", "ai-sdlc-package-trust", "ai-sdlc-approvals-sandbox", "ai-sdlc-host-adapter", "ai-sdlc-doctor", "ai-sdlc-workflow", "ai-sdlc-runtime", "ai-sdlc-shared-runtime"}:
+        return "Governance and operations", "Consult or apply within role authority"
+    if skill_id in {"ai-sdlc-quality-lenses", "ai-sdlc-evidence-council", "ai-sdlc-code-review", "ai-sdlc-security-testing", "ai-sdlc-validation", "ai-sdlc-qa-traceability-and-readiness-review", "ai-sdlc-requirements-readiness-review", "ai-sdlc-qa-requirements-gap-review"}:
+        return "Review and assurance", "Contribute risk or review evidence"
+    return "Planning and delivery", "Collaborate or resolve inputs"
+
+
 def research_read_contract() -> str:
     """Return the research-specific evidence and freshness contract."""
     return """### Required reads
@@ -706,8 +922,6 @@ def render_skill_guide(
         "",
         f"# `{skill_id}`",
         "",
-        metadata["description"],
-        "",
         "| Lifecycle position | Primary owner | Supporting roles | Module | Output |",
         "| --- | --- | --- | --- | --- |",
         f"| {markdown_cell(card['SDLC stage'])} | {markdown_cell(card['Primary audience'])} | {markdown_cell(card['Supporting audience'])} | `{modules}` | {markdown_cell(card['Output'])} |",
@@ -730,8 +944,7 @@ def render_skill_guide(
         "",
         "## Who is involved",
         "",
-        f"- **Accountable/primary:** {card['Primary audience']}.",
-        f"- **Supporting:** {card['Supporting audience']}.",
+        "The summary table above names the primary and supporting human roles for this capability.",
         "- **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.",
         "",
         "## Before you start",
@@ -1005,6 +1218,114 @@ def validate_coverage_manifest(
     return errors
 
 
+def roles_for_skill(skill_id: str) -> list[str]:
+    """Return every public role view that includes one canonical skill."""
+    return [
+        role
+        for role, group in ROLE_SKILL_GROUPS.items()
+        if skill_id in (*group["start"], *group["shared"])
+    ]
+
+
+def validate_role_skill_groups(paths: list[Path]) -> list[str]:
+    """Close the many-to-many role mapping over the installed inventory."""
+    required_roles = {"QA", "BA", "PM", "PO", "Dev", "VP", "Head of AI Practice"}
+    actual_skills = {skill_frontmatter(path)["name"] for path in paths}
+    mapped_skills: set[str] = set()
+    errors: list[str] = []
+    if set(ROLE_SKILL_GROUPS) != required_roles:
+        errors.append("role discovery must define exactly QA, BA, PM, PO, Dev, VP, and Head of AI Practice")
+    for role, group in ROLE_SKILL_GROUPS.items():
+        start = tuple(group.get("start", ()))
+        shared = tuple(group.get("shared", ()))
+        if not start:
+            errors.append(f"role discovery has no start-here skills for {role}")
+        if len(start + shared) != len(set(start + shared)):
+            errors.append(f"role discovery repeats a skill within {role}")
+        unknown = sorted(set(start + shared) - actual_skills)
+        errors.extend(f"role discovery maps unknown skill {skill_id} for {role}" for skill_id in unknown)
+        mapped_skills.update(start + shared)
+        for skill_id in start:
+            if skill_id not in TASK_SELECTION_HINTS:
+                errors.append(f"role discovery has no task-selection hint for {skill_id}")
+        if role in {"VP", "Head of AI Practice"} and not group.get("leadership"):
+            errors.append(f"role discovery must define leadership scope for {role}")
+    errors.extend(
+        f"role discovery leaves installed skill unmapped: {skill_id}"
+        for skill_id in sorted(actual_skills - mapped_skills)
+    )
+    return errors
+
+
+def render_skills_by_role() -> str:
+    """Render role-first task and relationship links to canonical skill guides."""
+    lines = [
+        "---",
+        "title: Skills by role",
+        "description: Choose AI SDLC capabilities by QA, BA, PM, PO, Dev, VP, or Head of AI Practice responsibility.",
+        "---",
+        "",
+        "# Skills by role",
+        "",
+        "Use this page when you know your responsibility but not the capability name. Each skill has one canonical guide and can appear under several roles. **Choose by task** lists common entry points for that role's work; **Shared and handoff** means the role contributes, reviews, or consumes evidence without implying ownership.",
+        "",
+        "Role labels are discovery aids, not an authority model. Local policy and named decision owners still control repository permissions and protected decisions.",
+        "",
+        "| Role | Jump to |",
+        "| --- | --- |",
+    ]
+    for role in ROLE_SKILL_GROUPS:
+        lines.append(f"| {role} | [{role} skills](#{re.sub(r'[^a-z0-9]+', '-', role.lower()).strip('-')}) |")
+    lines.append("")
+    for role, group in ROLE_SKILL_GROUPS.items():
+        lines.extend(
+            [
+                f"## {role}",
+                "",
+                str(group["boundary"]),
+                "",
+                "### Choose by task",
+                "",
+                "| Choose when… | Role relationship | Start with | Required input | Next handoff |",
+                "| --- | --- | --- | --- | --- |",
+            ]
+        )
+        for skill_id in group["start"]:
+            choose_when, required_input, next_handoff = TASK_SELECTION_HINTS[skill_id]
+            lines.append(
+                f"| {choose_when} | {start_relationship(role, skill_id)} | [`{skill_id}`](skills/{skill_id}.md) | {required_input} | {next_handoff} |"
+            )
+        lines.extend(
+            [
+                "",
+                "### Shared and handoff skills",
+                "",
+                "| Group | Role relationship | Skill |",
+                "| --- | --- | --- |",
+            ]
+        )
+        grouped = sorted(
+            ((shared_skill_group(skill_id), skill_id) for skill_id in group["shared"]),
+            key=lambda item: (item[0][0], item[1]),
+        )
+        for (category, relationship), skill_id in grouped:
+            lines.append(f"| {category} | {relationship} | [`{skill_id}`](skills/{skill_id}.md) |")
+        if "leadership" in group:
+            lines.extend(["", "### Leadership scope", "", str(group["leadership"])])
+        lines.extend(["", "[Return to all roles](#skills-by-role)", ""])
+    lines.extend(
+        [
+            "## When the role is shared",
+            "",
+            "Use the relationship shown here to find the guide, then use the project's RACI to identify who supplies inputs, who reviews, and who approves. Do not copy a guide into a role-specific page or let overlap imply authority.",
+            "",
+            "Need an alphabetical lookup? Use the [complete skill catalog](skills.md). Need lifecycle order? Use the [workflow map](workflow-map.md).",
+            "",
+        ]
+    )
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def render_skills(
     modules: list[dict[str, object]],
     scripts: list[ScriptRecord],
@@ -1014,15 +1335,15 @@ def render_skills(
     lines = [
         "---",
         "title: Skill catalog",
-        "description: Every installed AI SDLC capability with a local human-facing guide, lifecycle position, module, outputs, and helper count.",
+        "description: Compact alphabetical inventory of every installed AI SDLC capability, its role views, lifecycle position, module, output, and canonical guide.",
         "---",
         "",
         "# Skill catalog",
         "",
-        "This generated catalog is the public discovery surface for every installed capability. Each guide follows the same operating shape, while the linked `SKILL.md` remains execution authority.",
+        "This compact alphabetical inventory links every installed capability to its canonical guide. If you know your responsibility rather than the skill name, start with [Skills by role](skills-by-role.md).",
         "",
-        '<div class="grid cards" markdown>',
-        "",
+        "| Skill | Roles | Lifecycle position | Module | Output |",
+        "| --- | --- | --- | --- | --- |",
     ]
     for path in skill_sources():
         text = path.read_text(encoding="utf-8")
@@ -1030,26 +1351,15 @@ def render_skills(
         card = skill_card(text, path)
         skill_id = values["name"]
         module_names = " + ".join(sorted(owners.get(skill_id, []))) or "unregistered"
-        helper_count = len([record for record in scripts if record.owner == skill_id])
-        lines.extend(
-            [
-                f"-   **`{skill_id}`**",
-                "",
-                f"    `{module_names}` · {card['SDLC stage']} · {helper_count} package helper(s)",
-                "",
-                f"    {card['Purpose']}",
-                "",
-                f"    **Output:** {card['Output']}",
-                "",
-                f"    [Open the complete guide →](skills/{skill_id}.md)",
-                "",
-            ]
+        role_names = ", ".join(roles_for_skill(skill_id))
+        lines.append(
+            f"| [`{skill_id}`](skills/{skill_id}.md) | {role_names} | "
+            f"{markdown_cell(card['SDLC stage'])} | `{module_names}` | {markdown_cell(card['Output'])} |"
         )
     lines.extend(
         [
-            "</div>",
             "",
-            "Need an executable helper rather than a lifecycle guide? Use the [complete script reference](scripts.md).",
+            "Role labels are discovery aids, not exclusive ownership. A skill can support several roles while retaining one source contract and one guide. Need an executable helper instead? Use the [complete script reference](scripts.md).",
             "",
         ]
     )
@@ -1225,6 +1535,7 @@ def generated_outputs() -> dict[Path, str]:
     records = [script_record(path) for path in script_sources()]
     owners = module_owners(modules)
     outputs = {
+        DOCS / "reference" / "skills-by-role.md": render_skills_by_role(),
         DOCS / "reference" / "skills.md": render_skills(modules, records),
         DOCS / "reference" / "scripts.md": render_scripts(records),
         DOCS / "reference" / "modules.md": render_modules(modules),
@@ -1237,6 +1548,7 @@ def generated_outputs() -> dict[Path, str]:
         )
     paths = skill_sources()
     errors = validate_selection_contract(paths)
+    errors.extend(validate_role_skill_groups(paths))
     for path in paths:
         skill_id = skill_frontmatter(path)["name"]
         errors.extend(

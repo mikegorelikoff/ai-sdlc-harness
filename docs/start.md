@@ -70,3 +70,7 @@ evidence and recommend one required action rather than mutate the project.
 When observable behavior or architecture will change, use SDD before code. When
 the request is only a review, validation, or recovery task, enter directly at
 that stage and reuse valid upstream evidence.
+
+Already know your responsibility? Skip the learning sequence and choose from
+[Skills by role](reference/skills-by-role.md). For an exact capability, schema,
+path, or command, open [Reference](reference/index.md) directly.

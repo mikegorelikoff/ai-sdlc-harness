@@ -9,8 +9,9 @@ Reference pages state the contracts precisely. Use them while configuring automa
 
 <div class="grid cards" markdown>
 
+- [**Skills by role**](skills-by-role.md) — QA, BA, PM, PO, Dev, VP, and Head of AI Practice task entry points and shared handoffs.
+- [**Skill catalog**](skills.md) — compact alphabetical inventory of every installed capability and its canonical guide.
 - [**Workflow map**](workflow-map.md) — lifecycle stages, entry points, and artifacts.
-- [**Skill catalog**](skills.md) — every installed capability and its complete human-facing operating guide.
 - [**Script catalog**](scripts.md) — every helper, runner, packaging utility, and installed runtime mirror with safe starting point and repository effect.
 - [**Module catalog**](modules.md) — optional capability groups and compatibility.
 - [**Artifact routing**](artifact-routing.md) — canonical paths by work type.

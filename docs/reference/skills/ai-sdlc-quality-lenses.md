@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-quality-lenses, including 
 
 # `ai-sdlc-quality-lenses`
 
-AI SDLC reusable quality-lens workflow. Use when an AI assistant needs to challenge a requirement, design, plan, test strategy, change, or delivery artifact through pre-mortem, adversarial, edge-case, stakeholder-conflict, reversibility, abuse-case, operational-failure, or assumption lenses and finalize evidence-backed findings with ownership and traceability. Supports `--quick-flow` for selected high-value lenses and `--full-flow` for the complete applicable registry.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Cross-lifecycle quality review | BA, QA, Dev, Delivery | PM, Architecture, Security | `core` | `quality-lens-report.md` and `_ai_sdlc/quality-lens-report.toon` |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** BA, QA, Dev, Delivery.
-- **Supporting:** PM, Architecture, Security.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

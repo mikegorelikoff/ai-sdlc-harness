@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-ba, including inputs, auth
 
 # `ai-sdlc-ba`
 
-AI SDLC business analysis workflow. Use when an AI assistant needs to frame a feature or change before implementation, derive actors, workflows, business rules, assumptions, acceptance criteria, and richer spec context for requirements and design. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution. Explicit full or end-to-end spec refinement requests continue through the existing 18-stage refinement cascade.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Business analysis and refinement | BA | PM, Dev, QA | `core` | Business context, rules, assumptions, out-of-scope items, acceptance criteria, and open questions |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** BA.
-- **Supporting:** PM, Dev, QA.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

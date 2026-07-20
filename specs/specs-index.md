@@ -2,7 +2,7 @@
 
 - Workspace: `implementation`
 - Root: `specs`
-- Updated: `2026-07-19`
+- Updated: `2026-07-20`
 
 ## Feature Summary
 
@@ -13,6 +13,7 @@
 | 003-mkdocs-material-site | commit_prep | - | quick | 8 | `specs/003-mkdocs-material-site/decision-log.md` | `specs/003-mkdocs-material-site/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;ai-sdlc-validation;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated;validation |
 | 004-executable-delivery-control-plane | sdd | - | quick | 7 | `specs/004-executable-delivery-control-plane/decision-log.md` | `specs/004-executable-delivery-control-plane/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;approved;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases |
 | 005-guided-onboarding-documentation | code_review | - | quick | 7 | `specs/005-guided-onboarding-documentation/decision-log.md` | `specs/005-guided-onboarding-documentation/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;decision-log;design;draft;implementation;plan;qa;requirements;review;tasks;test-cases |
+| 006-role-based-documentation-navigation | commit_prep | - | quick | 7 | `specs/006-role-based-documentation-navigation/decision-log.md` | `specs/006-role-based-documentation-navigation/_ai_sdlc/state.toon` | ai-sdlc;ai-sdlc-sdd;decision-log;design;draft;implementation;plan;qa;requirements;tasks;test-cases;validated |
 
 ## Artifact Index
 
@@ -56,3 +57,10 @@
 | 005-guided-onboarding-documentation | `specs/005-guided-onboarding-documentation/requirements.md` | review | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;AC-011;AC-012;AC-013;AC-014;AC-015;AC-016;AC-017;AC-018;DEC-001 | ai-sdlc;implementation;ai-sdlc-sdd;requirements;review |
 | 005-guided-onboarding-documentation | `specs/005-guided-onboarding-documentation/tasks.md` | review | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;AC-011;AC-012;AC-013;AC-014;AC-015;AC-016;AC-017;AC-018 | ai-sdlc;implementation;ai-sdlc-sdd;tasks;review |
 | 005-guided-onboarding-documentation | `specs/005-guided-onboarding-documentation/test-cases.md` | review | ai-sdlc-sdd | quick | 2026-07-19 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;AC-011;AC-012;AC-013;AC-014;AC-015;AC-016;AC-017;AC-018;TC-001;TC-002;TC-003;TC-004;TC-005;TC-006;TC-007;TC-008;TC-009;TC-010;TC-011;TC-012;TC-013;TC-014;TC-015;TC-016;TC-017;TC-018 | ai-sdlc;implementation;ai-sdlc-sdd;test-cases;review |
+| 006-role-based-documentation-navigation | `specs/006-role-based-documentation-navigation/decision-log.md` | draft | ai-sdlc-sdd | quick | 2026-07-20 | AC-001;AC-003;AC-009;AC-010;DEC-001;DEC-002;TC-001;TC-003;TC-009;TC-010 | ai-sdlc;implementation;ai-sdlc-sdd;decision-log;draft |
+| 006-role-based-documentation-navigation | `specs/006-role-based-documentation-navigation/design.md` | validated | ai-sdlc-sdd | quick | 2026-07-20 | - | ai-sdlc;implementation;ai-sdlc-sdd;design;validated |
+| 006-role-based-documentation-navigation | `specs/006-role-based-documentation-navigation/plan.md` | validated | ai-sdlc-sdd | quick | 2026-07-20 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;TC-001;TC-002;TC-003;TC-004;TC-005;TC-006;TC-007;TC-008;TC-009;TC-010 | ai-sdlc;implementation;ai-sdlc-sdd;plan;validated |
+| 006-role-based-documentation-navigation | `specs/006-role-based-documentation-navigation/qa.md` | validated | ai-sdlc-sdd | quick | 2026-07-20 | AC-001;AC-010;TC-001;TC-010 | ai-sdlc;implementation;ai-sdlc-sdd;qa;validated |
+| 006-role-based-documentation-navigation | `specs/006-role-based-documentation-navigation/requirements.md` | validated | ai-sdlc-sdd | quick | 2026-07-20 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;DEC-001;DEC-002;NFR-001;NFR-002;NFR-003;NFR-004;NFR-005 | ai-sdlc;implementation;ai-sdlc-sdd;requirements;validated |
+| 006-role-based-documentation-navigation | `specs/006-role-based-documentation-navigation/tasks.md` | validated | ai-sdlc-sdd | quick | 2026-07-20 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010 | ai-sdlc;implementation;ai-sdlc-sdd;tasks;validated |
+| 006-role-based-documentation-navigation | `specs/006-role-based-documentation-navigation/test-cases.md` | validated | ai-sdlc-sdd | quick | 2026-07-20 | AC-001;AC-002;AC-003;AC-004;AC-005;AC-006;AC-007;AC-008;AC-009;AC-010;TC-001;TC-002;TC-003;TC-004;TC-005;TC-006;TC-007;TC-008;TC-009;TC-010 | ai-sdlc;implementation;ai-sdlc-sdd;test-cases;validated |

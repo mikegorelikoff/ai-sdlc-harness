@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-change-impact, including i
 
 # `ai-sdlc-change-impact`
 
-AI SDLC change-impact and lifecycle recovery workflow. Use when a requirement, acceptance criterion, decision, API contract, risk assumption, or other traced source changed after downstream artifacts were created and an AI assistant must identify stale artifacts, affected lifecycle stages, and evidence-backed reopen or revalidation actions without silently rewriting authoritative state. Supports `--quick-flow` for focused trace scanning and `--full-flow` for strict state and source-evidence gates.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Cross-lifecycle change recovery | Delivery, Dev, BA, QA | PM, Architecture, Security | `core` | `change-impact.md` and `_ai_sdlc/change-impact.toon` |
@@ -28,8 +26,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Delivery, Dev, BA, QA.
-- **Supporting:** PM, Architecture, Security.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

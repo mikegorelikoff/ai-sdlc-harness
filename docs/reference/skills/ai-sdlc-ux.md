@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-ux, including inputs, auth
 
 # `ai-sdlc-ux`
 
-Optional AI SDLC user-experience workflow. Use when an AI assistant needs to define actors, goals, user journeys, interaction steps, loading/empty/error/success states, recovery behavior, content intent, accessibility requirements, or UX acceptance evidence and route them into traceable human and machine artifacts. Supports `--quick-flow` for a focused journey slice and `--full-flow` for strict state, accessibility, and acceptance coverage.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Discovery, refinement, and design | UX, BA, PM | Dev, QA, Accessibility, Delivery | `ux` | `ux-spec.md` and `_ai_sdlc/ux-spec.toon` |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** UX, BA, PM.
-- **Supporting:** Dev, QA, Accessibility, Delivery.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

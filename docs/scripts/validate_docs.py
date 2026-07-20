@@ -24,7 +24,7 @@ REQUIRED_FILES = {
     "docs/assets/stylesheets/extra.css",
 }
 MODE_MINIMUMS = {"tutorials": 4, "how-to": 13, "explanation": 13, "reference": 10}
-GENERATED_PAGES = {"reference/skills.md", "reference/modules.md"}
+GENERATED_PAGES = {"reference/skills-by-role.md", "reference/skills.md", "reference/modules.md"}
 LEGACY_TOKENS = ("{%", "{{", "relative_url", "jekyll-build-pages", "layout: default")
 FOUNDATION_PAGES = {
     "foundations/index.md",
@@ -96,7 +96,6 @@ T006_PAGES = {
     "adoption/pilot.md",
     "adoption/metrics.md",
     "adoption/rollout.md",
-    "onboarding/role-paths.md",
     "operations/index.md",
     "operations/operating-model.md",
     "operations/governance.md",
@@ -107,26 +106,9 @@ T006_PAGES = {
     "maintainers/release.md",
 }
 ROLLOUT_STAGES = ("Pilot", "Limited cohort", "Broader cohort", "Standard or hold")
-ROLE_PATHS = (
-    "New or junior engineer",
-    "PM or product owner",
-    "Business analyst",
-    "QA or test owner",
-    "Developer or engineering lead",
-    "Architecture or platform",
-    "Security, privacy, or compliance",
-    "Delivery, release, or operations",
-    "Harness maintainer",
-    "Engineering manager or VP",
-)
-PM_REFINEMENT_STAGE_IDS = (
-    "discovery",
-    "prfaq",
-    "requirements_readiness",
-    "goal_epic_mapping",
-    "backlog_decomposition",
-    "release_slicing",
-)
+DELIVERY_ROLES = ("QA", "BA", "PM", "PO", "Dev")
+LEADERSHIP_ROLES = ("VP", "Head of AI Practice")
+ROLE_PATHS = DELIVERY_ROLES + LEADERSHIP_ROLES
 RACI_GATES = (
     "Problem/value accepted",
     "Requirements ready",
@@ -290,6 +272,13 @@ def validate_navigation(pages: list[Page], docs: Path = DOCS, config: Optional[P
         errors.append("public pages missing from navigation: " + ", ".join(missing))
     if unknown:
         errors.append("navigation targets missing pages: " + ", ".join(unknown))
+    config_text = config.read_text(encoding="utf-8")
+    nav_text = config_text.split("\nnav:\n", 1)[-1]
+    top_level = re.findall(r"^  - ([^:]+):", nav_text, re.MULTILINE)
+    if len(top_level) > 6:
+        errors.append(f"navigation has {len(top_level)} top-level entries; maximum is 6")
+    if "Reference" not in top_level[:3]:
+        errors.append("Reference must be one of the first three top-level navigation entries")
     for mode, minimum in MODE_MINIMUMS.items():
         count = len(list((docs / mode).glob("*.md")))
         if count < minimum:
@@ -631,31 +620,38 @@ def validate_flows(root: Path = ROOT) -> list[str]:
     return errors
 
 
-def validate_role_paths(text: str) -> list[str]:
-    """Require one explicit onboarding route for every target persona."""
-    errors = [
-        f"docs/onboarding/role-paths.md: missing persona path {role}"
-        for role in ROLE_PATHS
-        if f"## {role}" not in text
-    ]
-    profiles = {profile.stage_id: profile for profile in PROFILES}
-    for stage_id in PM_REFINEMENT_STAGE_IDS:
-        artifact = profiles[stage_id].artifact_name
-        if f"`{artifact}`" not in text:
-            errors.append(
-                "docs/onboarding/role-paths.md: PM path missing canonical refinement "
-                f"artifact {stage_id}/{artifact}"
-            )
-    normalized = " ".join(text.split())
+def role_section(text: str, role: str) -> str:
+    """Return one level-two role section without consuming the next role."""
+    match = re.search(
+        rf"^## {re.escape(role)}\s*$\n(.*?)(?=^## |\Z)",
+        text,
+        re.MULTILINE | re.DOTALL,
+    )
+    return match.group(1) if match else ""
+
+
+def validate_role_skill_discovery(text: str, root: Path = ROOT) -> list[str]:
+    """Validate generated role discovery, overlap, and inventory closure."""
+    errors: list[str] = []
+    for role in ROLE_PATHS:
+        if f"## {role}" not in text:
+            errors.append(f"docs/reference/skills-by-role.md: missing role {role}")
+    for role in LEADERSHIP_ROLES:
+        section = role_section(text, role)
+        if "### Leadership scope" not in section:
+            errors.append(f"docs/reference/skills-by-role.md: {role} missing leadership scope")
+    if "can appear under several roles" not in text or "overlap imply authority" not in text:
+        errors.append("docs/reference/skills-by-role.md: missing many-to-many overlap guidance")
     for token in (
-        "BRD) is a section inside `prfaq.md`",
-        "`specs/<feature>/requirements.md`",
-        "not a refinement output",
+        "| Choose when… | Role relationship | Start with | Required input | Next handoff |",
+        "| Group | Role relationship | Skill |",
     ):
-        if token not in normalized:
-            errors.append(f"docs/onboarding/role-paths.md: missing artifact boundary {token}")
-    if "`brd.md`" in text:
-        errors.append("docs/onboarding/role-paths.md: invents standalone refinement artifact brd.md")
+        if token not in text:
+            errors.append(f"docs/reference/skills-by-role.md: missing selection contract {token}")
+    for skill_path in sorted((root / "skills").glob("*/SKILL.md")):
+        skill_id = skill_path.parent.name
+        if f"skills/{skill_id}.md" not in text:
+            errors.append(f"docs/reference/skills-by-role.md: installed skill is not discoverable: {skill_id}")
     return errors
 
 
@@ -882,7 +878,7 @@ def validate_adoption_operations(root: Path = ROOT) -> list[str]:
         path = docs / relative
         return path.read_text(encoding="utf-8") if path.is_file() else ""
 
-    errors.extend(validate_role_paths(read("onboarding/role-paths.md")))
+    errors.extend(validate_role_skill_discovery(read("reference/skills-by-role.md"), root))
     errors.extend(validate_raci_contract(read("operations/operating-model.md")))
     errors.extend(validate_pilot_contract(read("adoption/pilot.md")))
     errors.extend(validate_rollout_contract(read("adoption/rollout.md")))

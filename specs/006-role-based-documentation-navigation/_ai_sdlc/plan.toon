@@ -1,0 +1,36 @@
+feature: 006-role-based-documentation-navigation
+workspace: implementation
+flow_mode: quick
+updated_at: 2026-07-20
+source_artifacts[6]{artifact,path}:
+  requirements,requirements.md
+  design,design.md
+  test_cases,test-cases.md
+  qa,qa.md
+  tasks,tasks.md
+  decisions,decision-log.md
+trace[10]{acceptance_id,test_cases,tasks}:
+  AC-001,TC-001,T001/T005
+  AC-002,TC-002,T001/T006
+  AC-003,TC-003,T002/T003/T005
+  AC-004,TC-004,T003/T005
+  AC-005,TC-005,T003/T005
+  AC-006,TC-006,T002/T005
+  AC-007,TC-007,T002/T005
+  AC-008,TC-008,T001/T003/T004
+  AC-009,TC-009,T007
+  AC-010,TC-010,T006
+tasks[7]{id,status,refs,tests,depends_on,artifact,decision_ref}:
+  T001,done,AC-001/AC-002/AC-008,TC-001/TC-002/TC-008,none,TBD,TBD
+  T002,done,AC-003/AC-006/AC-007,TC-003/TC-006/TC-007,T001,Role page; validated mapping; direct skill links; task tables; and overlap explanation.,TBD
+  T003,done,AC-003/AC-004/AC-005/AC-008,TC-003/TC-004/TC-005/TC-008,T002,QA; BA; PM; PO; and Dev progression plus VP and Head of AI Practice paths.,TBD
+  T004,done,AC-008,TC-008,T003,Reconciled Home; Start; onboarding; Reference; catalog; and generated skill-guide surfaces.,TBD
+  T005,done,AC-001/AC-003/AC-004/AC-005/AC-006/AC-007,TC-001/TC-003/TC-004/TC-005/TC-006/TC-007,T004,TBD,TBD
+  T006,done,AC-002/AC-010,TC-002/TC-010,T005,Passing unit tests; documentation validator; strict MkDocs build; rendered-site validation; and diff checks.,TBD
+  T007,done,AC-009,TC-009,T006,TBD,TBD
+validation_sequence[5]{step,command}:
+  1,check_refinement_context.py --full-flow
+  2,check_clarify.py --full-flow
+  3,check_checklist.py --full-flow
+  4,plan_links.py --check --full-flow
+  5,analyze_spec.py --full-flow && validate_spec.py --full-flow

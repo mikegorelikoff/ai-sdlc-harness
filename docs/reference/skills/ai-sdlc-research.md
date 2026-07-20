@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-research, including inputs
 
 # `ai-sdlc-research`
 
-Optional AI SDLC research workflow. Use when an AI assistant needs to investigate a customer, market, domain, technology, regulation, competitor, operational question, or implementation uncertainty and produce a routed source inventory plus synthesized findings with confidence, limitations, open questions, and delivery trace targets. Supports `--quick-flow` for focused evidence and `--full-flow` for multi-source and source-diversity gates.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Discovery, refinement, and design evidence | Research, PM, BA, Architecture | Dev, QA, Security, Delivery | `research` | `research.md` and `_ai_sdlc/research.toon` |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Research, PM, BA, Architecture.
-- **Supporting:** Dev, QA, Security, Delivery.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

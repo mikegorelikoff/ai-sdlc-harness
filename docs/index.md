@@ -76,16 +76,11 @@ New to these ideas? Read [What is AI SDLC?](foundations/ai-sdlc.md) and
 | Evidence-backed gates, handoffs, and recovery. | A guarantee of correctness, compliance, or business impact. |
 | A layer that can complement Git, issue tracking, CI, and agent hosts. | A project-management system, CI platform, or deployment authority. |
 
-## A safe first experience
+## Go directly to what you need
 
-1. Read [the mental model](foundations/mental-model.md).
-2. Check [fit, prerequisites, and non-goals](foundations/why-harness.md).
-3. [Install project-scoped skills](how-to/install.md).
-4. Complete [your first 30 minutes](onboarding/first-30-minutes.md).
-5. Follow the runnable [first feature tutorial](tutorials/first-feature.md).
-
-At every step, the documentation labels what to tell the agent, what to run in
-a terminal, what the agent does automatically, and where a human must decide.
+The [Start page](start.md) owns the canonical first-use sequence. Returning
+readers can find [skills by role](reference/skills-by-role.md) or open [Reference](reference/index.md)
+for an exact contract without replaying onboarding.
 
 The canonical project-scoped installation command is:
 

@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-sdd, including inputs, aut
 
 # `ai-sdlc-sdd`
 
-AI SDLC repository spec-driven development workflow. Use when an AI assistant receives a medium or large feature, refactor, API change, architecture change, provider integration change, or any request that must follow requirements, design, test cases, QA planning, tasks, implementation, and validation. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Repository SDD workflow | Dev | BA, QA, PM | `core` | SDD package, Markdown execution plan, TOON machine plan, validation status, task alignment, and implementation handoff |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Dev.
-- **Supporting:** BA, QA, PM.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start

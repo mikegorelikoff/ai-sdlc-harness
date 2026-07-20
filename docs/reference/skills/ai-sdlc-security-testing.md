@@ -5,8 +5,6 @@ description: Human-facing operating guide for ai-sdlc-security-testing, includin
 
 # `ai-sdlc-security-testing`
 
-AI SDLC security testing workflow. Use when an AI assistant is asked for OWASP review, security testing, abuse-case analysis, authz/authn review, input validation review, secret exposure review, or security-focused validation of a diff, endpoint, workflow, or subsystem. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
-
 | Lifecycle position | Primary owner | Supporting roles | Module | Output |
 | --- | --- | --- | --- | --- |
 | Security review / abuse-case validation | Dev | QA, Security, BA | `core` | Security findings, trust-boundary analysis, standards-backed notes, validation gaps, and fixes |
@@ -29,8 +27,7 @@ If the correct entry point is still unclear, ask the read-only navigator first i
 
 ## Who is involved
 
-- **Accountable/primary:** Dev.
-- **Supporting:** QA, Security, BA.
+The summary table above names the primary and supporting human roles for this capability.
 - **Agent:** follows this contract, reports assumptions and blockers, and cannot accept protected decisions for the humans above.
 
 ## Before you start
