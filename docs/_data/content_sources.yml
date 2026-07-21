@@ -1,0 +1,295 @@
+schema: ai-sdlc-content-sources/v1
+reviewed_date: 2026-07-21
+sources:
+  - source_id: HARNESS-DOCS
+    title: AI SDLC Harness documentation and repository contracts
+    publisher_or_owner: AI SDLC Harness maintainers
+    canonical_url: https://github.com/mikegorelikoff/ai-sdlc-harness/tree/faccb4354464a1a3cc309b7b2dfa65e8efaf3529/docs
+    source_type: internal-repository
+    version_release_tag_or_commit: faccb4354464a1a3cc309b7b2dfa65e8efaf3529
+    reviewed_date: 2026-07-21
+    verified_license: No repository LICENSE file; reuse terms unresolved and require repository-owner decision
+    license_url: https://github.com/mikegorelikoff/ai-sdlc-harness
+    reuse_class: internal-authority
+    material_consulted: [foundations, workflows, tutorials, how-to guides, explanations, role guides, governance]
+    adopted_concepts: [harness vocabulary, lifecycle model, artifact ownership, authority boundaries, recovery behavior]
+    excluded_material: [complete operational contracts that remain canonical elsewhere]
+    destination_pages: [docs/start.md, docs/learn/ai-foundations.md, docs/learn/prompt-engineering.md, docs/learn/context-and-verification.md, docs/learn/agents-tools-and-subagents.md, docs/learn/multi-role-review.md, docs/learn/ai-sdlc-and-sdd.md, docs/learn/harness-essentials.md, docs/learn/guided-practice.md, docs/learn/role-learning-paths.md]
+    adaptation_summary: Existing behavior was reorganized into a prerequisite learning sequence; new software-delivery examples and exercises teach the behavior while links preserve canonical ownership.
+    attribution_requirement: Link the canonical repository page where a lesson summarizes an operational contract.
+    reviewer: Lead documentation engineer
+    review_status: source-content-verified; license-owner-blocked
+  - source_id: HARNESS-SKILLS
+    title: AI SDLC Harness skill contracts and deterministic helpers
+    publisher_or_owner: AI SDLC Harness maintainers
+    canonical_url: https://github.com/mikegorelikoff/ai-sdlc-harness/tree/faccb4354464a1a3cc309b7b2dfa65e8efaf3529/skills
+    source_type: internal-repository
+    version_release_tag_or_commit: faccb4354464a1a3cc309b7b2dfa65e8efaf3529
+    reviewed_date: 2026-07-21
+    verified_license: No repository LICENSE file; reuse terms unresolved and require repository-owner decision
+    license_url: https://github.com/mikegorelikoff/ai-sdlc-harness
+    reuse_class: internal-authority
+    material_consulted: [skill metadata, flow modes, input and output contracts, state helpers, validation helpers]
+    adopted_concepts: [skill selection, quick and full flow, state, evidence, navigator, delegation boundaries]
+    excluded_material: [full SKILL.md contracts, scripts, generated catalogs]
+    destination_pages: [docs/learn/agents-tools-and-subagents.md, docs/learn/multi-role-review.md, docs/learn/ai-sdlc-and-sdd.md, docs/learn/harness-essentials.md, docs/learn/guided-practice.md, docs/learn/role-learning-paths.md]
+    adaptation_summary: Stable skill behavior was translated into learner decisions and original scenarios; exact invocation and contract details remain in generated reference pages.
+    attribution_requirement: Link canonical skill reference pages and do not treat the lesson as the contract owner.
+    reviewer: Lead documentation engineer
+    review_status: source-content-verified; license-owner-blocked
+  - source_id: MS-GENAI-BEGINNERS
+    title: Generative AI for Beginners
+    publisher_or_owner: Microsoft
+    canonical_url: https://github.com/microsoft/generative-ai-for-beginners
+    source_type: git-repository
+    version_release_tag_or_commit: 645f932514e9f22f688c8feb3e49a7a7f2eb6f1b
+    reviewed_date: 2026-07-21
+    verified_license: MIT
+    license_url: https://github.com/microsoft/generative-ai-for-beginners/blob/645f932514e9f22f688c8feb3e49a7a7f2eb6f1b/LICENSE
+    reuse_class: adaptable-with-verification
+    material_consulted: [course map, Learn and Build distinction, responsible-AI and introductory topic coverage]
+    adopted_concepts: [progressive beginner sequence, concept then practice rhythm, further-learning prompts]
+    excluded_material: [lesson text, headings, videos, code, assignments, diagrams, images, quizzes, vendor setup]
+    destination_pages: [docs/start.md, docs/learn/ai-foundations.md, docs/learn/guided-practice.md]
+    adaptation_summary: "Adopted idea: progressive concept-to-practice sequencing. Curriculum relevance: beginners need prerequisite evidence before tool use. Harness translation: Can explain, Can do, Can prove gates connect generation to repository evidence and authority. Original replacement: the release-note risk classifier and retry-evidence labs. Resulting difference: ten substantial harness chapters replace the source course map and build lessons. Deliberately excluded: lesson wording, sequence, assignments, quizzes, media, code, diagrams, and vendor setup."
+    attribution_requirement: Identify Microsoft, the pinned commit, and the MIT license when materially cited.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: MS-AGENTS-BEGINNERS
+    title: AI Agents for Beginners
+    publisher_or_owner: Microsoft
+    canonical_url: https://github.com/microsoft/ai-agents-for-beginners
+    source_type: git-repository
+    version_release_tag_or_commit: b7f34fd824767162f484e03cc500e23c0966372f
+    reviewed_date: 2026-07-21
+    verified_license: MIT
+    license_url: https://github.com/microsoft/ai-agents-for-beginners/blob/b7f34fd824767162f484e03cc500e23c0966372f/LICENSE
+    reuse_class: adaptable-with-verification
+    material_consulted: [agent fundamentals, tool use, planning, memory, orchestration, security topic inventory]
+    adopted_concepts: [introduce agent parts before orchestration, pair explanation with bounded practice]
+    excluded_material: [lesson sequence, framework code, cloud setup, videos, examples, diagrams, quizzes]
+    destination_pages: [docs/learn/agents-tools-and-subagents.md, docs/learn/multi-role-review.md]
+    adaptation_summary: "Adopted idea: introduce agent components before orchestration and pair concepts with practice. Curriculum relevance: learners must bound tool use before multi-role work. Harness translation: repository state, least privilege, read-only delegation, evidence, stop conditions, and accountable handoffs. Original replacement: the eight-file link scan and immutable review-fixture labs. Resulting difference: the chapters organize decisions around harness controls rather than frameworks or the source lesson sequence. Deliberately excluded: prose, code, cloud setup, videos, examples, diagrams, quizzes, and headings."
+    attribution_requirement: Identify Microsoft, the pinned commit, and the MIT license when materially cited.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: MS-AI-BEGINNERS
+    title: AI for Beginners
+    publisher_or_owner: Microsoft
+    canonical_url: https://github.com/microsoft/AI-For-Beginners
+    source_type: git-repository
+    version_release_tag_or_commit: 33e781bf7bfb9b39fd27c4e4a3e592669b52cb4b
+    reviewed_date: 2026-07-21
+    verified_license: MIT
+    license_url: https://github.com/microsoft/AI-For-Beginners/blob/33e781bf7bfb9b39fd27c4e4a3e592669b52cb4b/LICENSE
+    reuse_class: adaptable-with-verification
+    material_consulted: [curriculum map, progressive complexity, labs, pre-reading and practice pattern]
+    adopted_concepts: [starting-level diagnostics, practice after prerequisites, explicit recovery for learners]
+    excluded_material: [course order, lesson prose, notebooks, illustrations, quizzes, datasets]
+    destination_pages: [docs/start.md, docs/learn/guided-practice.md]
+    adaptation_summary: "Adopted idea: progressive complexity with diagnostic entry, practice, and recovery. Curriculum relevance: mixed-experience readers need evidence-based starting lanes. Harness translation: each lane names prerequisite artifacts and every lab has a failure/reset path. Original replacement: the Learn diagnostic and twelve repository-evidence labs. Resulting difference: the curriculum follows harness risk, authority, and artifact progression rather than the source course order. Deliberately excluded: lesson prose, notebooks, illustrations, quizzes, datasets, media, and exercises."
+    attribution_requirement: Identify Microsoft, the pinned commit, and the MIT license when materially cited.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: DAIR-PROMPT-GUIDE
+    title: Prompt Engineering Guide
+    publisher_or_owner: DAIR.AI
+    canonical_url: https://github.com/dair-ai/Prompt-Engineering-Guide
+    source_type: git-repository
+    version_release_tag_or_commit: 57673726396dd94acb23bdb1e67f27c78ee85a8e
+    reviewed_date: 2026-07-21
+    verified_license: MIT
+    license_url: https://github.com/dair-ai/Prompt-Engineering-Guide/blob/57673726396dd94acb23bdb1e67f27c78ee85a8e/LICENSE.md
+    reuse_class: adaptable-with-verification
+    material_consulted: [prompt component and risk topic indexes, context engineering, evaluation, retrieval, agent coverage]
+    adopted_concepts: [separate prompt components, compare weak and bounded tasks, evaluate prompts with evidence]
+    excluded_material: [prompt examples, taxonomy order, lesson text, diagrams, notebooks, model-specific recipes]
+    destination_pages: [docs/learn/prompt-engineering.md, docs/learn/context-and-verification.md]
+    adaptation_summary: "Adopted idea: prompts have separable components and should be evaluated, not admired. Curriculum relevance: harness work needs bounded, testable requests. Harness translation: Outcome, Constraints, Context, Acceptance and evidence, Output plus source authority and freshness. Original replacement: the cross-role notification request and invoice-retry evidence pack. Resulting difference: two chapters separate task definition from context/evidence decisions instead of following the source taxonomy. Deliberately excluded: prompt examples, taxonomy order, prose, diagrams, notebooks, and model recipes."
+    attribution_requirement: Identify DAIR.AI, the pinned commit, and the MIT license when materially cited.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: GITHUB-SPEC-KIT
+    title: GitHub Spec Kit
+    publisher_or_owner: GitHub
+    canonical_url: https://github.com/github/spec-kit
+    source_type: git-repository
+    version_release_tag_or_commit: 7873c447bd5ea8f919d7bdde8b118525c463d9c0
+    reviewed_date: 2026-07-21
+    verified_license: MIT
+    license_url: https://github.com/github/spec-kit/blob/7873c447bd5ea8f919d7bdde8b118525c463d9c0/LICENSE
+    reuse_class: adaptable-with-verification
+    material_consulted: [spec-driven overview, specification to plan to tasks progression]
+    adopted_concepts: [compare artifact progression and implementation handoff approaches]
+    excluded_material: [commands, constitution, templates, exact workflow, prose, examples]
+    destination_pages: [docs/learn/ai-sdlc-and-sdd.md]
+    adaptation_summary: "Adopted idea: specifications progress into plans, tasks, and implementation handoffs. Curriculum relevance: learners must distinguish artifact stages in specification-driven work. Harness translation: the lesson uses repository-owned requirements, design, QA, task, evidence, state, and human-gate contracts. Original replacement: the urgent-support-ticket trace packet. Resulting difference: Spec Kit is a bounded comparison inside a harness lifecycle chapter, not the chapter structure or behavior contract. Deliberately excluded: commands, constitution, templates, workflow, wording, and examples."
+    attribution_requirement: Identify GitHub, the pinned commit, and the MIT license when discussing the comparison.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: GOOGLE-TECH-WRITING
+    title: Google Technical Writing courses
+    publisher_or_owner: Google
+    canonical_url: https://developers.google.com/tech-writing
+    source_type: web-guidance
+    version_release_tag_or_commit: reviewed-2026-07-21
+    reviewed_date: 2026-07-21
+    verified_license: Creative Commons Attribution 4.0 for page content unless otherwise noted; code Apache 2.0
+    license_url: https://developers.google.com/terms/site-policies
+    reuse_class: reference-only
+    material_consulted: [audience analysis, prerequisite sequencing, observable task outcomes, practice pattern]
+    adopted_concepts: [write for stated prior knowledge, define observable outcomes, use international English]
+    excluded_material: [course text, exercises, equations, examples, headings, videos]
+    destination_pages: [docs/start.md, docs/learn/ai-foundations.md, docs/learn/prompt-engineering.md, docs/learn/guided-practice.md, docs/about/maintainers/curriculum-governance.md]
+    adaptation_summary: Editorial principles were applied to original harness chapters; no Google lesson, exercise, example, or structure was adapted.
+    attribution_requirement: Link the official page when explaining the editorial basis.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: GOOGLE-STYLE
+    title: Google developer documentation style guide
+    publisher_or_owner: Google
+    canonical_url: https://developers.google.com/style
+    source_type: web-guidance
+    version_release_tag_or_commit: reviewed-2026-07-21
+    reviewed_date: 2026-07-21
+    verified_license: Creative Commons Attribution 4.0 for page content unless otherwise noted; code Apache 2.0
+    license_url: https://developers.google.com/terms/site-policies
+    reuse_class: reference-only
+    material_consulted: [headings, links, global audience, accessibility, terminology]
+    adopted_concepts: [sentence-case descriptive headings, meaningful links, acronym expansion, literal international English]
+    excluded_material: [wording, examples, tables, complete style rules]
+    destination_pages: [docs/learn/prompt-engineering.md, docs/learn/role-learning-paths.md, docs/about/maintainers/curriculum-governance.md]
+    adaptation_summary: The guide served as an editorial verification checklist; all curriculum prose, examples, and page structures were independently created for this harness.
+    attribution_requirement: Link the official guide in maintainer governance.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: NIST-AI-RMF
+    title: Artificial Intelligence Risk Management Framework 1.0
+    publisher_or_owner: National Institute of Standards and Technology
+    canonical_url: https://doi.org/10.6028/NIST.AI.100-1
+    source_type: formal-guidance
+    version_release_tag_or_commit: NIST-AI-100-1-2023
+    reviewed_date: 2026-07-21
+    verified_license: NIST United States government publication; generally public domain in the United States
+    license_url: https://www.nist.gov/nist-research-library/library-faqs
+    reuse_class: reference-only
+    material_consulted: [govern, map, measure, manage functions and human risk ownership]
+    adopted_concepts: [risk is managed through explicit ownership, context, measurement, and response]
+    excluded_material: [framework wording, tables, profiles, diagrams, compliance implications]
+    destination_pages: [docs/learn/context-and-verification.md, docs/learn/multi-role-review.md, docs/learn/ai-sdlc-and-sdd.md, docs/learn/harness-essentials.md, docs/learn/role-learning-paths.md]
+    adaptation_summary: Risk functions were used to check coverage; lessons translate them into original repository evidence and escalation scenarios and make no compliance claim.
+    attribution_requirement: Cite the publication and state that the harness does not claim NIST compliance.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: NIST-GENAI-PROFILE
+    title: Artificial Intelligence Risk Management Framework Generative Artificial Intelligence Profile
+    publisher_or_owner: National Institute of Standards and Technology
+    canonical_url: https://doi.org/10.6028/NIST.AI.600-1
+    source_type: formal-guidance
+    version_release_tag_or_commit: NIST-AI-600-1-2024
+    reviewed_date: 2026-07-21
+    verified_license: NIST United States government publication; generally public domain in the United States
+    license_url: https://www.nist.gov/nist-research-library/library-faqs
+    reuse_class: reference-only
+    material_consulted: [unsupported output, content provenance, evaluation, human oversight, incident and third-party risk topics]
+    adopted_concepts: [fluent output needs verification, uncertainty and provenance need explicit handling]
+    excluded_material: [profile language, risk tables, actions, diagrams, compliance claims]
+    destination_pages: [docs/learn/ai-foundations.md, docs/learn/context-and-verification.md, docs/learn/agents-tools-and-subagents.md]
+    adaptation_summary: Risk topics were converted into original software-delivery classification cases, evidence tests, and stop conditions; no profile wording or structure was imported.
+    attribution_requirement: Cite NIST AI 600-1 and label the mapping as a repository recommendation.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: NIST-SSDF
+    title: Secure Software Development Framework version 1.1
+    publisher_or_owner: National Institute of Standards and Technology
+    canonical_url: https://doi.org/10.6028/NIST.SP.800-218
+    source_type: formal-guidance
+    version_release_tag_or_commit: NIST-SP-800-218-2022
+    reviewed_date: 2026-07-21
+    verified_license: NIST United States government publication; generally public domain in the United States
+    license_url: https://www.nist.gov/nist-research-library/library-faqs
+    reuse_class: reference-only
+    material_consulted: [outcome-based secure development practices, roles, evidence, preparation, protection, vulnerability response]
+    adopted_concepts: [security belongs across the lifecycle and needs evidence and accountable owners]
+    excluded_material: [practice tables, mappings, implementation examples, compliance claims]
+    destination_pages: [docs/learn/ai-sdlc-and-sdd.md, docs/learn/harness-essentials.md, docs/learn/role-learning-paths.md]
+    adaptation_summary: The secure-lifecycle idea was expressed through original harness gates and role handoffs; the curriculum does not claim SSDF conformance.
+    attribution_requirement: Cite SP 800-218 and describe the mapping as guidance, not certification.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: DIATAXIS
+    title: Diátaxis documentation framework
+    publisher_or_owner: Daniele Procida
+    canonical_url: https://diataxis.fr/
+    source_type: web-guidance
+    version_release_tag_or_commit: reviewed-2026-07-21
+    reviewed_date: 2026-07-21
+    verified_license: Copyright notice present; no adaptation license verified on the reviewed pages
+    license_url: https://diataxis.fr/colophon/
+    reuse_class: reference-only
+    material_consulted: [distinction between tutorials, how-to guides, reference, and explanation]
+    adopted_concepts: [preserve distinct documentation purposes and canonical owners]
+    excluded_material: [wording, four-quadrant diagrams, page structure, metaphors, examples]
+    destination_pages: [docs/start.md, docs/about/maintainers/curriculum-governance.md]
+    adaptation_summary: The four-type distinction was used only to audit site boundaries; the Learn architecture and chapter contract were independently designed for this repository.
+    attribution_requirement: Link Diátaxis as an architectural reference and do not reproduce its distinctive material.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: OWASP-LLM-SECURITY
+    title: OWASP AI Agent Security Cheat Sheet
+    publisher_or_owner: OWASP Foundation Cheat Sheet Series
+    canonical_url: https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html
+    source_type: security-guidance
+    version_release_tag_or_commit: reviewed-2026-07-21
+    reviewed_date: 2026-07-21
+    verified_license: Creative Commons Attribution-ShareAlike 4.0 International
+    license_url: https://creativecommons.org/licenses/by-sa/4.0/
+    reuse_class: reference-only
+    material_consulted: [prompt-injection threats described by the AI Agent Security page, untrusted content, least privilege, action boundaries, human oversight, agent testing]
+    adopted_concepts: [evidence can carry instructions, tools require least privilege, high-risk actions need human gates]
+    excluded_material: [checklists, attack strings, code, headings, taxonomy, diagrams]
+    destination_pages: [docs/learn/ai-foundations.md, docs/learn/context-and-verification.md, docs/learn/agents-tools-and-subagents.md, docs/learn/multi-role-review.md, docs/learn/harness-essentials.md]
+    adaptation_summary: Security topics were recast as original repository artifacts, malicious evidence snippets, permission decisions, and escalation exercises; OWASP lists and examples were not copied.
+    attribution_requirement: Cite OWASP for the security topics; no copied checklist is included.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: OPENAI-CODEX-DOCS
+    title: Official Codex behavior documentation set
+    publisher_or_owner: OpenAI
+    canonical_url: https://learn.chatgpt.com/docs/agent-configuration/agents-md
+    additional_canonical_urls:
+      - https://learn.chatgpt.com/docs/prompting
+      - https://learn.chatgpt.com/docs/agent-configuration/subagents
+      - https://learn.chatgpt.com/docs/security
+    source_type: vendor-documentation
+    version_release_tag_or_commit: reviewed-2026-07-21
+    reviewed_date: 2026-07-21
+    verified_license: OpenAI terms; used only as a current behavior reference
+    license_url: https://openai.com/policies/terms-of-use/
+    reuse_class: reference-only
+    material_consulted: [AGENTS.md discovery at https://learn.chatgpt.com/docs/agent-configuration/agents-md, prompting at https://learn.chatgpt.com/docs/prompting, subagents at https://learn.chatgpt.com/docs/agent-configuration/subagents, approvals and sandboxing at https://learn.chatgpt.com/docs/security]
+    adopted_concepts: [bounded delegation, read-heavy parallelism, care with concurrent writes, repository guidance, validation]
+    excluded_material: [vendor wording, examples, interface screenshots, feature promises as harness contracts]
+    destination_pages: [docs/learn/prompt-engineering.md, docs/learn/context-and-verification.md, docs/learn/agents-tools-and-subagents.md, docs/learn/multi-role-review.md]
+    adaptation_summary: Current Codex behavior was verified, then separated from the portable harness contract; original host-neutral scenarios teach delegation and evidence.
+    attribution_requirement: Link official current documentation and label host-specific behavior.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending
+  - source_id: W3C-WAI
+    title: W3C Web Accessibility Initiative tutorials and guidance
+    publisher_or_owner: World Wide Web Consortium
+    canonical_url: https://www.w3.org/WAI/tutorials/
+    source_type: accessibility-guidance
+    version_release_tag_or_commit: reviewed-2026-07-21
+    reviewed_date: 2026-07-21
+    verified_license: W3C Document License unless a page states a Creative Commons license
+    license_url: https://www.w3.org/WAI/about/using-wai-material/
+    reuse_class: reference-only
+    material_consulted: [heading structure, meaningful page regions, image alternatives, table relationships]
+    adopted_concepts: [logical headings, meaningful link text, text alternatives, no color-only meaning, simple tables]
+    excluded_material: [tutorial text, code, examples, images, diagrams, standards language]
+    destination_pages: [docs/learn/ai-foundations.md, docs/learn/prompt-engineering.md, docs/learn/context-and-verification.md, docs/learn/agents-tools-and-subagents.md, docs/learn/multi-role-review.md, docs/learn/ai-sdlc-and-sdd.md, docs/learn/harness-essentials.md, docs/learn/guided-practice.md, docs/learn/role-learning-paths.md, docs/about/maintainers/curriculum-governance.md]
+    adaptation_summary: Accessibility guidance was applied as a design and review checklist; no W3C tutorial content was modified or reproduced.
+    attribution_requirement: Link WAI guidance and retain the reference-only classification.
+    reviewer: Lead documentation engineer
+    review_status: source-facts-verified; independent-review-corrections-pending

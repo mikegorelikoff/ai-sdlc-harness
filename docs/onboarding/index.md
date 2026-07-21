@@ -6,13 +6,15 @@ description: Move from a correct mental model to a verified installation and fir
 # Onboarding
 
 Onboarding is the bridge between understanding the harness and using it on real
-work. It assumes you have read the [Foundations](../foundations/index.md), have a
-Git repository, and can use an AI agent that supports installed skills.
+work. It assumes you have completed the relevant competency checks on the
+[Learn hub](../start.md), have a Git repository, and can use an AI agent that
+supports installed skills. Foundations remains deeper explanation; it is not a
+replacement for the prerequisite learning evidence.
 
 ## Choose the next step
 
-- First session: follow the single canonical sequence on [Start here](../start.md),
-  which includes [Your first 30 minutes](first-30-minutes.md).
+- Learning first: use [Learn](../start.md) to select and prove the required level.
+- First operating session: after those prerequisites, follow [Your first 30 minutes](first-30-minutes.md) under Use.
 - Known responsibility: open [Skills by role](../reference/skills-by-role.md).
 - Known capability or contract: go directly to [Reference](../reference/index.md).
 - Team evaluation: use [Evaluate and adopt](../adoption/index.md).
@@ -30,5 +32,6 @@ After the first session you should have:
 
 If any of those is missing, stop and diagnose before expanding scope.
 
-The onboarding pages do not repeat the installation and tutorial sequence;
-that sequence stays on Start so updates have one canonical home.
+The Learn hub owns curriculum order. These onboarding pages under Use own the
+first operating sequence and link to canonical installation and tutorials so
+updates have one owner.

@@ -1,0 +1,28 @@
+LEARNING FIXTURE — BUSINESS ANALYST PATH — SUBSCRIPTION PAUSE
+Snapshot: LF-BA-2026-07-21
+
+Accepted outcome:
+  Eligible customers can temporarily stop the next renewal without closing
+  their account.
+
+Current policy extracts:
+  P-01 Monthly subscriptions renew at 00:00 UTC on the renewal date.
+  P-02 A pause request received before renewal prevents the next charge.
+  P-03 Annual plans and accounts with an unpaid balance are not yet covered by
+       an accepted pause policy.
+  P-04 Marketing notifications are optional; legally required billing notices
+       are not classified in this fixture.
+
+Current workflow observation:
+  Support agents manually add a note and ask Billing Operations to stop renewal.
+  The observation does not prove that the manual process is desired future policy.
+
+Known source owners:
+  Product owns intended customer outcome and priority.
+  Billing Operations owns current execution evidence.
+  Finance/Policy owns charge and refund policy.
+  Security owns authorization requirements.
+
+Learner boundary:
+  Derive supported rules, exceptions, assumptions, and questions. Do not invent
+  annual-plan behavior, refund rules, notice obligations, or authorization policy.

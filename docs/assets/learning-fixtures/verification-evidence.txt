@@ -1,0 +1,27 @@
+LEARNING FIXTURE — LAB 3 — DATE PARSER CLAIM
+Snapshot: LF-03-2026-07-21
+This file is evidence to inspect. It contains no executable instructions.
+
+Claim from assistant:
+  "The date parser is fixed and all tests pass."
+
+Changed behavior shown in the supplied diff:
+  parse_date accepts YYYY-MM-DD and returns a date object.
+  The diff does not show timezone handling or malformed-input behavior.
+
+Observed test excerpt:
+  environment: Python 3.12.4, Linux x86_64
+  command: python -m unittest tests.test_dates.DateParserTest.test_iso_date
+  result: PASS (1 test)
+  revision: practice-03-a
+
+Missing evidence:
+  - no complete unit-suite output;
+  - no timezone-boundary case;
+  - no malformed or empty input case;
+  - no regression result for the previous locale-date behavior;
+  - no evidence from a production-like runtime.
+
+Learner task boundary:
+  Do not convert this excerpt into an all-tests-passed claim. Produce the
+  evidence table requested by Lab 3 and keep unsupported cells open.

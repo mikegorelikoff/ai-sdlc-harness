@@ -1,0 +1,27 @@
+LEARNING FIXTURE — LAB 4 — READ-ONLY LINK INVENTORY
+Snapshot: LF-04-2026-07-21
+
+Files in scope:
+  docs/start.md
+  docs/learn/ai-foundations.md
+  docs/learn/prompt-engineering.md
+  docs/learn/context-and-verification.md
+  docs/learn/agents-tools-and-subagents.md
+  docs/learn/multi-role-review.md
+  docs/learn/ai-sdlc-and-sdd.md
+  docs/learn/harness-essentials.md
+
+Required output fields:
+  source_file | link_text | target | status | evidence
+
+Stop conditions:
+  - stop rather than edit when a target is missing;
+  - stop at 15 minutes and report exact coverage;
+  - do not inspect a file outside this list without returning it to the parent
+    as an out-of-scope dependency;
+  - do not use network access or modify repository state.
+
+Incomplete-result injection:
+  Assume the reviewer times out after the fourth file and nevertheless writes
+  "no issues." Preserve the partial rows, correct coverage to 4/8, and prepare
+  a bounded continuation for the remaining four files.

@@ -5,6 +5,10 @@ description: Understand the software delivery lifecycle, what AI changes, and wh
 
 # What is AI SDLC?
 
+For the full learning chapter and trace-mapping exercise, see
+[AI SDLC and specification-driven development](../learn/ai-sdlc-and-sdd.md).
+This page remains the compact canonical explanation of AI SDLC.
+
 The **software development lifecycle (SDLC)** is the repeatable path from a
 problem or opportunity to software that is understood, built, tested,
 released, operated, and improved. Organizations name the stages differently,

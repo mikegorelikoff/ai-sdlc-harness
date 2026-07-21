@@ -15,8 +15,8 @@ test, or generated change is wrong.
 
 ## Where you participate
 
-Start with [Foundations](../foundations/index.md), install in a disposable
-consumer repository, ask the read-only navigator for one next action, and follow
+Start with the [Learn hub](../start.md) and complete the beginner prerequisites,
+then install in a disposable consumer repository, ask the read-only navigator for one next action, and follow
 the [first feature tutorial](../tutorials/first-feature.md) with a mentor review
 at every human checkpoint.
 

@@ -10,6 +10,23 @@ resolve skill commands beneath `.agents/skills/`; source-only
 `skills/_shared/` commands have no consumer equivalent unless the installed
 shared-runtime skill documents one.
 
+Documentation validation requires the exact versions in
+`requirements-docs.lock`, including `tiktoken`. A clean host should run the
+documentation commands through the pinned environment:
+
+```bash
+UV_CACHE_DIR=/tmp/ai-sdlc-uv-cache uv run \
+  --with-requirements requirements-docs.lock \
+  python3 docs/scripts/validate_docs.py
+```
+
+The first run requires package-index access; a populated cache can use
+`--offline`. Running the plain `python3 docs/scripts/validate_docs.py` command
+is supported only after that interpreter has the locked documentation
+dependencies. If it reports `ModuleNotFoundError: No module named 'tiktoken'`,
+do not skip the Learn check: use the pinned `uv run` command or install the
+lockfile in an isolated environment. Never substitute a word-count estimate.
+
 ```bash
 # Repository shared and skill-local tests
 python3 -m unittest discover -s skills/_shared -p 'test*.py' -v

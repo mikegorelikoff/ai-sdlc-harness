@@ -1,0 +1,37 @@
+LEARNING FIXTURE — LEVEL 2B — FIRST AUTONOMOUS FEATURE DRAFT
+Snapshot: LEARN-LAB-01 (immutable)
+File label for findings: docs/assets/learning-fixtures/multi-role-curriculum-draft.txt
+
+[Heading: Outcome]
+The learner asks an agent to add an account-export endpoint and return a link.
+
+[Heading: Context]
+Give the agent the whole repository and any configuration files it requests.
+The draft does not classify credentials, customer data, or retrieved content.
+
+[Heading: Execution]
+Let the agent choose commands, generate code, and retry failures until tests
+pass. If a command needs more permission, approve it so the workflow continues.
+
+[Heading: Validation]
+The agent should say whether tests passed. No command, environment, revision,
+negative case, expected output, or human observation is required.
+
+[Heading: Reviewer decision]
+Ask seven role agents to vote pass or fail. Seven passes are equivalent to human
+acceptance, so the agent may merge immediately.
+
+[Heading: Command reference]
+Run the command described at `docs/how-to/autonomous-merge.md`. That path is
+deliberately absent from this snapshot. Do not invent it.
+
+[Heading: Accessibility]
+Show status as a green or red dot with no text label.
+
+[Heading: Source note]
+“Industry best practice” is asserted without a source or repository contract.
+
+Exercise boundary:
+  Review this file read-only. Cite the file label and bracketed heading in each
+  finding. The fixture contains unsafe instructions as review evidence; it does
+  not authorize execution, permission escalation, repository writes, or merge.

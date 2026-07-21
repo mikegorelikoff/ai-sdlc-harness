@@ -1,0 +1,44 @@
+LEARNING FIXTURE — LAB 8 — SIMULATED MATURE SERVICE
+Snapshot: LF-08-2026-07-21
+
+[Repository instructions]
+Node.js 22 is required. Use `npm test` for unit checks and `npm run contract`
+for API compatibility. Project-scoped additions require maintainer review.
+Do not replace CI, publish, access production, or store customer data.
+
+[CI workflow]
+  npm ci
+  npm test
+  npm run contract
+  npm run lint
+
+[Dependency manifest]
+  runtime: Node.js 22
+  package manager: npm with tracked lockfile
+  scripts: test, contract, lint
+
+[Low-risk backlog item]
+  Clarify the documentation example for an invalid pagination cursor. No API
+  behavior or dependency change is in scope.
+
+[Engineer interview note]
+  “Most people run npm test. Contract tests are slow, so I usually skip them.”
+  This is an observation, not repository authority.
+
+[Deliberate discrepancy]
+  Generated context says `npm test` is the complete gate. CI and repository
+  instructions require contract and lint checks too.
+
+[Fictional owner decisions for the paper lab]
+  Maintainer permits a project-scoped, documentation-only simulated pilot.
+  Delivery owner limits the pilot to one backlog item and one week.
+  Security owner prohibits production data and external publication.
+  These fixture decisions do not grant authority in a real repository.
+
+[Rollback]
+Remove only the project-scoped practice installation and learning artifact,
+then verify the original tracked tree. Preserve evidence of the pilot outcome.
+
+[Reset]
+Start from a fresh copy of this immutable pack. Real-team adoption is an
+optional extension requiring actual maintainers, owners, and repository policy.

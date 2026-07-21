@@ -5,6 +5,10 @@ description: Learn how specification-driven development turns intent into a test
 
 # What is SDD?
 
+For the full prerequisite lesson, comparison boundary, and traceability lab,
+see [AI SDLC and specification-driven development](../learn/ai-sdlc-and-sdd.md).
+This page remains the compact repository definition of SDD.
+
 **Specification-driven development (SDD)** means establishing a testable delivery
 contract before implementation becomes the source of truth by accident.
 

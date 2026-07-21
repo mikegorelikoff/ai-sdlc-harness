@@ -88,24 +88,21 @@ exclude_docs: |
 
 nav:
   - Home: index.md
-  - Start:
-      - Start here: start.md
-      - Foundations:
-          - Overview: foundations/index.md
-          - Git and terminal primer: foundations/git-and-terminal-primer.md
-          - Software delivery foundations: foundations/software-delivery.md
-          - Artificial intelligence foundations: foundations/ai-foundations.md
-          - Agents, sub-agents, and skills: foundations/agents-and-skills.md
-          - What is AI SDLC?: foundations/ai-sdlc.md
-          - What is SDD?: foundations/sdd.md
-          - Why use a harness?: foundations/why-harness.md
-          - Mental model: foundations/mental-model.md
-          - Human and agent responsibilities: foundations/responsibilities.md
-          - Context, prompts, and personalization: foundations/context-prompt-personalization.md
-          - Glossary: foundations/glossary.md
-      - Onboarding:
-          - Overview: onboarding/index.md
-          - Your first 30 minutes: onboarding/first-30-minutes.md
+  - Learn:
+      - Learning hub: start.md
+      - Level 0 — AI foundations: learn/ai-foundations.md
+      - Level 1A — Prompt engineering: learn/prompt-engineering.md
+      - Level 1B — Context and verification: learn/context-and-verification.md
+      - Level 2A — Agents, tools, and subagents: learn/agents-tools-and-subagents.md
+      - Level 2B — Multi-role review: learn/multi-role-review.md
+      - Level 3 — AI SDLC and SDD: learn/ai-sdlc-and-sdd.md
+      - Level 4 — Harness essentials: learn/harness-essentials.md
+      - Level 5 — Guided practice: learn/guided-practice.md
+      - Level 6 — Role learning paths: learn/role-learning-paths.md
+  - Reference:
+      - Overview: reference/index.md
+      - Skills by role: reference/skills-by-role.md
+      - Glossary: foundations/glossary.md
       - Role guides:
           - Choose your role: roles/index.md
           - Trainee developer: roles/trainee-developer.md
@@ -121,15 +118,6 @@ nav:
           - CTO: roles/cto.md
           - DevOps engineer: roles/devops-engineer.md
           - Security reviewer: roles/security-reviewer.md
-      - Tutorials:
-          - Overview: tutorials/index.md
-          - Ship a first feature: tutorials/first-feature.md
-          - Adopt an existing project: tutorials/existing-project.md
-          - Run the full lifecycle: tutorials/full-lifecycle.md
-          - Common change patterns: tutorials/change-patterns.md
-  - Reference:
-      - Overview: reference/index.md
-      - Skills by role: reference/skills-by-role.md
       - Workflow map: reference/workflow-map.md
       - Skill catalog: reference/skills.md
       - Skill guides:
@@ -191,6 +179,15 @@ nav:
       - Release 1.2 audit: reference/release-1.2.md
       - Release 1.1 audit: reference/release-1.1.md
   - Use:
+      - Onboarding:
+          - Overview: onboarding/index.md
+          - Your first 30 minutes: onboarding/first-30-minutes.md
+      - Tutorials:
+          - Overview: tutorials/index.md
+          - Ship a first feature: tutorials/first-feature.md
+          - Adopt an existing project: tutorials/existing-project.md
+          - Run the full lifecycle: tutorials/full-lifecycle.md
+          - Common change patterns: tutorials/change-patterns.md
       - Workflow journeys:
           - Choose a journey: flows/index.md
           - Complete refinement: flows/refinement.md
@@ -240,6 +237,18 @@ nav:
           - Troubleshooting and recovery: operations/troubleshooting.md
           - Field feedback disposition: operations/field-feedback.md
   - About:
+      - Foundations:
+          - Overview: foundations/index.md
+          - Git and terminal primer: foundations/git-and-terminal-primer.md
+          - Software delivery foundations: foundations/software-delivery.md
+          - Artificial intelligence foundations: foundations/ai-foundations.md
+          - Agents, sub-agents, and skills: foundations/agents-and-skills.md
+          - What is AI SDLC?: foundations/ai-sdlc.md
+          - What is SDD?: foundations/sdd.md
+          - Why use a harness?: foundations/why-harness.md
+          - Mental model: foundations/mental-model.md
+          - Human and agent responsibilities: foundations/responsibilities.md
+          - Context, prompts, and personalization: foundations/context-prompt-personalization.md
       - Production-readiness audit:
           - Executive summary: audits/2026-07-21-production-readiness/index.md
           - Repository inventory: audits/2026-07-21-production-readiness/repository-inventory.md
@@ -275,4 +284,7 @@ nav:
           - Maintain and contribute: maintainers/index.md
           - Extend skills and modules: maintainers/extend.md
           - Prepare and release: maintainers/release.md
+          - Learn curriculum governance: about/maintainers/curriculum-governance.md
+          - Source reuse and adaptation: about/maintainers/source-reuse-and-adaptation.md
+          - Learn review record (2026-07-21): about/maintainers/learn-review-2026-07-21.md
       - Roadmap: roadmap.md

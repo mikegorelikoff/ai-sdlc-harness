@@ -12,6 +12,8 @@ from typing import Optional
 from urllib.parse import unquote, urlsplit
 
 from build_catalog import DOCS, ROOT, generate
+from learning_structure import validate_learning_structure
+from learning_tokens import validate_learn_tokens
 
 sys.path.insert(0, str(ROOT / "skills" / "_shared"))
 from ai_sdlc_artifact_profiles import PROFILES  # noqa: E402
@@ -1098,6 +1100,9 @@ def validate(root: Path = ROOT) -> list[str]:
     errors.extend(validate_adoption_operations(root))
     errors.extend(validate_material(root))
     errors.extend(validate_workflow(root))
+    errors.extend(validate_learning_structure(root))
+    _, token_errors = validate_learn_tokens(root / "mkdocs.yml")
+    errors.extend(token_errors)
     return errors
 
 

@@ -1,0 +1,33 @@
+LEARNING FIXTURE — LAB 5 AND LEVEL 2B — ACCOUNT DELETION
+Snapshot: LF-05-2026-07-21 (immutable)
+
+[Heading: Intended outcome]
+A customer can close an account and lose access immediately. Product proposes
+that all customer data be deleted at once.
+
+[Heading: Constraint evidence]
+POLICY-FIN-07 states that financial transaction records are retained for the
+applicable accounting period. The fixture does not name who may decide the
+retention implementation or whether de-identification is sufficient.
+
+[Heading: Reviewer findings]
+F-PROD-01 | product | medium | proposal | Proceed after wording the immediate
+loss-of-access outcome as an acceptance criterion. Confidence: high.
+F-QA-01 | QA | high | risk | Deletion, access revocation, retained-record
+visibility, and retry behavior need separate cases. Confidence: high.
+F-DEV-01 | developer | medium | question | Which stores and backups are in the
+deletion boundary? No architecture evidence is supplied. Confidence: medium.
+F-SEC-01 | security | high | risk | Immediate deletion conflicts with the cited
+retention constraint; an accountable retention owner is absent. Confidence: high.
+
+[Heading: Apparent consensus]
+All four reviewers recommend continuing after their findings are addressed.
+That shared recommendation is not approval and does not resolve retention.
+
+[Heading: Deliberate defect]
+The draft links to `policy/customer-deletion-v2`, but that target is not part of
+the snapshot. Report the missing evidence; do not invent its contents.
+
+[Heading: Required decision]
+Name the accountable product/policy/legal owner who must decide the retained
+record boundary. Until that decision exists, resolution_status remains open.

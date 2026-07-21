@@ -1,32 +1,40 @@
 ---
-title: Agents, sub-agents, and skills
+title: Agents, subagents, and skills
 description: Learn orchestration, tool access, delegation, skill composition, precedence, testing, versioning, and failure recovery.
 ---
 
-# Agents, sub-agents, and skills
+# Agents, subagents, and skills
+
+For prerequisite teaching and a bounded delegation lab, see
+[Agents, tools, and subagents](../learn/agents-tools-and-subagents.md). For
+independent reviewer orchestration, continue to
+[Multi-role review](../learn/multi-role-review.md). This page remains the compact
+concept and skill-structure explanation.
 
 This chapter connects AI behavior to the reusable workflow packages in this
 repository.
 
-## Agent and sub-agent
+## Agent and subagent
 
 An **agent** is an AI system pursuing a goal through reasoning and tool use. A
-**sub-agent** is a separately invoked agent given a bounded part of a larger
-goal. **Orchestration** is the coordination of those agents, their inputs,
+**Subagent** is the preferred repository spelling for a separately invoked
+agent given a bounded part of a larger task. Older audit pages may use
+**sub-agent**; the terms are equivalent and do not imply independence.
+**Orchestration** is the coordination of those agents, their inputs,
 permissions, outputs, dependencies, disagreements, and stopping conditions.
 
-Sub-agents can improve breadth and independence, but they do not create truth by
+Subagents can improve breadth and independence, but they do not create truth by
 consensus. They may share the same blind spot, use stale evidence, fabricate a
 result, or conflict. The orchestrator must validate their reports against the
 repository and authoritative sources.
 
-Use sub-agents when work is independently reviewable, such as separate security,
+Use subagents when work is independently reviewable, such as separate security,
 quality, product, and operations assessments. Avoid delegation when a task
 requires one tightly shared mutable state and conflicts cannot be isolated.
 
 ## Context isolation and tools
 
-An agent sees only the context supplied by its host. A sub-agent may receive the
+An agent sees only the context supplied by its host. A subagent may receive the
 full conversation, a bounded context pack, or only a task. Missing context can
 produce incorrect assumptions; excessive context can introduce noise or
 untrusted instructions.

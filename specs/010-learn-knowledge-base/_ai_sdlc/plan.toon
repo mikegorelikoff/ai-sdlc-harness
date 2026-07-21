@@ -1,0 +1,42 @@
+feature: 010-learn-knowledge-base
+workspace: implementation
+flow_mode: quick
+updated_at: 2026-07-21
+source_artifacts[6]{artifact,path}:
+  requirements,requirements.md
+  design,design.md
+  test_cases,test-cases.md
+  qa,qa.md
+  tasks,tasks.md
+  decisions,decision-log.md
+trace[10]{acceptance_id,test_cases,tasks}:
+  AC-001,TC-016/TC-017/TC-018/TC-020/TC-022,T001/T005/T013
+  AC-002,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-016/TC-018/TC-019/TC-020/TC-021/TC-022/TC-023,T002/T003/T004/T011/T013
+  AC-003,TC-019/TC-022/TC-028,T003/T004/T011/T013
+  AC-004,TC-022,T001/T004/T005/T011/T012/T013
+  AC-005,TC-011/TC-012/TC-013/TC-014/TC-015/TC-024/TC-025/TC-026/TC-027,T001/T002/T008/T012/T013
+  AC-006,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014/TC-015/TC-016/TC-017/TC-018/TC-019/TC-020/TC-021/TC-023/TC-024/TC-025/TC-026/TC-027/TC-028,T002/T008/T013
+  AC-007,TC-020/TC-022,T005/T013
+  AC-008,TC-029,T006/T007/T010/T013
+  AC-009,TC-030,T009/T010/T013
+  AC-010,TC-031,T005/T010/T013
+tasks[13]{id,status,refs,tests,depends_on,artifact,decision_ref}:
+  T001,done,AC-001/AC-004/AC-005,TC-011/TC-012/TC-013/TC-014/TC-015/TC-016/TC-017/TC-018/TC-020/TC-022/TC-024/TC-025/TC-026/TC-027,none,mkdocs.yml; docs/_data/content_sources.yml; docs/about/maintainers/source-reuse-and-adaptation.md,TBD
+  T002,done,AC-002/AC-005/AC-006,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014/TC-015/TC-016/TC-017/TC-018/TC-019/TC-020/TC-021/TC-022/TC-023/TC-024/TC-025/TC-026/TC-027/TC-028,T001,docs/scripts/learning_tokens.py; docs/scripts/learning_structure.py; requirements-docs.lock,TBD
+  T003,done,AC-002/AC-003,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-016/TC-018/TC-019/TC-020/TC-021/TC-022/TC-023/TC-028,T001,docs/start.md; docs/learn/ai-foundations.md; docs/learn/prompt-engineering.md; docs/learn/context-and-verification.md; docs/learn/agents-tools-and-subagents.md; docs/learn/multi-role-review.md,TBD
+  T004,done,AC-002/AC-003/AC-004,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-016/TC-018/TC-019/TC-020/TC-021/TC-022/TC-023/TC-028,T003,docs/learn/ai-sdlc-and-sdd.md; docs/learn/harness-essentials.md; docs/learn/guided-practice.md; docs/learn/role-learning-paths.md; docs/assets/learning-fixtures,TBD
+  T005,done,AC-001/AC-004/AC-007/AC-010,TC-016/TC-017/TC-018/TC-020/TC-022/TC-031,T003/T004,mkdocs.yml; docs/index.md; README.md; docs/foundations; docs/about/maintainers,TBD
+  T006,done,AC-008,TC-029,T005/T008,docs/about/maintainers/learn-review-2026-07-21.md; corrected Learn snapshot,TBD
+  T007,pending,AC-008,TC-029,T006,post-correction review section in docs/about/maintainers/learn-review-2026-07-21.md,TBD
+  T008,done,AC-005/AC-006,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014/TC-015/TC-016/TC-017/TC-018/TC-019/TC-020/TC-021/TC-023/TC-024/TC-025/TC-026/TC-027/TC-028,T002,docs/tests/test_learning_tokens.py; docs/tests/test_learning_structure.py; docs/tests/test_content_sources.py,TBD
+  T009,pending,AC-009,TC-030,T007/T008,final validation receipts in docs/about/maintainers/learn-review-2026-07-21.md,TBD
+  T010,pending,AC-008/AC-009/AC-010,TC-029/TC-030/TC-031,T009,final report and SDD validation evidence,TBD
+  T011,done,AC-002/AC-003/AC-004,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-016/TC-018/TC-019/TC-020/TC-021/TC-022/TC-023/TC-028,T003/T004,docs/start.md; docs/learn/*.md,TBD
+  T012,done,AC-004/AC-005,TC-011/TC-012/TC-013/TC-014/TC-015/TC-022/TC-024/TC-025/TC-026/TC-027,T001,docs/about/maintainers/source-reuse-and-adaptation.md; docs/about/maintainers/curriculum-governance.md,TBD
+  T013,pending,AC-001/AC-002/AC-003/AC-004/AC-005/AC-006/AC-007/AC-008/AC-009/AC-010,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008/TC-009/TC-010/TC-011/TC-012/TC-013/TC-014/TC-015/TC-016/TC-017/TC-018/TC-019/TC-020/TC-021/TC-022/TC-023/TC-024/TC-025/TC-026/TC-027/TC-028/TC-029/TC-030/TC-031,T009/T010,final user-facing implementation report,TBD
+validation_sequence[5]{step,command}:
+  1,check_refinement_context.py --full-flow
+  2,check_clarify.py --full-flow
+  3,check_checklist.py --full-flow
+  4,plan_links.py --check --full-flow
+  5,analyze_spec.py --full-flow && validate_spec.py --full-flow

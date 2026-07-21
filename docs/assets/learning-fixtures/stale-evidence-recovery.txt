@@ -1,0 +1,25 @@
+LEARNING FIXTURE — LAB 10 — STALE EVIDENCE
+Snapshot: LF-10-2026-07-21
+
+Prior result:
+  revision: practice-10-a
+  command: make test-unit
+  observed: PASS, 84 tests
+  claim: API accepts the documented date range
+
+Changes since that result:
+  revision: practice-10-b
+  dependency lock: date-validation library 2.1 -> 2.2
+  requirement REQ-DATE-04: maximum future date changed from 30 to 14 days
+  API schema file changed
+  task state still says complete
+
+Available current checks:
+  unit tests, contract tests, schema lint, consumer smoke test
+
+Unavailable check:
+  partner sandbox; owner Platform QA; next window 2026-07-23
+
+Learner boundary:
+  Preserve the old output as superseded evidence. Identify which claims are
+  invalidated, which checks must run again, and why any exclusion is safe.

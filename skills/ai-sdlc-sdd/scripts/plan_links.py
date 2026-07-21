@@ -9,6 +9,7 @@ from the same task links and status.
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -103,7 +104,10 @@ def build_plan_toon(spec_dir: Path, args: argparse.Namespace) -> str:
             ]
         )
         depends_on = csv_list(entry.depends_on)
-        artifact = toon_value(previous.get("artifact") or entry.output or "TBD")
+        prior_artifact = previous.get("artifact")
+        artifact = toon_value(
+            prior_artifact if prior_artifact not in {None, "", "TBD", "none"} else entry.output or "TBD"
+        )
         decision_ref = toon_value(previous.get("decision_ref") or "TBD")
         lines.append(f"  {entry.task_id},{status},{refs},{tests},{depends_on},{artifact},{decision_ref}")
 
@@ -194,8 +198,13 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
     if task_entries:
         for entry in task_entries:
             checkbox = "[x]" if entry.task_id in closed_task_ids else "[ ]"
+            description = re.sub(
+                rf"^- \[[ xX]\] {re.escape(entry.task_id)}[.:]?\s*",
+                "",
+                entry.line,
+            )
             lines.append(
-                f"- {checkbox} {entry.task_id}: {entry.line}; refs: {', '.join(entry.refs) or 'TBD'}; "
+                f"- {checkbox} {entry.task_id}: {description}; refs: {', '.join(entry.refs) or 'TBD'}; "
                 f"output: {entry.output or 'TBD'}"
             )
     else:
@@ -208,6 +217,13 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
     else:
         lines.append("- T000: TBD")
 
+    missing_links: list[str] = []
+    for acceptance_id in acceptance_ids:
+        if not any(acceptance_id in values for values in test_case_links.values()):
+            missing_links.append(f"{acceptance_id} has no test-case link")
+        if not any(acceptance_id in entry.refs for entry in task_entries):
+            missing_links.append(f"{acceptance_id} has no task link")
+
     lines.extend(
         [
             "",
@@ -219,9 +235,12 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
             f"- Generated: {date.today().isoformat()}",
             "",
             "## Open Links And Blockers",
-            "- TBD until every AC/TC/TASK/DEC link is confirmed.",
         ]
     )
+    if missing_links:
+        lines.extend(f"- {item}." for item in missing_links)
+    else:
+        lines.append("- No unresolved AC/TC/task links; decision and external blockers remain in `decision-log.md` and owner reports.")
     return "\n".join(lines).rstrip() + "\n"
 
 

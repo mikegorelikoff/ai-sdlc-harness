@@ -1,0 +1,23 @@
+LEARNING FIXTURE — LAB 11 — ADDRESS CARDINALITY
+Snapshot: LF-11-2026-07-21
+
+REQ-ADDR-01 (accepted requirement, revision r3):
+  An account has one active delivery address.
+
+DES-ADDR-02 (design, revision d4):
+  Account 1 ---- * Address; all records may be active.
+
+TC-ADDR-07 (test case, revision t6):
+  Given two active addresses, checkout lets the customer choose either.
+
+TASK-ADDR-09 / implementation note (revision i2):
+  Retain the latest three addresses and mark all three selectable.
+
+Decision history:
+  No accepted record changes REQ-ADDR-01. A chat note says “multiple addresses
+  would be useful later,” but it names no owner and no acceptance boundary.
+
+Required recovery:
+  Do not vote among artifacts or treat code as truth. Register all competing
+  interpretations, identify the decision owner, preserve a provisional safe
+  posture, and list downstream updates after the owner decides.

@@ -5,6 +5,10 @@ description: Learn AI SDLC, SDD, the harness mental model, and responsibility bo
 
 # Foundations
 
+For the complete prerequisite curriculum with practice, answer explanations,
+and completion evidence, begin at the [Learn hub](../start.md). This Foundations
+section remains the compact conceptual reference linked by Learn.
+
 This path assumes no prior knowledge of software delivery, artificial
 intelligence, AI SDLC, or specification-driven development.
 Read it before the operational tutorials if terms such as artifact, evidence,
@@ -18,7 +22,7 @@ gate, handoff, or TOON are unfamiliar.
 3. [Artificial intelligence foundations](ai-foundations.md) introduces AI,
    machine learning, large language models, tokens, context, uncertainty,
    privacy, and validation.
-4. [Agents, sub-agents, and skills](agents-and-skills.md) explains tool use,
+4. [Agents, subagents, and skills](agents-and-skills.md) explains tool use,
    orchestration, precedence, failure recovery, and reusable capability design.
 5. [What is AI SDLC?](ai-sdlc.md) connects those foundations and explains what
    changes when an AI agent participates.

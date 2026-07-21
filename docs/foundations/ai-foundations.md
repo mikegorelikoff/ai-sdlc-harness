@@ -5,6 +5,11 @@ description: Understand AI, machine learning, large language models, prompts, co
 
 # Artificial intelligence foundations
 
+Complete beginners should use the expanded
+[Level 0 AI foundations lesson](../learn/ai-foundations.md), which adds risk
+classification, original examples, practice, recovery, and completion evidence.
+This page remains the compact canonical explanation.
+
 This chapter explains the minimum artificial intelligence concepts needed to
 use an AI coding agent responsibly. It does not require mathematics or machine
 learning experience.
@@ -138,4 +143,4 @@ and fresh evidence on the exact revision being approved.
 - [OWASP Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
 - [OWASP Excessive Agency](https://genai.owasp.org/llmrisk/llm062025-excessive-agency/)
 
-Next: [Agents, sub-agents, and skills](agents-and-skills.md).
+Next: [Agents, subagents, and skills](agents-and-skills.md).

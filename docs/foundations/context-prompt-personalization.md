@@ -5,6 +5,12 @@ description: Design efficient agent context, clear prompts, and user-controlled 
 
 # Context, prompts, and personalization
 
+New to prompts and context? Complete the beginner lessons on
+[prompt engineering](../learn/prompt-engineering.md) and
+[context, verification, and evidence](../learn/context-and-verification.md)
+first. This page remains the deeper canonical explanation of the harness
+context and personalization model.
+
 Good agent behavior is not produced by a magic phrase. It comes from three
 separate design problems:
 

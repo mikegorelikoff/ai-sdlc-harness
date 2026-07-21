@@ -6,7 +6,8 @@ agents. It turns requests, decisions, requirements, tests,
 implementation tasks, validation, and handoffs into visible evidence that can
 survive a chat, agent, or team change.
 
-**[Read the guided documentation](https://mikegorelikoff.github.io/ai-sdlc-harness/)**
+**[Learn from the foundations](https://mikegorelikoff.github.io/ai-sdlc-harness/start/)** ·
+**[Open the operational documentation](https://mikegorelikoff.github.io/ai-sdlc-harness/)**
 
 > **Release status:** `v2.0.0-rc.1` is the current release candidate. It fixes
 > the installed consumer-root defect in `v1.2.0`, hardens skill/runtime trust
@@ -38,17 +39,15 @@ that judgment easier to create, inspect, hand off, and recover.
 
 ## Learn before you install
 
-If these terms are new, begin here:
+If these terms are new, begin at the [Learn hub](docs/start.md). Its diagnostic
+routes complete beginners through AI foundations, prompting, context,
+verification, tools, agents, AI SDLC, SDD, harness workflows, guided practice,
+and role paths before installation. Experienced users can take an evidence-
+based fast lane without replaying familiar material.
 
-1. [Git and terminal primer](docs/foundations/git-and-terminal-primer.md)
-2. [Software delivery foundations](docs/foundations/software-delivery.md)
-3. [Artificial intelligence foundations](docs/foundations/ai-foundations.md)
-4. [Agents, sub-agents, and skills](docs/foundations/agents-and-skills.md)
-5. [What is AI SDLC?](docs/foundations/ai-sdlc.md)
-6. [What is SDD?](docs/foundations/sdd.md)
-7. [Why use a harness?](docs/foundations/why-harness.md)
-8. [How the pieces fit together](docs/foundations/mental-model.md)
-9. [Human and agent responsibilities](docs/foundations/responsibilities.md)
+If you are already competent with agent permissions, repository evidence, and
+human approval boundaries, go directly to the [installation guide](docs/how-to/install.md)
+or the [skills-by-role reference](docs/reference/skills-by-role.md).
 
 The short version:
 
@@ -219,7 +218,7 @@ at that stage and reuse valid upstream evidence.
 
 ## Explore the system
 
-- **Learn and use:** [Foundations](docs/foundations/index.md) →
+- **Learn, then use:** [Learn from the foundations](docs/start.md) →
   [Onboarding](docs/onboarding/index.md) →
   [Skills by role](docs/reference/skills-by-role.md) →
   [Tutorials](docs/tutorials/index.md).
@@ -227,7 +226,8 @@ at that stage and reuse valid upstream evidence.
   [bounded pilot](docs/adoption/pilot.md) →
   [metrics](docs/adoption/metrics.md) →
   [maturity and limitations](docs/explanation/maturity-limitations.md).
-- [Tutorials](docs/tutorials/index.md): learn by completing delivery journeys.
+- [Foundations](docs/foundations/index.md): deeper explanations linked from Learn.
+- [Tutorials](docs/tutorials/index.md): apply concepts through delivery journeys.
 - [Workflow map](docs/reference/workflow-map.md): lifecycle stages and handoffs.
 - [Skill catalog](docs/reference/skills.md): complete operating guides for all installed capabilities.
 - [Script catalog](docs/reference/scripts.md): every helper path, safe starting point, repository effect, and generated-mirror boundary.

@@ -29,23 +29,23 @@ intent, trade-offs, exceptions, and approval.
 intent -> requirement -> design -> task -> code -> test -> evidence -> handoff
 ```
 
-New to these ideas? Follow the [Foundations learning path](foundations/index.md),
-which begins with software delivery, artificial intelligence, agents, and
-skills before introducing AI-assisted SDLC and specification-driven
-development (SDD).
+New to these ideas? [Learn from the foundations](start.md). The curriculum
+starts with generative AI, prompting, context, verification, tools, and agents,
+then progresses through AI-assisted SDLC, specification-driven development
+(SDD), harness workflows, guided practice, and role-specific use.
 
 ## Choose your path
 
 <div class="grid cards" markdown>
 
--   **I need to understand it**
+-   **I want to learn from the foundations**
 
     ---
 
-    Learn SDLC, AI SDLC, SDD, artifacts, evidence, gates, and handoffs from
-    first principles.
+    Choose a starting level and build observable competence from basic AI
+    concepts through independent, evidence-backed harness use.
 
-    [Start Foundations →](foundations/index.md)
+    [Open the Learn hub →](start.md)
 
 -   **I want to use it**
 
@@ -88,7 +88,7 @@ development (SDD).
 
 ## Go directly to what you need
 
-The [Start page](start.md) owns the canonical first-use sequence. Returning
+The [Learn hub](start.md) owns the curriculum and starting-level diagnostic. Returning
 readers can find [skills by role](reference/skills-by-role.md) or open [Reference](reference/index.md)
 for an exact contract without replaying onboarding.
 
@@ -130,5 +130,5 @@ the harness mechanisms behave as specified. It does **not** prove a causal
 improvement in your cycle time, quality, or cost. Treat those outcomes as pilot
 hypotheses and evaluate them with your own baseline and review.
 
-[Begin with Foundations →](foundations/index.md){ .md-button .md-button--primary }
+[Learn from the foundations →](start.md){ .md-button .md-button--primary }
 [Evaluate a bounded pilot →](adoption/index.md){ .md-button }

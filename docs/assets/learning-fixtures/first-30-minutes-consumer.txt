@@ -1,0 +1,42 @@
+LEARNING FIXTURE — LAB 6 — DISPOSABLE CONSUMER
+Snapshot: LF-06-2026-07-21
+
+[Repository instructions]
+Scope: documentation-only practice. Read any tracked file. Write only
+learning-evidence/06-first-30-minutes.md. Do not commit, push, install globally,
+use network access, or change app.py/tests.txt. Stop at any requested write.
+
+[Tracked tree]
+  app.py       — display_name(value) returns a friendly label
+  tests.txt    — accepted examples for normal and empty values
+  request.txt  — clarify the error shown for an empty display name
+
+[app.py]
+def display_name(value):
+    return value.strip() or "Unknown user"
+
+[tests.txt]
+  "Mira" -> "Mira"
+  "  Mira  " -> "Mira"
+  empty -> current output "Unknown user"; desired wording is not accepted
+
+[request.txt]
+  Clarify the error shown for an empty display name.
+
+[Emulated installed inventory]
+  ai-sdlc-navigator, ai-sdlc-ba, ai-sdlc-validation
+  scope: project; revision: practice-fixture; host: emulated
+
+[Emulated navigator result]
+  route: ai-sdlc-ba read-only framing
+  reason: desired empty-state wording and owner are missing
+  expected next artifact: bounded ambiguity/question record
+  blocker: Product owner must accept user-visible wording
+  prohibited next step: change app.py
+
+[Setup and reset]
+Create a temporary directory, copy this fixture there as `fixture.txt`, run
+`git init`, then create only `learning-evidence/`. The paper path needs no code
+execution. Delete only that temporary directory to reset; never reset the
+harness checkout. If using a real installed host, replace emulated evidence
+with actual inventory and navigator output and keep the same write boundary.
