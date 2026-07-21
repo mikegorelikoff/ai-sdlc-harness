@@ -147,6 +147,22 @@ contains the absolute temporary source path, so record portable identity and
 remove the lock as shown. Review and commit only `.agents/skills/` and the two
 portable `.ai-sdlc/harness-*` records before feature work.
 
+For a workstation-wide Codex installation, keep the agent target explicit:
+
+```bash
+mkdir -p "$HOME/.codex/skills"
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill '*' --agent codex --global --copy -y
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --global --agent codex
+```
+
+Do not replace `--skill '*'` with `--all`. In the third-party CLI, `--all`
+means all skills **and all recognized agents**. Some recognized targets,
+including Eve and PromptScript in CLI `1.5.19`, have no global installation
+location, so `--all --global` reports two failures for every harness skill.
+Pre-creating Codex's directory also avoids the pinned CLI's clean-home linking
+bug; verification must list `Codex` for each skill, not an empty agent list.
+See the [full installation scope guidance](docs/how-to/install.md#optional-install-globally-for-codex).
+
 Network access to npm and GitHub is required for installation. An offline
 source checkout can run repository tests and compatibility validation, but it
 does not install skills into another project by itself.

@@ -58,6 +58,17 @@ DOCS_ROOT = SCRIPTS.parent
 
 
 class DocumentationValidationTests(unittest.TestCase):
+    def test_global_install_is_skill_wildcard_and_agent_scoped(self) -> None:
+        install = (DOCS_ROOT / "how-to/install.md").read_text(encoding="utf-8")
+        readme = (DOCS_ROOT.parent / "README.md").read_text(encoding="utf-8")
+        command = "--skill '*' --agent codex --global --copy -y"
+        self.assertIn(command, install)
+        self.assertIn(command, readme)
+        self.assertIn('mkdir -p "$HOME/.codex/skills"', install)
+        self.assertIn('`"agents": ["Codex"]`', install)
+        self.assertNotIn("--all --global -y", install)
+        self.assertIn("Never combine global scope with `--all`", install)
+
     def test_root_documents_reject_broken_link_and_machine_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

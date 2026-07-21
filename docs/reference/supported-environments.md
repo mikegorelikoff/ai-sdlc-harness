@@ -88,6 +88,19 @@ temporary source path. A project-scoped `--all` invocation instead targets all
 installer-recognized hosts and can create unrelated host directories; it is
 not the documented pilot path. Review `git status --short` before committing.
 
+For global Codex installation, use `--skill '*' --agent codex --global`; never
+use `--all --global`. The latter expands across every installer-recognized
+agent, including targets such as Eve and PromptScript that CLI `1.5.19` says do
+not support global installation. The resulting two failures per skill describe
+unsupported target/scope pairs, not invalid skill packages. Global behavior for
+other agents remains unverified by this harness until the host matrix records a
+passing installation and first workflow.
+
+On a clean home directory, create `$HOME/.codex/skills` before the global Codex
+command and require `skills list --global --agent codex --json` to report
+`Codex` in every item's `agents` array. CLI `1.5.19` can otherwise copy all 44
+skills into the canonical global store while leaving them unlinked from Codex.
+
 ## Maintainer preview versus stable release
 
 The `main` branch and its documentation can describe unreleased behavior.

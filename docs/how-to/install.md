@@ -164,6 +164,51 @@ inventory. The validator treats the managed inventory as ownership, requires
 every managed name to be installed, and permits unrelated project or
 third-party skill directories to coexist.
 
+## Optional: install globally for Codex
+
+Project-scoped installation is the auditable team default. Use global scope
+only when one person intentionally wants the skills available to Codex across
+multiple repositories. Run this in the same terminal session as the inspection
+block, before deleting `HARNESS_SRC`:
+
+```bash
+mkdir -p "$HOME/.codex/skills"
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill '*' --agent codex --global --copy -y
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --global --agent codex
+```
+
+Expected: 44 skills install for the single `codex` target and the list command
+shows `"agents": ["Codex"]` for every global inventory item. `--copy` makes
+the selected installation method explicit before the temporary checkout is
+removed. Pre-creating `$HOME/.codex/skills` is required for a clean-home test
+because the pinned CLI can otherwise populate `$HOME/.agents/skills` without
+linking the inventory to Codex. Treat an empty `agents` array or “not linked”
+result as a failed verification even when the install summary says success.
+
+The upstream CLI defines these flags differently:
+
+- `--skill '*'` selects every skill from this repository;
+- `--agent codex` selects one agent;
+- `--global` (or `-g`) selects user scope;
+- `--all` selects every skill **and every recognized agent**.
+
+Never combine global scope with `--all` or `--agent '*'` for this harness.
+Skills CLI `1.5.19` recognizes agents that do not define global installation,
+including Eve and PromptScript. With 44 skills, those two unsupported targets
+produce exactly 88 failures even when supported targets installed correctly.
+Rerun the explicit command above; do not interpret the failure count as 88
+broken harness skills. The flag meanings are defined by the
+[official Skills CLI documentation](https://github.com/vercel-labs/skills#options),
+and the clean-home behavior is tracked in the upstream
+[global directory issue](https://github.com/vercel-labs/skills/issues/537).
+
+Global installation is workstation state: it is not committed with a consumer
+repository and the project-scoped `.ai-sdlc/harness-install.json` procedure
+below does not describe it. Record the CLI version, harness revision, selected
+agent, installation method, and verification output in your workstation or
+organizational inventory. Use project scope when repository-level provenance
+and peer review are required.
+
 ## Verify the result
 
 !!! terminal "Run in terminal"
