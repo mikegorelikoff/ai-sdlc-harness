@@ -9,6 +9,24 @@ This procedure installs agent skills into a project using the Skills CLI. It
 does not copy this source repository into your application and it does not
 create delivery artifacts until you ask an agent to use a workflow.
 
+## Fast path (recommended)
+
+Use this path for a first project-scoped install. It works with any agent host
+supported by the Skills CLI; replace `codex` with your host identifier.
+
+```bash
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add \
+  mikegorelikoff/ai-sdlc-harness --skill '*' --agent codex -y
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
+```
+
+You need Node.js `22.20.0+`, npm, and a configured agent host. Run the
+commands from the consumer project, review the files the installer reports,
+then run one bounded navigator request. If this works, stop here and use the
+[first 30 minutes](../onboarding/first-30-minutes.md). The detailed sections
+below are only for pinned revisions, privacy review, global installs, or
+troubleshooting.
+
 ## Before you begin
 
 !!! note "Current release"
@@ -30,7 +48,7 @@ You need:
 Choose a low-risk consumer repository for your first use. The **consumer
 repository** is the software project receiving skills. The **harness source
 repository** is this GitHub project, used by maintainers and contributors.
-For the documented Codex pilot, [install and authenticate Codex CLI](setup-codex.md)
+For a host-specific setup, follow the relevant guide in [supported environments](../reference/supported-environments.md)
 before the first agent prompt.
 
 Install missing prerequisites from the official [Git](https://git-scm.com/downloads),
