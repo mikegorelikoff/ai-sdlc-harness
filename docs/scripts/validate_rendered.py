@@ -13,8 +13,14 @@ class Targets(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
         self.values: list[str] = []
+        self.h1_count = 0
+        self.images_without_alt = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag == "h1":
+            self.h1_count += 1
+        if tag == "img" and not any(name == "alt" and value is not None for name, value in attrs):
+            self.images_without_alt += 1
         wanted = "href" if tag in {"a", "link"} else "src" if tag in {"img", "script"} else None
         if wanted is None:
             return
@@ -50,6 +56,10 @@ def validate(site: Path) -> tuple[list[str], int]:
     for source in html_files:
         parser = Targets()
         parser.feed(source.read_text(encoding="utf-8"))
+        if parser.h1_count != 1:
+            errors.append(f"{source.relative_to(site)}: expected one accessible h1; found {parser.h1_count}")
+        if parser.images_without_alt:
+            errors.append(f"{source.relative_to(site)}: {parser.images_without_alt} image(s) missing alt text")
         for target in parser.values:
             resolved = target_path(source, target, site)
             if resolved is None:

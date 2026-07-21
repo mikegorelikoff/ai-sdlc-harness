@@ -5,6 +5,16 @@ hide:
   - navigation
 ---
 
+!!! warning "Main is a maintainer preview"
+
+    This site is built from unreleased `main`. Stable consumer instructions
+    install the immutable commit for `v1.2.0`. Use this site's exact-fetch
+    installation erratum. The stable release installs, but its installed SDD
+    helpers fail the complete consumer-relative workflow by resolving specs
+    beneath `.agents/specs`. Use it only for historical comparison; evaluate
+    the current candidate from a reviewed source checkout until a corrected
+    release and versioned site exist.
+
 ## The problem in one minute
 
 AI can generate code faster than teams can reconstruct why that code should
@@ -21,8 +31,10 @@ intent, trade-offs, exceptions, and approval.
 intent -> requirement -> design -> task -> code -> test -> evidence -> handoff
 ```
 
-New to these ideas? Read [What is AI SDLC?](foundations/ai-sdlc.md) and
-[What is SDD?](foundations/sdd.md) before installing anything.
+New to these ideas? Follow the [Foundations learning path](foundations/index.md),
+which begins with software delivery, artificial intelligence, agents, and
+skills before introducing AI-assisted SDLC and specification-driven
+development (SDD).
 
 ## Choose your path
 
@@ -72,7 +84,7 @@ New to these ideas? Read [What is AI SDLC?](foundations/ai-sdlc.md) and
 | --- | --- |
 | Portable instructions for AI delivery workflows. | A new IDE or autonomous developer. |
 | Deterministic helpers for repeatable repository mechanics. | A replacement for product, engineering, QA, security, or legal judgment. |
-| Human-readable artifacts plus complete agent state. | A hidden SaaS database or hosted telemetry service. |
+| Human-readable artifacts plus schema-complete state for the managed workflow. | A complete record of every project fact, decision, or external event. |
 | Evidence-backed gates, handoffs, and recovery. | A guarantee of correctness, compliance, or business impact. |
 | A layer that can complement Git, issue tracking, CI, and agent hosts. | A project-management system, CI platform, or deployment authority. |
 
@@ -82,10 +94,25 @@ The [Start page](start.md) owns the canonical first-use sequence. Returning
 readers can find [skills by role](reference/skills-by-role.md) or open [Reference](reference/index.md)
 for an exact contract without replaying onboarding.
 
-The canonical project-scoped installation command is:
+The canonical project- and host-scoped installation sequence is:
 
 ```bash
-DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
+HARNESS_REV=7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2
+HARNESS_TMP="$(mktemp -d)"
+HARNESS_SRC="$HARNESS_TMP/ai-sdlc-harness"
+PYTHON_BIN="${PYTHON_BIN:-python3}"
+git init "$HARNESS_SRC"
+git -C "$HARNESS_SRC" remote add origin https://github.com/mikegorelikoff/ai-sdlc-harness.git
+git -C "$HARNESS_SRC" fetch --depth 1 origin "$HARNESS_REV"
+git -C "$HARNESS_SRC" checkout --detach FETCH_HEAD
+test "$(git -C "$HARNESS_SRC" rev-parse HEAD)" = "$HARNESS_REV"
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill '*' --agent codex -y
+mkdir -p .ai-sdlc
+cp "$HARNESS_SRC/config/ai-sdlc-managed-skills.txt" .ai-sdlc/harness-managed-skills.txt
+printf '{"schema":"ai-sdlc-install-record/v1","revision":"%s","skills_cli":"1.5.19","agent":"codex","selection":"all-skills","inventory":".ai-sdlc/harness-managed-skills.txt"}\n' "$HARNESS_REV" > .ai-sdlc/harness-install.json
+"$PYTHON_BIN" .agents/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_install_record.py
+rm skills-lock.json
+rm -rf "$HARNESS_TMP"
 ```
 
 Run it from the consumer repository only after reviewing the
@@ -93,7 +120,8 @@ Run it from the consumer repository only after reviewing the
 boundary](how-to/install.md). The opt-out applies to the Skills CLI; it does not
 describe the independent data behavior of an agent host or model provider.
 The pinned CLI requires Node.js `>=22.20.0`; verify `node --version` before
-starting.
+starting. Review and commit only `.agents/skills/` plus the portable install
+records; the transient CLI lock contains the deleted temporary source path.
 
 ## What the evidence proves
 

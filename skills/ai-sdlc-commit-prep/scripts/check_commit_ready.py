@@ -18,9 +18,19 @@ if not _SHARED.is_dir():
     _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
+from ai_sdlc_validation_receipt import validate_receipt
 
-ROOT = Path(__file__).resolve().parents[3]
-SDD_SCRIPTS = ROOT / "skills" / "ai-sdlc-sdd" / "scripts"
+def workspace_root(script_path: Path = Path(__file__)) -> Path:
+    """Return the consumer/source repository root for either distribution layout."""
+    candidate = script_path.resolve().parents[3]
+    return candidate.parent if candidate.name == ".agents" else candidate
+
+
+ROOT = workspace_root()
+SKILLS_ROOT = ROOT / "skills"
+if not SKILLS_ROOT.is_dir():
+    SKILLS_ROOT = ROOT / ".agents" / "skills"
+SDD_SCRIPTS = SKILLS_ROOT / "ai-sdlc-sdd" / "scripts"
 CHECK_CLARIFY = SDD_SCRIPTS / "check_clarify.py"
 CHECK_CHECKLIST = SDD_SCRIPTS / "check_checklist.py"
 ANALYZE_SPEC = SDD_SCRIPTS / "analyze_spec.py"
@@ -72,7 +82,7 @@ def spec_tasks_complete(spec_dir: Path, selected_task: str | None = None) -> lis
 
 def run_spec_gate(script: Path, spec_dir: Path) -> list[str]:
     """Run one SDD gate and normalize failure output into error lines."""
-    result = run(["python3", str(script), str(spec_dir)])
+    result = run([sys.executable, str(script), str(spec_dir)])
     if result.returncode == 0:
         return []
 
@@ -132,7 +142,7 @@ def main() -> int:
         for script in spec_gates:
             errors.extend(run_spec_gate(script, spec_dir))
         if (spec_dir / "plan.md").is_file():
-            plan_result = run(["python3", str(PLAN_LINKS), str(spec_dir), "--check"])
+            plan_result = run([sys.executable, str(PLAN_LINKS), str(spec_dir), "--check"])
             if plan_result.returncode != 0:
                 errors.append("plan_links.py failed")
                 if plan_result.stderr.strip():
@@ -140,6 +150,8 @@ def main() -> int:
         if args.full_flow and not (spec_dir / "decision-log.md").is_file():
             # Full flow needs decision traceability before an auditable commit.
             errors.append(f"missing decision log for full flow: {spec_dir / 'decision-log.md'}")
+        if args.full_flow:
+            errors.extend(validate_receipt(spec_dir / "_ai_sdlc/validation-receipt.json", ROOT))
 
     if errors:
         for error in errors:

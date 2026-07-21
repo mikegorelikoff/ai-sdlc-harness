@@ -30,6 +30,8 @@ KINDS = {"test", "validation", "approval", "review", "research", "release"}
 
 def atomic_write(path: Path, content: str) -> None:
     """Atomically replace one generated ledger output."""
+    if any(component.is_symlink() for component in (path, *list(path.parents)[:4])):
+        raise SystemExit(f"ERROR: output path contains symlink component: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
     try:

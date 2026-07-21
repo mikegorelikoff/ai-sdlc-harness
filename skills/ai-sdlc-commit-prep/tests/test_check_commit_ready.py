@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
+import importlib.util
 import subprocess
+import sys
 import tempfile
 import textwrap
 import unittest
@@ -12,6 +14,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 CHECK_COMMIT_READY = ROOT / "skills" / "ai-sdlc-commit-prep" / "scripts" / "check_commit_ready.py"
+
+
+def load_checker():
+    """Load the checker so path-resolution helpers can be tested directly."""
+    spec = importlib.util.spec_from_file_location("check_commit_ready", CHECK_COMMIT_READY)
+    module = importlib.util.module_from_spec(spec)
+    assert spec and spec.loader
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 def write(path: Path, text: str) -> None:
@@ -151,9 +163,9 @@ def write_spec(spec_dir: Path, *, bad_acceptance: bool = False, decision_log: bo
         ## Cross-Artifact Trace Map
         - AC-001 -> TC-001 -> T001, T002, T003
         ## Task Execution Plan
-        - [x] T001
-        - [x] T002
-        - [x] T003
+        - [x] T001: Example
+        - [x] T002: Example
+        - [x] T003: Example
         ## Task Dependencies
         - T001: none
         - T002: T001
@@ -202,6 +214,16 @@ def write_spec(spec_dir: Path, *, bad_acceptance: bool = False, decision_log: bo
 
 
 class CheckCommitReadyTests(unittest.TestCase):
+    def test_installed_layout_resolves_consumer_workspace_root(self) -> None:
+        """Installed commit prep must not resolve relative specs below `.agents`."""
+        checker = load_checker()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            consumer = Path(temp_dir) / "consumer"
+            installed_script = (
+                consumer / ".agents/skills/ai-sdlc-commit-prep/scripts/check_commit_ready.py"
+            )
+            self.assertEqual(checker.workspace_root(installed_script), consumer.resolve())
+
     """Behavior tests for the commit-readiness helper CLI."""
 
     def test_quick_flow_runs_portable_spec_validation(self) -> None:

@@ -8,6 +8,7 @@ and QA evidence. It is intentionally stricter than structural validation.
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -17,6 +18,7 @@ if not _SHARED.is_dir():
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_paths import first_existing, legacy_plan_toon_path, plan_toon_path
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
+from ai_sdlc_validation_receipt import validate_receipt
 from spec_helpers import ROOT, parse_acceptance_ids, parse_task_entries, parse_test_case_ids
 
 
@@ -78,6 +80,13 @@ def validate(spec_dir: Path) -> list[str]:
 
     if "## Validation Commands" not in qa_md:
         errors.append("qa.md missing Validation Commands section")
+    execution_claim = re.search(r"(?im)^\s*(?:-\s*)?PASS\s*(?::|-|\.)", qa_md)
+    if execution_claim:
+        receipt = spec_dir / "_ai_sdlc/validation-receipt.json"
+        receipt_errors = validate_receipt(receipt, ROOT)
+        if receipt_errors:
+            errors.append("qa.md contains PASS claims without a current executed validation receipt")
+            errors.extend(receipt_errors)
 
     for required_link in ("requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md", "_ai_sdlc/plan.toon", "decision-log.md"):
         if required_link not in plan_md:

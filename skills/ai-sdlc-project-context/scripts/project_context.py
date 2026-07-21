@@ -9,13 +9,32 @@ import os
 import re
 import subprocess
 import tempfile
+import sys
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+_SHARED = Path(__file__).resolve().parents[2] / "_shared"
+if not _SHARED.is_dir():
+    _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
+sys.path.insert(0, str(_SHARED))
+from ai_sdlc_safe_io import atomic_write_text
+
 
 SOURCE_NAMES = {"AGENTS.md", "README.md", "README", "Makefile", "go.mod", "package.json", "pyproject.toml", "Cargo.toml", "requirements.txt"}
 SECRET_PATTERN = re.compile(r"(^|[._/-])(env|secret|credential|token|private|id_rsa|id_ed25519|\.pem|\.key|\.p12)([._/-]|$)", re.I)
+SECRET_ASSIGNMENT_PATTERN = re.compile(
+    r"(?im)^\s*(?:export\s+|set\s+|\$env:)?"
+    r"(?:[A-Z][A-Z0-9_.-]*[_-])?(?:API[_-]?KEY|ACCESS[_-]?KEY|ACCESS[_-]?TOKEN|AUTH[_-]?TOKEN|"
+    r"CLIENT[_-]?SECRET|PASSWORD|PASSWD|PRIVATE[_-]?KEY|REFRESH[_-]?TOKEN|SECRET|TOKEN)"
+    r"\s*[:=]\s*['\"]?[^\s'\"#]{6,}"
+)
+SECRET_CONTENT_PATTERNS = (
+    SECRET_ASSIGNMENT_PATTERN,
+    re.compile(r"(?i)\b(?:authorization\s*[:=]\s*)?bearer\s+[A-Za-z0-9._~+/=-]{8,}"),
+    re.compile(r"(?i)\b(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?|mysql|redis)://[^\s/@:]+:[^\s/@]+@"),
+    re.compile(r"-----BEGIN (?:[A-Z0-9 ]+ )?PRIVATE KEY-----"),
+)
 COMMAND_PATTERN = re.compile(r"(?:^|\s)((?:npm|npx|pnpm|yarn|go|cargo|python3?|pytest|make|docker)\s+[^\n`]+)")
 
 
@@ -27,6 +46,11 @@ class Evidence:
     line: int
     kind: str
     detail: str
+
+
+def credential_like_content(content: str) -> bool:
+    """Conservatively detect credential-shaped content before it enters output."""
+    return any(pattern.search(content) for pattern in SECRET_CONTENT_PATTERNS)
 
 
 def git(root: Path, *args: str) -> str:
@@ -55,6 +79,8 @@ def scan(root: Path) -> tuple[list[Evidence], list[str], list[str], str]:
     for path in sources(root):
         relative = path.relative_to(root).as_posix()
         content = path.read_text(encoding="utf-8", errors="replace")
+        if credential_like_content(content):
+            continue
         digest.update(relative.encode())
         digest.update(b"\0")
         digest.update(content.encode())
@@ -118,17 +144,9 @@ def render_markdown(root: Path, rev: str, fingerprint: str, stack: list[str], co
     return "\n".join(lines).rstrip() + "\n"
 
 
-def atomic_write(path: Path, content: str) -> None:
+def atomic_write(root: Path, path: Path, content: str) -> None:
     """Atomically replace one context output."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            handle.write(content)
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
+    atomic_write_text(root, path, content)
 
 
 def saved_identity(path: Path) -> tuple[str, str]:
@@ -178,8 +196,8 @@ def main() -> int:
     if args.write:
         toon_output = render_toon(root, rev, fingerprint, stack, commands, evidence, "no")
         markdown_output = render_markdown(root, rev, fingerprint, stack, commands, evidence, "no")
-        atomic_write(toon_path, toon_output)
-        atomic_write(root / "project-context.md", markdown_output)
+        atomic_write(root, toon_path, toon_output)
+        atomic_write(root, root / "project-context.md", markdown_output)
     print(toon_output if args.format == "toon" else markdown_output, end="")
     return 0
 

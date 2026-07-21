@@ -127,8 +127,11 @@ diffs, conservative conflicts, stale references, reopen actions, gates, and a
 fingerprint that becomes invalid when any input drifts.
 
 The JSON schemas `ai-sdlc-change-approval/v1` and
-`ai-sdlc-change-recovery/v1` bind accountable approval to the current preview
-and preserve transaction, backup, apply, and rollback evidence.
+`ai-sdlc-change-recovery/v1` bind a structurally valid approval record to the
+current preview and preserve transaction, backup, apply, and rollback evidence.
+They do not authenticate the named owner or prove authorization. Branch
+protection, CODEOWNERS review, a signed attestation, or another independently
+enforced control must establish that authority before apply.
 
 Quality gate:
 
@@ -163,7 +166,7 @@ On a blocker, preserve failed/stale evidence, name the accountable owner and exa
   structurally valid workspace to delta authoring and validation. Include
   `next_required` and `next_optional` actions with reasons, commands, and
   expected artifacts.
-- Return progress, validation, and handoff summaries directly in the Codex response.
+- Return progress, validation, and handoff summaries directly in the active agent response.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
 - Do not create ad hoc summaries outside the canonical workspace files.
 

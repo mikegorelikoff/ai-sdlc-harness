@@ -59,6 +59,19 @@ class ProjectContextTests(unittest.TestCase):
             self.assertNotIn("do-not-read", result.stdout)
             self.assertNotIn(".env", result.stdout)
 
+    def test_credential_content_in_named_source_is_excluded(self) -> None:
+        """Credential-shaped content in an ordinary source must not be emitted."""
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "README.md").write_text(
+                "ACME_PROD_API_KEY=synthetic-value-123\nRun python3 -m unittest\n",
+                encoding="utf-8",
+            )
+            result = self.run_context(root, "--emit", "--format", "toon")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertNotIn("synthetic-value-123", result.stdout)
+            self.assertNotIn("README.md", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -11,11 +11,16 @@ recommendation, explain its authority, and leave a usable handoff.
 
 ## Minute 0–5: verify the environment
 
+If Codex is the selected host, complete [Set up Codex CLI](../how-to/setup-codex.md)
+first. The guide covers installation, authentication, opening the consumer
+repository, and entering an agent prompt.
+
 !!! terminal "Run in terminal — consumer repository"
 
     ```bash
     git status --short
-    python3 --version
+    PYTHON_BIN="${PYTHON_BIN:-python3}"
+    "$PYTHON_BIN" --version
     DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
     ```
 
@@ -74,6 +79,21 @@ Use the [glossary](../foundations/glossary.md) and
 
 ## Minute 20–25: run one bounded skill
 
+Before any product or evidence write, create or switch to a reviewed task
+branch. Branch creation itself is the necessary write-capable exception: review
+the base and name first, then run `ai-sdlc-branching` or the equivalent Git
+command. For this disposable practice branch:
+
+```bash
+git switch -c feature/onboarding-practice
+git branch --show-current
+git status --short
+```
+
+Expected: the task branch is not the shared base branch, and the working tree
+is clean or every existing change is understood. If either condition is false,
+stop before asking the agent to write.
+
 !!! example "Tell your agent"
 
     ```text
@@ -83,9 +103,10 @@ Use the [glossary](../foundations/glossary.md) and
     Stop if a material decision or permission is missing.
     ```
 
-The exact skill depends on the request. It may create context, a small SDD, a
-QA gap report, a validation plan, or a review. The agent should use its packaged
-helpers automatically and return the common handoff.
+The exact skill depends on the request. It must either return a versioned
+`ai-sdlc-handoff/v1` with `result: complete` and the stated artifact at the
+declared path, or return `result: blocked` with the missing decision, evidence,
+or permission. A generic success sentence is not completion.
 
 ## Minute 25–30: inspect and stop
 

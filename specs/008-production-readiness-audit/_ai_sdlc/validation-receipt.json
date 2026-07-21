@@ -1,0 +1,131 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "skills/_shared/test_all_skill_scripts.py"
+      ],
+      "duration_ms": 12684,
+      "exit_code": 0,
+      "id": "V001",
+      "output_limited": false,
+      "stderr_bytes": 129,
+      "stderr_sha256": "f494e9d75ec961fc28a137c379862264130e555df62ba9c5c98239dbc01de4f5",
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_ids": [
+        "TC-009",
+        "TC-012"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "skills/_shared/test_each_skill_tests.py"
+      ],
+      "duration_ms": 38827,
+      "exit_code": 0,
+      "id": "V002",
+      "output_limited": false,
+      "stderr_bytes": 99,
+      "stderr_sha256": "ac9cbc6443cd6e9e65b770d48b140f1f10334055f7defacd829625da5740d58c",
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_ids": [
+        "TC-009",
+        "TC-012"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "docs/scripts/validate_docs.py"
+      ],
+      "duration_ms": 776,
+      "exit_code": 0,
+      "id": "V003",
+      "output_limited": false,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 109,
+      "stdout_sha256": "02927e80c0bf87f86c7bfbf7ab88ce6c0bd4a45192e1662a3b883fe389eeede2",
+      "trace_ids": [
+        "TC-006",
+        "TC-007",
+        "TC-008",
+        "TC-011"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "docs.tests.test_docs"
+      ],
+      "duration_ms": 5466,
+      "exit_code": 0,
+      "id": "V004",
+      "output_limited": false,
+      "stderr_bytes": 117,
+      "stderr_sha256": "36a446a2612fc528c401dfc9901bd6f1a1e1338829fe9b049d75ec24f752ef66",
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_ids": [
+        "TC-006",
+        "TC-007",
+        "TC-008"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "skills/_shared/ai_sdlc_install_smoke.py",
+        "--mode",
+        "emulated"
+      ],
+      "duration_ms": 4719,
+      "exit_code": 0,
+      "id": "V005",
+      "output_limited": false,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 110,
+      "stdout_sha256": "85d8fab75e865b5e824db21ef17ed7dca3228951a59145ed361eab3ebb866d0c",
+      "trace_ids": [
+        "TC-002",
+        "TC-003"
+      ]
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "duration_ms": 19,
+      "exit_code": 0,
+      "id": "V006",
+      "output_limited": false,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_ids": [
+        "TC-015"
+      ]
+    }
+  ],
+  "environment": {
+    "platform": "macOS-26.3.1-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "evidence_trust": "local-structural-not-authenticated",
+  "executed_at": "2026-07-21T12:47:31.493469Z",
+  "plan_path": "specs/008-production-readiness-audit/_ai_sdlc/validation-plan.json",
+  "plan_sha256": "4cb1b02d9f6bca8d0cc1a11107e2bab64ec6bf4f8cad9d2c847df1f23eeacd8f",
+  "receipt_fingerprint": "dcf1333c388866a562b1c8f48b66241ba7c120370d979ac78edc2cce28a13470",
+  "revision": "38da30737c15fcbe53c8e4854cea09eae0446fd0",
+  "schema": "ai-sdlc-validation-receipt/v1",
+  "workspace_fingerprint": "62661cd8e57adc03990dbf3df2cd39ef21e333bd757a5724fd5dbc239fc92f0d"
+}

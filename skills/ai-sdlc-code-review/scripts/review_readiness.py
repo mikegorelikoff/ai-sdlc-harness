@@ -142,12 +142,32 @@ def skill_metadata_warnings(files: list[str], full_repo: bool) -> list[str]:
     )
     for skill in changed_skills:
         skill_dir = Path("skills") / skill
+        changed_python = sorted(
+            file for file in files
+            if file.startswith(f"{skill_dir}/") and file.endswith(".py") and Path(file).is_file()
+        )
+        if skill == "_shared":
+            if changed_python:
+                warnings.append(
+                    "shared helper change detected; run "
+                    "PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-harness-pycache python3 -m py_compile "
+                    + " ".join(changed_python)
+                )
+            warnings.append(
+                "shared helper change detected; run python3 "
+                "skills/_shared/sync_installed_runtime.py --check"
+            )
+            continue
         if not (skill_dir / "SKILL.md").is_file():
             warnings.append(f"skill change detected but {skill_dir / 'SKILL.md'} is missing")
-        warnings.append(
-            "skill change detected; run "
-            f"python3 -m py_compile {skill_dir}/scripts/*.py and inspect {skill_dir}/SKILL.md"
-        )
+        else:
+            warnings.append(f"skill change detected; inspect {skill_dir}/SKILL.md")
+        if changed_python:
+            warnings.append(
+                "skill Python change detected; run "
+                "PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-harness-pycache python3 -m py_compile "
+                + " ".join(changed_python)
+            )
     return warnings
 
 

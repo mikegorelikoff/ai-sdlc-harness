@@ -1,12 +1,35 @@
 name: docs-pages
 
 on:
-  push:
-    branches: [main]
+  pull_request:
     paths:
+      - "README.md"
+      - "FAQ.md"
+      - "CONTRIBUTING.md"
+      - "SECURITY.md"
+      - "SUPPORT.md"
       - "docs/**"
       - "mkdocs.yml"
       - "requirements-docs.txt"
+      - "requirements-docs.lock"
+      - "skills/**"
+      - "modules/**"
+      - "compatibility/**"
+      - "config/**"
+      - ".github/workflows/pages.yml"
+  push:
+    branches: [main]
+    paths:
+      - "README.md"
+      - "FAQ.md"
+      - "CONTRIBUTING.md"
+      - "SECURITY.md"
+      - "SUPPORT.md"
+      - "docs/**"
+      - "mkdocs.yml"
+      - "requirements-docs.txt"
+      - "requirements-docs.lock"
+      - "config/**"
       - "skills/**"
       - "modules/**"
       - "compatibility/**"
@@ -22,26 +45,33 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.13"
           cache: pip
-          cache-dependency-path: requirements-docs.txt
+          cache-dependency-path: requirements-docs.lock
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22.20.0"
       - name: Install documentation dependencies
-        run: python3 -m pip install -r requirements-docs.txt
+        run: python3 -m pip install --require-hashes -r requirements-docs.lock
       - name: Validate generated catalogs
         run: python3 docs/scripts/build_catalog.py --check
       - name: Validate documentation source
         run: python3 docs/scripts/validate_docs.py
-      - name: Smoke test project-scoped skill installation
-        run: python3 skills/_shared/ai_sdlc_install_smoke.py --mode npx --source https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0
+      - name: Smoke test checked-out candidate installation
+        run: python3 skills/_shared/ai_sdlc_install_smoke.py --mode npx --source . --agent codex
+      - name: Smoke test documented stable remote revision
+        run: python3 skills/_shared/ai_sdlc_install_smoke.py --mode npx-remote --source https://github.com/mikegorelikoff/ai-sdlc-harness.git --revision 7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2 --agent codex --expected-failure .agents/specs/001-runtime-smoke/requirements.md
       - name: Run documentation tests
         run: python3 -m unittest discover -s docs/tests -v
       - name: Build documentation
@@ -49,13 +79,15 @@ jobs:
       - name: Validate rendered site
         run: python3 docs/scripts/validate_rendered.py site
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
           path: site
 
   deploy:
+    if: github.event_name != 'pull_request'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pages: write
       id-token: write
@@ -65,4 +97,4 @@ jobs:
     steps:
       - name: Deploy Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

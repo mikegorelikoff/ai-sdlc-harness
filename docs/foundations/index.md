@@ -5,23 +5,34 @@ description: Learn AI SDLC, SDD, the harness mental model, and responsibility bo
 
 # Foundations
 
-This path assumes no prior knowledge of AI SDLC or spec-driven development.
+This path assumes no prior knowledge of software delivery, artificial
+intelligence, AI SDLC, or specification-driven development.
 Read it before the operational tutorials if terms such as artifact, evidence,
 gate, handoff, or TOON are unfamiliar.
 
-1. [What is AI SDLC?](ai-sdlc.md) starts with the ordinary software
-   development lifecycle and explains what changes when an AI agent participates.
-2. [What is SDD?](sdd.md) explains why observable requirements, design, tests,
+1. [Git and terminal primer](git-and-terminal-primer.md) introduces the command,
+   repository, branch, commit, remote, and immutable revision vocabulary used
+   by the executable guides.
+2. [Software delivery foundations](software-delivery.md) introduces lifecycle
+   stages, roles, requirements, acceptance, technical debt, and common failures.
+3. [Artificial intelligence foundations](ai-foundations.md) introduces AI,
+   machine learning, large language models, tokens, context, uncertainty,
+   privacy, and validation.
+4. [Agents, sub-agents, and skills](agents-and-skills.md) explains tool use,
+   orchestration, precedence, failure recovery, and reusable capability design.
+5. [What is AI SDLC?](ai-sdlc.md) connects those foundations and explains what
+   changes when an AI agent participates.
+6. [What is SDD?](sdd.md) explains why observable requirements, design, tests,
    QA scope, and tasks should exist before implementation grows.
-3. [Why use a harness?](why-harness.md) defines the product, fit, prerequisites,
+7. [Why use a harness?](why-harness.md) defines the product, fit, prerequisites,
    non-goals, and maturity boundaries.
-4. [Mental model](mental-model.md) connects skills, scripts, artifacts, state,
+8. [Mental model](mental-model.md) connects skills, scripts, artifacts, state,
    policy, agents, and humans.
-5. [Human and agent responsibilities](responsibilities.md) shows who may decide,
+9. [Human and agent responsibilities](responsibilities.md) shows who may decide,
    write, validate, approve, or escalate.
-6. [Context, prompts, and personalization](context-prompt-personalization.md)
+10. [Context, prompts, and personalization](context-prompt-personalization.md)
    explains how to select sufficient evidence, write stable task contracts, and
    apply user-controlled communication preferences safely.
-7. [Glossary](glossary.md) provides one canonical vocabulary reference.
+11. [Glossary](glossary.md) provides one canonical vocabulary reference.
 
 After this path, continue with [Onboarding](../onboarding/index.md).

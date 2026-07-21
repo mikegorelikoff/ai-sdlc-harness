@@ -5,10 +5,14 @@ description: Map repository topology and select explained, secret-safe task cont
 
 # Build a task context pack
 
+Run from the root of an installed consumer repository. Replace the task, goal,
+path, tags, and budget with an existing task and authoritative local artifact;
+the example `specs/004-...` path exists only in this harness source repository.
+
 Inspect ownership and source-to-test topology first:
 
 ```bash
-python3 skills/ai-sdlc-project-context/scripts/context_engine.py \
+python3 .agents/skills/ai-sdlc-project-context/scripts/context_engine.py \
   --topology --write --format toon
 ```
 
@@ -16,7 +20,7 @@ Then identify one task, its outcome, known relevant paths or tags, and a token
 budget:
 
 ```bash
-python3 skills/ai-sdlc-project-context/scripts/context_engine.py \
+python3 .agents/skills/ai-sdlc-project-context/scripts/context_engine.py \
   --build-pack \
   --task T009 \
   --goal "Implement bounded context selection" \
@@ -39,7 +43,8 @@ Check `sufficiency.status` before acting:
 
 A missing evidence ledger or stale project context is never reported as
 current evidence. Retrieved code and documents are `evidence_only`; only
-recognized repository instruction files receive `repository_instruction`
+recognized root instruction files (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`) and
+`.github/copilot-instructions.md` receive `repository_instruction`
 authority. An enabled interaction profile may shape presentation, but cannot
 change either classification or the selected evidence.
 

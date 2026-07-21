@@ -5,7 +5,8 @@ description: Release evidence and migration notes for the guided onboarding and 
 
 # Release 1.2
 
-`v1.2.0` is the tagged release for the guided onboarding program. It includes
+`v1.2.0` is the historical version tag for the guided onboarding program; no
+matching GitHub Release object exists. It includes
 the installable shared runtime, canonical Material onboarding, complete skill
 and script guides, adoption/governance operations, and the final independent
 persona/release audit.
@@ -15,10 +16,10 @@ persona/release audit.
 | Item | Evidence |
 | --- | --- |
 | API compatibility | `1.0.0`; stable skill names, flags, routes, and module IDs remain additive. |
-| Installer source | `https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0` with `DISABLE_TELEMETRY=1`. |
+| Installer source | Tag `v1.2.0` maps to immutable commit `7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2`; fetch and verify that commit, then install its local checkout with `DISABLE_TELEMETRY=1`. Skills CLI `1.5.19` cannot clone a SHA supplied as a GitHub `/tree/...` branch. The tag is not signed. |
 | Inventory | 44 skills, 5 modules, 106 scripts, 17 installed-runtime mirrors. |
 | Documentation | Strict Material build, rendered target validation, canonical `docs/` navigation, and role/adoption/operations paths. |
-| Runtime | Pinned CLI smoke verifies shared-runtime imports and a disposable SDD scaffold from the exact tagged source. |
+| Runtime | The historical shallow smoke verified shared-runtime imports and one scaffold. The strengthened complete consumer smoke now reproduces a root-resolution failure, so the tag is not approved for full use. |
 | Governance | Human authority, data/telemetry, package trust, permissions, retention, incident, rollout, and limitations are documented. |
 
 ## One-task/one-commit audit

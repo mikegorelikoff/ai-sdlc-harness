@@ -12,7 +12,8 @@ commands, show expected results, and stop at human checkpoints.
 
 -   **Ship a first feature**
 
-    Copy a dependency-free sample service and follow navigation, a small SDD,
+    Copy a dependency-free sample service and follow navigation, a small
+    Specification-driven development (SDD) workflow,
     implementation, a deliberate regression, recovery, validation, and commit.
 
     [Begin the runnable tutorial →](first-feature.md)
@@ -24,15 +25,26 @@ commands, show expected results, and stop at human checkpoints.
 
     [Begin adoption →](existing-project.md)
 
--   **Run the full lifecycle**
+-   **Run the full refinement-to-implementation handoff**
 
-    Follow a medium-risk SSO feature through all 18 refinement stages,
+    Follow a medium-risk single sign-on (SSO) feature through all 18 refinement stages,
     a real blocked-and-resumed handoff, the 18/18 gate, and implementation SDD.
 
     [Begin the full journey →](full-lifecycle.md)
 
+-   **Apply common change patterns**
+
+    Adapt evidence-complete patterns for defects, refactors, application
+    programming interfaces (APIs), database
+    changes, tests, ambiguous requests, artificial intelligence (AI) review,
+    failed work, and requirement
+    changes.
+
+    [Choose a pattern →](change-patterns.md)
+
 </div>
 
-Read [Foundations](../foundations/index.md) first if AI SDLC, SDD, artifact,
+Read [Foundations](../foundations/index.md) first if an AI-assisted software
+development lifecycle, SDD, artifact,
 gate, or handoff is unfamiliar. Use [Flows](../flows/index.md) when you need an
 exact map rather than a learning exercise.

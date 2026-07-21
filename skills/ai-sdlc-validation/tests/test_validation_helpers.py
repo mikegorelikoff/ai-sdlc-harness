@@ -75,6 +75,26 @@ class ValidationPlanTests(unittest.TestCase):
         self.assertIn("python3 skills/ai-sdlc-sdd/scripts/validate_spec.py specs/176-ai-setup-hardening --quick-flow", result.stdout)
         self.assertNotIn("check_clarify.py", result.stdout)
 
+    def test_shared_helper_uses_real_paths_and_sync_check(self) -> None:
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(VALIDATION_PLAN),
+                "--quick-flow",
+                "skills/_shared/ai_sdlc_install_record.py",
+            ],
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            cwd=ROOT,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertNotIn("skills/_shared/SKILL.md", result.stdout)
+        self.assertIn("skills/_shared/sync_installed_runtime.py --check", result.stdout)
+        self.assertIn("skills/_shared/ai_sdlc_install_record.py", result.stdout)
+
 
 class ReviewReadinessTests(unittest.TestCase):
     """Behavior tests for code-review helper warnings."""
@@ -84,6 +104,17 @@ class ReviewReadinessTests(unittest.TestCase):
         module = load_module(REVIEW_READINESS, "review_readiness")
         warnings = module.skill_metadata_warnings(["skills/ai-sdlc-ba/SKILL.md"], full_repo=False)
         self.assertTrue(any("inspect skills/ai-sdlc-ba/SKILL.md" in warning for warning in warnings))
+
+    def test_shared_warning_has_no_impossible_skill_or_wildcard_path(self) -> None:
+        module = load_module(REVIEW_READINESS, "review_readiness_shared")
+        warnings = module.skill_metadata_warnings(
+            ["skills/_shared/ai_sdlc_install_record.py"], full_repo=False
+        )
+        joined = "\n".join(warnings)
+        self.assertNotIn("skills/_shared/SKILL.md", joined)
+        self.assertNotIn("scripts/*.py", joined)
+        self.assertIn("skills/_shared/ai_sdlc_install_record.py", joined)
+        self.assertIn("sync_installed_runtime.py --check", joined)
 
 
 if __name__ == "__main__":

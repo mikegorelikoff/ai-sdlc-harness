@@ -1,54 +1,84 @@
 ---
 title: Ship a first feature
-description: Follow a runnable sample from clean project setup through installation, branch-first SDD, implementation, real failure recovery, validation, and traceable commit evidence.
+description: Follow a runnable sample from clean project setup through installation, branch-first specification, implementation, real failure recovery, validation, and traceable commit evidence.
 ---
 
 # Ship a first feature
+
+This tutorial uses artificial intelligence (AI), Specification-driven
+development (SDD), Windows Subsystem for Linux (WSL), and command-line
+interface (CLI).
 
 This tutorial adds a read-only `/health` route to a tiny dependency-free Python
 service. It teaches the shortest complete evidence loop; the point is not the
 endpoint but the ability to explain and verify every step without the original
 chat.
 
+`/health` is a web route used to report whether the tiny process is alive.
+Hypertext Transfer Protocol (HTTP) `GET` means read that route; status `200`
+means the request succeeded; `{"status": "ok"}` is the expected JavaScript
+Object Notation (JSON) response body.
+
 You need network access, Git, Python 3.10+, Node.js `>=22.20.0`, npm, and a
 supported AI agent. The commands are written for Linux/macOS/WSL or Git Bash;
 PowerShell users should use WSL for this end-to-end fixture. Every repository
 created here is disposable.
 
-## 0. Acquire the pinned tutorial source
+## 0. Open the candidate source checkout
 
-The fixture is in the tagged source release. Run this before the first step:
+This tutorial validates the current source candidate, including documentation,
+security, and workflow fixes that are not present in `v1.2.0`. The stable release passed the
+historical shallow copy/help smoke, but it fails the current complete installed
+SDD/commit smoke and cannot demonstrate these unreleased acceptance criteria.
+If you are reading the public site rather than a source checkout, acquire the
+unreleased maintainer preview explicitly:
+
+```bash
+CANDIDATE_PARENT="$(mktemp -d)"
+git clone https://github.com/mikegorelikoff/ai-sdlc-harness.git "$CANDIDATE_PARENT/ai-sdlc-harness"
+cd "$CANDIDATE_PARENT/ai-sdlc-harness"
+test "$(git remote get-url origin)" = "https://github.com/mikegorelikoff/ai-sdlc-harness.git"
+git checkout --detach origin/main
+```
+
+This mutable `main` acquisition is suitable only for the tutorial preview; the
+captured commit below is evidence for the bytes exercised, not a production
+release or signature. A contributor may instead open an already reviewed,
+committed source checkout containing this page.
+Capture the exact candidate revision only from a clean committed checkout so
+the recorded revision identifies every installed byte. The Git checks below
+fail on tracked, staged, or untracked candidate content:
 
 !!! terminal "Linux/macOS/WSL/Git Bash"
 
     ```bash
-    git clone --branch v1.2.0 --depth 1 https://github.com/mikegorelikoff/ai-sdlc-harness.git ai-sdlc-harness-v1.2.0
-    cd ai-sdlc-harness-v1.2.0
+    HARNESS_SRC="$(git rev-parse --show-toplevel)"
+    HARNESS_REV="$(git -C "$HARNESS_SRC" rev-parse HEAD)"
+    git -C "$HARNESS_SRC" diff --quiet
+    git -C "$HARNESS_SRC" diff --cached --quiet
+    test -z "$(git -C "$HARNESS_SRC" ls-files --others --exclude-standard)"
+    test -f "$HARNESS_SRC/docs/tutorials/first-feature.md"
+    TUTORIAL_ROOT="$(mktemp -d)"
+    cd "$HARNESS_SRC"
     node --version  # expected: v22.20.0 or newer
     npm --version
-    python3 --version
+    PYTHON_BIN="${PYTHON_BIN:-python3}"
+    "$PYTHON_BIN" --version
     ```
 
-!!! terminal "PowerShell"
-
-    ```powershell
-    git clone --branch v1.2.0 --depth 1 https://github.com/mikegorelikoff/ai-sdlc-harness.git ai-sdlc-harness-v1.2.0
-    Set-Location ai-sdlc-harness-v1.2.0
-    node --version  # expected: v22.20.0 or newer
-    npm --version
-    py --version
-    ```
-
-If Node is older than `22.20.0`, stop and upgrade Node before invoking the
+If any clean-check command fails, stop and commit or discard the candidate
+content through normal review before recording `HARNESS_REV`. If Node is older than `22.20.0`, stop and upgrade Node before invoking the
 pinned Skills CLI. The CLI package declares that engine floor; changing the
 Node version is safer than forcing installation with an unsupported runtime.
+If Python is older than 3.10, stop as well; installation alone does not verify
+the helper runtime. Windows users should perform the complete fixture in WSL.
 
 ## 1. Create a clean consumer and explicit base branch
 
 !!! terminal "Run in terminal — harness source checkout (POSIX)"
 
     ```bash
-    DEMO_PARENT="$(mktemp -d)"
+    DEMO_PARENT="$TUTORIAL_ROOT"
     DEMO_ROOT="$DEMO_PARENT/ai-sdlc-health-demo"
     cp -R examples/onboarding-health-service "$DEMO_ROOT"
     cd "$DEMO_ROOT"
@@ -59,25 +89,12 @@ Node version is safer than forcing installation with an unsupported runtime.
     git config --local commit.gpgsign false
     git config --get user.name
     git config --get user.email
-    git add README.md app.py test_app.py deliberate_unknown_route_regression.py.disabled
+    printf '__pycache__/\n*.py[cod]\n' > .gitignore
+    git add .gitignore README.md app.py test_app.py deliberate_unknown_route_regression.py.disabled
     git commit -m "chore: initialize health service fixture"
-    python3 -m unittest -v
+    "$PYTHON_BIN" -m unittest -v
     git status --short
     ```
-
-For PowerShell, use a disposable directory explicitly:
-
-```powershell
-$demoRoot = Join-Path ([System.IO.Path]::GetTempPath()) 'ai-sdlc-health-demo'
-Remove-Item -Recurse -Force $demoRoot -ErrorAction SilentlyContinue
-Copy-Item -Recurse examples/onboarding-health-service $demoRoot
-Set-Location $demoRoot
-git init
-git checkout -b dev
-git config --local user.name "AI SDLC Tutorial"
-git config --local user.email "tutorial@example.invalid"
-git config --local commit.gpgsign false
-```
 
 Expected tests:
 
@@ -91,6 +108,7 @@ Expected tree:
 
 ```text
 ai-sdlc-health-demo/
+  .gitignore
   README.md
   app.py
   deliberate_unknown_route_regression.py.disabled
@@ -102,22 +120,34 @@ The repository is on `dev` and clean. The `.disabled` file is not discovered by
 
 ## 2. Install and commit the accepted baseline
 
-Follow the [canonical project-scoped installation](../how-to/install.md) from
-the consumer root. Then inspect what the installer added.
+Reuse the scope, telemetry, and trust rules from the
+[canonical project-scoped installation](../how-to/install.md), but do **not**
+rerun that guide's stable-source selection in this candidate exercise. Preserve
+the `HARNESS_SRC` and `HARNESS_REV` captured in step 0, then inspect what the
+installer adds.
 
 !!! terminal "Run in terminal"
 
     ```bash
-    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
-    python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
-    python3 .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
+    test "$(git -C "$HARNESS_SRC" rev-parse HEAD)" = "$HARNESS_REV"
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill '*' --agent codex -y
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
+    mkdir -p .ai-sdlc
+    cp "$HARNESS_SRC/config/ai-sdlc-managed-skills.txt" .ai-sdlc/harness-managed-skills.txt
+    printf '{"schema":"ai-sdlc-install-record/v1","revision":"%s","skills_cli":"1.5.19","agent":"codex","selection":"all-skills","inventory":".ai-sdlc/harness-managed-skills.txt"}\n' "$HARNESS_REV" > .ai-sdlc/harness-install.json
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_install_record.py
+    rm skills-lock.json
     git status --short
     ```
 
 !!! warning "Human checkpoint"
 
     Review the installed diff and source identity. Continue only if changes are
-    limited to accepted agent skill locations and `skills-lock.json`. Installed
+    limited to `.agents/skills/` and the two portable harness records under
+    `.ai-sdlc/`. The transient
+    CLI lock contains an absolute temporary path and must be absent. Installed
     instructions run with the agent's authority; inventory is not a trust
     decision.
 
@@ -128,11 +158,12 @@ scope.
 !!! terminal "Run in terminal"
 
     ```bash
-    git add -A
+    git status --short
+    git add .agents .ai-sdlc/harness-install.json .ai-sdlc/harness-managed-skills.txt
     git diff --cached --stat
     git commit -m "chore: install AI SDLC harness"
-    git init --bare /tmp/ai-sdlc-health-demo-origin.git
-    git remote add origin /tmp/ai-sdlc-health-demo-origin.git
+    git init --bare "$TUTORIAL_ROOT/health-origin.git"
+    git remote add origin "$TUTORIAL_ROOT/health-origin.git"
     git push -u origin dev
     git status --short
     ```
@@ -268,6 +299,8 @@ specs/001-health-endpoint/
   plan.md
 ```
 
+`AC` means acceptance criterion: observable behavior the owner can accept.
+`TC` means test case: setup, action, and expected result used to verify it.
 Representative trace:
 
 ```text
@@ -316,7 +349,7 @@ recovery removes only untrusted evidence.
 
     ```bash
     cp deliberate_unknown_route_regression.py.disabled test_deliberate_unknown_route_regression.py
-    python3 -m unittest -v
+    "$PYTHON_BIN" -m unittest -v
     ```
 
 Expected: four tests run, the deliberate test fails because it expects status
@@ -341,7 +374,7 @@ that disposable probe and rerun trusted evidence.
 
     ```bash
     rm test_deliberate_unknown_route_regression.py
-    python3 -m unittest -v
+    "$PYTHON_BIN" -m unittest -v
     git status --short
     ```
 
@@ -352,8 +385,11 @@ the feature's SDD, `app.py`, and `test_app.py` changes.
 
     ```text
     The trusted three-test rerun passed. Record exact evidence against AC-001,
-    AC-002, TC-001, and TC-002; then mark T001 and its machine-plan status
-    complete. Do not record the deliberately invalid probe as passing evidence.
+    AC-002, TC-001, and TC-002; then check T001 in tasks.md. Regenerate plan.md
+    and _ai_sdlc/plan.toon with the installed plan_links.py --write
+    --quick-flow command and verify it with --check. Do not edit either plan
+    projection directly or record the deliberately invalid probe as passing
+    evidence.
     ```
 
 ## 8. Validate the real result
@@ -362,20 +398,46 @@ the feature's SDD, `app.py`, and `test_app.py` changes.
 
     ```text
     Use ai-sdlc-validation --quick-flow for specs/001-health-endpoint and the
-    current diff. Select focused deterministic checks, run them, map outcomes
-    to AC/TC IDs, and report skipped checks and residual risk.
+    current diff. Write the reviewed argv plan below to
+    specs/001-health-endpoint/_ai_sdlc/validation-plan.json, finalize
+    validation.md with the intended AC/TC mapping and residual risks, execute
+    the canonical runner, verify its receipt, and only then complete validation
+    state. Do not substitute prose that merely says PASS.
     ```
+
+Reviewed plan:
+
+```json
+{"schema":"ai-sdlc-validation-command-plan/v1","commands":[{"id":"V001","argv":["python3","-m","unittest","-v"],"trace_ids":["AC-001","AC-002","TC-001","TC-002"]},{"id":"V002","argv":["git","diff","--check"],"trace_ids":["AC-001","AC-002"]}]}
+```
 
 !!! terminal "Run in terminal"
 
     ```bash
-    python3 -m unittest -v
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-shared-runtime/scripts/state_machine.py begin \
+      --feature 001-health-endpoint --workspace implementation \
+      --skill ai-sdlc-validation --quick-flow
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-validation/scripts/run_validation.py \
+      --root . \
+      --plan specs/001-health-endpoint/_ai_sdlc/validation-plan.json \
+      --output specs/001-health-endpoint/_ai_sdlc/validation-receipt.json \
+      --quick-flow
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-validation/scripts/run_validation.py \
+      --root . \
+      --plan specs/001-health-endpoint/_ai_sdlc/validation-plan.json \
+      --output specs/001-health-endpoint/_ai_sdlc/validation-receipt.json \
+      --verify --quick-flow
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-shared-runtime/scripts/state_machine.py complete \
+      --feature 001-health-endpoint --workspace implementation \
+      --skill ai-sdlc-validation \
+      --artifacts specs/001-health-endpoint/validation.md --quick-flow
     git diff --check
     git status --short
     ```
 
-Expected: three tests pass, whitespace validation is clean, and scope is
-limited to the SDD, `app.py`, and `test_app.py`.
+Expected: both receipt commands have exit code zero, verification says the
+receipt is current, validation state is `done`, and scope is limited to the
+SDD, validation evidence, `app.py`, and `test_app.py`.
 
 ## 9. Prepare one traceable commit
 
@@ -397,14 +459,37 @@ feat(health): add process health endpoint
 A passing outcome is a clean tree and one commit from which another reviewer
 can reconstruct intent → acceptance → test → implementation → evidence.
 
-## 10. Clean up
+## 10. Open, review, and accept the increment
+
+Follow [Open, review, and merge a change](../how-to/review-and-merge.md). In
+this local fixture, inspect the commit rather than pushing to a real host. The
+product owner (or delegated outcome owner) must confirm that `/health` means
+process liveness and that the response matches AC-001; an independent engineer
+must review the code and current three-test evidence. Agent self-review is not
+acceptance. Preserve the disposition using
+[Record product acceptance](../how-to/record-product-acceptance.md), including
+the exact reviewed commit and AC/TC evidence. Because this decision necessarily
+references the implementation commit, record it in a separate reviewed evidence
+commit (or the protected pull-request decision system) before merge; do not
+amend the already reviewed implementation commit and invalidate its hash.
+
+Expected final evidence:
+
+- the reviewed commit hash;
+- AC-001 and AC-002 mapped to current passing output;
+- no cache, installer surprise, or unrelated file in the commit;
+- explicit product acceptance and reviewer disposition.
+
+## 11. Clean up
 
 !!! terminal "Run in terminal"
 
     ```bash
     cd /tmp
-    rm -rf "$DEMO_PARENT"
+    rm -rf "$TUTORIAL_ROOT"
+    if test -n "${CANDIDATE_PARENT:-}"; then rm -rf "$CANDIDATE_PARENT"; fi
     ```
 
-Only remove these disposable paths. Never use cleanup commands on a real
-consumer repository or its authoritative artifacts.
+The guarded second removal applies only when Step 0 created the public-site
+candidate clone. Only remove these disposable paths. Never use cleanup commands
+on a real consumer repository or its authoritative artifacts.

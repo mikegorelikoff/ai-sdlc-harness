@@ -38,15 +38,10 @@ consumer project. Installing skills does not authorize product changes.
 
 ## The operating loop
 
-```mermaid
-flowchart LR
-    Human["Human intent and decisions"] --> Agent["AI agent"]
-    Agent --> Skill["Selected skill contract"]
-    Skill --> Helpers["Deterministic helpers"]
-    Helpers --> Artifacts["Markdown artifacts and TOON state"]
-    Artifacts --> Gates["Validation, policy, review"]
-    Gates --> Handoff["Result, blockers, next actions"]
-    Handoff --> Human
+```text
+Human intent → AI agent → selected skill → deterministic helpers
+     ↑                                         ↓
+     └── handoff ← gates/review ← durable artifacts
 ```
 
 The agent supplies contextual judgment. The skill bounds that judgment. Helpers

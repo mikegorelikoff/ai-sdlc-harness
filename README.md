@@ -1,11 +1,25 @@
 # AI SDLC Harness
 
-AI SDLC Harness is a repository-native operating system for software teams
-working with AI agents. It turns requests, decisions, requirements, tests,
+The Artificial Intelligence (AI) Software Development Lifecycle (SDLC) Harness
+is a repository-native operating system for software teams working with AI
+agents. It turns requests, decisions, requirements, tests,
 implementation tasks, validation, and handoffs into visible evidence that can
 survive a chat, agent, or team change.
 
 **[Read the guided documentation](https://mikegorelikoff.github.io/ai-sdlc-harness/)**
+
+> **Release status:** this `main` branch documents unreleased work beyond
+> `v1.2.0`, including context-contract changes. The installation commands below
+> intentionally install the historical `v1.2.0` Git tag. Use the current install
+> guide's exact-fetch sequence; the tagged page's older `/tree/<SHA>` form is a
+> known Skills command-line interface (CLI) `1.5.19` incompatibility. A clean regression also confirms
+> that the stable installed specification-driven development (SDD) helpers resolve relative specs below
+> `.agents/specs`, so `v1.2.0` is suitable only for historical comparison—not a
+> complete consumer workflow. Use the
+> [v1.2.0 source documentation](https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0/docs)
+> for runtime behavior after applying that installation erratum. Do not treat
+> other `main` contracts as installed until a matching release is published.
+> No GitHub Release object exists for the current version tags.
 
 ## Why this exists
 
@@ -22,7 +36,8 @@ development lifecycle (SDLC). AI-assisted delivery needs the same disciplines,
 but encoded so an agent can follow them repeatedly. That is AI SDLC.
 
 The harness provides portable skill instructions, deterministic helper scripts,
-human-readable Markdown artifacts, complete TOON state for agents, and explicit
+human-readable Markdown artifacts, complete Token-Oriented Object Notation
+(TOON) state for agents, and explicit
 gates. It does not replace engineering judgment; it makes the evidence behind
 that judgment easier to create, inspect, hand off, and recover.
 
@@ -30,11 +45,15 @@ that judgment easier to create, inspect, hand off, and recover.
 
 If these terms are new, begin here:
 
-1. [What is AI SDLC?](docs/foundations/ai-sdlc.md)
-2. [What is SDD?](docs/foundations/sdd.md)
-3. [Why use a harness?](docs/foundations/why-harness.md)
-4. [How the pieces fit together](docs/foundations/mental-model.md)
-5. [Human and agent responsibilities](docs/foundations/responsibilities.md)
+1. [Git and terminal primer](docs/foundations/git-and-terminal-primer.md)
+2. [Software delivery foundations](docs/foundations/software-delivery.md)
+3. [Artificial intelligence foundations](docs/foundations/ai-foundations.md)
+4. [Agents, sub-agents, and skills](docs/foundations/agents-and-skills.md)
+5. [What is AI SDLC?](docs/foundations/ai-sdlc.md)
+6. [What is SDD?](docs/foundations/sdd.md)
+7. [Why use a harness?](docs/foundations/why-harness.md)
+8. [How the pieces fit together](docs/foundations/mental-model.md)
+9. [Human and agent responsibilities](docs/foundations/responsibilities.md)
 
 The short version:
 
@@ -43,8 +62,8 @@ request -> evidence-backed requirement -> design -> bounded task
         -> implementation -> test evidence -> review -> traceable commit
 ```
 
-Spec-driven development (SDD) means agreeing on observable behavior, design
-boundaries, test cases, QA scope, and delivery tasks before implementation grows
+Specification-driven development (SDD) means agreeing on observable behavior, design
+boundaries, test cases, quality assurance (QA) scope, and delivery tasks before implementation grows
 beyond a safe guess. Small changes can use small specs; risky changes need more
 evidence and stronger gates.
 
@@ -55,7 +74,8 @@ Good fit:
 - software teams already using Git and AI coding assistants;
 - teams that want portable workflows instead of one vendor-specific chat;
 - work where decisions, tests, reviews, or handoffs must remain inspectable;
-- mixed PM, BA, QA, Delivery, Security, Architecture, and Dev collaboration;
+- mixed product manager (PM), business analyst (BA), QA, delivery, security,
+  architecture, and developer (Dev) collaboration;
 - teams that want low-risk quick flows and stricter controls for high-risk work.
 
 Poor fit or prerequisite gap:
@@ -63,7 +83,8 @@ Poor fit or prerequisite gap:
 - work that is not managed in a software repository;
 - teams unwilling to review agent changes or preserve basic Git discipline;
 - environments where an AI agent must autonomously approve or deploy changes;
-- teams seeking a project-management system, CI platform, IDE, or correctness
+- teams seeking a project-management system, continuous integration (CI)
+  platform, integrated development environment (IDE), or correctness
   guarantee rather than a delivery workflow layer.
 
 The harness supports accountable delivery. It is not a release authority,
@@ -72,8 +93,9 @@ engineering, QA, security, or legal ownership.
 
 ## Install in a consumer repository
 
-Prerequisites: Git, Node.js `>=22.20.0`/npm with `npx`, Python 3.10 or newer, a supported
-AI agent, and a clean Git working tree in the project that will use the skills.
+Prerequisites: Git, Node.js `>=22.20.0`/npm with `npx`, Python 3.10 or newer, a
+candidate agent host selected for a bounded pilot, and a clean Git working tree
+in the project that will use the skills.
 
 Run this from the **consumer project**, not from a clone of this source
 repository. The pinned CLI version below is the version verified by these docs:
@@ -85,36 +107,53 @@ choosing a different policy. This installer boundary is separate from the
 harness's content-free local metrics.
 
 ```bash
-DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
+HARNESS_REV=7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2
+HARNESS_TMP="$(mktemp -d)"
+HARNESS_SRC="$HARNESS_TMP/ai-sdlc-harness"
+git init "$HARNESS_SRC"
+git -C "$HARNESS_SRC" remote add origin https://github.com/mikegorelikoff/ai-sdlc-harness.git
+git -C "$HARNESS_SRC" fetch --depth 1 origin "$HARNESS_REV"
+git -C "$HARNESS_SRC" checkout --detach FETCH_HEAD
+test "$(git -C "$HARNESS_SRC" rev-parse HEAD)" = "$HARNESS_REV"
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --list
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill '*' --agent codex -y
 ```
 
-This is project-scoped because `-g` is intentionally absent. Review the files
-reported by the CLI, then verify the installed inventory:
+The fetch checks out one exact commit because Skills CLI `1.5.19` cannot use a
+commit SHA as the branch portion of a GitHub `/tree/...` URL. The install is
+project-scoped because `-g` is absent and host-scoped to the manually validated
+`codex` target. Review the files reported by the CLI, then verify the installed
+inventory:
 
 ```bash
 DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
 git status --short
-python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
-python3 .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
+PYTHON_BIN="${PYTHON_BIN:-python3}"
+"$PYTHON_BIN" --version
+"$PYTHON_BIN" .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
+"$PYTHON_BIN" .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
+mkdir -p .ai-sdlc
+cp "$HARNESS_SRC/config/ai-sdlc-managed-skills.txt" .ai-sdlc/harness-managed-skills.txt
+printf '%s\n' '{"schema":"ai-sdlc-install-record/v1","revision":"7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2","skills_cli":"1.5.19","agent":"codex","selection":"all-skills","inventory":".ai-sdlc/harness-managed-skills.txt"}' > .ai-sdlc/harness-install.json
+"$PYTHON_BIN" .agents/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_install_record.py
+rm skills-lock.json
+rm -rf "$HARNESS_TMP"
 ```
 
 The complete installation includes `ai-sdlc-shared-runtime`, which makes
 deterministic helpers executable outside this source checkout. Both `--help`
-commands must complete without an import traceback. Review and commit the
-accepted installation baseline before starting feature work.
-
-To inspect available skills before installing:
-
-```bash
-DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --list
-```
+commands must complete without an import traceback. The generated CLI lock
+contains the absolute temporary source path, so record portable identity and
+remove the lock as shown. Review and commit only `.agents/skills/` and the two
+portable `.ai-sdlc/harness-*` records before feature work.
 
 Network access to npm and GitHub is required for installation. An offline
 source checkout can run repository tests and compatibility validation, but it
 does not install skills into another project by itself.
 
 See [Install the harness](docs/how-to/install.md) for scope, trust, update,
-remove, and rollback details.
+remove, and rollback details. If Codex is your host, complete
+[Set up Codex CLI](docs/how-to/setup-codex.md) before first use.
 
 ## First use
 
@@ -143,12 +182,13 @@ then the runnable [first feature tutorial](docs/tutorials/first-feature.md).
 | Skills | Tell the agent when and how to perform one bounded workflow. | Instructions; not evidence that work succeeded. |
 | Helpers | Scaffold, parse, validate, index, migrate, and report deterministically. | Mechanical enforcement within declared inputs. |
 | Markdown | Holds requirements, design, decisions, tests, QA, and plans for people. | Authoritative delivery detail. |
-| TOON | Gives agents complete token-efficient state, indexes, plans, and results. | Machine projection; does not replace Markdown truth. |
+| TOON | Gives agents schema-complete, token-efficient managed-workflow state, indexes, plans, and results. | Machine projection; does not contain every project fact or replace Markdown truth. |
 | State and policy | Sequence work, explain gates, and preserve protected controls. | Fail closed where unsafe ambiguity could weaken a gate. |
 | Humans | Own intent, risk acceptance, approvals, and accountable signoff. | Final decision authority. |
 
-JSON remains at JSON Schema, external interoperability, exact recovery, and
-JSONL journal boundaries. New agent-facing control-plane output is TOON-first.
+JavaScript Object Notation (JSON) remains at JSON Schema, external
+interoperability, exact recovery, and JSON Lines (JSONL) journal boundaries.
+New agent-facing control-plane output is TOON-first.
 
 ## Choose the right amount of process
 
@@ -192,9 +232,14 @@ or previewing its documentation:
 ```bash
 git clone https://github.com/mikegorelikoff/ai-sdlc-harness.git
 cd ai-sdlc-harness
-UV_CACHE_DIR=/tmp/ai-sdlc-uv-cache uv run --offline \
-  --with-requirements requirements-docs.txt mkdocs serve
+UV_CACHE_DIR=/tmp/ai-sdlc-uv-cache uv run \
+  --with-requirements requirements-docs.lock mkdocs serve
 ```
+
+The first run requires package-index access. After that command has populated
+the named cache, add `--offline` for repeatable offline previews. Starting with
+`--offline` in a clean cache fails because the pinned documentation dependency
+has not been downloaded yet.
 
 Validate a source checkout against the current release `1.2.0` compatibility baseline (this command skips the Git commit audit; the full `v1.1.0..HEAD` audit is documented in `docs/how-to/validate-release.md`):
 

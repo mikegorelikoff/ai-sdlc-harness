@@ -119,7 +119,7 @@ On a blocker, preserve failed/stale evidence, name the accountable owner and exa
 ## Handoff
 
 - Return design scope, decision/risk counts, blockers, validation status, and
-  output paths directly in the Codex response.
+  output paths directly in the active agent response.
 - Before the final response, emit `ai-sdlc-handoff/v1` with `result`,
   `blockers`, `next_required`, and `next_optional`; every action includes
   `reason`, `command`, and `expected_artifact`.

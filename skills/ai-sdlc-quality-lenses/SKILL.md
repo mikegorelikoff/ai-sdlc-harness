@@ -43,7 +43,7 @@ description: AI SDLC reusable quality-lens workflow. Use when an AI assistant ne
 ### 0.3 Output Rules
 
 - Return selected lenses, finding counts by severity and status, blockers, and
-  output paths directly in the Codex response.
+  output paths directly in the active agent response.
 - Before the final response, emit `ai-sdlc-handoff/v1` with `result`,
   `blockers`, `next_required`, and `next_optional`; every action includes
   `reason`, `command`, and `expected_artifact`.
@@ -57,6 +57,10 @@ description: AI SDLC reusable quality-lens workflow. Use when an AI assistant ne
 - Default machine output: `<artifact-parent>/_ai_sdlc/quality-lens-report.toon`.
 - Use `--output-root` to route the pair to an owning feature directory.
 - Keep the source artifact unchanged; reports are review evidence.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

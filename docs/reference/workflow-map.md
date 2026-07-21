@@ -8,20 +8,12 @@ description: Complete map of entry signals, refinement, implementation, control-
 The map has four connected lanes. Use the earliest lane whose required evidence
 is missing; reuse valid upstream work.
 
-```mermaid
-flowchart LR
-    Signal["Request or evidence signal"] --> Nav["Navigator"]
-    Nav --> Refine["18-stage refinement"]
-    Nav --> Implement["Implementation SDD"]
-    Nav --> Review["Validation / review-only"]
-    Refine --> Implement
-    Implement --> Release["Release evidence"]
-    Review --> Release
-    Change["Changed intent or stale evidence"] --> Control["Control plane"]
-    Control --> Refine
-    Control --> Implement
-    Release --> Learn["Retrospective and metrics"]
-    Learn --> Change
+```text
+request/evidence → navigator ┬→ 18-stage refinement → implementation SDD ┐
+                             ├→ implementation SDD                       ├→ release evidence
+                             └→ validation/review only ──────────────────┘
+                                      ↑                                      ↓
+changed intent/stale evidence → control plane ← learning/retrospective/metrics
 ```
 
 ## Complete lanes

@@ -1,0 +1,81 @@
+---
+title: Unified issue register
+description: Consolidated findings, severity, evidence, resolution, acceptance test, and current status.
+---
+
+# Unified issue register
+
+Status meanings: **resolved** has repository evidence and focused validation;
+**pending regression** has a correction awaiting the final complete run;
+**external blocker** requires authority or settings outside the repository.
+
+| ID | Sev | Category / reporting perspectives | Evidence and user impact | Resolution / acceptance test | Status |
+| --- | --- | --- | --- | --- | --- |
+| AUD-001 | High | Legal; CTO, VP, DevOps, Security | No `LICENSE`; consumers lack permission clarity | Repository owner/legal selects license; file and dependency policy reviewed | External blocker |
+| AUD-002 | High | Release/docs; CTO, VP, Lead, DevOps | Exact `v1.2.0` installs but complete consumer SDD fails through wrong root resolution | Candidate fixes and exact expected-regression CI; cut and validate a corrected immutable release | External release blocker |
+| AUD-003 | High | Consumer DX; Lead, Writer | Public `skills/...` commands fail after `.agents` install | 44 skills define logical path resolution; consumer guides use `.agents`; run clean fixture | Resolved |
+| AUD-004 | High | Portability; CTO, VP, Writer, DevOps | “Supported agent” undefined; installer reports 73 targets | Support matrix separates tested/candidate/recognized | Resolved |
+| AUD-005 | High | CI/QA; QA | `test_modules.py` and `test_compatibility.py` failed but CI omitted them | Fix stale expectations/semantics; discover every shared test in Python matrix | Resolved |
+| AUD-006 | High | Docs CI; CTO, QA, DevOps | Docs gates ran only after push to main | Pull-request build/validation; deploy remains push-only | Resolved |
+| AUD-007 | High | Candidate install; DevOps | CI installed old tag rather than checkout | Real CLI smoke uses local checked-out candidate | Pending remote CI |
+| AUD-008 | High | Supply chain; CTO, Security, DevOps | Mutable Actions and unlocked transitive docs deps | Full-SHA action pins, Dependabot, hashed lock, `--require-hashes` | Resolved |
+| AUD-009 | High | Context secrecy; Security | Ordinary high-signal source could emit credential-shaped line | Central fail-closed screening plus vendor token/bearer/URL/key tests | Resolved |
+| AUD-010 | High | Prompt injection; Security | Any `*.instructions.md` gained instruction authority | Conservative explicit paths; arbitrary docs stay evidence-only; adversarial test | Resolved |
+| AUD-011 | High | Approval; Security | Local JSON could be described as authenticated human approval | Result says identity not authenticated; protected external control required | Resolved with external enforcement limitation |
+| AUD-012 | High | Foundations; Trainee, Writer | Basic software/AI/LLM/token/confabulation concepts absent | Three new foundation chapters and glossary coverage test | Resolved |
+| AUD-013 | High | Roles; VP, PM, PO, BA, QA, Writer | Required canonical role guides absent | Role index plus 13 guides with ownership, workflow, mistakes, checklist | Resolved |
+| AUD-014 | High | Tutorials; Lead, PM, QA, Writer | Nine required change scenarios absent | Ten-pattern tutorial group plus runnable first feature | Resolved; scenario smoke depth accepted limitation |
+| AUD-015 | High | Semantic readiness; PM, PO, BA | Decisions-only input produced `gaps[0]` | Required-section evidence gaps emitted; regression fixture | Resolved |
+| AUD-016 | High | Read-only behavior; BA | Full analysis wrote derived context without explicit cache | No implicit persistence; only explicit cache/write can mutate | Resolved |
+| AUD-017 | High | SDD prerequisites; Lead | `AGENTS.md` required but absent in consumer fixture | Presence-aware rule plus conservative default size rubric | Resolved |
+| AUD-018 | High | Repository hygiene; Lead | Helper imports could generate tracked Python caches | Ignore caches; tutorial initializes ignores before helpers; explicit staging | Resolved |
+| AUD-019 | High | Release validation; QA | Documented `v1.1.0..HEAD` exact-end audit failed after maintenance | Exact sequence at base, later maintenance allowed; tests/docs aligned | Resolved |
+| AUD-020 | High | Validation evidence; QA, Security | Prose `PASS` can be fabricated; a self-hash cannot authenticate its writer | Constrained argv runner records exits/current diff and trace IDs; docs label local evidence unauthenticated; protected CI remains required for independent authority | Resolved locally; external trust limitation accepted |
+| AUD-021 | Medium | Vulnerability/support; CTO, Security | No disclosure/support boundaries | Add `SECURITY.md` and `SUPPORT.md`; private setting remains external | Resolved with settings limitation |
+| AUD-022 | Medium | Ownership; CTO, VP, DevOps | No CODEOWNERS/support owner | Add CODEOWNERS and support boundary; enforcement external | Resolved with settings limitation |
+| AUD-023 | Medium | Install offline; CTO, Trainee, DevOps | First documented `uv --offline` fails clean cache | Online first resolution, hashed lock, explicit offline mirror/cache path | Resolved |
+| AUD-024 | Medium | Update/remove; Trainee, DevOps | CLI update cannot act on portable install; reinstall leaves renamed skills; removal can affect foreign content | Exact reinstall, portable record, sorted managed inventory, persisted retired-set checkpoint, ownership-safe cleanup | Resolved |
+| AUD-025 | Medium | Task authority; Lead | SKILL said machine plan wins although generator uses tasks checkbox | `tasks.md` authoritative; plan files projections | Resolved |
+| AUD-026 | Medium | BA lifecycle; BA | Role prose and stage ordering appeared contradictory | Explain early BA contribution and formal post-draft challenge gate | Resolved |
+| AUD-027 | Medium | Product ownership; PM, PO | PM/PO/BA/Delivery accountability ambiguous | Canonical PM/PO delegation and one-accountable-owner rule | Resolved |
+| AUD-028 | Medium | Data egress; Security | No single provider/browser/connector/CI matrix | Governance deployment worksheet | Resolved |
+| AUD-029 | Medium | Accessibility/diagrams; QA, Writer | Non-rendered Mermaid; no heading/alt validation | Text-equivalent flows; rendered one-H1 and alt checks | Resolved |
+| AUD-030 | Medium | Vocabulary/IA; Trainee, Writer | Acronyms and noncanonical FAQ routing | Expanded glossary, canonical FAQ, progressive nav | Resolved |
+| AUD-031 | Medium | Historical duplication; Writer | 25 noncanonical `concepts/`/`guides/` pages appear in search | Public links prohibited; retained as deprecated notes | Accepted: Git/search ambiguity documented |
+| AUD-032 | Medium | Platform coverage; DevOps, QA | Only Ubuntu CI; no native Windows/macOS matrix | Claims narrowed; WSL route; local macOS evidence | Accepted limitation |
+| AUD-033 | Medium | Enterprise scale; VP | No consumer CI/fleet distribution example | Governance/rollout guidance improved; executable fleet tooling excluded | Accepted limitation |
+| AUD-034 | Low | Metrics/coverage; QA | No code coverage/mutation signal | Risk-based future improvement; not used as vanity readiness gate | Accepted limitation |
+| AUD-035 | High | State integrity; BA, QA | Direct state CLI could mark a stage done without begin or evidence | Require active begun stage and existing canonical artifact; full refinement requires finalized metadata | Resolved |
+| AUD-036 | High | Validation command safety; QA, Security | Basename allowlist accepted `python -c`, destructive Git, arbitrary package/target commands | Restrict executable forms, repository Python scripts, read-only Git, bounded Go/npm; add negative execution tests; document no sandbox | Resolved |
+| AUD-037 | Medium | Discovery semantics; PM, BA | Output headings were mistaken for source evidence, generating false gaps or hiding source quality | Preserve source criteria; alias-aware source token matching; SSO fixture reports the two absent Value Proposition and Risks sections | Resolved |
+| AUD-038 | Medium | Trace graph; PO | Generated root indexes produced false repository nodes | Exclude root projections as source documents and regression-test graph node set | Resolved |
+| AUD-039 | Medium | Product acceptance; PM, PO | No canonical record separated product outcome acceptance from technical completion | Decision-log acceptance procedure with evidence links, owner, conditions, and rejection path | Resolved |
+| AUD-040 | Medium | Installed root/task authority; Lead | Installed helpers resolved under `.agents`; task projections could disagree with checkboxes | Resolve consumer root; make reviewed task checkbox authoritative and reject projection drift | Resolved |
+| AUD-041 | Medium | RACI and change sequence; PM, PO, BA | Composite accountability and tutorial stage ordering conflicted with operating model | One accountable PM/PO gate owner; canonical discovery-to-handoff change sequence | Resolved |
+| AUD-042 | Medium | Install scope; DevOps, Security | Generic smoke could invoke unbounded `--all` and miss unexpected roots | Real CLI modes require explicit agent; assert allowed consumer roots | Resolved |
+| AUD-043 | Medium | Audit evidence; QA | Full-flow audit prerequisite contradicted intentionally quick-flow upstream refinement | Use quick-flow for the audit's assumption-driven SDD checks and record the decision | Resolved |
+| AUD-044 | High | Configuration/governance; VP | Consumer docs referenced missing source defaults and implied resolved rigor/gates were enforced | Package one installed presentation default; use installed command; state only interaction is consumed; direct enforceable controls to policy/platform; installed smoke | Resolved |
+| AUD-045 | High | Candidate provenance; Trainee | Tutorial recorded `HEAD` while installing dirty working-tree bytes | Require no tracked, staged, or untracked source change before recording revision; validate candidate from a clean synthetic/release commit | Resolved |
+| AUD-046 | Medium | Version links; CTO | Version matrix linked nonexistent GitHub Release objects and advised upgrade to blocked tag | Link Git tags, disclose absent Release objects/signatures, keep accepted prior pin or wait for correction; validator rejects old URLs | Resolved |
+| AUD-047 | Medium | Beginner branch gate; Trainee | First-session prose required a branch before the branch-creation write itself | Explicitly exempt reviewed branch creation and provide a disposable exact command | Resolved |
+| AUD-048 | Medium | Graph coverage semantics; PO | FR/NFR/AC were pooled although tasks/tests conventionally trace acceptance criteria, producing misleading gap counts | Scope actionable task/test coverage to leaf AC nodes; report all requirement declarations separately; keep FR/NFR visible as trace/orphan evidence | Resolved |
+| AUD-049 | High | Backlog projections; PO | Specs 002–004 showed completed authoritative tasks as pending; spec 004 also retained phantom AC-015 in tasks/metadata/plans | Remove phantom reference through scaffold; metadata now derives IDs from body; regenerate projections; all-spec plan consistency test | Resolved |
+| AUD-050 | Medium | Historical trace; PO, Lead | 41 pre-contract commits lack `Task:` links in immutable Git history | Keep gaps visible; do not rewrite history; require task-linked commits prospectively and document the baseline count | Accepted historical limitation |
+| AUD-051 | Medium | Prospective trace; PO | Audit promised future task-linked commits but validator/templates required only Spec and Validation | Require canonical `Task: TNNN` in traced/full messages; four focused tests and PO re-review | Resolved |
+| AUD-052 | High | Install ownership; Lead, DevOps | Portable validator rejected unrelated skills and all-skill inventory contradicted explicit subsets | Treat inventory as harness ownership; allow foreign directories; validate full/subset integrity; preserve subset during update; five tests | Resolved |
+| AUD-053 | Medium | Review DX; Lead | Review/validation planners invented `_shared/SKILL.md` and wildcard script commands | Special-case canonical shared source, compile concrete files, require mirror sync; focused planner tests | Resolved |
+| AUD-054 | High | Release regression evidence; QA | Strengthened current smoke failed on v1.2.0's older required config argument before reaching the claimed root defect | Supply the immutable checkout's explicit stable base config when required; exact remote smoke now reaches the locked `.agents/specs/...` diagnostic | Resolved characterization; release remains blocked |
+| AUD-055 | High | State/evidence integrity; Lead, QA | Empty artifacts, failed/forged/stale receipts, premature completion, and receipt/state fingerprint deadlock could create false `done` state | Require finalized canonical bodies/SDD package, canonical receipt validation, reject runner completion, define derived-evidence exclusions and sequence; state/validation tests | Resolved |
+| AUD-056 | Medium | QA/NFR; QA | Audit QA scenarios lacked actor/setup/evidence/risk/owners and accessibility evidence could be overread | Expand scenario matrix and named residual owners; explicitly state no WCAG conformance and retain human/assistive-technology pilot gap | Resolved with accepted accessibility limitation |
+| AUD-057 | Medium | Terminology/IA; Writer | Current script/helper counts and SDD expansion drifted across public pages | Canonicalize “Specification-driven development,” distinguish other SDD meanings, regenerate catalogs, and refresh all audit counts/statuses | Resolved |
+| AUD-058 | High | Controlled writes; Security | A tampered recovery manifest could traverse outside the repository; symlinked target parents could redirect writes | Strict recovery schema/canonical-target checks, bounded target/backup/staging paths, shared symlink-aware atomic I/O, and traversal/symlink/tamper tests | Resolved |
+| AUD-059 | Medium | Repository boundaries; Security, QA | Several repository-scoped writers followed symlinked parent directories | Shared bounded-output helper on high-risk writers; all remaining atomic writers reject symlink components before `mkdir`/replace; metrics and doctor escape regressions | Resolved; new writers must reuse the shared helper |
+| AUD-060 | Medium | Validation evidence; Security, QA | Git failures produced `unversioned` evidence, the reviewed plan was not digest-bound, and output buffering was unbounded | Require valid Git `HEAD`, bind canonical plan path/digest, stream with byte limit and process-group termination, and add negative tests | Resolved |
+| AUD-061 | Medium | Approval safety; Security | Absolute executables, Git global options, and common environment-secret names bypassed approval-plan detection | Normalize executable basenames and Git option prefixes; broaden secret patterns; add bypass regressions | Resolved |
+| AUD-062 | Medium | Evidence language; Security | Runtime journal was called authoritative although a workspace writer can recompute its hash chain | Define it as local structural, unauthenticated recovery evidence and require protected Git/CI/external logs for independent assurance | Resolved |
+| AUD-063 | Medium | Validation review surface; QA | Untracked symlinks could hash external content and unbounded untracked files were read into memory | Reject untracked symlinks/unsafe parents, stream hashing, cap each untracked file at 20 MB, and add negative tests | Resolved |
+| AUD-064 | High | Core artifact/state boundary; QA, Security | Symlinked feature directories redirected shared scaffolds, state, indexes, and locks outside the repository | Root-aware safe I/O in shared path authority, scaffold preflight, bounded index root, clean CLI errors, installed mirror sync, and state/artifact escape regressions | Resolved |
+| AUD-065 | Medium | Timeout robustness; QA | A process could exit between `poll()` and process-group termination, intermittently converting the intended timeout exit 124 into runner exit 127 | Treat `ProcessLookupError` as an already-terminated process; five focused and three consecutive 97-test aggregate runs passed | Resolved |
+
+Final sign-off cannot be `READY` while AUD-001 or AUD-002 remains High. The
+audit deliberately does not downgrade external blockers to make the score pass.

@@ -1,7 +1,7 @@
 feature: 004-executable-delivery-control-plane
 workspace: implementation
 flow_mode: quick
-updated_at: 2026-07-19
+updated_at: 2026-07-21
 source_artifacts[6]{artifact,path}:
   requirements,requirements.md
   design,design.md
@@ -25,21 +25,21 @@ trace[14]{acceptance_id,test_cases,tasks}:
   AC-013,TC-013,T001/T002/T003/T004/T005/T006/T007/T008/T009/T011/T012/T013/T014/T015
   AC-014,TC-014,T001/T010/T015
 tasks[15]{id,status,refs,tests,depends_on,artifact,decision_ref}:
-  T001,pending,AC-013/AC-014/DEC-001/DEC-002,TC-013/TC-014,none,Complete SDD package; accepted decisions; registered roadmap; generated plans and indexes; validation evidence; and one focused planning commit.,TBD
-  T002,pending,AC-001/AC-013/DEC-001,TC-001/TC-013,none,ChangeSet skill; versioned schemas; deterministic workspace creator and validator; fixtures; tests; and documentation.,TBD
-  T003,pending,AC-001/AC-002/AC-013,TC-001/TC-002/TC-013,none,Added; modified; removed; and renamed operation parser; scenario and target validation; overlap detection; tests; and documentation.,TBD
-  T004,pending,AC-002/AC-013,TC-002/TC-013,none,Deterministic preview plan; target diffs; downstream staleness and reopen analysis; policy gate discovery; conflict reasons; tests; and documentation.,TBD
-  T005,pending,AC-003/AC-015/AC-013,TC-003/TC-013,none,Staged multi-file apply; approval checks; archive record; recovery manifest; repeat protection; fault-injection tests; and documentation.,TBD
-  T006,pending,AC-004/AC-013,TC-004/TC-013,none,Versioned node and edge schemas; deterministic indexer; trace and gap queries; orphan detection; tests; and documentation.,TBD
-  T007,pending,AC-004/AC-008/AC-013,TC-004/TC-008/TC-013,none,Evidence identity and fingerprint contract; dependency-aware staleness propagation; coverage queries; tests; and documentation.,TBD
-  T008,pending,AC-007/AC-015/AC-013/DEC-002,TC-007/TC-013/TC-015,none,Layered policy schema and resolver; protected rules; action evaluator; explain output; expiring waiver contract; organization profiles; tests; and documentation.,TBD
-  T009,pending,AC-008/AC-013,TC-008/TC-013,none,Repository ownership and test topology; conditional selectors; token budget allocator; freshness-aware context packs; secret exclusions; tests; and documentation.,TBD
-  T010,pending,AC-005/AC-015/AC-014,TC-005/TC-014/TC-015,none,Versioned run state and journal; ready-task selection; budgets; retries; stop reasons; resume and idempotency behavior; commit-boundary contract; tests; and documentation.,TBD
-  T011,pending,AC-005/AC-006/AC-007/AC-013,TC-005/TC-006/TC-007/TC-013/TC-015,none,Workflow schema and validator; typed step planner; conditions; approval gates; deterministic hooks; cycle detection; safe wave planning and fallbacks; tests; and documentation.,TBD
-  T012,pending,AC-006/AC-009/AC-013,TC-006/TC-009/TC-013,none,Adapter manifest and operation contract; negotiation and fallback engine; conformance fixtures for representative hosts; tests; and documentation.,TBD
-  T013,pending,AC-010/AC-013,TC-010/TC-013,none,Environment diagnostic registry; compatibility checks; file and schema change preview; backup and rollback plan; migration fixtures; tests; and documentation.,TBD
-  T014,pending,AC-011/AC-012/AC-013,TC-011/TC-012/TC-013,none,Package origin; integrity; compatibility; capability and provenance validation; local run and quality aggregates; privacy tests; and documentation.,TBD
-  T015,pending,AC-013/AC-014,TC-013/TC-014,none,Final integration docs; release-version navigation; migration guide; generated catalogs; full validation evidence; task-to-commit audit; branch publication; main integration; and release tag.,TBD
+  T001,done,AC-013/AC-014/DEC-001/DEC-002,TC-013/TC-014,none,Complete SDD package; accepted decisions; registered roadmap; generated plans and indexes; validation evidence; and one focused planning commit.,TBD
+  T002,done,AC-001/AC-013/DEC-001,TC-001/TC-013,none,ChangeSet skill; versioned schemas; deterministic workspace creator and validator; fixtures; tests; and documentation.,TBD
+  T003,done,AC-001/AC-002/AC-013,TC-001/TC-002/TC-013,none,Added; modified; removed; and renamed operation parser; scenario and target validation; overlap detection; tests; and documentation.,TBD
+  T004,done,AC-002/AC-013,TC-002/TC-013,none,Deterministic preview plan; target diffs; downstream staleness and reopen analysis; policy gate discovery; conflict reasons; tests; and documentation.,TBD
+  T005,done,AC-003/AC-013,TC-003/TC-013,none,Staged multi-file apply; approval checks; archive record; recovery manifest; repeat protection; fault-injection tests; and documentation.,TBD
+  T006,done,AC-004/AC-013,TC-004/TC-013,none,Versioned node and edge schemas; deterministic indexer; trace and gap queries; orphan detection; tests; and documentation.,TBD
+  T007,done,AC-004/AC-008/AC-013,TC-004/TC-008/TC-013,none,Evidence identity and fingerprint contract; dependency-aware staleness propagation; coverage queries; tests; and documentation.,TBD
+  T008,done,AC-007/AC-013/DEC-002,TC-007/TC-013/TC-015,none,Layered policy schema and resolver; protected rules; action evaluator; explain output; expiring waiver contract; organization profiles; tests; and documentation.,TBD
+  T009,done,AC-008/AC-013,TC-008/TC-013,none,Repository ownership and test topology; conditional selectors; token budget allocator; freshness-aware context packs; secret exclusions; tests; and documentation.,TBD
+  T010,done,AC-005/AC-014,TC-005/TC-014/TC-015,none,Versioned run state and journal; ready-task selection; budgets; retries; stop reasons; resume and idempotency behavior; commit-boundary contract; tests; and documentation.,TBD
+  T011,done,AC-005/AC-006/AC-007/AC-013,TC-005/TC-006/TC-007/TC-013/TC-015,none,Workflow schema and validator; typed step planner; conditions; approval gates; deterministic hooks; cycle detection; safe wave planning and fallbacks; tests; and documentation.,TBD
+  T012,done,AC-006/AC-009/AC-013,TC-006/TC-009/TC-013,none,Adapter manifest and operation contract; negotiation and fallback engine; conformance fixtures for representative hosts; tests; and documentation.,TBD
+  T013,done,AC-010/AC-013,TC-010/TC-013,none,Environment diagnostic registry; compatibility checks; file and schema change preview; backup and rollback plan; migration fixtures; tests; and documentation.,TBD
+  T014,done,AC-011/AC-012/AC-013,TC-011/TC-012/TC-013,none,Package origin; integrity; compatibility; capability and provenance validation; local run and quality aggregates; privacy tests; and documentation.,TBD
+  T015,done,AC-013/AC-014,TC-013/TC-014,none,Final integration docs; release-version navigation; migration guide; generated catalogs; full validation evidence; task-to-commit audit; branch publication; main integration; and release tag.,TBD
 validation_sequence[5]{step,command}:
   1,check_refinement_context.py --full-flow
   2,check_clarify.py --full-flow

@@ -19,6 +19,7 @@ if not _SHARED.is_dir():
     _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_toon import encode_toon
+from ai_sdlc_safe_io import bounded_path, ensure_directory
 
 
 PLAN_SCHEMA = "ai-sdlc-run-plan/v1"
@@ -399,7 +400,14 @@ def persist_event(run_dir: Path, events: list[dict[str, Any]], state: dict[str, 
 
 def result(operation: str, state: dict[str, Any], recovered: bool = False, idempotent: bool = False) -> dict[str, Any]:
     """Wrap state with operation evidence."""
-    return {"schema": RESULT_SCHEMA, "operation": operation, "recovered": recovered, "idempotent": idempotent, "state": state}
+    return {
+        "schema": RESULT_SCHEMA,
+        "operation": operation,
+        "recovered": recovered,
+        "idempotent": idempotent,
+        "evidence_trust": "local-structural-not-authenticated",
+        "state": state,
+    }
 
 
 def main() -> int:
@@ -443,9 +451,9 @@ def main() -> int:
     if not repository.is_dir():
         print(f"ERROR: repository does not exist: {repository}")
         return 1
-    runs_root = repository / "_ai_sdlc/runs"
-    run_dir = runs_root / args.run_id
     try:
+        runs_root = bounded_path(repository, repository / "_ai_sdlc/runs")
+        run_dir = bounded_path(repository, runs_root / args.run_id)
         if args.start:
             if args.plan is None:
                 raise ValueError("--plan is required for --start")
@@ -457,7 +465,7 @@ def main() -> int:
             plan, errors = validate_plan(source_plan)
             if errors:
                 raise ValueError("; ".join(errors))
-            runs_root.mkdir(parents=True, exist_ok=True)
+            ensure_directory(repository, runs_root)
             try:
                 run_dir.mkdir()
             except FileExistsError as exc:
@@ -470,6 +478,8 @@ def main() -> int:
             state, events = persist_event(run_dir, [], {}, "run-started", payload)
             output = result("start", state)
         else:
+            for name in ("journal.jsonl", "state.json", "state.toon", ".lock"):
+                bounded_path(repository, run_dir / name)
             if not run_dir.is_dir() or run_dir.is_symlink():
                 raise ValueError("run does not exist or is unsafe")
             if args.status:

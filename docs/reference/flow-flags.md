@@ -19,4 +19,7 @@ same result, blocker, and trace meaning as the human view.
 
 ## Precedence
 
-Explicit full flow and organization minimum policy cannot be downgraded by automatic classification or a user override. Unknown risk inputs cannot reduce rigor.
+Explicit full flow cannot be downgraded by automatic classification. An
+organization minimum is effective only when supplied to the rigor helper or
+required by an enforced policy decision; presentation configuration does not
+set it. Unknown risk inputs cannot reduce rigor.

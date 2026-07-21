@@ -12,6 +12,7 @@ from ai_sdlc_paths import first_existing, legacy_state_path, write_lock
 from ai_sdlc_state_machine import (
     STAGE_BY_SKILL,
     begin_stage,
+    completion_artifact_errors,
     complete_stage,
     flow_mode_from_args,
     initial_state,
@@ -128,7 +129,10 @@ def command_complete(args: argparse.Namespace) -> int:
             print(f"ERROR: {exc}", file=sys.stderr)
             return 1
         flow = flow_mode_from_args(args)
-        errors, warnings = complete_stage(state, args.skill, args.artifacts, args.decision_ref, flow, args.assumption)
+        errors = completion_artifact_errors(state, args.skill, args.artifacts, flow, Path.cwd())
+        warnings: list[str] = []
+        if not errors:
+            errors, warnings = complete_stage(state, args.skill, args.artifacts, args.decision_ref, flow, args.assumption)
         rc = print_messages(errors, warnings)
         if rc:
             return rc
@@ -175,7 +179,11 @@ def main() -> int:
         action_parser.set_defaults(func=func)
 
     args = parser.parse_args()
-    return args.func(args)
+    try:
+        return args.func(args)
+    except (OSError, ValueError) as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

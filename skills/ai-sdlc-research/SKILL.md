@@ -45,7 +45,7 @@ description: Optional AI SDLC research workflow. Use when an AI assistant needs 
 ### 0.3 Output Rules
 
 - Return question, source, finding, confidence, blocker, and output path counts
-  directly in the Codex response.
+  directly in the active agent response.
 - Before the final response, emit `ai-sdlc-handoff/v1` with `result`,
   `blockers`, `next_required`, and `next_optional`; every action includes
   `reason`, `command`, and `expected_artifact`.
@@ -58,6 +58,10 @@ description: Optional AI SDLC research workflow. Use when an AI assistant needs 
 - Write `<feature-root>/_ai_sdlc/research.toon`.
 - Keep downloaded or licensed source files outside generated output unless allowed.
 - Link research to requirements and decisions; do not overwrite them.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

@@ -46,8 +46,9 @@ When records disagree, use this order to determine what must be repaired:
 2. `decision-log.md` is authoritative for why a material choice was accepted,
    rejected, or superseded.
 3. `state.toon` is authoritative for lifecycle transition status.
-4. `plan.toon` is authoritative for implementation task/link status where SDD
-   execution planning is active.
+4. `tasks.md` checkboxes are authoritative for implementation completion;
+   `plan.toon` and `plan.md` are derived task/link projections and must be rebuilt
+   when they drift.
 5. Artifact metadata is a routing and traceability index over the artifact.
 6. Specs indexes and context packs are derived projections and may be rebuilt.
 

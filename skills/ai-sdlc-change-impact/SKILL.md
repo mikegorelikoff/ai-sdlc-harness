@@ -42,7 +42,7 @@ description: AI SDLC change-impact and lifecycle recovery workflow. Use when a r
 ### 0.3 Output Rules
 
 - Return changed refs, stale artifacts, affected stages, blockers, and ordered
-  reopen actions directly in the Codex response.
+  reopen actions directly in the active agent response.
 - Before the final response, emit `ai-sdlc-handoff/v1` with `result`,
   `blockers`, `next_required`, and `next_optional`; every action includes
   `reason`, `command`, and `expected_artifact`.
@@ -55,6 +55,10 @@ description: AI SDLC change-impact and lifecycle recovery workflow. Use when a r
 - Write machine analysis to `<feature-root>/_ai_sdlc/change-impact.toon`.
 - Never overwrite the changed source, downstream artifacts, or state.
 - Route approved actions through the owning lifecycle skill.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

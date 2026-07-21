@@ -100,7 +100,7 @@ Use these skills by skill name for BA work:
 | User story decomposition | `ai-sdlc-user-story-decomposition` | A clarified initiative package needs epics, stories, acceptance criteria, scenario coverage, and priority signals. |
 | BA context engineering | `ai-sdlc-ba` | A feature or change needs actors, workflows, business rules, assumptions, acceptance criteria, and richer spec context. |
 | Delivery spec synthesis | `ai-sdlc-delivery-spec-synthesis` | Stories and clarified delivery context are ready to become a structured delivery specification. |
-| SDD alignment | `ai-sdlc-sdd` | The change is medium or large and must move through spec-driven development with requirements, design, tests, tasks, implementation, and validation. |
+| Specification-driven development (SDD) alignment | `ai-sdlc-sdd` | The change is medium or large and must move through Specification-driven development with requirements, design, tests, tasks, implementation, and validation. |
 
 ## BA Artifact Generation
 

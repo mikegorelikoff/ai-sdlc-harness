@@ -51,7 +51,7 @@ description: AI SDLC Conventional Commit workflow. Use when an AI assistant draf
 - Make findings, gaps, risks, and blockers explicit.
 - Tie recommendations to evidence from the provided artifact, repository, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
 - Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
-- Return progress, completion, validation, and handoff summaries directly in the Codex response.
+- Return progress, completion, validation, and handoff summaries directly in the active agent response.
 - Before the final response, emit the `ai-sdlc-handoff/v1` contract with `result`, `blockers`, `next_required`, and `next_optional`; every action includes `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file unless the user explicitly requests one.
 - Keep durable writes limited to the canonical lifecycle artifacts, decision log, human-readable index, and `_ai_sdlc` machine files.
@@ -77,14 +77,18 @@ description: AI SDLC Conventional Commit workflow. Use when an AI assistant draf
 - Do not place PM, BA, QA, Delivery, discovery, planning, refinement, or readiness outputs in `specs/`; those belong at `specs-refiniment/<feature-name>/<file.md>`.
 - When consuming `specs-refiniment/<feature-name>/<file.md>`, treat it as upstream refinement context and create or update `specs/` only when implementation work is explicitly in scope.
 
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
+
 ## 0.5 Feature State Machine
 
 - Maintain feature lifecycle state in TOON at `specs-refiniment/<feature-name>/_ai_sdlc/state.toon` for refinement work and `specs/<feature-name>/_ai_sdlc/state.toon` for implementation work.
-- Before executing this skill for a feature, check the state machine with `python3 skills/_shared/state_machine.py check --feature <feature-name> --skill <this-skill-name> --workspace <refinement|implementation> --quick-flow|--full-flow`.
+- Before executing this skill for a feature, check the state machine with `python3 skills/ai-sdlc-shared-runtime/scripts/state_machine.py check --feature <feature-name> --skill <this-skill-name> --workspace <refinement|implementation> --quick-flow|--full-flow`.
 - When this skill starts durable work, mark it in progress with `begin`; when the skill's required artifact or review is complete, mark it done with `complete` and include `--artifacts <path>` plus `--decision-ref DEC-###` when a decision was involved.
 - In `--full-flow`, do not proceed when predecessor stages are incomplete, another lifecycle skill is active, or the state file reports a blocker.
 - In `--quick-flow`, a predecessor skip is allowed only when continuing is low risk and the command includes `--assumption "..."` or `--decision-ref DEC-###`; record the same assumption or decision in `decision-log.md`.
-- Use `python3 skills/_shared/state_machine.py status --feature <feature-name> --workspace <refinement|implementation> --format toon` to emit compact LLM-readable state before choosing the next skill.
+- Use `python3 skills/ai-sdlc-shared-runtime/scripts/state_machine.py status --feature <feature-name> --workspace <refinement|implementation> --format toon` to emit compact LLM-readable state before choosing the next skill.
 - The state machine is feature-scoped: do not reuse a `state.toon` across unrelated feature folders.
 
 ## 0.6 Artifact Metadata And Metatags
@@ -101,7 +105,7 @@ description: AI SDLC Conventional Commit workflow. Use when an AI assistant draf
 
 - Before searching across feature folders, inspect the compact LLM index first: `specs-refiniment/_ai_sdlc/specs-index.toon` for refinement work or `specs/_ai_sdlc/specs-index.toon` for implementation work.
 - Use the human-readable index at `specs-refiniment/specs-index.md` or `specs/specs-index.md` when reporting feature coverage, artifact inventory, or handoff status to people.
-- After this skill creates or materially updates an artifact, refresh the matching workspace index with `python3 skills/_shared/ai_sdlc_specs_index.py --workspace <refinement|implementation> --quick-flow|--full-flow`.
+- After this skill creates or materially updates an artifact, refresh the matching workspace index with `python3 skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_specs_index.py --workspace <refinement|implementation> --quick-flow|--full-flow`.
 - In `--quick-flow`, rely on `specs-index.toon` to choose the smallest relevant artifact set before opening files.
 - In `--full-flow`, verify the updated artifact appears in both `specs-index.toon` and `specs-index.md` before final handoff.
 - The specs index summarizes artifact metadata and state; it does not replace reading the selected source artifacts when details, approvals, or validation evidence matter.
@@ -115,7 +119,8 @@ description: AI SDLC Conventional Commit workflow. Use when an AI assistant draf
 - Validate commit messages before presenting or using them.
 - Quick flow: `python3 skills/ai-sdlc-conventional-commit/scripts/validate_commit_msg.py --quick-flow --message "<type(scope): subject>"`
 - Full flow: `python3 skills/ai-sdlc-conventional-commit/scripts/validate_commit_msg.py --full-flow path/to/commit-message.txt`
-- Use `--require-traceability` when medium or large work must include `Spec:` and `Validation:` metadata even outside full flow.
+- Use `--require-traceability` when medium or large work must include `Spec:`,
+  `Task: TNNN`, and `Validation:` metadata even outside full flow.
 
 ## Purpose
 
@@ -126,6 +131,7 @@ Draft, validate, or repair an AI SDLC commit message that uses Conventional Comm
 - Collect the intended change type: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `ci`, `build`, `perf`, or `revert`.
 - Collect the optional scope when it adds useful precision, for example `api`, `bitgo`, `sdd`, `skills`, or `docs`.
 - Collect the active spec folder for medium or large work, for example `specs/177-skill-instruction-upgrade`.
+- Collect the completed task ID or IDs represented by the commit.
 - Collect the implementation summary, reviewer-visible test path, and exact validation commands with outcomes.
 - Collect breaking-change details when behavior, schema, API contract, migration requirements, or compatibility changes are not backward compatible.
 
@@ -135,8 +141,11 @@ Draft, validate, or repair an AI SDLC commit message that uses Conventional Comm
 2. Keep the subject under 72 characters unless a longer subject prevents ambiguity.
 3. Use a lowercase type and lowercase kebab-case scope.
 4. Use an imperative summary, for example `fix bitgo wallet routing`, not `fixed bitgo wallet routing`.
-6. Add `Spec: specs/NNN-feature-name` for medium or large work.
-6. Add `Business context`, `Implementation details`, `Mermaid diagram`, `How to test`, and `Validation` sections for medium or large work.
+5. Add `Spec: specs/NNN-feature-name` for medium or large work.
+6. Add `Task: TNNN` (or a comma-separated list of canonical task IDs) for
+   medium or large work. Each ID must represent completed work in the named
+   specification; do not invent a task to satisfy the validator.
+7. Add `Business context`, `Implementation details`, `Mermaid diagram`, `How to test`, and `Validation` sections for medium or large work.
 8. Add `BREAKING CHANGE:` when the change requires a migration, client update, data backfill, or operator action.
 9. Validate the message before committing:
 
@@ -155,6 +164,7 @@ type(scope): imperative summary
 
 
 Spec: specs/NNN-feature-name
+Task: TNNN
 
 Business context:
 One or two sentences explaining why the change matters to product, operations, risk, clients, QA, or delivery governance.
@@ -163,11 +173,9 @@ Implementation details:
 - Concrete code, contract, doc, workflow, provider, schema, or validation changes.
 - Important compatibility, rollout, or failure-mode decisions.
 
-Mermaid diagram:
-```mermaid
-flowchart LR
-    Actor["Actor or trigger"] --> Change["Changed AI SDLC path"]
-    Change --> Outcome["Business-visible outcome"]
+Change flow:
+```text
+Actor or trigger -> changed AI SDLC path -> business-visible outcome
 ```
 
 How to test:
@@ -180,7 +188,9 @@ Validation:
 
 Quality gate:
 
-- Pass when the subject is Conventional Commit compliant, traceability is present when required, validation commands are exact, and every required body section contains concrete project-specific content.
+- Pass when the subject is Conventional Commit compliant, required Spec/Task
+  traceability is present, validation commands are exact, and every required
+  body section contains concrete project-specific content.
 - Fail when the message uses placeholders, omits required traceability, hides failed validation, or describes implementation in vague terms such as "updated stuff" or "improved docs".
 
 ## Examples
@@ -192,6 +202,7 @@ docs(skill): upgrade repo-local skill instructions
 
 
 Spec: specs/177-skill-instruction-upgrade
+Task: T001, T002
 
 Business context:
 This makes AI skill usage deterministic for future AI SDLC work and reduces reviewer effort caused by vague skill outputs.
@@ -200,11 +211,9 @@ Implementation details:
 - Rewrote every repo-local skill with Purpose, Inputs, Steps, Output spec, Examples, Edge cases, and Scope boundary.
 - Added a skill index that maps each workflow phase to the correct skill.
 
-Mermaid diagram:
-```mermaid
-flowchart LR
-    Request["Skill audit"] --> Rewrite["Normalized SKILL.md files"]
-    Rewrite --> Output["Consistent AI assistant behavior"]
+Change flow:
+```text
+Skill audit -> normalized SKILL.md files -> consistent AI assistant behavior
 ```
 
 How to test:

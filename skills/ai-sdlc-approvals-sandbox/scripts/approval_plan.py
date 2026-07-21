@@ -51,6 +51,7 @@ SECRET_PATTERNS = [
     re.compile(r"api[_-]?key\s*[:=]\s*['\"]?[A-Za-z0-9._~+/=-]{12,}", re.IGNORECASE),
     re.compile(r"token\s*[:=]\s*['\"]?[A-Za-z0-9._~+/=-]{20,}", re.IGNORECASE),
     re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
+    re.compile(r"\b(?:AWS_SECRET_ACCESS_KEY|AWS_SESSION_TOKEN|CLIENT_SECRET|PASSWORD|PRIVATE_KEY)\s*=\s*\S+", re.IGNORECASE),
 ]
 
 # Shell features make command segmentation and prefix-rule reuse harder to reason
@@ -65,8 +66,51 @@ def has_secret(text: str) -> bool:
 
 def starts_with_destructive(command: str) -> bool:
     """Detect commands that can delete data or rewrite remote history."""
-    normalized = " ".join(command.strip().split())
-    return any(normalized == item or normalized.startswith(f"{item} ") for item in DESTRUCTIVE)
+    try:
+        tokens = shlex.split(command)
+    except ValueError:
+        return True
+    while tokens and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=.*", tokens[0]):
+        tokens.pop(0)
+    while tokens and Path(tokens[0]).name in {"env", "command", "sudo"}:
+        wrapper = Path(tokens.pop(0)).name
+        if wrapper in {"env", "sudo"}:
+            while tokens and (tokens[0].startswith("-") or re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=.*", tokens[0])):
+                tokens.pop(0)
+    if not tokens:
+        return False
+    executable = Path(tokens.pop(0)).name
+    if executable in {"rm", "rmdir"}:
+        return True
+    if executable != "git":
+        return False
+    index = 0
+    value_options = {"-C", "-c", "--git-dir", "--work-tree", "--namespace"}
+    while index < len(tokens):
+        token = tokens[index]
+        if token == "-c" and index + 1 < len(tokens) and tokens[index + 1].lower().startswith("alias."):
+            return True
+        if token in value_options:
+            index += 2
+        elif token.startswith(("--git-dir=", "--work-tree=", "--namespace=")):
+            index += 1
+        elif token.startswith("-"):
+            index += 1
+        else:
+            break
+    if index >= len(tokens):
+        return False
+    subcommand = tokens[index]
+    remainder = tokens[index + 1:]
+    return subcommand in {"reset", "clean", "rm", "restore"} or (
+        subcommand == "checkout" and "--" in remainder
+    ) or (
+        subcommand == "push" and any(
+            item in {"-f", "--force", "--force-with-lease", "--delete"}
+            or item.startswith("+") or item.startswith(":")
+            for item in remainder
+        )
+    )
 
 
 def has_shell_feature(command: str) -> bool:
@@ -111,7 +155,7 @@ def validate(command: str, justification: str, prefix_rule: str | None) -> tuple
         # Prefix rules should be narrow reusable capabilities, not generic shells
         # or scripts with redirection/wildcards embedded in them.
         first = prefix_first_token(prefix_rule)
-        if first in BROAD_PREFIXES:
+        if first in BROAD_PREFIXES or Path(first).name in {Path(item).name for item in BROAD_PREFIXES}:
             errors.append(f"prefix_rule is too broad: {first}")
         if has_shell_feature(prefix_rule):
             errors.append("prefix_rule must not include shell operators, redirection, substitutions, or wildcards")

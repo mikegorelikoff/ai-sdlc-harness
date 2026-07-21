@@ -21,7 +21,13 @@ sys.path.insert(0, str(_SHARED))
 from ai_sdlc_paths import first_existing, internal_dir
 
 
-ROOT = Path(__file__).resolve().parents[3]
+def workspace_root(script_path: Path = Path(__file__)) -> Path:
+    """Return the consumer/source repository root for either distribution layout."""
+    candidate = script_path.resolve().parents[3]
+    return candidate.parent if candidate.name == ".agents" else candidate
+
+
+ROOT = workspace_root()
 FEATURE_SPEC_DIR_RE = re.compile(r"^\d{3}-")
 ACCEPTANCE_ID_RE = re.compile(r"\bAC-\d{3}\b")
 TEST_CASE_ID_RE = re.compile(r"\bTC-\d{3}\b")

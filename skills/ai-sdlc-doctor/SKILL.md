@@ -38,7 +38,7 @@ description: AI SDLC installation diagnostics and safe upgrade planning. Use whe
 
 - Default to complete TOON with checks, evidence, remediation, file changes,
   migrations, backups, rollback actions, blockers, and fingerprints.
-- Return summaries directly in the Codex response.
+- Return summaries directly in the active agent response.
 - Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
   `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
@@ -48,6 +48,10 @@ description: AI SDLC installation diagnostics and safe upgrade planning. Use whe
 - Write generated reports only below repository `_ai_sdlc/`.
 - Keep authored upgrade inventories visible and version controlled.
 - Never treat a generated plan as authority to apply changes.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

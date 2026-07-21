@@ -40,7 +40,7 @@ description: AI SDLC host adapter and capability negotiation workflow. Use when 
 
 - Default to complete TOON with mappings, missing requirements, fallbacks,
   effective limits, compatibility, source fingerprint, and result fingerprint.
-- Return summaries directly in the Codex response.
+- Return summaries directly in the active agent response.
 - Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
   `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
@@ -50,6 +50,10 @@ description: AI SDLC host adapter and capability negotiation workflow. Use when 
 - Write negotiations only below `_ai_sdlc/adapters/<adapter-id>/`.
 - Keep manifests in repository-owned visible paths or skill conformance fixtures.
 - Never mutate a manifest during negotiation.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

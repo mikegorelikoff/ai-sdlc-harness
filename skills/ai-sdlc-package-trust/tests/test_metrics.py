@@ -24,4 +24,12 @@ class MetricsTests(unittest.TestCase):
             result = self.cli(repository, "--write", "--format", "json"); self.assertEqual(result.returncode, 0, result.stdout + result.stderr); value = json.loads(result.stdout)
             self.assertEqual(value["runs"]["completed"], 1); self.assertEqual(value["tasks"]["retries"], 1); self.assertEqual(value["quality"]["stale_records"], 1); self.assertNotIn("SECRET", result.stdout); self.assertNotIn("DO-NOT-COLLECT", result.stdout)
             self.assertTrue((repository / "_ai_sdlc/metrics/local.toon").is_file())
+    def test_write_rejects_symlinked_repository_parent(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            parent = Path(temp); repository = parent / "repo"; outside = parent / "outside"
+            repository.mkdir(); outside.mkdir(); (repository / "_ai_sdlc").symlink_to(outside, target_is_directory=True)
+            result = self.cli(repository, "--write", "--format", "json")
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("symlink", result.stdout)
+            self.assertFalse((outside / "metrics/local.json").exists())
 if __name__ == "__main__": unittest.main()

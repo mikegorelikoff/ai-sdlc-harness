@@ -17,9 +17,11 @@ flow behavior remain valid; no bulk rewrite is required.
 
 ## Update and verify
 
-1. Install or check out release `v1.1.0` using the same installation method when
-   reproducing that historical baseline; new consumers should use the tagged
-   `v1.2.0` source in [Install](install.md).
+1. Install or check out release `v1.1.0` using the same installation method only
+   when reproducing that historical baseline. Release `v1.2.0` is also
+   reproducible but has a confirmed complete-workflow defect; new consumers
+   should retain an already accepted prior pin or wait for a corrected immutable
+   release, as explained in [Install](install.md).
 2. Run the installation doctor and preview any proposed upgrade before applying it.
 3. Run the compatibility gate:
 

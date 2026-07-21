@@ -50,8 +50,9 @@ from ai_sdlc_context import (
 from ai_sdlc_specs_index import parse_artifact_metadata
 from ai_sdlc_specs_index import write_indexes_for_roots
 from ai_sdlc_migrate import MigrationConflict, migrate_workspace
-from ai_sdlc_paths import state_path
+from ai_sdlc_paths import state_path, atomic_write_text
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
+from ai_sdlc_safe_io import bounded_path
 
 
 # Common traceability IDs that should survive compression and remain visible to
@@ -71,27 +72,6 @@ FENCE_PATTERN = re.compile(r"^\s*(`{3,}|~{3,})")
 EMPTY_SECTION_MARKER = "<!-- ai-sdlc:empty -->"
 DECISION_ID_PATTERN = re.compile(r"^DEC-\d{3,4}$")
 LIFECYCLE_TAGS = {"draft", "review", "approved", "validated", "blocked", "superseded"}
-
-
-def atomic_write_text(path: Path, text: str) -> None:
-    """Atomically replace one UTF-8 text file in its target directory."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temp_path: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            dir=path.parent,
-            prefix=f".{path.name}.",
-            suffix=".tmp",
-            delete=False,
-        ) as handle:
-            handle.write(text)
-            temp_path = Path(handle.name)
-        os.replace(temp_path, path)
-    finally:
-        if temp_path is not None and temp_path.exists():
-            temp_path.unlink()
 
 
 def markdown_section_spans(text: str) -> list[tuple[str, int, int, int]]:
@@ -294,8 +274,12 @@ def refreshed_artifact_metadata(
         for tag in existing.get("metatags", ())
         if str(tag) not in LIFECYCLE_TAGS
     ]
-    discovered_ids = sorted({match.group(0).upper() for match in ID_PATTERN.finditer(text)})
-    trace_ids = sorted({str(value) for value in existing.get("trace_ids", ())} | set(discovered_ids))
+    visible_text = text
+    if visible_text.startswith("---\n"):
+        frontmatter_end = visible_text.find("\n---", 4)
+        if frontmatter_end != -1:
+            visible_text = visible_text[frontmatter_end + len("\n---") :]
+    trace_ids = sorted({match.group(0).upper() for match in ID_PATTERN.finditer(visible_text)})
     metadata = artifact_metadata_lines(
         feature=feature,
         artifact_name=artifact_name,
@@ -672,6 +656,11 @@ def emit_profile_report(
     document_title: str | None = None,
 ) -> int:
     """Emit and optionally write the standardized artifact-profile report."""
+    # Wrapper-declared sections describe evidence expected in source material.
+    # Profile sections describe the canonical output artifact. Keep both:
+    # replacing the former with the latter makes analysis demand that raw notes
+    # already use the output template's exact headings.
+    analysis_required_sections = list(required_sections)
     profile = profile_for_skill(skill_name)
     legacy_artifact_names: tuple[str, ...] = ()
     table_requirements: dict[str, tuple[str, ...]] = {}
@@ -693,6 +682,11 @@ def emit_profile_report(
     decision_row = bool(getattr(state_args, "decision_row", False)) if state_args is not None else False
     stdin_action = bool(section or finalize or decision_row)
     if (stdin_action or write) and feature != "<feature-name>":
+        try:
+            bounded_path(Path.cwd(), Path.cwd() / feature_root)
+        except ValueError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 1
         try:
             migrate_workspace(Path.cwd(), workspace, apply=True)
         except MigrationConflict as exc:
@@ -913,7 +907,7 @@ def emit_profile_report(
                 workspace=workspace,
                 flow_mode=flow_mode,
                 budget_tokens=budget,
-                required_sections=required_sections,
+                required_sections=analysis_required_sections,
                 keywords=keywords,
                 cache=bool(
                     getattr(state_args, "cache_context", False) or getattr(state_args, "refresh_context", False)
@@ -1076,7 +1070,6 @@ def emit_profile_report(
         # `--write` materializes the routed artifact and creates the decision log
         # only if absent, preserving any existing traceability history.
         artifact_file = Path(artifact_path)
-        artifact_file.parent.mkdir(parents=True, exist_ok=True)
         atomic_write_text(artifact_file, "\n".join(template_lines).rstrip() + "\n")
         decision_file = Path(decision_log_path)
         if not decision_file.exists():

@@ -15,7 +15,7 @@ Create, update, validate, and enforce the AI SDLC SDD package for medium and lar
 
 ## Use it when
 
-AI SDLC repository spec-driven development workflow. Use when an AI assistant receives a medium or large feature, refactor, API change, architecture change, provider integration change, or any request that must follow requirements, design, test cases, QA planning, tasks, implementation, and validation. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
+AI SDLC repository specification-driven development workflow. Use when an AI assistant receives a medium or large feature, refactor, API change, architecture change, provider integration change, or any request that must follow requirements, design, test cases, QA planning, tasks, implementation, and validation. Supports `--quick-flow` for fast assumption-driven execution and `--full-flow` for question-driven verified execution.
 
 If the correct entry point is still unclear, ask the read-only navigator first instead of guessing.
 
@@ -51,7 +51,9 @@ This is an agent instruction, not a shell command. Terminal commands belong in t
 
 ## What the agent reads
 
-- Read `AGENTS.md` for change classification and repository workflow rules.
+- Read `AGENTS.md` for change classification and repository workflow rules when
+  it exists. If it is absent, record that fact and use the default risk rubric
+  below; absence is not permission to invent repository policy.
 - Collect the user request, affected systems, and likely spec name.
 - Search existing `specs/` folders for a matching active or historical spec.
 - Use `$ai-sdlc-ba`, `$ai-sdlc-test-cases`, and `$ai-sdlc-qa` when those phases are incomplete.
@@ -171,7 +173,9 @@ Quality gate:
 - Treat unlisted historical numbered specs as `unclassified` until `specs/spec-registry.md` says otherwise.
 - Do not treat scaffolded historical `qa.md` or `test-cases.md` files with unresolved TODOs as validated evidence.
 - Treat missing `_ai_sdlc/plan.toon` or `plan.md` as a structural SDD failure, even in quick flow.
-- When `_ai_sdlc/plan.toon` and `plan.md` disagree, trust `_ai_sdlc/plan.toon` for machine task status and regenerate `plan.md` with `plan_links.py --write`.
+- When `tasks.md`, `_ai_sdlc/plan.toon`, and `plan.md` disagree, trust the
+  reviewed checkbox state in `tasks.md` and regenerate both projections with
+  `plan_links.py --write`. Investigate unexpected drift before continuing.
 - In full flow, treat missing upstream refinement delivery or QA readiness as a blocker unless the predecessor is explicitly skipped with a decision reference.
 
 On a blocker, preserve failed/stale evidence, name the accountable owner and exact missing input, then resume this skill or the earliest reopened producer. Never manufacture completion by editing derived state.
@@ -182,7 +186,7 @@ On a blocker, preserve failed/stale evidence, name the accountable owner and exa
 - Make findings, gaps, risks, and blockers explicit.
 - Tie recommendations to evidence from the provided artifact, repository, `specs-refiniment/<feature-name>/<file.md>` workspace, or user context.
 - Include role ownership when the output creates follow-up work for BA, QA, Dev, PM, or Delivery.
-- Return progress, completion, validation, and handoff summaries directly in the Codex response.
+- Return progress, completion, validation, and handoff summaries directly in the active agent response.
 - Before the final response, emit the `ai-sdlc-handoff/v1` contract with `result`, `blockers`, `next_required`, and `next_optional`; every action includes `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file unless the user explicitly requests one.
 - Keep durable writes limited to the canonical lifecycle artifacts, decision log, human-readable index, and `_ai_sdlc` machine files.
@@ -195,11 +199,11 @@ The downstream consumer rechecks artifacts and freshness; it does not trust a pr
 ??? info "Feature state"
 
     - Maintain feature lifecycle state in TOON at `specs-refiniment/<feature-name>/_ai_sdlc/state.toon` for refinement work and `specs/<feature-name>/_ai_sdlc/state.toon` for implementation work.
-    - Before executing this skill for a feature, check the state machine with `python3 skills/_shared/state_machine.py check --feature <feature-name> --skill <this-skill-name> --workspace <refinement|implementation> --quick-flow|--full-flow`.
+    - Before executing this skill for a feature, check the state machine with `python3 skills/ai-sdlc-shared-runtime/scripts/state_machine.py check --feature <feature-name> --skill <this-skill-name> --workspace <refinement|implementation> --quick-flow|--full-flow`.
     - When this skill starts durable work, mark it in progress with `begin`; when the skill's required artifact or review is complete, mark it done with `complete` and include `--artifacts <path>` plus `--decision-ref DEC-###` when a decision was involved.
     - In `--full-flow`, do not proceed when predecessor stages are incomplete, another lifecycle skill is active, or the state file reports a blocker.
     - In `--quick-flow`, a predecessor skip is allowed only when continuing is low risk and the command includes `--assumption "..."` or `--decision-ref DEC-###`; record the same assumption or decision in `decision-log.md`.
-    - Use `python3 skills/_shared/state_machine.py status --feature <feature-name> --workspace <refinement|implementation> --format toon` to emit compact LLM-readable state before choosing the next skill.
+    - Use `python3 skills/ai-sdlc-shared-runtime/scripts/state_machine.py status --feature <feature-name> --workspace <refinement|implementation> --format toon` to emit compact LLM-readable state before choosing the next skill.
     - The state machine is feature-scoped: do not reuse a `state.toon` across unrelated feature folders.
 
 ??? info "Artifact metadata"
@@ -216,7 +220,7 @@ The downstream consumer rechecks artifacts and freshness; it does not trust a pr
 
     - Before searching across feature folders, inspect the compact LLM index first: `specs-refiniment/_ai_sdlc/specs-index.toon` for refinement work or `specs/_ai_sdlc/specs-index.toon` for implementation work.
     - Use the human-readable index at `specs-refiniment/specs-index.md` or `specs/specs-index.md` when reporting feature coverage, artifact inventory, or handoff status to people.
-    - After this skill creates or materially updates an artifact, refresh the matching workspace index with `python3 skills/_shared/ai_sdlc_specs_index.py --workspace <refinement|implementation> --quick-flow|--full-flow`.
+    - After this skill creates or materially updates an artifact, refresh the matching workspace index with `python3 skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_specs_index.py --workspace <refinement|implementation> --quick-flow|--full-flow`.
     - In `--quick-flow`, rely on `specs-index.toon` to choose the smallest relevant artifact set before opening files.
     - In `--full-flow`, verify the updated artifact appears in both `specs-index.toon` and `specs-index.md` before final handoff.
     - The specs index summarizes artifact metadata and state; it does not replace reading the selected source artifacts when details, approvals, or validation evidence matter.

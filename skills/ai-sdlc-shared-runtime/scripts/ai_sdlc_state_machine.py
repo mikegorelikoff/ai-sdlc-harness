@@ -9,12 +9,14 @@ not invent their own chain rules.
 from __future__ import annotations
 
 import argparse
+import re
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
 from ai_sdlc_artifact_profiles import PROFILES
 from ai_sdlc_paths import atomic_write_text, first_existing, legacy_state_path, state_path, workspace_base, write_lock
+from ai_sdlc_validation_receipt import validate_receipt
 
 
 STATUSES = {"not_started", "in_progress", "blocked", "done", "skipped", "not_applicable"}
@@ -287,6 +289,12 @@ def complete_stage(
         return errors, warnings
     stage = stage_for_skill(skill)
     row = stage_row(state, stage.stage_id)
+    if row.get("status") != "in_progress" or state.get("active_skill") != skill:
+        errors.append(f"stage must be begun before completion: {stage.stage_id}")
+    if not artifacts:
+        errors.append(f"completion artifact is required: {row.get('artifacts') or stage.artifacts}")
+    if errors:
+        return errors, warnings
     row["status"] = "done"
     if artifacts:
         row["artifacts"] = artifacts
@@ -299,6 +307,84 @@ def complete_stage(
     if assumption:
         record_skip(state, stage.stage_id, assumption, decision_ref, flow_mode)
     return [], warnings
+
+
+def completion_artifact_errors(
+    state: dict[str, object], skill: str, artifacts: str, flow_mode: str, root: Path
+) -> list[str]:
+    """Require completion evidence at the canonical feature route."""
+    if not artifacts:
+        return ["--artifacts is required for stage completion"]
+    if "," in artifacts:
+        return ["--artifacts must name one canonical stage artifact"]
+    stage = stage_for_skill(skill)
+    feature = str(state.get("feature", ""))
+    supplied = Path(artifacts)
+    expected = Path(stage.artifacts.replace("<feature>", feature))
+    if stage.stage_id == "sdd":
+        canonical = Path("specs") / feature
+    else:
+        canonical = Path(workspace_base(stage.workspace)) / feature / expected.name
+    normalized = supplied if supplied.is_absolute() else root / supplied
+    expected_path = canonical if canonical.is_absolute() else root / canonical
+    if normalized.resolve() != expected_path.resolve():
+        return [f"completion artifact must use canonical path {canonical.as_posix()}: {artifacts}"]
+    if not normalized.exists():
+        return [f"completion artifact does not exist: {artifacts}"]
+
+    finalized_statuses = {"review", "approved", "validated"}
+
+    def finalized_markdown(path: Path) -> list[str]:
+        if not path.is_file():
+            return [f"completion evidence is not a file: {path.relative_to(root)}"]
+        text = path.read_text(encoding="utf-8", errors="replace")
+        label = path.relative_to(root).as_posix()
+        if 'schema: "ai-sdlc-artifact-metadata/v1"' not in text:
+            return [f"completion artifact lacks canonical metadata: {label}"]
+        status_match = re.search(r'^\s*status:\s*["\']?([^"\'\n]+)', text, re.MULTILINE)
+        if not status_match or status_match.group(1).strip() not in finalized_statuses:
+            return [f"completion artifact is not finalized for review: {label}"]
+        body = text.split("---", 2)[-1].strip() if text.startswith("---") else text.strip()
+        if len(body) < 40 or not re.search(r"(?m)^#\s+\S", body):
+            return [f"completion artifact has no meaningful review body: {label}"]
+        return []
+
+    if stage.stage_id == "sdd":
+        if not normalized.is_dir():
+            return [f"SDD completion artifact must be a directory: {artifacts}"]
+        required = ("requirements.md", "design.md", "test-cases.md", "qa.md", "tasks.md")
+        errors: list[str] = []
+        for name in required:
+            errors.extend(finalized_markdown(normalized / name))
+        plan = normalized / "plan.md"
+        machine_plan = normalized / "_ai_sdlc" / "plan.toon"
+        if not plan.is_file() or not plan.read_text(encoding="utf-8", errors="replace").strip():
+            errors.append(f"SDD completion evidence is missing plan projection: {plan.relative_to(root)}")
+        if not machine_plan.is_file() or not machine_plan.read_text(encoding="utf-8", errors="replace").strip():
+            errors.append(f"SDD completion evidence is missing machine plan: {machine_plan.relative_to(root)}")
+        return errors
+
+    if normalized.is_dir():
+        return [f"completion artifact must be a file: {artifacts}"]
+    errors = finalized_markdown(normalized)
+    if errors:
+        return errors
+    text = normalized.read_text(encoding="utf-8", errors="replace")
+    if stage.stage_id == "validation":
+        receipt = normalized.parent / "_ai_sdlc" / "validation-receipt.json"
+        receipt_errors = validate_receipt(receipt, root)
+        if receipt_errors:
+            return [
+                f"validation completion receipt is not current: {error}"
+                for error in receipt_errors
+            ]
+    if stage.stage_id == "code_review" and "## Findings" not in text:
+        return [f"code-review completion artifact must contain a Findings section: {artifacts}"]
+    if stage.stage_id == "security_testing" and not any(
+        heading in text for heading in ("## Findings", "## Threat", "## Security")
+    ):
+        return [f"security completion artifact must contain findings or threat analysis: {artifacts}"]
+    return []
 
 
 def add_state_arguments(parser: argparse.ArgumentParser) -> None:
@@ -339,7 +425,9 @@ def run_state_action(args: argparse.Namespace, skill: str, workspace: str, artif
         if getattr(args, "begin_state", False):
             errors, warnings = begin_stage(state, skill, flow, decision_ref, assumption)
         elif getattr(args, "complete_state", False):
-            errors, warnings = complete_stage(state, skill, artifacts, decision_ref, flow, assumption)
+            errors = completion_artifact_errors(state, skill, artifacts, flow, Path.cwd())
+            if not errors:
+                errors, warnings = complete_stage(state, skill, artifacts, decision_ref, flow, assumption)
         else:
             errors, warnings = validate_transition(state, skill, flow, decision_ref, assumption)
 

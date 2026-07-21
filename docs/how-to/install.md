@@ -11,27 +11,59 @@ create delivery artifacts until you ask an agent to use a workflow.
 
 ## Before you begin
 
+!!! note "Published tag and maintainer preview"
+
+    These consumer commands install Git tag `v1.2.0`, whose immutable commit is
+    `7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2`. Documentation on `main` can
+    describe unreleased changes. The release tag is not cryptographically
+    signed; verify the commit and your organization's trust policy before use.
+    No corresponding GitHub Release object exists. The tag copies successfully and supports the read-only navigator,
+    but the full installed SDD/commit path has a confirmed consumer-root defect.
+    Do not approve it for a production pilot. The candidate tutorial exercises
+    the correction; a matching reviewed release is still required.
+
 You need:
 
 - Git and a repository with a clean or understood working tree;
 - Node.js `>=22.20.0`/npm with `npx`;
 - Python 3.10 or newer for deterministic helpers;
 - network access to npm and GitHub during installation;
-- a supported AI agent environment;
+- an AI agent environment selected for a pilot; see [supported environments](../reference/supported-environments.md);
 - permission to add project-scoped agent files.
 
 Choose a low-risk consumer repository for your first use. The **consumer
 repository** is the software project receiving skills. The **harness source
 repository** is this GitHub project, used by maintainers and contributors.
+For the documented Codex pilot, [install and authenticate Codex CLI](setup-codex.md)
+before the first agent prompt.
 
-The shell blocks below use POSIX syntax (Linux, macOS, WSL, or Git Bash). In
-PowerShell, set the opt-out once in the session and run the same pinned CLI:
+Install missing prerequisites from the official [Git](https://git-scm.com/downloads),
+[Node.js](https://nodejs.org/en/download), and
+[Python](https://www.python.org/downloads/) distribution pages or an approved
+organizational package mirror. Do not use an agent-generated download URL.
+
+The shell blocks below use POSIX syntax (Linux, macOS, Windows Subsystem for
+Linux (WSL), or Git Bash). In PowerShell, set the opt-out once in the session
+and run the same pinned CLI:
 
 ```powershell
 $env:DISABLE_TELEMETRY = "1"
+$HarnessRevision = "7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2"
+$HarnessSource = Join-Path ([System.IO.Path]::GetTempPath()) ("ai-sdlc-harness-" + [guid]::NewGuid())
 node --version  # expected: v22.20.0 or newer
-npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
+git init $HarnessSource
+git -C $HarnessSource remote add origin https://github.com/mikegorelikoff/ai-sdlc-harness.git
+git -C $HarnessSource fetch --depth 1 origin $HarnessRevision
+git -C $HarnessSource checkout --detach FETCH_HEAD
+if ((git -C $HarnessSource rev-parse HEAD) -ne $HarnessRevision) { throw "Harness revision mismatch" }
+npx -y skills@1.5.19 add $HarnessSource --skill '*' --agent codex -y
 npx -y skills@1.5.19 list --json
+New-Item -ItemType Directory -Force .ai-sdlc | Out-Null
+Copy-Item (Join-Path $HarnessSource "config/ai-sdlc-managed-skills.txt") .ai-sdlc/harness-managed-skills.txt
+@{schema="ai-sdlc-install-record/v1"; revision=$HarnessRevision; skills_cli="1.5.19"; agent="codex"; selection="all-skills"; inventory=".ai-sdlc/harness-managed-skills.txt"} | ConvertTo-Json -Compress | Set-Content -Encoding utf8 .ai-sdlc/harness-install.json
+python .agents/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_install_record.py
+Remove-Item -LiteralPath skills-lock.json
+Remove-Item -LiteralPath $HarnessSource -Recurse -Force
 ```
 
 Do not paste the PowerShell environment assignment into a POSIX shell; use the
@@ -53,41 +85,84 @@ use the form required by your organization consistently.
 
 ## Inspect before installing
 
+Inspecting repository files in a browser or a separately cloned checkout is the
+only inspection that occurs before third-party installer code runs. The
+following `--list` command still downloads and executes the pinned Skills CLI;
+review `npm view skills@1.5.19 dist.integrity repository engines --json` and
+your approved npm provenance before invoking it.
+
 !!! terminal "Run in terminal — from the consumer repository"
 
     ```bash
-    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --list
+    HARNESS_REV=7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2
+    HARNESS_TMP="$(mktemp -d)"
+    HARNESS_SRC="$HARNESS_TMP/ai-sdlc-harness"
+    git --version
+    node --version
+    npm --version
+    PYTHON_BIN="${PYTHON_BIN:-python3}"
+    "$PYTHON_BIN" --version
+    npm view skills@1.5.19 dist.integrity repository engines --json
+    git init "$HARNESS_SRC"
+    git -C "$HARNESS_SRC" remote add origin https://github.com/mikegorelikoff/ai-sdlc-harness.git
+    git -C "$HARNESS_SRC" fetch --depth 1 origin "$HARNESS_REV"
+    git -C "$HARNESS_SRC" checkout --detach FETCH_HEAD
+    test "$(git -C "$HARNESS_SRC" rev-parse HEAD)" = "$HARNESS_REV"
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --list
     ```
 
-Before this command, run `node --version` and stop unless it reports
-`v22.20.0` or newer. `npm view skills@1.5.19 engines --json` is the recovery
-check when a pinned CLI invocation reports an engine mismatch.
+Stop unless Node reports `v22.20.0` or newer and Python reports 3.10 or newer.
+The installer does not enforce the Python floor. `npm view
+skills@1.5.19 engines --json` is the recovery check when a pinned CLI invocation
+reports an engine mismatch.
 
 This lists available skills without installing them. Review the repository
-origin and selected package names. Release `v1.2.0` is the current documented
-harness release; the CLI version is pinned here so this procedure is
-reproducible.
+origin and selected package names. Release `v1.2.0` currently maps to the exact
+revision checked above. Skills CLI `1.5.19` treats the final segment of a
+GitHub `/tree/...` URL as a branch, so a raw commit SHA in that URL fails; the
+detached local checkout is intentional.
 
 ## Install project-scoped skills
 
 !!! terminal "Run in terminal — from the consumer repository"
 
     ```bash
-    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill '*' --agent codex -y
     ```
 
-`--all` selects every capability—including the portable shared runtime—and
-every detected supported agent. Because `-g` is absent, the intended scope is
-the current project. Review the CLI summary before accepting any unexpected
-target.
+Run this in the same terminal session as the inspection block so
+`HARNESS_SRC` still names the verified checkout. `--skill '*'` selects all 44
+harness skills—including the shared runtime—while `--agent codex` selects the
+one manually validated host target. `--all` would override that scope: a clean
+baseline test of CLI
+`1.5.19` reported 73 possible targets; that broad mode is not the canonical
+pilot path. Because `-g` is absent, installation remains project-scoped. Stop
+if the CLI summary names unexpected locations.
 
-For a smaller installation, omit `--all` and select exact skills/agents in the
-interactive prompt, or use the CLI's `--skill` and `--agent` options. A useful
-starter set is shared runtime, navigator, project context, SDD, validation, and commit prep;
-installing all skills is easier when you want the navigator to expose every
-role and control-plane path. Any selected helper-backed skill must be installed
-with `ai-sdlc-shared-runtime`; a skill inventory without its runtime is not a
-healthy installation.
+For a smaller installation, create the reviewed inventory first and use it as
+the exact installer input; do not copy the 44-name full inventory afterward:
+
+```bash
+mkdir -p .ai-sdlc
+printf '%s\n' \
+  ai-sdlc-commit-prep \
+  ai-sdlc-conventional-commit \
+  ai-sdlc-navigator \
+  ai-sdlc-project-context \
+  ai-sdlc-sdd \
+  ai-sdlc-shared-runtime \
+  ai-sdlc-validation | sort -u > .ai-sdlc/harness-managed-skills.txt
+set --
+while IFS= read -r skill; do set -- "$@" --skill "$skill"; done < .ai-sdlc/harness-managed-skills.txt
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" "$@" --agent codex -y
+```
+
+This starter subset includes shared runtime plus the commit-message dependency
+used by commit prep. Keep `selection` as `explicit-skills` in the record below.
+For all skills, retain the canonical wildcard command and full packaged
+inventory. The validator treats the managed inventory as ownership, requires
+every managed name to be installed, and permits unrelated project or
+third-party skill directories to coexist.
 
 ## Verify the result
 
@@ -96,24 +171,71 @@ healthy installation.
     ```bash
     DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
     git status --short
-    python3 --version
-    python3 .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
-    python3 .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
+    "$PYTHON_BIN" --version
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-navigator/scripts/navigate.py --help
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
     ```
 
 Expected result:
 
-- the list contains AI SDLC skill names;
+- for `all-skills`, the list contains all 44 managed names; for
+  `explicit-skills`, every name in the reviewed managed inventory is present;
+  either list may also contain unrelated project or third-party skills;
 - Git shows only the agent/skill files you intended to add;
 - Python reports 3.10 or newer;
 - navigator and SDD helper usage render without an import traceback;
 - no application source, secrets, or existing project artifacts were replaced.
 
+The Codex-scoped command creates `.agents/skills/` and a transient
+`skills-lock.json`. CLI `1.5.19` records the absolute temporary source path in
+that lock and cannot update this local-source installation, so the lock is not
+portable team provenance and must not be committed. Record portable identity,
+then remove only the transient lock:
+
+```bash
+mkdir -p .ai-sdlc
+test -f .ai-sdlc/harness-managed-skills.txt || cp "$HARNESS_SRC/config/ai-sdlc-managed-skills.txt" .ai-sdlc/harness-managed-skills.txt
+HARNESS_SELECTION=all-skills # use explicit-skills when you ran the subset block
+printf '{"schema":"ai-sdlc-install-record/v1","revision":"%s","skills_cli":"1.5.19","agent":"codex","selection":"%s","inventory":".ai-sdlc/harness-managed-skills.txt"}\n' "$(git -C "$HARNESS_SRC" rev-parse HEAD)" "$HARNESS_SELECTION" > .ai-sdlc/harness-install.json
+"$PYTHON_BIN" .agents/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_install_record.py
+rm skills-lock.json
+rm -rf "$HARNESS_TMP"
+git status --short
+```
+
+The installed validator checks record fields, revision syntax, sorted managed
+inventory, full-versus-explicit selection integrity, and presence of every
+managed skill before temporary source cleanup. Unrelated installed skills are
+allowed and are never claimed as harness-owned. The published JSON Schema remains available for organization
+tooling. Commit `.agents/skills/` and both portable harness records. Skill documentation uses logical paths such as
+`skills/<name>`; in a consumer installation, resolve those paths beneath
+`.agents/skills/`.
+
 !!! warning "Human checkpoint"
 
-    Review and commit the accepted installation baseline before starting a
-    feature branch. Installation is not approval for an agent to modify product
-    code, policy, or delivery evidence.
+    Review and commit the accepted `.agents/skills/` inventory and portable
+    install record before starting a feature branch. Installation is not
+    approval for an agent to modify product code, policy, or delivery evidence.
+
+From a clean consumer baseline, create that auditable installation commit with
+exact paths rather than broad staging:
+
+```bash
+git status --short
+git add .agents/skills .ai-sdlc/harness-install.json .ai-sdlc/harness-managed-skills.txt
+git diff --cached --check
+git diff --cached --stat
+git diff --cached
+git commit -m "chore: install AI SDLC harness"
+git status --short
+```
+
+Expected: the staged diff contains only the reviewed managed skills and two
+portable records; the commit succeeds; final status prints nothing. If Git asks
+for identity, unrelated paths appear, or status remains dirty, stop and use the
+[Git and terminal primer](../foundations/git-and-terminal-primer.md) plus
+[troubleshooting](../operations/troubleshooting.md). Do not use `git add -A` as
+a shortcut.
 
 ## Verify first use
 
@@ -133,17 +255,13 @@ before reinstalling.
 
 ## Update, remove, or roll back
 
-!!! terminal "Run in terminal"
-
-    ```bash
-    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 update
-    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 remove
-    ```
-
-Review updates like source changes. Preserve project-owned specs, decisions,
-state, configuration, and evidence. Removing an installed skill must not delete
-artifacts it previously helped create. For version compatibility and schema
-recovery, follow [Update safely](update.md) and [Migrate to 1.1](migrate-1.1.md).
+Skills CLI `1.5.19` does not update this exact local-source installation and its
+generic remove operation can leave the transient lock and empty host
+directories. Do not use those commands as the canonical lifecycle. Follow
+[Update safely](update.md) for exact reinstall, reviewed rollback, and cleanup.
+Preserve project-owned specs, decisions, state, configuration, and evidence;
+they are never installer-owned. For schema recovery, see
+[Migrate to 1.1](migrate-1.1.md).
 
 ## Offline and private environments
 
@@ -153,5 +271,29 @@ organization's approved supply-chain process. A local harness checkout can run
 tests and compatibility validation, but this documentation does not claim that
 cloning alone installs skills into another agent environment.
 
+An offline invocation succeeds only when every required npm package and source
+object already exists in an approved local cache or mirror. A clean offline
+machine is therefore expected to fail. Prepare the mirror while connected,
+record integrity metadata, disconnect, and test the complete install in a
+disposable repository before organizational rollout.
+
 For a private repository, configure an SSH key, GitHub CLI login, or approved
 HTTPS credential with read access. Never paste tokens into an agent prompt.
+
+## Troubleshooting first install
+
+| Symptom | Safe response |
+| --- | --- |
+| Command appears hung | Wait for the npm/Git timeout; use `Ctrl-C` once, then check approved proxy/DNS/TLS access. Do not repeatedly launch installers. |
+| Engine mismatch | Compare `node --version` with `npm view skills@1.5.19 engines --json`; upgrade Node through an approved source. |
+| `python3` missing or below 3.10 | Install a supported Python, set `PYTHON_BIN` to its exact executable (for example `PYTHON_BIN=/opt/homebrew/bin/python3.11`), rerun `"$PYTHON_BIN" --version`, and substitute `"$PYTHON_BIN"` for displayed `python3` helper commands. Do not assume `python` and `python3` are the same. |
+| `list --json` requires network | This CLI behavior is expected; use an approved registry/cache or record the offline limitation. |
+| Skill helper path missing | Confirm `.agents/skills/ai-sdlc-shared-runtime` and the selected skill both exist; reinstall the pair if either is absent. |
+| Unexpected agent directories | Do not commit or use the generic CLI remover. If the repository is disposable, delete that whole verified fixture from its parent. Otherwise follow the ownership-safe [uninstall procedure](update.md#remove-and-verify-cleanup), review every managed path, inspect status, and reinstall with an explicit `--agent`. |
+| Authentication or certificate failure | Stop and ask the repository/network owner. Never disable TLS verification or paste a token into chat. |
+
+After any failed attempt, inspect `git status --short`. Remove only files that
+the installer created and that a human has verified are not project-owned. The
+successful POSIX sequence removes only the unique directory named by
+`HARNESS_TMP`; after a failure, inspect that variable and remove that exact
+temporary directory only after preserving useful diagnostics.

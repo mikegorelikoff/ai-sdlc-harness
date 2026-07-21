@@ -92,6 +92,10 @@ nav:
       - Start here: start.md
       - Foundations:
           - Overview: foundations/index.md
+          - Git and terminal primer: foundations/git-and-terminal-primer.md
+          - Software delivery foundations: foundations/software-delivery.md
+          - Artificial intelligence foundations: foundations/ai-foundations.md
+          - Agents, sub-agents, and skills: foundations/agents-and-skills.md
           - What is AI SDLC?: foundations/ai-sdlc.md
           - What is SDD?: foundations/sdd.md
           - Why use a harness?: foundations/why-harness.md
@@ -102,11 +106,27 @@ nav:
       - Onboarding:
           - Overview: onboarding/index.md
           - Your first 30 minutes: onboarding/first-30-minutes.md
+      - Role guides:
+          - Choose your role: roles/index.md
+          - Trainee developer: roles/trainee-developer.md
+          - Software engineer: roles/software-engineer.md
+          - Lead developer: roles/lead-developer.md
+          - QA engineer: roles/qa-engineer.md
+          - Business analyst: roles/business-analyst.md
+          - Product owner: roles/product-owner.md
+          - Product manager: roles/product-manager.md
+          - Delivery manager: roles/delivery-manager.md
+          - Engineering manager: roles/engineering-manager.md
+          - VP of Engineering: roles/vp-engineering.md
+          - CTO: roles/cto.md
+          - DevOps engineer: roles/devops-engineer.md
+          - Security reviewer: roles/security-reviewer.md
       - Tutorials:
           - Overview: tutorials/index.md
           - Ship a first feature: tutorials/first-feature.md
           - Adopt an existing project: tutorials/existing-project.md
           - Run the full lifecycle: tutorials/full-lifecycle.md
+          - Common change patterns: tutorials/change-patterns.md
   - Reference:
       - Overview: reference/index.md
       - Skills by role: reference/skills-by-role.md
@@ -146,7 +166,7 @@ nav:
           - Research: reference/skills/ai-sdlc-research.md
           - Retrospective: reference/skills/ai-sdlc-retrospective.md
           - Runtime: reference/skills/ai-sdlc-runtime.md
-          - Spec-driven development: reference/skills/ai-sdlc-sdd.md
+          - Specification-driven development: reference/skills/ai-sdlc-sdd.md
           - Security testing: reference/skills/ai-sdlc-security-testing.md
           - Shared runtime: reference/skills/ai-sdlc-shared-runtime.md
           - Test suite synthesis: reference/skills/ai-sdlc-test-case-and-suite-synthesis.md
@@ -165,6 +185,7 @@ nav:
       - Validation commands: reference/validation.md
       - Directory layout: reference/directory-layout.md
       - Compatibility contract: reference/compatibility.md
+      - Supported environments: reference/supported-environments.md
       - Supported versions: reference/versions.md
       - Release 1.2 audit: reference/release-1.2.md
       - Release 1.1 audit: reference/release-1.1.md
@@ -178,6 +199,7 @@ nav:
       - How-to guides:
           - Overview: how-to/index.md
           - Install the harness: how-to/install.md
+          - Set up Codex CLI: how-to/setup-codex.md
           - Update safely: how-to/update.md
           - Migrate to 1.1: how-to/migrate-1.1.md
           - Choose a flow mode: how-to/choose-flow.md
@@ -198,6 +220,8 @@ nav:
           - Run an evidence council: how-to/evidence-council.md
           - Research with sources: how-to/research.md
           - Prepare a commit: how-to/prepare-commit.md
+          - Open, review, and merge a change: how-to/review-and-merge.md
+          - Record product acceptance: how-to/record-product-acceptance.md
           - Validate a release: how-to/validate-release.md
   - Adopt:
       - Evaluate and adopt:
@@ -211,6 +235,19 @@ nav:
           - Governance and trust: operations/governance.md
           - Troubleshooting and recovery: operations/troubleshooting.md
   - About:
+      - Production-readiness audit:
+          - Executive summary: audits/2026-07-21-production-readiness/index.md
+          - Repository inventory: audits/2026-07-21-production-readiness/repository-inventory.md
+          - Issue register: audits/2026-07-21-production-readiness/issue-register.md
+          - Contradiction register: audits/2026-07-21-production-readiness/contradiction-register.md
+          - Installation validation: audits/2026-07-21-production-readiness/installation-validation.md
+          - Skills audit: audits/2026-07-21-production-readiness/skills-audit.md
+          - Documentation coverage: audits/2026-07-21-production-readiness/documentation-coverage.md
+          - Research sources: audits/2026-07-21-production-readiness/research-sources.md
+          - Test and validation: audits/2026-07-21-production-readiness/validation-report.md
+          - Sub-agent reviews: audits/2026-07-21-production-readiness/sub-agent-reviews.md
+          - Assumptions and limitations: audits/2026-07-21-production-readiness/assumptions-and-limitations.md
+          - Final readiness: audits/2026-07-21-production-readiness/final-readiness.md
       - Explanation:
           - Overview: explanation/index.md
           - System model: explanation/system-model.md

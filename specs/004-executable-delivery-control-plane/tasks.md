@@ -12,7 +12,7 @@ artifact_metadata:
   status: "approved"
   owner: "Dev"
   created_at: "2026-07-19"
-  updated_at: "2026-07-19"
+  updated_at: "2026-07-21"
   trace_ids:
     - "AC-001"
     - "AC-002"
@@ -28,7 +28,6 @@ artifact_metadata:
     - "AC-012"
     - "AC-013"
     - "AC-014"
-    - "AC-015"
     - "DEC-001"
     - "DEC-002"
   related_artifacts:
@@ -64,7 +63,7 @@ artifact_metadata:
   Refs: AC-002, AC-013
 - [x] T005. Implement policy-gated atomic apply and archive.
   Output: Staged multi-file apply, approval checks, archive record, recovery manifest, repeat protection, fault-injection tests, and documentation.
-  Refs: AC-003, AC-015, AC-013
+  Refs: AC-003, AC-013
 - [x] T006. Implement the repository delivery graph and trace queries.
   Output: Versioned node and edge schemas, deterministic indexer, trace and gap queries, orphan detection, tests, and documentation.
   Refs: AC-004, AC-013
@@ -73,13 +72,13 @@ artifact_metadata:
   Refs: AC-004, AC-008, AC-013
 - [x] T008. Implement versioned policy-as-code and waiver lifecycle.
   Output: Layered policy schema and resolver, protected rules, action evaluator, explain output, expiring waiver contract, organization profiles, tests, and documentation.
-  Refs: AC-007, AC-015, AC-013, DEC-002
+  Refs: AC-007, AC-013, DEC-002
 - [x] T009. Implement Context Engine v2 and bounded task packs.
   Output: Repository ownership and test topology, conditional selectors, token budget allocator, freshness-aware context packs, secret exclusions, tests, and documentation.
   Refs: AC-008, AC-013
 - [x] T010. Implement the resumable task runtime core.
   Output: Versioned run state and journal, ready-task selection, budgets, retries, stop reasons, resume and idempotency behavior, commit-boundary contract, tests, and documentation.
-  Refs: AC-005, AC-015, AC-014
+  Refs: AC-005, AC-014
 - [x] T011. Implement declarative workflows, gates, hooks, and dependency waves.
   Output: Workflow schema and validator, typed step planner, conditions, approval gates, deterministic hooks, cycle detection, safe wave planning and fallbacks, tests, and documentation.
   Refs: AC-005, AC-006, AC-007, AC-013

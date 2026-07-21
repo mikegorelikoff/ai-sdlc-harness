@@ -13,7 +13,11 @@ Choose `--full-flow` when requirements are ambiguous, several roles must approve
 
 ## Use adaptive policy
 
-When neither explicit flag is supplied, the rigor engine can classify risk as patch, standard, assured, or regulated. Inspect factor scores and escalation reasons. Automatic selection never outranks an explicit full-flow request or an organization minimum.
+When neither explicit flag is supplied, the rigor engine can classify risk as
+patch, standard, assured, or regulated. Inspect factor scores and escalation
+reasons. Automatic selection never outranks an explicit full-flow request. An
+organization minimum applies only when supplied to the rigor helper or required
+by enforced delivery policy; presentation configuration is not that control.
 
 ## Record the decision
 

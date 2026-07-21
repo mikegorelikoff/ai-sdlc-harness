@@ -16,6 +16,7 @@ if not _SHARED.is_dir():
     _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_toon import encode_toon
+from ai_sdlc_safe_io import atomic_write_text
 
 PACKAGE_SCHEMA = "ai-sdlc-package/v1"
 DECISION_SCHEMA = "ai-sdlc-package-trust-decision/v1"
@@ -31,14 +32,8 @@ def file_hash(path: Path) -> str:
         for chunk in iter(lambda: handle.read(65536), b""):
             value.update(chunk)
     return value.hexdigest()
-def atomic_write(path: Path, content: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8") as handle: handle.write(content)
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary): os.unlink(temporary)
+def atomic_write(root: Path, path: Path, content: str) -> None:
+    atomic_write_text(root, path, content)
 def semver(value: Any) -> tuple[int, int, int] | None:
     if not isinstance(value, str) or not re.fullmatch(r"\d+\.\d+\.\d+", value): return None
     return tuple(int(item) for item in value.split("."))
@@ -122,7 +117,10 @@ def main() -> int:
     value = trust(package_root, manifest, set(args.allowed_origin), set(args.allowed_capability), active_api, args.require_provenance)
     if args.write:
         output = repository / f"_ai_sdlc/trust/{manifest['id']}/decision.json"
-        atomic_write(output, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n"); atomic_write(output.with_suffix(".toon"), encode_toon(value)); atomic_write(output.with_suffix(".md"), markdown(value))
+        try:
+            atomic_write(repository, output, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n"); atomic_write(repository, output.with_suffix(".toon"), encode_toon(value)); atomic_write(repository, output.with_suffix(".md"), markdown(value))
+        except ValueError as exc:
+            print(f"ERROR: {exc}"); return 1
     print(json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) if args.format == "json" else markdown(value) if args.format == "markdown" else encode_toon(value), end="" if args.format != "json" else "\n")
     return 0 if value["decision"] == "allow" else 2
 if __name__ == "__main__": raise SystemExit(main())

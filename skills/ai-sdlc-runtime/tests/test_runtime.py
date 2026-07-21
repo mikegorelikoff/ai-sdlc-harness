@@ -142,6 +142,22 @@ class RuntimeTests(unittest.TestCase):
             self.assertEqual(resumed.returncode, 1)
             self.assertIn("hash chain", resumed.stdout)
 
+    def test_symlinked_runtime_parent_cannot_escape_repository(self) -> None:
+        with tempfile.TemporaryDirectory() as temp, tempfile.TemporaryDirectory() as outside:
+            repository = Path(temp)
+            (repository / "_ai_sdlc").symlink_to(Path(outside), target_is_directory=True)
+            plan = self.plan(repository, two_tasks=False)
+            result = self.cli(repository, "--start", "--run-id", "run-1", "--plan", str(plan))
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("symlink", result.stdout)
+            self.assertFalse((Path(outside) / "runs/run-1/state.json").exists())
+
+    def test_result_discloses_local_unauthenticated_trust(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            repository = Path(temp)
+            started = self.start(repository, self.plan(repository, two_tasks=False))
+            self.assertEqual(started["evidence_trust"], "local-structural-not-authenticated")
+
 
 if __name__ == "__main__":
     unittest.main()

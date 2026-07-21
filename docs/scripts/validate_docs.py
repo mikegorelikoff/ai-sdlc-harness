@@ -21,6 +21,7 @@ REQUIRED_META = {"title", "description"}
 REQUIRED_FILES = {
     "mkdocs.yml",
     "requirements-docs.txt",
+    "requirements-docs.lock",
     "docs/assets/stylesheets/extra.css",
 }
 MODE_MINIMUMS = {"tutorials": 4, "how-to": 13, "explanation": 13, "reference": 10}
@@ -28,6 +29,10 @@ GENERATED_PAGES = {"reference/skills-by-role.md", "reference/skills.md", "refere
 LEGACY_TOKENS = ("{%", "{{", "relative_url", "jekyll-build-pages", "layout: default")
 FOUNDATION_PAGES = {
     "foundations/index.md",
+    "foundations/git-and-terminal-primer.md",
+    "foundations/software-delivery.md",
+    "foundations/ai-foundations.md",
+    "foundations/agents-and-skills.md",
     "foundations/ai-sdlc.md",
     "foundations/sdd.md",
     "foundations/why-harness.md",
@@ -37,16 +42,25 @@ FOUNDATION_PAGES = {
     "onboarding/index.md",
     "onboarding/first-30-minutes.md",
 }
+ROOT_PUBLIC_DOCUMENTS = ("README.md", "FAQ.md", "CONTRIBUTING.md", "SECURITY.md", "SUPPORT.md")
 BEGINNER_TERMS = (
+    "machine learning",
+    "large language model",
+    "generative AI",
+    "context window",
+    "confabulation",
+    "sub-agent",
+    "orchestration",
     "software development lifecycle",
     "AI SDLC",
-    "spec-driven development",
+    "specification-driven development",
     "artifact",
     "evidence",
     "gate",
     "handoff",
 )
-CANONICAL_INSTALL = "DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all"
+CANONICAL_INSTALL = 'DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill \'*\' --agent codex -y'
+CANONICAL_REVISION = "7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2"
 FLOW_PAGES = {
     "flows/index.md",
     "flows/refinement.md",
@@ -118,6 +132,7 @@ RACI_GATES = (
     "Branch/task start",
     "SDD ready",
     "Implementation accepted",
+    "Product outcome accepted",
     "Security/privacy accepted",
     "Validation complete",
     "Review findings resolved",
@@ -302,6 +317,17 @@ def validate_onboarding(root: Path = ROOT) -> list[str]:
     """Validate the beginner-first entry path and canonical install contract."""
     errors: list[str] = []
     docs = root / "docs"
+    inventory_path = root / "config/ai-sdlc-managed-skills.txt"
+    expected_inventory = sorted(path.parent.name for path in (root / "skills").glob("*/SKILL.md"))
+    actual_inventory = inventory_path.read_text(encoding="utf-8").splitlines() if inventory_path.is_file() else []
+    if actual_inventory != expected_inventory:
+        errors.append("config/ai-sdlc-managed-skills.txt: inventory does not exactly match sorted skill packages")
+    runtime_references = root / "skills/ai-sdlc-shared-runtime/references"
+    for name in ("ai-sdlc.defaults.json", "ai-sdlc-config.schema.json"):
+        if not (runtime_references / name).is_file():
+            errors.append(f"skills/ai-sdlc-shared-runtime/references/{name}: missing installed configuration asset")
+        elif not (root / "config" / name).is_file() or (root / "config" / name).read_bytes() != (runtime_references / name).read_bytes():
+            errors.append(f"config/{name}: source compatibility copy must match the installed configuration asset")
     missing = sorted(relative for relative in FOUNDATION_PAGES if not (docs / relative).is_file())
     if missing:
         errors.append("missing foundation/onboarding pages: " + ", ".join(missing))
@@ -315,11 +341,21 @@ def validate_onboarding(root: Path = ROOT) -> list[str]:
             errors.append(f"{display_path(path)}: references nonexistent scripts/install.sh")
         if "AI SDLC Skill Library" in text:
             errors.append(f"{display_path(path)}: uses non-canonical product name AI SDLC Skill Library")
+        if "github.com/mikegorelikoff/ai-sdlc-harness/releases/tag/v1." in text:
+            errors.append(f"{display_path(path)}: links to a nonexistent GitHub Release instead of the version tag")
+        if path != docs / "reference/scripts.md" and (
+            "skills/_shared/ai_sdlc_config.py" in text or "config/ai-sdlc.defaults.json" in text
+        ):
+            errors.append(f"{display_path(path)}: uses source-only presentation configuration path")
 
     for relative in ("README.md", "docs/index.md", "docs/how-to/install.md"):
         path = root / relative
-        if not path.is_file() or CANONICAL_INSTALL not in path.read_text(encoding="utf-8"):
+        text = path.read_text(encoding="utf-8") if path.is_file() else ""
+        if CANONICAL_INSTALL not in text:
             errors.append(f"{relative}: missing canonical project-scoped install command")
+        for token in (CANONICAL_REVISION, "fetch --depth 1 origin", "checkout --detach FETCH_HEAD", "rev-parse HEAD"):
+            if token not in text:
+                errors.append(f"{relative}: missing exact-revision install step {token}")
 
     foundations = "\n".join(
         (docs / relative).read_text(encoding="utf-8")
@@ -414,6 +450,11 @@ def validate_refinement_contract(text: str) -> list[str]:
             errors.append(
                 "docs/flows/refinement.md: mis-associated canonical profile "
                 f"{profile.stage_id}; expected {expected}, found {actual}"
+            )
+        accountable = plain_cell(row[4])
+        if "/" in accountable or re.search(r"\band\b", accountable, re.IGNORECASE):
+            errors.append(
+                f"docs/flows/refinement.md: stage {profile.stage_id} has composite Accountable value {accountable}"
             )
     return errors
 
@@ -529,7 +570,7 @@ def validate_flows(root: Path = ROOT) -> list[str]:
             "Expected tree",
             "deliberate regression",
             "ai-sdlc-handoff/v1",
-            "python3 -m unittest -v",
+            '"$PYTHON_BIN" -m unittest -v',
             "git diff --check",
             "feature/001-health-endpoint",
             "test_deliberate_unknown_route_regression.py",
@@ -600,8 +641,8 @@ def validate_flows(root: Path = ROOT) -> list[str]:
             "feature/organization-sso",
             "refinement_status.py",
             "test-environment-resolution.md",
-            "rm /tmp/ai-sdlc-sso-demo/test-environment-resolution.md",
-            "cp /tmp/ai-sdlc-sso-test-environment-resolution.md test-environment-resolution.md",
+            'rm "$DEMO_ROOT/test-environment-resolution.md"',
+            'cp "$RESOLUTION_BACKUP" test-environment-resolution.md',
             "result is `blocked`",
             "Stage 13 — resume",
             "18/18",
@@ -812,6 +853,35 @@ def validate_root_source_text(text: str, label: str) -> list[str]:
     return errors
 
 
+def validate_root_documents(root: Path = ROOT) -> list[str]:
+    """Validate root public guides that MkDocs does not render."""
+    errors: list[str] = []
+    for relative in ROOT_PUBLIC_DOCUMENTS:
+        path = root / relative
+        if not path.is_file():
+            errors.append(f"{relative}: required root public document missing")
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        if "/Users/" in text or re.search(r"[A-Za-z]:\\\\Users\\\\", text):
+            errors.append(f"{relative}: contains machine-specific absolute path")
+        page = Page(path=path, metadata={}, body=text)
+        for target in sorted(internal_links(page)):
+            path_text = unquote(urlsplit(target).path)
+            if not path_text or path_text.startswith("/"):
+                if path_text.startswith("/"):
+                    errors.append(f"{relative}: root-absolute link is not portable: {target}")
+                continue
+            resolved = (root / path_text).resolve()
+            try:
+                resolved.relative_to(root.resolve())
+            except ValueError:
+                errors.append(f"{relative}: link escapes repository: {target}")
+                continue
+            if not resolved.exists():
+                errors.append(f"{relative}: broken local link {target}")
+    return errors
+
+
 def validate_canonical_sources(root: Path = ROOT) -> list[str]:
     """Keep root authoring notes explicitly subordinate to public docs."""
     errors: list[str] = []
@@ -903,6 +973,15 @@ def validate_adoption_operations(root: Path = ROOT) -> list[str]:
     if "source checkout" not in versions.lower() or "Consumer repositories" not in versions:
         errors.append("docs/reference/versions.md: compatibility execution context remains ambiguous")
 
+    source_only_how_tos = {"migrate-1.1.md", "update.md", "validate-release.md"}
+    for path in sorted((docs / "how-to").glob("*.md")):
+        if path.name in source_only_how_tos:
+            continue
+        if "python3 skills/" in path.read_text(encoding="utf-8"):
+            errors.append(
+                f"docs/how-to/{path.name}: consumer procedure uses a source-checkout skills path"
+            )
+
     errors.extend(validate_canonical_sources(root))
     errors.extend(validate_section_indexes(root))
     install = read("how-to/install.md")
@@ -975,16 +1054,24 @@ def validate_workflow(root: Path = ROOT) -> list[str]:
         return [".github/workflows/pages.yml: missing Pages workflow"]
     text = path.read_text(encoding="utf-8")
     tokens = (
-        "actions/checkout@v6",
-        "actions/configure-pages@v5",
-        "actions/setup-python@v6",
-        "python3 -m pip install -r requirements-docs.txt",
+        "pull_request:",
+        "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6",
+        "actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5",
+        "actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6",
+        "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4",
+        "python3 -m pip install --require-hashes -r requirements-docs.lock",
         "mkdocs build --strict",
         "python3 docs/scripts/validate_rendered.py site",
         "python3 skills/_shared/ai_sdlc_install_smoke.py --mode npx",
-        "actions/upload-pages-artifact@v4",
+        "--mode npx-remote",
+        "README.md",
+        "FAQ.md",
+        "CONTRIBUTING.md",
+        "SECURITY.md",
+        "SUPPORT.md",
+        "actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4",
         "path: site",
-        "actions/deploy-pages@v4",
+        "actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4",
         "pages: write",
         "id-token: write",
         "name: github-pages",
@@ -1000,6 +1087,7 @@ def validate(root: Path = ROOT) -> list[str]:
     errors.extend(validate_links(pages, docs))
     errors.extend(validate_content(pages, docs))
     errors.extend(validate_onboarding(root))
+    errors.extend(validate_root_documents(root))
     errors.extend(validate_flows(root))
     errors.extend(validate_adoption_operations(root))
     errors.extend(validate_material(root))

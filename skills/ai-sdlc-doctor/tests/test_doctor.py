@@ -57,5 +57,12 @@ class DoctorTests(unittest.TestCase):
             result = self.cli(repository, "--upgrade", "--current", str(FIXTURES / "current.json"), "--target", str(path), "--upgrade-id", "unsafe")
             self.assertEqual(result.returncode, 1)
             self.assertIn("path is unsafe", result.stdout)
+    def test_write_rejects_symlinked_repository_parent(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            parent = Path(temp); repository = parent / "repo"; outside = parent / "outside"
+            repository.mkdir(); outside.mkdir(); (repository / "_ai_sdlc").symlink_to(outside, target_is_directory=True)
+            result = self.cli(repository, "--doctor", "--write")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse((outside / "doctor/report.json").exists())
 if __name__ == "__main__":
     unittest.main()

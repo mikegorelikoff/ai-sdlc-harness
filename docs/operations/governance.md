@@ -57,6 +57,28 @@ contact the incident owner, rotate/revoke through the authorized system, assess
 downstream exposure, and resume only with approval. The agent must not rotate a
 credential autonomously.
 
+### Data-egress worksheet
+
+Complete this matrix for the actual deployment before a pilot. “Unknown” is a
+blocker for confidential or regulated data, not permission to proceed.
+
+| Boundary | Data that may leave | Questions the accountable owner must answer |
+| --- | --- | --- |
+| Agent/model host | Prompts, selected source, diffs, tool results, metadata | Provider, model, region, retention, training use, access, deletion, contract |
+| Browser/search | Search text, opened URLs, page content, IP/identity metadata | Approved domains, logging, safe-search policy, confidential terms prohibited |
+| Connectors | Query parameters and returned mail/calendar/document data | OAuth scopes, tenant boundary, recipients, retention, revocation, audit log |
+| npm/GitHub installer | Package/source requests and upstream CLI telemetry unless disabled | Mirror, proxy logs, account identity, integrity, telemetry opt-out |
+| Continuous integration | Source, commands, logs, caches, artifacts, job metadata | Fork exposure, secret masking, retention, artifact access, runner location |
+| Error/reporting systems | Stack traces, filenames, snippets, environment metadata | Redaction, access, retention, downstream processors, deletion |
+
+Record the decision owner, date, evidence link, accepted data classes, denied
+fields, compensating controls, and review/expiry date. Reassess after provider,
+model, connector, region, retention, or repository classification changes.
+
+Pattern screening in project-context helpers is defense in depth, not a
+complete secret scanner. Keep credentials out of agent-readable files and use
+approved repository/CI secret scanning as a separate preventive control.
+
 ## Permissions and sandbox
 
 Grant the least filesystem, command, network, identity, and external-system

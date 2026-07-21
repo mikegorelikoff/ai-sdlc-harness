@@ -32,8 +32,13 @@ requirements, test references verify requirements, explicit component and
 evidence declarations connect implementation and proof, commits implement
 tasks, and tags release commits. It never adds a link based on wording alone.
 
-Gap queries expose requirements without task or test coverage, tasks and tests
-without requirement links, and disconnected lifecycle nodes. Trace queries
+Gap queries expose leaf acceptance criteria without task or test coverage,
+tasks and tests without requirement links, and disconnected lifecycle nodes.
+The graph inventories every FR/NFR/REQ/AC declaration, but its actionable
+task/test counters are scoped to `AC-###`, the leaf identifiers required by
+the SDD plan contract, and only when that AC is explicitly declared. Inferred
+or parent requirements remain available for explicit trace
+paths and orphan review. Trace queries
 walk semantic links in either direction so a reviewer can move from a customer
 criterion to its task, commit, and release without artifact declaration edges
 creating misleading shortcuts.

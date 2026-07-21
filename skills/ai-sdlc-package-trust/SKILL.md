@@ -38,7 +38,7 @@ description: AI SDLC package trust and privacy-preserving local metrics workflow
 ### 0.3 Output Rules
 
 - Default to complete TOON trust decisions or content-free aggregate metrics.
-- Return summaries directly in the Codex response.
+- Return summaries directly in the active agent response.
 - Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
   `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
@@ -47,6 +47,10 @@ description: AI SDLC package trust and privacy-preserving local metrics workflow
 
 - Write generated decisions and metrics only below `_ai_sdlc/`.
 - Never rewrite package files, manifests, runtime records, or evidence ledgers.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

@@ -1,9 +1,14 @@
 ---
-title: Run the full lifecycle
-description: Execute a fixture-backed organization SSO journey through all 18 refinement stages, a blocked-and-resumed QA handoff, the 18/18 gate, and implementation SDD.
+title: Run the full refinement-to-implementation handoff
+description: Execute a fixture-backed organization single-sign-on journey through all 18 refinement stages, a blocked-and-resumed quality handoff, the 18/18 gate, and implementation specification.
 ---
 
-# Run the full lifecycle
+# Run the full refinement-to-implementation handoff
+
+This tutorial uses single sign-on (SSO), quality assurance (QA),
+Specification-driven development (SDD), minimum viable product (MVP), OpenID
+Connect (OIDC), and business analysis (BA).
+It also uses Press Release/Frequently Asked Questions (PRFAQ).
 
 This runnable delivery exercise turns a prepared organization single sign-on
 (SSO) scenario into an implementation-ready package. It deliberately stops
@@ -19,23 +24,49 @@ and accept each handoff.
 !!! terminal "Run in terminal — harness source checkout"
 
     ```bash
-    cp -R examples/onboarding-sso /tmp/ai-sdlc-sso-demo
-    cp /tmp/ai-sdlc-sso-demo/test-environment-resolution.md /tmp/ai-sdlc-sso-test-environment-resolution.md
-    rm /tmp/ai-sdlc-sso-demo/test-environment-resolution.md
-    cd /tmp/ai-sdlc-sso-demo
+    HARNESS_SRC="$(pwd)"
+    HARNESS_REV="$(git rev-parse HEAD)"
+    git diff --quiet
+    git diff --cached --quiet
+    test -z "$(git ls-files --others --exclude-standard)"
+    test -f docs/tutorials/full-lifecycle.md
+    node --version  # expected: v22.20.0 or newer
+    npm --version
+    PYTHON_BIN="${PYTHON_BIN:-python3}"
+    "$PYTHON_BIN" --version  # expected: Python 3.10 or newer
+    TUTORIAL_ROOT="$(mktemp -d)"
+    DEMO_ROOT="$TUTORIAL_ROOT/ai-sdlc-sso-demo"
+    RESOLUTION_BACKUP="$TUTORIAL_ROOT/test-environment-resolution.md"
+    ORIGIN_ROOT="$TUTORIAL_ROOT/ai-sdlc-sso-demo-origin.git"
+    cp -R examples/onboarding-sso "$DEMO_ROOT"
+    cp "$DEMO_ROOT/test-environment-resolution.md" "$RESOLUTION_BACKUP"
+    rm "$DEMO_ROOT/test-environment-resolution.md"
+    cd "$DEMO_ROOT"
     git init
     git checkout -b dev
+    git config --local user.name "AI SDLC Tutorial"
+    git config --local user.email "tutorial@example.invalid"
+    git config --local commit.gpgsign false
     git add scenario.md decisions.md
     git commit -m "chore: initialize organization SSO scenario"
-    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0 --all
-    git add .agents .claude agent skills-lock.json
+    DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill '*' --agent codex -y
+    mkdir -p .ai-sdlc
+    cp "$HARNESS_SRC/config/ai-sdlc-managed-skills.txt" .ai-sdlc/harness-managed-skills.txt
+    printf '{"schema":"ai-sdlc-install-record/v1","revision":"%s","skills_cli":"1.5.19","agent":"codex","selection":"all-skills","inventory":".ai-sdlc/harness-managed-skills.txt"}\n' "$HARNESS_REV" > .ai-sdlc/harness-install.json
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_install_record.py
+    rm skills-lock.json
+    git add .agents .ai-sdlc/harness-install.json .ai-sdlc/harness-managed-skills.txt
     git commit -m "chore: install AI SDLC harness"
-    git init --bare /tmp/ai-sdlc-sso-demo-origin.git
-    git remote add origin /tmp/ai-sdlc-sso-demo-origin.git
+    git init --bare "$ORIGIN_ROOT"
+    git remote add origin "$ORIGIN_ROOT"
     git push -u origin dev
     git checkout -b feature/organization-sso
     git status --short
     ```
+
+    Stop if the candidate has tracked, staged, or untracked changes: otherwise
+    the installed bytes would not be identified by `HARNESS_REV`. Also stop if
+    Node is older than 22.20.0 or Python is older than 3.10.
 
 !!! warning "Human checkpoint"
 
@@ -50,11 +81,12 @@ Expected starting tree:
 scenario.md
 decisions.md
 .agents/skills/
-skills-lock.json
+.ai-sdlc/harness-install.json
+.ai-sdlc/harness-managed-skills.txt
 ```
 
 The QA Platform evidence is outside the consumer at
-`/tmp/ai-sdlc-sso-test-environment-resolution.md`. The agent cannot discover it
+`$RESOLUTION_BACKUP`. The agent cannot discover it
 until the accountable human supplies it during the recovery exercise.
 
 ## 2. Use the same execution contract at every stage
@@ -111,7 +143,7 @@ not contradict discovery or the decision log.
     Assign every blocker to a human owner; do not repair the PRFAQ silently.
     ```
 
-**Owner:** Delivery/BA. **Exit:** blocking workflow, rule, support, rollout, and
+**Accountable:** Product manager. **Responsible:** Delivery lead and BA. **Exit:** blocking workflow, rule, support, rollout, and
 ownership gaps are resolved or explicitly block progression.
 
 ### Stage 4 — `requirements_readiness`
@@ -125,7 +157,7 @@ ownership gaps are resolved or explicitly block progression.
     follow-up and final verdict. Stop on ambiguous actor, scope or policy.
     ```
 
-**Owner:** Product/BA. **Exit:** requirements are ready to feed planning and QA.
+**Accountable:** Product manager. **Responsible:** BA. **Exit:** requirements are ready to feed planning and QA.
 
 Check the resumable state. A non-zero result is expected because 14 stages
 remain; it must name the next stage rather than claiming completion.
@@ -133,7 +165,7 @@ remain; it must name the next stage rather than claiming completion.
 !!! terminal "Run in terminal"
 
     ```bash
-    python3 .agents/skills/ai-sdlc-shared-runtime/scripts/refinement_status.py --feature organization-sso --gate full --format toon
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-shared-runtime/scripts/refinement_status.py --feature organization-sso --gate full --format toon
     ```
 
 ## 4. Execute stages 5–9: outcomes, backlog, and release slices
@@ -192,7 +224,7 @@ remain; it must name the next stage rather than claiming completion.
     This declared complete cascade requires the stage; do not silently skip it.
     ```
 
-**Owners:** Product and Delivery. **Checkpoint:** accept outcome trace, story
+**Accountable:** Product manager. **Responsible:** Product Owner and Delivery lead. **Checkpoint:** accept outcome trace, story
 boundaries, OIDC-only MVP, opt-in rollout, dependencies, and rollback criteria.
 
 ## 5. Execute stages 10–12: business behavior and QA entry
@@ -258,7 +290,7 @@ not start; the handoff result is `blocked` with a non-empty blocker list.
     if acceptable, provide it as new repository evidence:
 
     ```bash
-    cp /tmp/ai-sdlc-sso-test-environment-resolution.md test-environment-resolution.md
+    cp "$RESOLUTION_BACKUP" test-environment-resolution.md
     git status --short
     ```
 
@@ -345,7 +377,7 @@ stage. Missing or stale test environment evidence must reopen stage 13–17 work
 !!! terminal "Run in terminal"
 
     ```bash
-    python3 .agents/skills/ai-sdlc-shared-runtime/scripts/refinement_status.py --feature organization-sso --gate full --format toon
+    "$PYTHON_BIN" .agents/skills/ai-sdlc-shared-runtime/scripts/refinement_status.py --feature organization-sso --gate full --format toon
     git status --short
     ```
 
@@ -390,7 +422,7 @@ If status is non-zero, resume the earliest reported stage. Never edit
     decision trace, plan.toon and plan.md. Stop on conflicting authority.
     ```
 
-**Owners:** Dev/Architecture, with QA and Security signoff. **Exit:** every task
+**Accountable:** Engineering lead. **Responsible:** Developer and architect; QA and Security are consulted signoff owners where required. **Exit:** every task
 traces to accepted behavior and tests; architecture, threat boundaries,
 observability, rollout, migration, monitoring and rollback are explicit.
 
@@ -405,8 +437,7 @@ product, security, QA, rollout, or release decisions.
 
     ```bash
     cd /tmp
-    rm -rf ai-sdlc-sso-demo ai-sdlc-sso-demo-origin.git
-    rm ai-sdlc-sso-test-environment-resolution.md
+    rm -rf "$TUTORIAL_ROOT"
     ```
 
 Only remove these disposable tutorial paths. For exact profiles and recovery

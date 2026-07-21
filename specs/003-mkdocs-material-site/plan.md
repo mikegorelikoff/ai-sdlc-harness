@@ -11,8 +11,8 @@ artifact_metadata:
   decision_log: "specs/003-mkdocs-material-site/decision-log.md"
   status: "draft"
   owner: "TBD"
-  created_at: "2026-07-19"
-  updated_at: "2026-07-19"
+  created_at: "2026-07-21"
+  updated_at: "2026-07-21"
   trace_ids: []
   related_artifacts: []
   validation: []
@@ -53,7 +53,7 @@ artifact_metadata:
 - AC-008: requirements.md -> test-cases.md (TC-008) -> tasks.md (T001) -> qa.md -> decision-log.md
 
 ## Task Execution Plan
-- [ ] T001: - [x] T001. Migrate the complete documentation site and delivery pipeline to MkDocs Material.; refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, DEC-001; output: SDD package, MkDocs Material configuration, pinned dependency, Material-native home and catalogs, migrated links, minimal brand CSS, strict Pages workflow, validators, tests, rendered QA evidence, and one focused commit.
+- [x] T001: - [x] T001. Migrate the complete documentation site and delivery pipeline to MkDocs Material.; refs: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, DEC-001; output: SDD package, MkDocs Material configuration, pinned dependency, Material-native home and catalogs, migrated links, minimal brand CSS, strict Pages workflow, validators, tests, rendered QA evidence, and one focused commit.
 
 ## Task Dependencies
 - T001: depends on previous applicable task / none
@@ -63,7 +63,7 @@ artifact_metadata:
 - 2. `python3 skills/ai-sdlc-sdd/scripts/check_checklist.py <spec-dir> --full-flow`
 - 3. `python3 skills/ai-sdlc-sdd/scripts/analyze_spec.py <spec-dir> --full-flow`
 - 4. `python3 skills/ai-sdlc-sdd/scripts/validate_spec.py <spec-dir> --full-flow`
-- Generated: 2026-07-19
+- Generated: 2026-07-21
 
 ## Open Links And Blockers
 - TBD until every AC/TC/TASK/DEC link is confirmed.

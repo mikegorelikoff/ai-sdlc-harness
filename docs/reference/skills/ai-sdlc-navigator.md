@@ -184,8 +184,8 @@ On a blocker, preserve failed/stale evidence, name the accountable owner and exa
   blockers.
 - For every action include exact skill name, evidence-backed reason, portable
   invocation guidance, and expected artifact.
-- Return the navigation report directly in the Codex response.
-- Return progress, blockers, and recommendations directly in the Codex response.
+- Return the navigation report directly in the active agent response.
+- Return progress, blockers, and recommendations directly in the active agent response.
 - Before the final response, emit the `ai-sdlc-handoff/v1` contract with
   `result`, `blockers`, `next_required`, and `next_optional`; every action
   includes `reason`, `command`, and `expected_artifact`.

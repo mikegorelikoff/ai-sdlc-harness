@@ -1,7 +1,7 @@
 feature: 003-mkdocs-material-site
 workspace: implementation
 flow_mode: quick
-updated_at: 2026-07-19
+updated_at: 2026-07-21
 source_artifacts[6]{artifact,path}:
   requirements,requirements.md
   design,design.md
@@ -19,7 +19,7 @@ trace[8]{acceptance_id,test_cases,tasks}:
   AC-007,TC-007,T001
   AC-008,TC-008,T001
 tasks[1]{id,status,refs,tests,depends_on,artifact,decision_ref}:
-  T001,pending,AC-001/AC-002/AC-003/AC-004/AC-005/AC-006/AC-007/AC-008/DEC-001,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008,none,SDD package; MkDocs Material configuration; pinned dependency; Material-native home and catalogs; migrated links; minimal brand CSS; strict Pages workflow; validators; tests; rendered QA evidence; and one focused commit.,TBD
+  T001,done,AC-001/AC-002/AC-003/AC-004/AC-005/AC-006/AC-007/AC-008/DEC-001,TC-001/TC-002/TC-003/TC-004/TC-005/TC-006/TC-007/TC-008,none,SDD package; MkDocs Material configuration; pinned dependency; Material-native home and catalogs; migrated links; minimal brand CSS; strict Pages workflow; validators; tests; rendered QA evidence; and one focused commit.,TBD
 validation_sequence[5]{step,command}:
   1,check_refinement_context.py --full-flow
   2,check_clarify.py --full-flow

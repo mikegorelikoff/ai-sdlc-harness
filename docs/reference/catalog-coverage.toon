@@ -1,6 +1,6 @@
 schema: ai-sdlc-documentation-coverage/v1
 skill_count: 44
-script_count: 106
+script_count: 115
 documentation_root: docs
 
 skills[44]{skill,source,page,module,package_scripts}:
@@ -39,17 +39,17 @@ skills[44]{skill,source,page,module,package_scripts}:
   ai-sdlc-runtime,skills/ai-sdlc-runtime/SKILL.md,reference/skills/ai-sdlc-runtime.md,core,1
   ai-sdlc-sdd,skills/ai-sdlc-sdd/SKILL.md,reference/skills/ai-sdlc-sdd.md,core,11
   ai-sdlc-security-testing,skills/ai-sdlc-security-testing/SKILL.md,reference/skills/ai-sdlc-security-testing.md,core,1
-  ai-sdlc-shared-runtime,skills/ai-sdlc-shared-runtime/SKILL.md,reference/skills/ai-sdlc-shared-runtime.md,core,17
+  ai-sdlc-shared-runtime,skills/ai-sdlc-shared-runtime/SKILL.md,reference/skills/ai-sdlc-shared-runtime.md,core,20
   ai-sdlc-test-case-and-suite-synthesis,skills/ai-sdlc-test-case-and-suite-synthesis/SKILL.md,reference/skills/ai-sdlc-test-case-and-suite-synthesis.md,core,1
   ai-sdlc-test-cases,skills/ai-sdlc-test-cases/SKILL.md,reference/skills/ai-sdlc-test-cases.md,core,1
   ai-sdlc-test-scope-and-strategy-design,skills/ai-sdlc-test-scope-and-strategy-design/SKILL.md,reference/skills/ai-sdlc-test-scope-and-strategy-design.md,core,1
   ai-sdlc-user-story-decomposition,skills/ai-sdlc-user-story-decomposition/SKILL.md,reference/skills/ai-sdlc-user-story-decomposition.md,core,1
   ai-sdlc-ux,skills/ai-sdlc-ux/SKILL.md,reference/skills/ai-sdlc-ux.md,ux,1
-  ai-sdlc-validation,skills/ai-sdlc-validation/SKILL.md,reference/skills/ai-sdlc-validation.md,core,1
+  ai-sdlc-validation,skills/ai-sdlc-validation/SKILL.md,reference/skills/ai-sdlc-validation.md,core,2
   ai-sdlc-workflow,skills/ai-sdlc-workflow/SKILL.md,reference/skills/ai-sdlc-workflow.md,core,1
   ai-sdlc-working-backwards-discovery,skills/ai-sdlc-working-backwards-discovery/SKILL.md,reference/skills/ai-sdlc-working-backwards-discovery.md,core,1
 
-scripts[106]{path,owner,classification,documentation}:
+scripts[115]{path,owner,classification,documentation}:
   skills/ai-sdlc-approvals-sandbox/scripts/approval_plan.py,ai-sdlc-approvals-sandbox,skill package helper,reference/scripts.md
   skills/ai-sdlc-architecture/scripts/architecture.py,ai-sdlc-architecture,skill package helper,reference/scripts.md
   skills/ai-sdlc-ba/scripts/ba_context_scaffold.py,ai-sdlc-ba,skill package helper,reference/scripts.md
@@ -108,13 +108,16 @@ scripts[106]{path,owner,classification,documentation}:
   skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_context.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_context_benchmark.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_handoff.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_install_record.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_migrate.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_modules.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_paths.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_rigor.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_safe_io.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_specs_index.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_state_machine.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_toon.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
+  skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_validation_receipt.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/refinement_status.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/skill_script_contract.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
   skills/ai-sdlc-shared-runtime/scripts/state_machine.py,ai-sdlc-shared-runtime,installed runtime mirror,reference/scripts.md
@@ -123,6 +126,7 @@ scripts[106]{path,owner,classification,documentation}:
   skills/ai-sdlc-test-scope-and-strategy-design/scripts/strategy_scaffold.py,ai-sdlc-test-scope-and-strategy-design,skill package helper,reference/scripts.md
   skills/ai-sdlc-user-story-decomposition/scripts/story_map.py,ai-sdlc-user-story-decomposition,skill package helper,reference/scripts.md
   skills/ai-sdlc-ux/scripts/ux.py,ai-sdlc-ux,skill package helper,reference/scripts.md
+  skills/ai-sdlc-validation/scripts/run_validation.py,ai-sdlc-validation,skill package helper,reference/scripts.md
   skills/ai-sdlc-validation/scripts/validation_plan.py,ai-sdlc-validation,skill package helper,reference/scripts.md
   skills/ai-sdlc-workflow/scripts/workflow.py,ai-sdlc-workflow,skill package helper,reference/scripts.md
   skills/ai-sdlc-working-backwards-discovery/scripts/discovery_interview_plan.py,ai-sdlc-working-backwards-discovery,skill package helper,reference/scripts.md
@@ -133,14 +137,17 @@ scripts[106]{path,owner,classification,documentation}:
   skills/_shared/ai_sdlc_context.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/ai_sdlc_context_benchmark.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/ai_sdlc_handoff.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_install_record.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/ai_sdlc_install_smoke.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/ai_sdlc_migrate.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/ai_sdlc_modules.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/ai_sdlc_paths.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/ai_sdlc_rigor.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_safe_io.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/ai_sdlc_specs_index.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/ai_sdlc_state_machine.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/ai_sdlc_toon.py,shared runtime,canonical shared helper,reference/scripts.md
+  skills/_shared/ai_sdlc_validation_receipt.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/refinement_status.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/skill_script_contract.py,shared runtime,canonical shared helper,reference/scripts.md
   skills/_shared/state_machine.py,shared runtime,canonical shared helper,reference/scripts.md
@@ -151,8 +158,10 @@ scripts[106]{path,owner,classification,documentation}:
   skills/_shared/test_config.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_each_skill_tests.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_handoff.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_install_record.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_migration.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_modules.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_rigor.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_safe_io.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_state_machine.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_toon.py,shared runtime,repository validation runner,reference/scripts.md

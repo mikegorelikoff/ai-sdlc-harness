@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from change_preview import apply_virtual, build_preview, digest
-from change_set import REQUIRED_ARTIFACTS, fingerprint, validate_workspace
+from change_set import REQUIRED_ARTIFACTS, fingerprint, safe_target, validate_workspace
 from spec_delta import analyze_delta_set
 
 _SHARED = Path(__file__).resolve().parents[2] / "_shared"
@@ -23,6 +23,7 @@ if not _SHARED.is_dir():
     _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_toon import encode_toon
+from ai_sdlc_safe_io import atomic_write_text, bounded_path, ensure_directory
 
 
 APPROVAL_SCHEMA = "ai-sdlc-change-approval/v1"
@@ -34,27 +35,19 @@ def now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def atomic_write(path: Path, content: str) -> None:
+def atomic_write(root: Path, path: Path, content: str) -> None:
     """Replace one repository file atomically on its own filesystem."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
-            handle.write(content)
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
+    atomic_write_text(root, path, content)
 
 
-def atomic_json(path: Path, value: dict[str, Any]) -> None:
+def atomic_json(root: Path, path: Path, value: dict[str, Any]) -> None:
     """Write interoperable JSON and a complete agent-facing TOON mirror."""
-    atomic_write(path, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
-    atomic_write(path.with_suffix(".toon"), encode_toon(value))
+    atomic_write(root, path, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+    atomic_write(root, path.with_suffix(".toon"), encode_toon(value))
 
 
 def load_approval(path: Path, change_id: str, preview: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
-    """Validate explicit approval against the current preview and gates."""
+    """Validate record structure, fingerprint, and gates; not approver identity."""
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
@@ -103,7 +96,78 @@ def update_metadata(workspace: Path, status: str, updated_at: str) -> None:
         text, date_count = re.subn(r'(?m)^  updated_at: "[^"]+"$', f'  updated_at: "{updated_at[:10]}"', text, count=1)
         if status_count != 1 or date_count != 1:
             raise ValueError(f"{relative}: cannot update lifecycle metadata")
-        atomic_write(path, text)
+        atomic_write(workspace, path, text)
+
+
+def validate_recovery_manifest(
+    repository: Path,
+    workspace: Path,
+    manifest: Any,
+    change_id: str,
+    canonical_targets: list[str],
+) -> list[str]:
+    """Validate every recovery field and path before any rollback mutation."""
+    if not isinstance(manifest, dict):
+        return ["recovery manifest must be a JSON object"]
+    required = {
+        "schema", "change_id", "status", "preview_fingerprint", "created_at",
+        "updated_at", "targets", "applied", "rollback_errors",
+    }
+    errors: list[str] = []
+    if set(manifest) != required:
+        errors.append("recovery manifest fields must match the versioned contract exactly")
+    if manifest.get("schema") != RECOVERY_SCHEMA:
+        errors.append(f"recovery manifest schema must be {RECOVERY_SCHEMA}")
+    if manifest.get("change_id") != change_id:
+        errors.append("recovery manifest change_id mismatch")
+    if manifest.get("status") not in {"in_progress", "complete", "rolled_back", "rollback_failed"}:
+        errors.append("recovery manifest status is invalid")
+    if not isinstance(manifest.get("preview_fingerprint"), str) or not re.fullmatch(r"[a-f0-9]{64}", manifest["preview_fingerprint"]):
+        errors.append("recovery manifest preview_fingerprint is invalid")
+    if not isinstance(manifest.get("rollback_errors"), list) or not all(isinstance(item, str) for item in manifest.get("rollback_errors", [])):
+        errors.append("recovery manifest rollback_errors must be a string array")
+    targets_value = manifest.get("targets")
+    if not isinstance(targets_value, list):
+        return [*errors, "recovery manifest targets must be an array"]
+    expected_fields = {"target", "existed", "backup", "staging", "before_sha256", "after_sha256"}
+    target_map: dict[str, dict[str, Any]] = {}
+    for index, item in enumerate(targets_value):
+        if not isinstance(item, dict) or set(item) != expected_fields:
+            errors.append(f"recovery target {index} fields are invalid")
+            continue
+        target = item.get("target")
+        if not isinstance(target, str) or safe_target(target) != target or target not in canonical_targets:
+            errors.append(f"recovery target {index} is not a canonical target: {target}")
+            continue
+        if target in target_map:
+            errors.append(f"recovery target is duplicated: {target}")
+        target_map[target] = item
+        if not isinstance(item.get("existed"), bool):
+            errors.append(f"recovery target existed flag is invalid: {target}")
+        for field in ("before_sha256", "after_sha256"):
+            if not isinstance(item.get(field), str) or not re.fullmatch(r"[a-f0-9]{64}", item[field]):
+                errors.append(f"recovery target {field} is invalid: {target}")
+        expected_staging = f"_ai_sdlc/staging/{target}"
+        if item.get("staging") != expected_staging:
+            errors.append(f"recovery target staging path is invalid: {target}")
+        expected_backup = f"_ai_sdlc/backups/{target}" if item.get("existed") else ""
+        if item.get("backup") != expected_backup:
+            errors.append(f"recovery target backup path is invalid: {target}")
+        try:
+            bounded_path(repository, repository / target)
+            bounded_path(workspace, workspace / expected_staging)
+            if expected_backup:
+                backup = bounded_path(workspace, workspace / expected_backup)
+                if not backup.is_file():
+                    errors.append(f"recovery backup is missing: {target}")
+        except ValueError as exc:
+            errors.append(str(exc))
+    applied = manifest.get("applied")
+    if not isinstance(applied, list) or not all(isinstance(item, str) for item in applied):
+        errors.append("recovery manifest applied must be a string array")
+    elif len(applied) != len(set(applied)) or any(item not in target_map for item in applied):
+        errors.append("recovery manifest applied must be a unique subset of targets")
+    return errors
 
 
 def compile_after_states(repository: Path, change_id: str, preview: dict[str, Any]) -> tuple[dict[str, str], list[str]]:
@@ -131,32 +195,37 @@ def compile_after_states(repository: Path, change_id: str, preview: dict[str, An
     return after_states, errors
 
 
-def rollback(repository: Path, workspace: Path, manifest: dict[str, Any]) -> list[str]:
+def rollback(repository: Path, workspace: Path, manifest: dict[str, Any], change_id: str, canonical_targets: list[str]) -> list[str]:
     """Restore every recorded applied target in reverse order."""
-    errors: list[str] = []
+    errors = validate_recovery_manifest(repository, workspace, manifest, change_id, canonical_targets)
+    if errors:
+        return errors
     targets = {item["target"]: item for item in manifest.get("targets", [])}
     for target in reversed(manifest.get("applied", [])):
         item = targets.get(target, {})
         path = repository / target
         try:
             if item.get("existed"):
-                backup = workspace / item["backup"]
+                backup = bounded_path(workspace, workspace / item["backup"])
+                path = bounded_path(repository, path)
+                ensure_directory(repository, path.parent)
                 descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".rollback.", dir=path.parent)
                 os.close(descriptor)
                 shutil.copyfile(backup, temporary)
                 os.replace(temporary, path)
             elif path.exists():
+                path = bounded_path(repository, path)
                 path.unlink()
         except OSError as exc:
             errors.append(f"{target}: rollback failed: {exc}")
     manifest["status"] = "rollback_failed" if errors else "rolled_back"
     manifest["rollback_errors"] = errors
     manifest["updated_at"] = now()
-    atomic_json(workspace / "_ai_sdlc/recovery-manifest.json", manifest)
+    atomic_json(workspace, workspace / "_ai_sdlc/recovery-manifest.json", manifest)
     return errors
 
 
-def recover_incomplete(repository: Path, workspace: Path) -> list[str]:
+def recover_incomplete(repository: Path, workspace: Path, change_id: str, canonical_targets: list[str]) -> list[str]:
     """Recover an interrupted prior transaction before any new apply."""
     path = workspace / "_ai_sdlc/recovery-manifest.json"
     if not path.is_file():
@@ -167,19 +236,23 @@ def recover_incomplete(repository: Path, workspace: Path) -> list[str]:
         return [f"cannot inspect recovery manifest: {exc}"]
     if manifest.get("status") not in {"in_progress", "rollback_failed"}:
         return []
-    errors = rollback(repository, workspace, manifest)
+    errors = rollback(repository, workspace, manifest, change_id, canonical_targets)
     return errors or ["recovered an incomplete prior transaction; review evidence and rerun apply"]
 
 
 def apply_change(repository: Path, change_id: str, approval_path: Path, simulate_failure_after: int | None) -> tuple[dict[str, Any], list[str]]:
     """Apply one approved ready preview with fail-safe rollback."""
     workspace = repository / "changes" / change_id
+    try:
+        workspace = bounded_path(repository, workspace)
+    except ValueError as exc:
+        return {}, [str(exc)]
     record, errors = validate_workspace(workspace, change_id)
     if errors:
         return {}, errors
     if record["status"] != "draft":
         return {}, [f"change status must be draft before apply; got {record['status']}"]
-    recovery_errors = recover_incomplete(repository, workspace)
+    recovery_errors = recover_incomplete(repository, workspace, change_id, record["canonical_targets"])
     if recovery_errors:
         return {}, recovery_errors
     preview, preview_errors = build_preview(repository, change_id)
@@ -197,39 +270,51 @@ def apply_change(repository: Path, change_id: str, approval_path: Path, simulate
     targets: list[dict[str, Any]] = []
     for target, after in sorted(after_states.items()):
         path = repository / target
+        try:
+            path = bounded_path(repository, path)
+        except ValueError as exc:
+            errors.append(str(exc))
+            continue
         existed = path.is_file()
         backup = Path("_ai_sdlc/backups") / target
         staging = Path("_ai_sdlc/staging") / target
         if existed:
             backup_path = workspace / backup
-            backup_path.parent.mkdir(parents=True, exist_ok=True)
+            ensure_directory(workspace, backup_path.parent)
+            backup_path = bounded_path(workspace, backup_path)
             backup_path.write_bytes(path.read_bytes())
         staging_path = workspace / staging
-        staging_path.parent.mkdir(parents=True, exist_ok=True)
+        ensure_directory(workspace, staging_path.parent)
+        staging_path = bounded_path(workspace, staging_path)
         staging_path.write_text(after, encoding="utf-8")
         targets.append({"target": target, "existed": existed, "backup": backup.as_posix() if existed else "", "staging": staging.as_posix(), "before_sha256": next(item["before_sha256"] for item in preview["targets"] if item["target"] == target), "after_sha256": digest(after)})
 
+    if errors:
+        return {}, errors
+
     manifest: dict[str, Any] = {"schema": RECOVERY_SCHEMA, "change_id": change_id, "status": "in_progress", "preview_fingerprint": preview["preview_fingerprint"], "created_at": now(), "updated_at": now(), "targets": targets, "applied": [], "rollback_errors": []}
     manifest_path = workspace / "_ai_sdlc/recovery-manifest.json"
-    atomic_json(manifest_path, manifest)
-    atomic_json(workspace / "evidence/approval.json", approval)
+    atomic_json(workspace, manifest_path, manifest)
+    atomic_json(workspace, workspace / "evidence/approval.json", approval)
     try:
         for index, item in enumerate(targets, start=1):
             target_path = repository / item["target"]
-            target_path.parent.mkdir(parents=True, exist_ok=True)
-            os.replace(workspace / item["staging"], target_path)
+            target_path = bounded_path(repository, target_path)
+            ensure_directory(repository, target_path.parent)
+            staging_path = bounded_path(workspace, workspace / item["staging"])
+            os.replace(staging_path, target_path)
             manifest["applied"].append(item["target"])
             manifest["updated_at"] = now()
-            atomic_json(manifest_path, manifest)
+            atomic_json(workspace, manifest_path, manifest)
             if simulate_failure_after is not None and index >= simulate_failure_after:
                 raise OSError(f"simulated failure after {index} target replacements")
         applied_at = now()
         update_metadata(workspace, "applied", applied_at)
         record.update({"status": "applied", "updated_at": applied_at[:10], "applied_at": applied_at, "preview_fingerprint": preview["preview_fingerprint"], "approval": {"owner": approval["owner"], "decision_ref": approval["decision_ref"], "decided_at": approval["decided_at"], "approved_gates": sorted(approval["approved_gates"])}})
         record["contract_fingerprint"] = fingerprint(record)
-        atomic_json(workspace / "_ai_sdlc/change-set.json", record)
+        atomic_json(workspace, workspace / "_ai_sdlc/change-set.json", record)
     except (OSError, ValueError) as exc:
-        rollback_errors = rollback(repository, workspace, manifest)
+        rollback_errors = rollback(repository, workspace, manifest, change_id, record["canonical_targets"])
         try:
             update_metadata(workspace, "draft", record["updated_at"])
         except (OSError, ValueError) as metadata_exc:
@@ -237,14 +322,26 @@ def apply_change(repository: Path, change_id: str, approval_path: Path, simulate
         return {}, [f"apply failed and rollback was attempted: {exc}", *rollback_errors]
     manifest["status"] = "complete"
     manifest["updated_at"] = now()
-    atomic_json(manifest_path, manifest)
+    atomic_json(workspace, manifest_path, manifest)
     shutil.rmtree(staging_root, ignore_errors=True)
-    return {"schema": "ai-sdlc-change-apply-result/v1", "change_id": change_id, "status": "applied", "preview_fingerprint": preview["preview_fingerprint"], "targets": [item["target"] for item in targets], "recovery_manifest": manifest_path.relative_to(repository).as_posix()}, []
+    return {
+        "schema": "ai-sdlc-change-apply-result/v1",
+        "change_id": change_id,
+        "status": "applied",
+        "approval_record_status": "structurally_valid_identity_not_authenticated",
+        "preview_fingerprint": preview["preview_fingerprint"],
+        "targets": [item["target"] for item in targets],
+        "recovery_manifest": manifest_path.relative_to(repository).as_posix(),
+    }, []
 
 
 def archive_change(repository: Path, change_id: str, archive_date: str | None) -> tuple[dict[str, Any], list[str]]:
     """Move a completely applied workspace into immutable history."""
     workspace = repository / "changes" / change_id
+    try:
+        workspace = bounded_path(repository, workspace)
+    except ValueError as exc:
+        return {}, [str(exc)]
     if not workspace.is_dir():
         matches = sorted((repository / "changes/archive").glob(f"*-{change_id}"))
         return {}, [f"active change is absent; archived copies: {', '.join(path.name for path in matches) or 'none'}"]
@@ -274,14 +371,15 @@ def archive_change(repository: Path, change_id: str, archive_date: str | None) -
         update_metadata(workspace, "archived", archived_at)
         record.update({"status": "archived", "updated_at": archived_at[:10], "archived_at": archived_at, "archive_path": destination.relative_to(repository).as_posix()})
         record["contract_fingerprint"] = fingerprint(record)
-        atomic_json(workspace / "_ai_sdlc/change-set.json", record)
-        destination.parent.mkdir(parents=True, exist_ok=True)
+        atomic_json(workspace, workspace / "_ai_sdlc/change-set.json", record)
+        destination = bounded_path(repository, destination)
+        ensure_directory(repository, destination.parent)
         os.replace(workspace, destination)
     except (OSError, ValueError) as exc:
         if workspace.exists():
             try:
                 update_metadata(workspace, "applied", prior["updated_at"])
-                atomic_json(workspace / "_ai_sdlc/change-set.json", prior)
+                atomic_json(workspace, workspace / "_ai_sdlc/change-set.json", prior)
             except (OSError, ValueError):
                 pass
         return {}, [f"archive failed: {exc}"]

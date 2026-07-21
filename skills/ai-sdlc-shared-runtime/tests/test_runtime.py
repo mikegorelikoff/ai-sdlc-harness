@@ -27,7 +27,7 @@ class InstalledRuntimeTests(unittest.TestCase):
             stderr=subprocess.PIPE,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("17 canonical helpers", result.stdout)
+        self.assertIn("20 canonical helpers", result.stdout)
 
     def test_sdd_scaffold_runs_from_skill_only_installation(self) -> None:
         result = subprocess.run(
@@ -39,7 +39,7 @@ class InstalledRuntimeTests(unittest.TestCase):
             stderr=subprocess.PIPE,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("shared runtime and SDD scaffold passed", result.stdout)
+        self.assertIn("installed runtime, complete SDD gates, and commit readiness passed", result.stdout)
 
 
 if __name__ == "__main__":

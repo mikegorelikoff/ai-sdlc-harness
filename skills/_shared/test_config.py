@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "skills/_shared/ai_sdlc_config.py"
-DEFAULTS = ROOT / "config/ai-sdlc.defaults.json"
+DEFAULTS = ROOT / "skills/ai-sdlc-shared-runtime/references/ai-sdlc.defaults.json"
 
 
 def write(path: Path, values: dict[str, object], protected: list[str] | None = None) -> None:
@@ -48,22 +48,24 @@ class ConfigTests(unittest.TestCase):
     def test_protected_boolean_cannot_be_weakened(self) -> None:
         """User configuration must not disable a required gate."""
         with tempfile.TemporaryDirectory() as temp:
-            user = Path(temp) / "user.json"
+            base, user = Path(temp) / "base.json", Path(temp) / "user.json"
+            write(base, {"gates": {"require_traceability": True}}, ["gates.require_traceability"])
             write(user, {"gates": {"require_traceability": False}})
-            result = self.run_config("--base", str(DEFAULTS), "--user", str(user))
+            result = self.run_config("--base", str(base), "--user", str(user))
             self.assertEqual(result.returncode, 1)
             self.assertIn("weakens protected gate gates.require_traceability", result.stdout)
 
     def test_protected_rigor_can_strengthen_but_not_downgrade(self) -> None:
         """Strictness order should allow strengthening across layers."""
         with tempfile.TemporaryDirectory() as temp:
-            team, user = Path(temp) / "team.json", Path(temp) / "user.json"
+            base, team, user = Path(temp) / "base.json", Path(temp) / "team.json", Path(temp) / "user.json"
+            write(base, {"rigor": {"minimum_profile": "patch"}}, ["rigor.minimum_profile"])
             write(team, {"rigor": {"minimum_profile": "assured"}})
             write(user, {"rigor": {"minimum_profile": "patch"}})
-            blocked = self.run_config("--base", str(DEFAULTS), "--team", str(team), "--user", str(user))
+            blocked = self.run_config("--base", str(base), "--team", str(team), "--user", str(user))
             self.assertEqual(blocked.returncode, 1)
             self.assertIn("assured", blocked.stdout)
-            allowed = self.run_config("--base", str(DEFAULTS), "--team", str(team), "--format", "toon")
+            allowed = self.run_config("--base", str(base), "--team", str(team), "--format", "toon")
             self.assertEqual(allowed.returncode, 0, allowed.stdout + allowed.stderr)
             self.assertIn("rigor.minimum_profile,assured,team,yes", allowed.stdout)
 
@@ -82,6 +84,12 @@ class ConfigTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertIn("interaction.preferred_name,Mike,user,no", result.stdout)
             self.assertIn("interaction.response_style,concise,user,no", result.stdout)
+
+    def test_packaged_defaults_are_implicit(self) -> None:
+        result = self.run_config("--format", "json")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        value = json.loads(result.stdout)
+        self.assertEqual(value["values"]["interaction"]["response_style"], "balanced")
 
     def test_invalid_interaction_preference_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

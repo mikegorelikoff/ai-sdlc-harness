@@ -21,6 +21,16 @@ INTERACTION_FIELDS = {
 }
 
 
+def packaged_defaults() -> Path:
+    """Locate the single defaults file in source and installed layouts."""
+    script = Path(__file__).resolve()
+    installed = script.parent.parent / "references" / "ai-sdlc.defaults.json"
+    if installed.is_file():
+        return installed
+    source = script.parents[1] / "ai-sdlc-shared-runtime" / "references" / "ai-sdlc.defaults.json"
+    return source
+
+
 def toon(value: object) -> str:
     """Escape one value for the repository TOON subset."""
     if isinstance(value, (dict, list)):
@@ -168,6 +178,8 @@ def render_markdown(values: dict[str, Any], provenance: dict[str, str], protecte
 
 def atomic_write(path: Path, content: str) -> None:
     """Write one resolved projection atomically."""
+    if any(component.is_symlink() for component in (path, *list(path.parents)[:4])):
+        raise SystemExit(f"ERROR: output path contains symlink component: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temp_name = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
     try:
@@ -182,7 +194,7 @@ def atomic_write(path: Path, content: str) -> None:
 def main() -> int:
     """Resolve configuration and emit values with provenance."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--base", type=Path, required=True)
+    parser.add_argument("--base", type=Path, default=packaged_defaults())
     parser.add_argument("--team", type=Path)
     parser.add_argument("--user", type=Path)
     parser.add_argument("--format", choices=("markdown", "toon", "json"), default="markdown")

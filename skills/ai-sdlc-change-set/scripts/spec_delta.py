@@ -20,6 +20,7 @@ if not _SHARED.is_dir():
     _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_toon import encode_toon
+from ai_sdlc_safe_io import atomic_write_text, bounded_path
 
 
 SCHEMA = "ai-sdlc-spec-delta/v1"
@@ -217,17 +218,9 @@ def build_projection(change_id: str, operations: list[dict[str, Any]], sources: 
     return record
 
 
-def atomic_write(path: Path, content: str) -> None:
+def atomic_write(root: Path, path: Path, content: str) -> None:
     """Replace one generated projection atomically."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
-            handle.write(content)
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
+    atomic_write_text(root, path, content)
 
 
 def render_toon(record: dict[str, Any]) -> str:
@@ -278,15 +271,19 @@ def main() -> int:
         print("ERROR: delta validation cannot mutate feature lifecycle state")
         return 1
     repository = args.repository.resolve()
-    workspace = repository / "changes" / args.change_id
+    try:
+        workspace = bounded_path(repository, repository / "changes" / args.change_id)
+    except ValueError as exc:
+        print(f"ERROR: {exc}")
+        return 1
     record, errors = analyze_delta_set(repository, args.change_id)
     if errors:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
     if args.write:
-        atomic_write(workspace / "_ai_sdlc/delta-set.json", json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
-        atomic_write(workspace / "_ai_sdlc/delta-set.toon", encode_toon(record))
+        atomic_write(workspace, workspace / "_ai_sdlc/delta-set.json", json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+        atomic_write(workspace, workspace / "_ai_sdlc/delta-set.toon", encode_toon(record))
     if args.format == "json":
         print(json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False))
     elif args.format == "toon":

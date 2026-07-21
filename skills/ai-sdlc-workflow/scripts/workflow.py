@@ -37,6 +37,8 @@ def digest(value: Any) -> str:
 
 
 def atomic_write(path: Path, content: str) -> None:
+    if any(component.is_symlink() for component in (path, *list(path.parents)[:4])):
+        raise SystemExit(f"ERROR: output path contains symlink component: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
     try:

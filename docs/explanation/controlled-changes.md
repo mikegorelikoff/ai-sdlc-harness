@@ -36,8 +36,13 @@ decisions, organization policy, and Git history remain authoritative.
 
 ## Deterministic use
 
+The commands below run from a **consumer repository** after project-scoped
+installation. Therefore the canonical helper root is `.agents/skills/`. In a
+harness source checkout, maintainers may replace `.agents/skills/` with
+`skills/`; do not mix the two execution contexts.
+
 ```bash
-python3 skills/ai-sdlc-change-set/scripts/change_set.py . \
+python3 .agents/skills/ai-sdlc-change-set/scripts/change_set.py . \
   --change-id add-session-timeout \
   --title "Add session timeout" \
   --summary "Expire inactive sessions." \
@@ -45,7 +50,7 @@ python3 skills/ai-sdlc-change-set/scripts/change_set.py . \
   --target specs/auth/requirements.md \
   --create --full-flow
 
-python3 skills/ai-sdlc-change-set/scripts/change_set.py . \
+python3 .agents/skills/ai-sdlc-change-set/scripts/change_set.py . \
   --change-id add-session-timeout \
   --validate --format toon
 ```
@@ -64,7 +69,7 @@ WHEN/THEN scenarios. Removed requirements require a reason and migration path;
 renames retain the existing stable ID and declare distinct old and new names.
 
 ```bash
-python3 skills/ai-sdlc-change-set/scripts/spec_delta.py . \
+python3 .agents/skills/ai-sdlc-change-set/scripts/spec_delta.py . \
   --change-id add-session-timeout \
   --validate --write --format toon
 ```
@@ -81,7 +86,7 @@ ambiguous blocks and overlaps with other active changes, finds exact downstream
 references that need revalidation, and explains every required gate.
 
 ```bash
-python3 skills/ai-sdlc-change-set/scripts/change_preview.py . \
+python3 .agents/skills/ai-sdlc-change-set/scripts/change_preview.py . \
   --change-id add-session-timeout \
   --preview --write --format toon
 ```
@@ -94,19 +99,26 @@ block or proposal should win.
 
 Apply accepts only an explicit `ai-sdlc-change-approval/v1` record whose
 fingerprint matches a freshly rebuilt ready preview and whose gate list covers
-every preview requirement. It stages all after-states, backs up existing
+every preview requirement. This proves record consistency, **not** the identity
+or authority of the named approver. Before apply, the organization must enforce
+approval independently through branch protection and CODEOWNERS, a signed
+attestation, or an equivalent protected system. An agent must never create the
+local record and describe that act as human authorization.
+
+After that external gate, apply stages all after-states, backs up existing
 targets, persists a recovery manifest, and uses same-filesystem replacement for
-each write. Any partial failure restores already-written targets before the
-command returns an error.
+each write. Its result explicitly reports
+`structurally_valid_identity_not_authenticated`. Any partial failure attempts to restore
+already-written targets before the command returns an error.
 
 ```bash
-python3 skills/ai-sdlc-change-set/scripts/change_apply.py . \
+python3 .agents/skills/ai-sdlc-change-set/scripts/change_apply.py . \
   --change-id add-session-timeout \
   --apply \
   --approval changes/add-session-timeout/evidence/owner-approval.json \
   --format toon
 
-python3 skills/ai-sdlc-change-set/scripts/change_apply.py . \
+python3 .agents/skills/ai-sdlc-change-set/scripts/change_apply.py . \
   --change-id add-session-timeout \
   --archive --format toon
 ```

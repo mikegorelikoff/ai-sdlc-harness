@@ -43,7 +43,7 @@ description: AI SDLC evidence-backed retrospective workflow. Use when delivery w
 ### 0.3 Output Rules
 
 - Return observation and proposal counts, accepted-decision coverage,
-  blockers, and output paths directly in the Codex response.
+  blockers, and output paths directly in the active agent response.
 - Before the final response, emit `ai-sdlc-handoff/v1` with `result`,
   `blockers`, `next_required`, and `next_optional`; every action includes
   `reason`, `command`, and `expected_artifact`.
@@ -56,6 +56,10 @@ description: AI SDLC evidence-backed retrospective workflow. Use when delivery w
 - Write machine output to `<feature-root>/_ai_sdlc/retrospective.toon`.
 - Keep proposal target paths as references only.
 - Apply accepted improvements later through the target-owning workflow.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

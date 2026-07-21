@@ -1,13 +1,18 @@
 ---
-title: Layered configuration
-description: How defaults, team policy, and personal preferences combine with provenance and protected boundaries.
+title: Presentation configuration and delivery policy
+description: How presentation preferences remain separate from enforceable organization controls.
 ---
 
-Customization is necessary for real teams, but unstructured overrides make behavior impossible to reproduce. Layered configuration provides flexibility while keeping the effective result explainable.
+Customization is necessary for real teams, but presentation preferences and
+delivery controls have different authority. The configuration resolver creates
+an inspectable preference projection. The policy skill evaluates enforceable
+delivery rules. Neither artifact grants platform permissions by itself.
 
 ## Ownership layers
 
-Base values are shipped and versioned by the harness. Team values are committed and reviewed as organization policy. User values remain local and cover personal presentation or convenience preferences.
+Base presentation values ship inside the installed shared-runtime skill. User
+values remain local. If a team chooses to standardize presentation, its sparse
+layer may be reviewed and committed, but it is not organization delivery policy.
 
 ## Typed interaction preferences
 
@@ -37,8 +42,7 @@ For example, a local user layer can contain:
 Resolve the layers normally and inspect provenance:
 
 ```bash
-python3 skills/_shared/ai_sdlc_config.py \
-  --base config/ai-sdlc.defaults.json \
+python3 .agents/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_config.py \
   --user ~/.config/ai-sdlc/config.json \
   --write-root . \
   --format toon
@@ -58,15 +62,17 @@ for usage guidance and anti-patterns.
 
 The resolver applies documented precedence and emits provenance for every effective key. Identical layers produce identical output. Sparse overrides inherit future defaults; full copied configurations tend to drift.
 
-## Protected controls
+## Resolver boundary
 
-Some settings define minimum rigor, security validation, approval authority, or evidence requirements. Lower layers cannot weaken them. A rejected override is reported with the source and protected rule instead of being silently ignored.
-
-Provenance makes configuration debuggable: a reviewer can see not only the final value, but who owns it and why it won.
+The generic resolver can preserve declared values and provenance, but current
+workflow helpers consume only the typed `interaction` object. Resolved values
+for rigor, gates, approval, or modules would be informational and must not be
+represented as enforced. Use executable policy and protected repository or CI
+settings for those controls.
 
 ## Executable policy
 
-Configuration supplies general harness values; policy evaluates whether a
+Presentation configuration supplies communication preferences; policy evaluates whether a
 specific delivery action is allowed, denied, or gated. Versioned policy layers
 resolve in base, organization, project, and user order. Every effective rule
 retains its source layer and fingerprint.

@@ -23,6 +23,7 @@ from ai_sdlc_paths import (
     legacy_state_path,
     state_path,
     atomic_write_text,
+    authority_root,
     write_lock,
 )
 from ai_sdlc_state_machine import csv_escape, from_toon
@@ -328,8 +329,10 @@ def write_workspace_index(workspace_root: Path) -> tuple[Path, Path]:
     """Write TOON and Markdown indexes for one workspace root."""
     from ai_sdlc_migrate import migrate_workspace
 
-    migrate_workspace(workspace_root.parent.resolve(), workspace_for_root(workspace_root), apply=True)
-    workspace_root.mkdir(parents=True, exist_ok=True)
+    root = authority_root(workspace_root)
+    from ai_sdlc_safe_io import ensure_directory
+    workspace_root = ensure_directory(root, workspace_root)
+    migrate_workspace(root, workspace_for_root(workspace_root), apply=True)
     toon_path = index_toon_path(workspace_root)
     md_path = workspace_root / INDEX_MD
     with write_lock(workspace_root / INTERNAL_DIR):

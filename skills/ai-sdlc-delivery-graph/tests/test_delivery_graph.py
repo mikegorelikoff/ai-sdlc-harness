@@ -65,8 +65,9 @@ class DeliveryGraphTests(unittest.TestCase):
             self.assertEqual(first.stdout, second.stdout)
             graph = json.loads(first.stdout)
             self.assertEqual(graph["schema"], "ai-sdlc-delivery-graph/v1")
-            self.assertEqual(graph["coverage"]["requirements_with_tasks"], 1)
-            self.assertEqual(graph["coverage"]["requirements_with_tests"], 1)
+            self.assertEqual(graph["coverage"]["requirement_declarations"], 2)
+            self.assertEqual(graph["coverage"]["acceptance_criteria_with_tasks"], 1)
+            self.assertEqual(graph["coverage"]["acceptance_criteria_with_tests"], 1)
             self.assertIn("trace:payments:DEC-001", graph["orphans"])
             self.assertEqual((repository / "_ai_sdlc/delivery-graph.json").read_text(encoding="utf-8"), second.stdout)
             self.assertTrue((repository / "_ai_sdlc/delivery-graph.md").is_file())
@@ -90,11 +91,26 @@ class DeliveryGraphTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             repository = Path(temp)
             self.fixture(repository)
+            requirements = repository / "specs/payments/requirements.md"
+            requirements.write_text(requirements.read_text(encoding="utf-8") + "- AC-002: Declined payments are explained.\n", encoding="utf-8")
             gaps = json.loads(self.cli(repository, "--gaps", "--format", "json").stdout)
-            self.assertIn({"code": "requirement-without-task", "node": "trace:payments:FR-001"}, gaps["gaps"])
+            self.assertIn({"code": "acceptance-criterion-without-task", "node": "trace:payments:AC-002"}, gaps["gaps"])
+            self.assertNotIn({"code": "acceptance-criterion-without-task", "node": "trace:payments:FR-001"}, gaps["gaps"])
             orphans = json.loads(self.cli(repository, "--orphans", "--format", "json").stdout)
             self.assertIn("trace:payments:FR-001", orphans["orphans"])
             self.assertIn("trace:payments:DEC-001", orphans["orphans"])
+
+    def test_generated_workspace_index_does_not_create_repository_trace_nodes(self) -> None:
+        """Generated human indexes must not be treated as authoritative features."""
+        with tempfile.TemporaryDirectory() as temp:
+            repository = Path(temp)
+            self.fixture(repository)
+            (repository / "specs/specs-index.md").write_text(
+                "# Generated index\n\nAC-777 TC-777 T777\n", encoding="utf-8"
+            )
+            graph = json.loads(self.cli(repository, "--index", "--format", "json").stdout)
+            self.assertFalse(any(node["id"].startswith("trace:repository:") for node in graph["nodes"]))
+            self.assertFalse(any(node["id"] == "artifact:specs/specs-index.md" for node in graph["nodes"]))
 
     def test_ambiguous_short_id_requires_scoped_identity(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

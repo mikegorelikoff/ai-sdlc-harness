@@ -57,8 +57,8 @@ description: AI SDLC context-aware navigation workflow. Use when an AI assistant
   blockers.
 - For every action include exact skill name, evidence-backed reason, portable
   invocation guidance, and expected artifact.
-- Return the navigation report directly in the Codex response.
-- Return progress, blockers, and recommendations directly in the Codex response.
+- Return the navigation report directly in the active agent response.
+- Return progress, blockers, and recommendations directly in the active agent response.
 - Before the final response, emit the `ai-sdlc-handoff/v1` contract with
   `result`, `blockers`, `next_required`, and `next_optional`; every action
   includes `reason`, `command`, and `expected_artifact`.
@@ -73,6 +73,10 @@ description: AI SDLC context-aware navigation workflow. Use when an AI assistant
 - Do not create or update decision logs, SDD artifacts, refinement artifacts,
   indexes, or plans.
 - Route durable work to the recommended downstream skill.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

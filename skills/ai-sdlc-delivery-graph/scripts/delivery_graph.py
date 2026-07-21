@@ -51,6 +51,8 @@ def digest(value: Any) -> str:
 
 def atomic_write(path: Path, content: str) -> None:
     """Atomically replace one generated output."""
+    if any(component.is_symlink() for component in (path, *list(path.parents)[:4])):
+        raise SystemExit(f"ERROR: output path contains symlink component: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
     try:
@@ -142,7 +144,10 @@ class Builder:
             if not root.is_dir():
                 continue
             for path in sorted(root.glob("**/*.md")):
-                if "_ai_sdlc" in path.parts:
+                # Workspace indexes are generated projections containing IDs
+                # copied from many features. Indexing them as a synthetic
+                # `repository` feature creates false trace nodes and gaps.
+                if "_ai_sdlc" in path.parts or path.parent == root and path.name == "specs-index.md":
                     continue
                 relative = path.relative_to(self.repository).as_posix()
                 raw = path.read_text(encoding="utf-8", errors="replace")
@@ -226,15 +231,20 @@ class Builder:
         semantic = [edge for edge in edges if edge["relation"] in SEMANTIC_RELATIONS]
         incident = {node_id for edge in semantic for node_id in (edge["source"], edge["target"])}
         requirements = [node for node in nodes if node["kind"] == "requirement"]
+        acceptance_criteria = [
+            node
+            for node in requirements
+            if node["key"].upper().startswith("AC-") and node["status"] == "declared"
+        ]
         tasks = [node for node in nodes if node["kind"] == "task"]
         tests = [node for node in nodes if node["kind"] == "test"]
         incoming = {(edge["target"], self.nodes[edge["source"]]["kind"]) for edge in semantic}
         gaps: list[dict[str, str]] = []
-        for node in requirements:
+        for node in acceptance_criteria:
             if (node["id"], "task") not in incoming:
-                gaps.append({"code": "requirement-without-task", "node": node["id"]})
+                gaps.append({"code": "acceptance-criterion-without-task", "node": node["id"]})
             if (node["id"], "test") not in incoming:
-                gaps.append({"code": "requirement-without-test", "node": node["id"]})
+                gaps.append({"code": "acceptance-criterion-without-test", "node": node["id"]})
         for node in tasks:
             if not any(edge["source"] == node["id"] and self.nodes[edge["target"]]["kind"] == "requirement" for edge in semantic):
                 gaps.append({"code": "task-without-requirement", "node": node["id"]})
@@ -246,9 +256,10 @@ class Builder:
                 gaps.append({"code": "commit-without-task", "node": node["id"]})
         orphans = sorted(node["id"] for node in nodes if node["kind"] != "artifact" and node["id"] not in incident)
         coverage = {
-            "requirements": len(requirements),
-            "requirements_with_tasks": sum((node["id"], "task") in incoming for node in requirements),
-            "requirements_with_tests": sum((node["id"], "test") in incoming for node in requirements),
+            "requirement_declarations": len(requirements),
+            "acceptance_criteria": len(acceptance_criteria),
+            "acceptance_criteria_with_tasks": sum((node["id"], "task") in incoming for node in acceptance_criteria),
+            "acceptance_criteria_with_tests": sum((node["id"], "test") in incoming for node in acceptance_criteria),
             "tasks": len(tasks),
             "tests": len(tests),
             "commits": sum(node["kind"] == "commit" for node in nodes),

@@ -48,6 +48,7 @@ from validate_docs import (  # noqa: E402
     validate_raci_contract,
     validate_role_skill_discovery,
     validate_root_source_text,
+    validate_root_documents,
     validate_section_index,
     validate_troubleshooting_contract,
 )
@@ -57,6 +58,16 @@ DOCS_ROOT = SCRIPTS.parent
 
 
 class DocumentationValidationTests(unittest.TestCase):
+    def test_root_documents_reject_broken_link_and_machine_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for name in ("README.md", "FAQ.md", "CONTRIBUTING.md", "SECURITY.md", "SUPPORT.md"):
+                (root / name).write_text("Public documentation.\n", encoding="utf-8")
+            (root / "README.md").write_text("[Missing](docs/missing.md) /Users/example/private\n", encoding="utf-8")
+            errors = validate_root_documents(root)
+            self.assertTrue(any("broken local link" in error for error in errors))
+            self.assertTrue(any("machine-specific" in error for error in errors))
+
     def test_parse_material_frontmatter(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "page.md"
@@ -150,7 +161,7 @@ class DocumentationValidationTests(unittest.TestCase):
                 path = docs / relative
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(
-                    "software development lifecycle AI SDLC spec-driven development artifact evidence gate handoff "
+                    "software development lifecycle AI SDLC specification-driven development artifact evidence gate handoff "
                     "Tell your agent Run in terminal Agent does automatically Human checkpoint",
                     encoding="utf-8",
                 )
@@ -190,6 +201,8 @@ class DocumentationValidationTests(unittest.TestCase):
         self.assertEqual(validate_refinement_contract(text), [])
         mutated = text.replace("`discovery.md`", "`wrong-discovery.md`", 1)
         self.assertTrue(any("mis-associated canonical profile discovery" in error for error in validate_refinement_contract(mutated)))
+        composite = text.replace("| Product manager | `discovery.md`", "| Product manager/BA | `discovery.md`", 1)
+        self.assertTrue(any("composite Accountable" in error for error in validate_refinement_contract(composite)))
 
     def test_full_lifecycle_rejects_misassociated_stage_prompt(self) -> None:
         text = (DOCS_ROOT / "tutorials/full-lifecycle.md").read_text(encoding="utf-8")
@@ -352,7 +365,7 @@ class DocumentationValidationTests(unittest.TestCase):
         skills = skill_sources()
         records = [script_record(path) for path in script_sources()]
         self.assertEqual(len(skills), 44)
-        self.assertEqual(len(records), 106)
+        self.assertEqual(len(records), 115)
         self.assertEqual(len(SKILL_SELECTION_BOUNDARIES), 44)
         self.assertEqual(validate_selection_contract(skills), [])
         self.assertEqual(validate_role_skill_groups(skills), [])
@@ -370,7 +383,7 @@ class DocumentationValidationTests(unittest.TestCase):
         self.assertTrue(coverage.startswith("schema: ai-sdlc-documentation-coverage/v1\n"))
         self.assertEqual(
             sum(record.classification == "installed runtime mirror" for record in records),
-            17,
+            20,
         )
 
     def test_generated_catalog_rejects_missing_sections_and_paths(self) -> None:

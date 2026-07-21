@@ -9,15 +9,20 @@ Create an `ai-sdlc-run-plan/v1` file with unique tasks, dependencies, input
 fingerprints, maximum attempts, commit-boundary flags, and positive step,
 failure, and token budgets. Start a new run once:
 
+Run from an installed consumer repository. `run-plan.json` is an input you must
+create from the `ai-sdlc-run-plan/v1` schema and runtime contract under
+`.agents/skills/ai-sdlc-runtime/references/`; validate every task ID,
+dependency, fingerprint, and budget before starting the irreversible journal.
+
 ```bash
-python3 skills/ai-sdlc-runtime/scripts/runtime.py . \
+python3 .agents/skills/ai-sdlc-runtime/scripts/runtime.py . \
   --start --run-id delivery-004 --plan run-plan.json --format toon
 ```
 
 Claim the next dependency-ready task:
 
 ```bash
-python3 skills/ai-sdlc-runtime/scripts/runtime.py . \
+python3 .agents/skills/ai-sdlc-runtime/scripts/runtime.py . \
   --next --run-id delivery-004 --format toon
 ```
 
@@ -25,7 +30,7 @@ Calling `--next` again returns the same running task without another attempt.
 Execute it through the owning workflow, then record exact evidence:
 
 ```bash
-python3 skills/ai-sdlc-runtime/scripts/runtime.py . \
+python3 .agents/skills/ai-sdlc-runtime/scripts/runtime.py . \
   --record --run-id delivery-004 \
   --task T001 --outcome succeeded \
   --result-fingerprint <sha256> \
@@ -38,7 +43,7 @@ tasks require an explicit retry reason after the cause is resolved.
 ## Recover after interruption
 
 ```bash
-python3 skills/ai-sdlc-runtime/scripts/runtime.py . \
+python3 .agents/skills/ai-sdlc-runtime/scripts/runtime.py . \
   --resume --run-id delivery-004 --format toon
 ```
 
@@ -48,3 +53,7 @@ projections. Agents should read complete TOON state; integrations may use exact
 JSON recovery state. Resume fails closed if journal history was edited,
 reordered, truncated into an invalid transition, or given a conflicting
 repeated outcome.
+Successful start/record operations append the hash-chained event journal below
+`_ai_sdlc/runs/<run-id>/`; successful resume reports a current projection.
+Preserve a failed journal unchanged for investigation instead of deleting it or
+starting another run with the same ID.

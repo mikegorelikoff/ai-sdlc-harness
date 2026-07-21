@@ -10,6 +10,7 @@ Choose the result you need now. Each guide is task-oriented and assumes basic Gi
 <div class="grid cards" markdown>
 
 - [**Install the harness**](install.md) — add harness skills to a consumer project.
+- [**Set up Codex CLI**](setup-codex.md) — install, authenticate, launch, and verify the documented pilot host.
 - [**Update safely**](update.md) — preview, merge, and validate upstream changes.
 - [**Migrate to 1.1**](migrate-1.1.md) — adopt the additive control plane without rewriting existing work.
 - [**Choose a flow mode**](choose-flow.md) — select quick, full, or adaptive rigor.
@@ -30,6 +31,8 @@ Choose the result you need now. Each guide is task-oriented and assumes basic Gi
 - [**Run an evidence council**](evidence-council.md) — coordinate independent review lenses.
 - [**Research with sources**](research.md) — gather current external evidence.
 - [**Prepare a commit**](prepare-commit.md) — produce an auditable atomic change.
+- [**Open, review, and merge**](review-and-merge.md) — require independent review, fresh checks, acceptance, and rollback ownership.
+- [**Record product acceptance**](record-product-acceptance.md) — bind a Product Owner disposition to one revision and its evidence.
 - [**Validate a release**](validate-release.md) — run compatibility and release gates.
 
 </div>

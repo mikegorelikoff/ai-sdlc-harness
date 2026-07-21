@@ -20,6 +20,7 @@ from ai_sdlc_paths import (
     plan_toon_path,
     state_path,
 )
+from ai_sdlc_safe_io import bounded_path
 
 
 @dataclass(frozen=True)
@@ -67,6 +68,8 @@ def migrate_feature(root: Path, feature: str, workspace: str, *, apply: bool) ->
             for legacy_name in profile.legacy_names:
                 pairs.append((feature_root / profile.artifact_name, feature_root / legacy_name))
     for canonical, legacy in pairs:
+        bounded_path(root, canonical)
+        bounded_path(root, legacy)
         result = migrate_pair(canonical, legacy, apply=apply)
         if result:
             results.append(result)

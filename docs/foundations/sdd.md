@@ -1,12 +1,18 @@
 ---
 title: What is SDD?
-description: Learn how spec-driven development turns intent into a testable implementation contract without creating paperwork for its own sake.
+description: Learn how specification-driven development turns intent into a testable implementation contract without creating paperwork for its own sake.
 ---
 
 # What is SDD?
 
-**Spec-driven development (SDD)** means establishing a testable delivery
+**Specification-driven development (SDD)** means establishing a testable delivery
 contract before implementation becomes the source of truth by accident.
+
+This is the repository's canonical meaning of **SDD**. Some organizations and
+sources use the same abbreviation for a Software Design Document, software
+design and development, or another local practice. Those meanings are not the
+lifecycle method defined here. In informal prose this guide may say
+“spec-driven,” but it always means this specification-driven workflow.
 
 In this harness, an implementation SDD package connects:
 

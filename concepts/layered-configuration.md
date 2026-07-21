@@ -8,22 +8,22 @@ The harness resolves configuration in one deterministic order: base, then
 team, then user. Every resolved leaf records its source layer. Identical inputs
 therefore produce identical values and provenance.
 
-All layers use `ai-sdlc-config/v1`. The canonical base template is
-`config/ai-sdlc.defaults.json`; teams and users may provide partial `values`
-objects. Only the base declares protected dotted paths. Later layers may
-strengthen protected rigor or gates but cannot weaken them or redefine which
-paths are protected.
+All layers use `ai-sdlc-config/v1`. The source compatibility copy of the base
+template remains at `config/ai-sdlc.defaults.json`;
+installed consumers use the packaged default automatically. Teams and users may provide partial `values`
+objects. Current workflows consume only typed interaction preferences from the
+resolved projection. Delivery rigor and gates are enforced through
+`ai-sdlc-policy` and repository/platform controls, not this configuration.
 
 Run:
 
 ```bash
-python3 skills/_shared/ai_sdlc_config.py \
-  --base config/ai-sdlc.defaults.json \
+python3 .agents/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_config.py \
   --team .ai-sdlc/team.json \
   --user ~/.config/ai-sdlc/config.json \
   --format toon
 ```
 
 With `--write-root`, the resolver writes `config.resolved.json` and
-`_ai_sdlc/config-provenance.toon`. Consumers should use the resolved projection,
-not independently merge layer files.
+`_ai_sdlc/config-provenance.toon`. Context helpers use only its presentation
+profile; they do not treat it as policy.

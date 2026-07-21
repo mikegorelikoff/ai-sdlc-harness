@@ -15,6 +15,9 @@ Classification is deterministic for the same inputs and exposes factor scores, e
 
 ## Safe precedence
 
-An explicit full-flow request and organization minimum can raise rigor. Automatic policy cannot lower them. Unknown values are conservative, and customization cannot disable protected security, approval, or evidence gates.
+An explicit full-flow request raises rigor. An organization minimum raises it
+only when the caller supplies that minimum to the rigor decision or an
+enforced `ai-sdlc-policy` rule requires the corresponding gates. Presentation
+configuration is not a rigor input. Unknown values remain conservative.
 
 Adaptive rigor is therefore a routing aid, not permission to skip reasoning. The decision stays inspectable and can be challenged with better evidence.

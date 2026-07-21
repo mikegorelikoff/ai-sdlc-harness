@@ -5,10 +5,15 @@ description: Resolve protected policy layers, inspect action gates, and apply bo
 
 # Evaluate delivery policy
 
+Run from an installed consumer repository. Built-in profiles ship with the
+skill. Project/user layers, `policy-context.json`, and waiver JSON are explicit
+inputs you create and review from the schemas/examples under
+`.agents/skills/ai-sdlc-policy/references/`; the commands do not invent them.
+
 Resolve the built-in base with an organization assurance profile:
 
 ```bash
-python3 skills/ai-sdlc-policy/scripts/policy.py . \
+python3 .agents/skills/ai-sdlc-policy/scripts/policy.py . \
   --resolve --profile high-assurance --format markdown
 ```
 
@@ -22,7 +27,7 @@ Create a JSON context with the fields referenced by rule predicates, including
 a stable `subject` when waivers may apply. Then run:
 
 ```bash
-python3 skills/ai-sdlc-policy/scripts/policy.py . \
+python3 .agents/skills/ai-sdlc-policy/scripts/policy.py . \
   --explain change.apply \
   --context policy-context.json \
   --profile regulated \
@@ -40,7 +45,7 @@ A waiver names one waivable rule, action pattern, subject, exact context
 constraints, owner, approver, accepted decision, reason, issue time, and expiry.
 
 ```bash
-python3 skills/ai-sdlc-policy/scripts/policy.py . \
+python3 .agents/skills/ai-sdlc-policy/scripts/policy.py . \
   --explain change.apply \
   --context policy-context.json \
   --profile high-assurance \
@@ -51,3 +56,8 @@ python3 skills/ai-sdlc-policy/scripts/policy.py . \
 Inspect the waiver row in the decision. `expired`, `subject-mismatch`,
 `constraint-mismatch`, and `rule-not-waivable` records are rejected and leave
 the original rule effective.
+
+Success returns a deterministic decision with matching rule sources and context
+fingerprint. Unknown actions, missing predicate fields, expired waivers, and
+attempts to weaken protected rules must remain denied until authoritative input
+changes.

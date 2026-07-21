@@ -45,7 +45,7 @@ description: AI SDLC versioned policy-as-code workflow. Use when an AI assistant
 
 - Report resolved policy fingerprint, layer provenance, action decision, matched
   rules, required gates, reason codes, and applied or rejected waivers.
-- Return validation and handoff summaries directly in the Codex response.
+- Return validation and handoff summaries directly in the active agent response.
 - Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
   `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
@@ -55,6 +55,10 @@ description: AI SDLC versioned policy-as-code workflow. Use when an AI assistant
 - Keep approved policy layers in visible repository-owned paths.
 - Write generated resolution and decision records only below `_ai_sdlc/`.
 - Never overwrite a source policy or waiver during evaluation.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

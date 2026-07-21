@@ -7,7 +7,7 @@ description: AI SDLC resumable task-runtime workflow. Use when an AI assistant n
 
 > Internal AI SDLC skill, not client-facing by default.
 > Every rule below is important to follow. None of it can be skipped.
-> The journal is authoritative; complete state is a recoverable TOON-first projection.
+> The journal is the local structural source for recovery; it is not authenticated evidence. A user with workspace write access can rewrite entries and recompute the SHA-256 chain. Independent assurance requires protected Git history, trusted continuous-integration records, or an external audit log.
 
 ## 0. Skill Card
 
@@ -43,7 +43,7 @@ description: AI SDLC resumable task-runtime workflow. Use when an AI assistant n
 
 - Report run status, sequence, current task, ready tasks, budgets, stop reason,
   recovery status, and next command.
-- Return validation and handoff summaries directly in the Codex response.
+- Return validation and handoff summaries directly in the active agent response.
 - Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
   `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
@@ -54,6 +54,10 @@ description: AI SDLC resumable task-runtime workflow. Use when an AI assistant n
 - Keep journal append-only, JSON recovery state atomically replaceable, and
   TOON state as the complete agent-facing projection.
 - Never store runtime records inside a feature spec folder.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

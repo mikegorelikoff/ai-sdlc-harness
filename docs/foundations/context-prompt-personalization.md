@@ -134,15 +134,15 @@ Create a local user layer such as `~/.config/ai-sdlc/config.json`:
 Resolve it with provenance:
 
 ```bash
-python3 skills/_shared/ai_sdlc_config.py \
-  --base config/ai-sdlc.defaults.json \
+python3 .agents/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_config.py \
   --user ~/.config/ai-sdlc/config.json \
   --write-root . \
   --format toon
 ```
 
-The resolved profile is presentation-only metadata in context packs. It cannot
-weaken protected gates. Set `enabled` to `false`, remove individual values, or
+The installed helper finds its packaged base automatically. The resolved
+profile is presentation-only metadata in context packs; it is not a policy or
+rigor input. Set `enabled` to `false`, remove individual values, or
 delete the local user layer and resolve again to stop applying it. Review
 `_ai_sdlc/config-provenance.toon` to see where every effective value came from.
 

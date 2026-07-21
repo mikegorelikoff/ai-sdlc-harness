@@ -163,7 +163,7 @@ The AI assistant identifies:
 
 This step prevents incomplete context from becoming implementation debt.
 
-### 5. Spec-Driven Development
+### 5. Specification-driven development
 
 Dev converts approved refinement context into implementation artifacts under
 `specs/<feature-name>/`.

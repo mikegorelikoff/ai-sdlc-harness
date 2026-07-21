@@ -146,7 +146,7 @@ On a blocker, preserve failed/stale evidence, name the accountable owner and exa
 ## Handoff
 
 - Return generation, drift, blockers, evidence coverage, and output paths
-  directly in the Codex response.
+  directly in the active agent response.
 - Before the final response, emit the `ai-sdlc-handoff/v1` contract with
   `result`, `blockers`, `next_required`, and `next_optional`; every action
   includes `reason`, `command`, and `expected_artifact`.

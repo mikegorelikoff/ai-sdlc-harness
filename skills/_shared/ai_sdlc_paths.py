@@ -4,11 +4,13 @@
 from __future__ import annotations
 
 import os
+import re
 import tempfile
 import time
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Iterator
+from ai_sdlc_safe_io import atomic_write_text as bounded_atomic_write_text, bounded_path, ensure_directory
 
 try:  # pragma: no cover - platform-specific import
     import fcntl
@@ -31,6 +33,8 @@ def workspace_base(workspace: str) -> str:
 
 def feature_dir(feature: str, workspace: str, root: Path | None = None) -> Path:
     """Return one feature's visible artifact directory."""
+    if feature != "<feature-name>" and not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", feature):
+        raise ValueError(f"feature must be a lowercase hyphenated slug: {feature}")
     prefix = root or Path()
     return prefix / workspace_base(workspace) / feature
 
@@ -95,28 +99,31 @@ def first_existing(canonical: Path, *legacy: Path) -> Path:
     return canonical
 
 
+def authority_root(path: Path) -> Path:
+    """Infer the lexical repository root for canonical workspace output paths."""
+    candidate = Path(os.path.abspath(path))
+    for index, part in enumerate(candidate.parts):
+        if part in {"specs", "specs-refiniment"}:
+            return Path(*candidate.parts[:index])
+    cwd = Path.cwd().resolve()
+    try:
+        candidate.relative_to(cwd)
+    except ValueError as exc:
+        raise ValueError(f"cannot establish repository authority for output path: {path}") from exc
+    return cwd
+
+
 def atomic_write_text(path: Path, text: str) -> None:
     """Replace one UTF-8 file atomically without exposing partial content."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temp_path: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w", encoding="utf-8", dir=path.parent,
-            prefix=f".{path.name}.", suffix=".tmp", delete=False,
-        ) as handle:
-            handle.write(text)
-            temp_path = Path(handle.name)
-        os.replace(temp_path, path)
-    finally:
-        if temp_path is not None and temp_path.exists():
-            temp_path.unlink()
+    bounded_atomic_write_text(authority_root(path), path, text)
 
 
 @contextmanager
 def write_lock(scope: Path, timeout: float = 10.0) -> Iterator[None]:
     """Serialize writers with an OS lock released automatically on process exit."""
-    lock = scope / ".write.lock"
-    scope.mkdir(parents=True, exist_ok=True)
+    root = authority_root(scope)
+    scope = ensure_directory(root, scope)
+    lock = bounded_path(root, scope / ".write.lock")
     deadline = time.monotonic() + timeout
     with lock.open("a+", encoding="utf-8") as handle:
         if msvcrt is not None:

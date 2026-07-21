@@ -46,7 +46,7 @@ description: AI SDLC repository delivery-graph and evidence-freshness workflow. 
 - Report the graph fingerprint, node and edge counts, source fingerprint,
   coverage, gaps, and orphans.
 - Return query paths as ordered node and edge evidence, not prose-only claims.
-- Return the validation and handoff summary directly in the Codex response.
+- Return the validation and handoff summary directly in the active agent response.
 - Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
   `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
@@ -57,6 +57,10 @@ description: AI SDLC repository delivery-graph and evidence-freshness workflow. 
 - Write generated graph data only below repository `_ai_sdlc/`.
 - Keep versioned schemas and interpretation rules in this skill package.
 - Preserve repository-relative evidence paths and one-based source line numbers.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 
@@ -144,7 +148,11 @@ what verifies it, what shipped it, and where delivery evidence is missing.
 
 The graph contains sorted nodes, edges, gaps, orphans, coverage counters, source
 hashes, and fingerprints. Rebuilding identical inputs produces byte-identical
-TOON, JSON, and Markdown.
+TOON, JSON, and Markdown. `requirement_declarations` inventories FR, NFR, AC,
+REQ, story, workflow, and rule nodes. Actionable missing-task/test gaps and
+coverage counters apply only to explicitly declared leaf `AC-###` nodes because
+SDD tasks and tests trace acceptance criteria. Inferred references and parent requirements remain visible for explicit
+paths and orphan review rather than inflating leaf coverage.
 
 The TOON/JSON evidence ledger contains recalculated file identities, resolved subjects,
 freshness states, reason codes, upstream state, stale paths, and fresh-only

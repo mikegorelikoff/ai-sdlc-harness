@@ -23,9 +23,11 @@ anchor. Markdown and Git remain authoritative.
 
 Trace paths traverse semantic edges in either direction and omit artifact
 declaration edges unless the artifact is an endpoint. Short keys must resolve
-to exactly one scoped node. Gap analysis reports requirements without tasks or
-tests, tasks and tests without requirement links, and commits without task
-links. Orphans are non-artifact nodes with no semantic edge.
+to exactly one scoped node. Gap analysis reports explicitly declared leaf
+acceptance criteria without tasks or tests, tasks and tests without requirement
+links, and commits without task links. Other requirement declarations remain
+inventory and trace/orphan evidence. Orphans are non-artifact nodes with no
+semantic edge.
 
 Identical authoritative bytes and Git references must produce byte-identical
 graph JSON, gap ordering, orphan ordering, and query paths.

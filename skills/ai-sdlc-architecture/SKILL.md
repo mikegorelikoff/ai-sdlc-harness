@@ -42,7 +42,7 @@ description: Optional AI SDLC architecture workflow. Use when an AI assistant ne
 ### 0.3 Output Rules
 
 - Return design scope, decision/risk counts, blockers, validation status, and
-  output paths directly in the Codex response.
+  output paths directly in the active agent response.
 - Before the final response, emit `ai-sdlc-handoff/v1` with `result`,
   `blockers`, `next_required`, and `next_optional`; every action includes
   `reason`, `command`, and `expected_artifact`.
@@ -56,6 +56,10 @@ description: Optional AI SDLC architecture workflow. Use when an AI assistant ne
 - Keep ADRs or decision-log entries separate when organizational authority
   requires them; link their IDs from architecture decisions.
 - Do not write into refinement unless architecture work is explicitly upstream.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

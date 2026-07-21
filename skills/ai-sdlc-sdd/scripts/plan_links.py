@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Create and validate SDD `plan.md` and `_ai_sdlc/plan.toon` execution links.
 
-`_ai_sdlc/plan.toon` is the compact machine plan. `plan.md` is the human-readable view
-generated from the same links, with completed tasks reflected from TOON status.
+`tasks.md` checkboxes are authoritative. `_ai_sdlc/plan.toon` is the compact
+machine projection and `plan.md` is the human-readable projection generated
+from the same task links and status.
 """
 
 from __future__ import annotations
@@ -27,7 +28,6 @@ from ai_sdlc_state_machine import add_state_arguments, flow_mode_from_args, run_
 from ai_sdlc_specs_index import write_indexes_for_roots
 from spec_helpers import (
     ROOT,
-    completed_plan_task_ids,
     parse_acceptance_ids,
     parse_test_case_acceptance_links,
     parse_plan_toon_rows,
@@ -150,12 +150,13 @@ def build_plan(spec_dir: Path, args: argparse.Namespace) -> str:
     requirements_md = read(spec_dir / "requirements.md")
     test_cases_md = read(spec_dir / "test-cases.md")
     tasks_md = read(spec_dir / "tasks.md")
-    plan_toon = read(first_existing(plan_toon_path(spec_dir), legacy_plan_toon_path(spec_dir)))
     acceptance_ids = parse_acceptance_ids(requirements_md)
     test_case_ids = parse_test_case_ids(test_cases_md)
     test_case_links = parse_test_case_acceptance_links(test_cases_md)
     task_entries = parse_task_entries(tasks_md)
-    closed_task_ids = completed_plan_task_ids(plan_toon)
+    closed_task_ids = {
+        entry.task_id for entry in task_entries if "[x]" in entry.line.lower()
+    }
 
     lines = metadata + [
         "# plan.md",
@@ -256,6 +257,19 @@ def check_plan(spec_dir: Path) -> list[str]:
             errors.append(f"plan.md missing task link: {entry.task_id}")
         if entry.task_id not in toon_tasks:
             errors.append(f"plan.toon missing task row: {entry.task_id}")
+            continue
+        expected_status = "done" if "[x]" in entry.line.lower() else "pending"
+        actual_status = toon_tasks[entry.task_id].get("status")
+        if actual_status != expected_status:
+            errors.append(
+                f"plan.toon task {entry.task_id} status {actual_status or 'missing'} "
+                f"does not match authoritative tasks.md status {expected_status}"
+            )
+        expected_checkbox = "x" if expected_status == "done" else " "
+        if f"- [{expected_checkbox}] {entry.task_id}:" not in text:
+            errors.append(
+                f"plan.md task {entry.task_id} status does not match authoritative tasks.md"
+            )
     test_case_links = parse_test_case_acceptance_links(test_cases_md)
     acceptance_ids = set(parse_acceptance_ids(requirements_md))
     for test_case_id, linked_acceptance in test_case_links.items():

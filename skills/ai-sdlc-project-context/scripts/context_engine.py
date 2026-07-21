@@ -15,7 +15,7 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from project_context import SECRET_PATTERN, revision, saved_identity, scan
+from project_context import credential_like_content, SECRET_PATTERN, revision, saved_identity, scan
 
 _SHARED = Path(__file__).resolve().parents[2] / "_shared"
 if not _SHARED.is_dir():
@@ -23,6 +23,7 @@ if not _SHARED.is_dir():
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_context import resolve_interaction_profile
 from ai_sdlc_toon import encode_toon
+from ai_sdlc_safe_io import atomic_write_text
 
 
 PACK_SCHEMA = "ai-sdlc-context-pack/v3"
@@ -31,7 +32,6 @@ TOPOLOGY_SCHEMA = "ai-sdlc-repository-topology/v2"
 SOURCE_EXTENSIONS = {".c", ".cc", ".cpp", ".cs", ".go", ".java", ".js", ".jsx", ".kt", ".php", ".py", ".rb", ".rs", ".swift", ".ts", ".tsx"}
 MANIFESTS = {"Cargo.toml", "Makefile", "go.mod", "package.json", "pyproject.toml", "requirements.txt"}
 IGNORED_PARTS = {".git", ".venv", "__pycache__", "build", "dist", "node_modules", "site", "vendor"}
-CONTENT_SECRET = re.compile(r"(?i)\b(?:api[_-]?key|access[_-]?token|client[_-]?secret|password|private[_-]?key)\b\s*[:=]\s*['\"]?[A-Za-z0-9+/=_-]{8,}")
 SELECTOR_FIELDS = {"id", "when", "include", "priority", "max_tokens", "reason"}
 WHEN_FIELDS = {"task", "paths_any", "tags_any"}
 INSTRUCTION_NAMES = {"AGENTS.md", "CLAUDE.md", "GEMINI.md", "copilot-instructions.md"}
@@ -59,17 +59,9 @@ def digest(value: Any) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
-def atomic_write(path: Path, content: str) -> None:
+def atomic_write(root: Path, path: Path, content: str) -> None:
     """Atomically replace one generated output."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
-            handle.write(content)
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
+    atomic_write_text(root, path, content)
 
 
 def git_files(root: Path) -> list[str]:
@@ -119,7 +111,7 @@ def read_safe(root: Path, relative: str) -> tuple[str | None, str | None]:
     if b"\0" in data:
         return None, "binary"
     text = data.decode("utf-8", errors="replace")
-    if CONTENT_SECRET.search(text):
+    if credential_like_content(text):
         return None, "credential-like-content"
     return text, None
 
@@ -354,8 +346,8 @@ def query_terms(task: str, goal: str, paths: list[str], tags: list[str]) -> list
 
 def source_authority(relative: str) -> str:
     """Separate recognized repository instructions from evidence-only content."""
-    name = PurePosixPath(relative).name
-    if name in INSTRUCTION_NAMES or name.endswith(".instructions.md"):
+    normalized = PurePosixPath(relative).as_posix()
+    if normalized in {"AGENTS.md", "CLAUDE.md", "GEMINI.md", ".github/copilot-instructions.md"}:
         return "repository_instruction"
     return "evidence_only"
 
@@ -678,9 +670,9 @@ def main() -> int:
         value = topology
         output_path = root / "_ai_sdlc/context/topology.json"
     if args.write:
-        atomic_write(output_path, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
-        atomic_write(output_path.with_suffix(".toon"), encode_toon(value))
-        atomic_write(output_path.with_suffix(".md"), markdown(value))
+        atomic_write(root, output_path, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+        atomic_write(root, output_path.with_suffix(".toon"), encode_toon(value))
+        atomic_write(root, output_path.with_suffix(".md"), markdown(value))
     if args.format == "json":
         print(json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False))
     elif args.format == "toon":

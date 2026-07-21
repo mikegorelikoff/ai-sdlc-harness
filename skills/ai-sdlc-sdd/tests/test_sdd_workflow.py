@@ -120,7 +120,12 @@ def write_full_test_cases(spec_dir: Path, include_ac: bool = True) -> None:
     )
 
 
-def write_full_tasks(spec_dir: Path, include_refs: bool = True, include_output: bool = True) -> None:
+def write_full_tasks(
+    spec_dir: Path,
+    include_refs: bool = True,
+    include_output: bool = True,
+    completed: bool = False,
+) -> None:
     """Create task artifact rows with optional Refs and Output metadata."""
     refs_line = "Refs: AC-001" if include_refs else ""
     output_line = "Output: Done." if include_output else ""
@@ -129,15 +134,15 @@ def write_full_tasks(spec_dir: Path, include_refs: bool = True, include_output: 
         f"""
         # Tasks
         ## Implementation
-        - [ ] T001. Example
+        - [{'x' if completed else ' '}] T001. Example
         {output_line}
         {refs_line}
         ## Testing
-        - [ ] T002. Example
+        - [{'x' if completed else ' '}] T002. Example
         {output_line}
         {refs_line}
         ## Documentation
-        - [ ] T003. Example
+        - [{'x' if completed else ' '}] T003. Example
         {output_line}
         {refs_line}
         """,
@@ -269,6 +274,15 @@ def write_requirements(
 
 
 class ResolveActiveSpecTests(unittest.TestCase):
+    def test_installed_layout_resolves_consumer_workspace_root(self) -> None:
+        """Installed scripts must resolve relative specs from the consumer root."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            consumer = Path(temp_dir) / "consumer"
+            installed_script = (
+                consumer / ".agents/skills/ai-sdlc-sdd/scripts/spec_helpers.py"
+            )
+            self.assertEqual(SPEC_HELPERS.workspace_root(installed_script), consumer.resolve())
+
     """Tests for active feature spec resolution."""
 
     def test_resolves_explicit_spec(self) -> None:
@@ -383,15 +397,15 @@ class GateTests(unittest.TestCase):
             (spec_dir / "plan.md").write_text(PLAN_LINKS.build_plan(spec_dir, args), encoding="utf-8")
             self.assertEqual(PLAN_LINKS.check_plan(spec_dir), [])
 
-    def test_plan_links_marks_done_tasks_from_plan_toon(self) -> None:
-        """Plan helper should close plan.md tasks when _ai_sdlc/plan.toon status is done."""
+    def test_plan_links_marks_done_tasks_from_authoritative_tasks(self) -> None:
+        """Plan helper should derive completion from tasks.md, not stale projections."""
         with tempfile.TemporaryDirectory() as temp_dir:
             spec_dir = Path(temp_dir) / "185-example"
             spec_dir.mkdir()
             write_requirements(spec_dir)
             write_full_design(spec_dir)
             write_full_test_cases(spec_dir)
-            write_full_tasks(spec_dir)
+            write_full_tasks(spec_dir, completed=True)
             write_full_qa(spec_dir)
             write_full_plan_toon(spec_dir, status="done")
             args = type(
@@ -410,6 +424,21 @@ class GateTests(unittest.TestCase):
             self.assertIn("- [x] T001:", plan_md)
             self.assertIn("- [x] T002:", plan_md)
             self.assertIn("- [x] T003:", plan_md)
+
+    def test_plan_check_rejects_status_drift_from_tasks(self) -> None:
+        """A stale machine or human plan must not override task checkboxes."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            spec_dir = Path(temp_dir) / "185-example"
+            spec_dir.mkdir()
+            write_requirements(spec_dir)
+            write_full_design(spec_dir)
+            write_full_test_cases(spec_dir)
+            write_full_tasks(spec_dir, completed=True)
+            write_full_qa(spec_dir)
+            write_full_plan_toon(spec_dir, status="pending")
+            write_full_plan(spec_dir)
+            errors = PLAN_LINKS.check_plan(spec_dir)
+            self.assertTrue(any("authoritative tasks.md" in error for error in errors))
 
     def test_refinement_gate_blocks_full_flow_without_upstream(self) -> None:
         """Full-flow SDD should block when upstream refinement context is absent."""
@@ -513,6 +542,19 @@ class StatusTests(unittest.TestCase):
             state, reasons = SDD_STATUS.evaluate_status(spec_dir)
             self.assertEqual(state, "ready_for_impl")
             self.assertEqual(reasons, [])
+
+
+class RepositoryProjectionTests(unittest.TestCase):
+    """Keep every committed SDD plan aligned with authoritative task checkboxes."""
+
+    def test_all_repository_plan_projections_match_tasks(self) -> None:
+        checked = 0
+        for spec_dir in sorted((ROOT / "specs").glob("[0-9][0-9][0-9]-*")):
+            if not (spec_dir / "tasks.md").is_file():
+                continue
+            checked += 1
+            self.assertEqual(PLAN_LINKS.check_plan(spec_dir), [], spec_dir.name)
+        self.assertGreaterEqual(checked, 8)
 
 
 if __name__ == "__main__":

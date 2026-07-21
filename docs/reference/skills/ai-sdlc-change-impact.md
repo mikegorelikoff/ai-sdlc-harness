@@ -126,7 +126,7 @@ On a blocker, preserve failed/stale evidence, name the accountable owner and exa
 ## Handoff
 
 - Return changed refs, stale artifacts, affected stages, blockers, and ordered
-  reopen actions directly in the Codex response.
+  reopen actions directly in the active agent response.
 - Before the final response, emit `ai-sdlc-handoff/v1` with `result`,
   `blockers`, `next_required`, and `next_optional`; every action includes
   `reason`, `command`, and `expected_artifact`.

@@ -9,6 +9,7 @@ and specialized flow semantics for non-profile scripts.
 from __future__ import annotations
 
 import os
+import importlib.util
 import py_compile
 import re
 import subprocess
@@ -227,9 +228,9 @@ def write_valid_spec(spec_dir: Path) -> None:
         ## Cross-Artifact Trace Map
         - AC-001: requirements.md -> test-cases.md (TC-001) -> tasks.md (T001, T002, T003) -> qa.md -> decision-log.md
         ## Task Execution Plan
-        - T001: Add portable helper tests; refs: AC-001
-        - T002: Run helper test suite; refs: AC-001
-        - T003: Keep script contract documented; refs: AC-001
+        - [x] T001: Add portable helper tests; refs: AC-001
+        - [x] T002: Run helper test suite; refs: AC-001
+        - [x] T003: Keep script contract documented; refs: AC-001
         ## Task Dependencies
         - T001: depends on none
         - T002: depends on T001
@@ -305,6 +306,19 @@ def write_valid_spec(spec_dir: Path) -> None:
 class ScriptContractTests(unittest.TestCase):
     """Repository-wide assertions for helper script behavior."""
 
+    def test_install_smoke_absolutizes_local_source_before_consumer_run(self) -> None:
+        """`--source .` must keep referring to the checkout after cwd changes."""
+        path = ROOT / "skills/_shared/ai_sdlc_install_smoke.py"
+        spec = importlib.util.spec_from_file_location("ai_sdlc_install_smoke", path)
+        module = importlib.util.module_from_spec(spec)
+        assert spec and spec.loader
+        spec.loader.exec_module(module)
+        resolved, source_path = module.resolve_source(".")
+        self.assertEqual(source_path, ROOT)
+        self.assertEqual(resolved, str(ROOT))
+        remote = "https://example.invalid/repository/tree/revision"
+        self.assertEqual(module.resolve_source(remote)[0], remote)
+
     def test_every_script_compiles(self) -> None:
         """Every runtime helper must be syntactically valid Python."""
         for path in script_paths():
@@ -335,6 +349,37 @@ class ScriptContractTests(unittest.TestCase):
             self.assertIn("next_reads[", output)
             self.assertLessEqual(estimate_tokens(output), 700)
             self.assertEqual(toon_row(('значение, кавычки "точно"',)), '"значение, кавычки ""точно"""')
+
+    def test_context_pack_reports_semantic_required_section_gaps(self) -> None:
+        """TOON analysis must not report zero gaps for structurally incomplete input."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp_dir:
+            cwd = Path(temp_dir)
+            source = cwd / "decisions-only.md"
+            source.write_text("# Decisions\n\n## Decision Log\n- DEC-001: Proceed.\n", encoding="utf-8")
+            output = emit_context_pack(
+                files=[source], feature="gap-test", skill="ai-sdlc-ba",
+                workspace="refinement", flow_mode="full", budget_tokens=1600,
+                required_sections=["Goal", "Actors", "Business Rules"], keywords=[], root=cwd,
+            )
+            self.assertIn("gaps[3]", output)
+            self.assertIn("missing_required_evidence", output)
+            self.assertIn("Business Rules", output)
+
+    def test_discovery_context_matches_semantic_source_headings_not_output_template(self) -> None:
+        """Analysis should recognize equivalent discovery evidence and report only real gaps."""
+        source = ROOT / "examples/onboarding-sso/scenario.md"
+        output = emit_context_pack(
+            files=[source], feature="onboarding-sso", skill="ai-sdlc-working-backwards-discovery",
+            workspace="refinement", flow_mode="full", budget_tokens=24000,
+            required_sections=["Customer", "Problem", "Value Proposition", "MVP", "Risks", "Success Metrics"],
+            keywords=["customer", "metric", "mvp", "risk"], root=ROOT,
+        )
+        self.assertIn("Value Proposition", output)
+        self.assertIn(",Risks,yes,", output)
+        self.assertNotIn(",Customer,yes,", output)
+        self.assertNotIn(",Problem,yes,", output)
+        self.assertNotIn(",MVP,yes,", output)
+        self.assertNotIn(",Success Metrics,yes,", output)
 
     def test_context_cache_hits_and_invalidates_by_source_hash(self) -> None:
         """Feature-local cache must only be reused for an exact fingerprint."""
@@ -420,12 +465,9 @@ class ScriptContractTests(unittest.TestCase):
             self.assertIn("Detailed backlog sequencing evidence", output)
             self.assertEqual(output.count(repeated), 1)
             dossier = feature_context_path(cwd / "specs-refiniment", feature)
-            self.assertTrue(dossier.is_file())
-            self.assertIn("schema: ai-sdlc-feature-context/v1", dossier.read_text(encoding="utf-8"))
-            self.assertIn("sources[3]", dossier.read_text(encoding="utf-8"))
+            self.assertFalse(dossier.exists())
             snapshot = cwd / f"specs-refiniment/{feature}/_ai_sdlc/context/ai-sdlc-ba.toon"
-            self.assertTrue(snapshot.is_file())
-            self.assertIn("schema: ai-sdlc-context/v3", snapshot.read_text(encoding="utf-8"))
+            self.assertFalse(snapshot.exists())
 
             quick = emit_context_pack(
                 files=[explicit],
@@ -616,6 +658,7 @@ class ScriptContractTests(unittest.TestCase):
                 "ai_sdlc_context_benchmark.py",
                 "refinement_status.py",
                 "ai_sdlc_migrate.py",
+                "ai_sdlc_install_record.py",
             }:
                 continue
             with self.subTest(path=path.relative_to(ROOT)):
@@ -1009,14 +1052,29 @@ class ScriptContractTests(unittest.TestCase):
                 self.assertIn("specs-index.md", text)
 
     def test_every_skill_routes_machine_files_and_summaries_consistently(self) -> None:
-        """Every skill must hide TOON writes and keep summaries in Codex."""
+        """Every skill must hide TOON writes and keep summaries in the active host."""
         for skill_doc in sorted((ROOT / "skills").glob("*/SKILL.md")):
             with self.subTest(skill_doc=skill_doc.relative_to(ROOT)):
                 text = skill_doc.read_text(encoding="utf-8")
                 self.assertIn("_ai_sdlc/state.toon", text)
                 self.assertIn("_ai_sdlc/specs-index.toon", text)
                 self.assertIn("Do not create `summary.txt`", text)
-                self.assertIn("directly in the Codex response", text)
+                self.assertIn("directly in the active agent response", text)
+
+    def test_every_skill_resolves_source_and_consumer_runtime_paths(self) -> None:
+        """Every skill must explain logical paths in both distribution layouts."""
+        for skill_doc in sorted((ROOT / "skills").glob("*/SKILL.md")):
+            with self.subTest(skill_doc=skill_doc.relative_to(ROOT)):
+                text = skill_doc.read_text(encoding="utf-8")
+                self.assertIn("## 0.4.1 Runtime Path Resolution", text)
+                self.assertIn(".agents/skills/", text)
+                self.assertIn("ai-sdlc-shared-runtime", text)
+                if skill_doc.parent.name != "ai-sdlc-shared-runtime":
+                    self.assertNotIn(
+                        "python3 skills/_shared/",
+                        text,
+                        "installed skill commands must use the installable shared-runtime path",
+                    )
 
     def test_public_docs_use_canonical_machine_paths_and_budgets(self) -> None:
         """Public documentation must not reintroduce legacy runtime contracts."""

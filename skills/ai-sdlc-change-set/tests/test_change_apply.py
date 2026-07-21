@@ -61,6 +61,16 @@ class ChangeApplyTests(unittest.TestCase):
         path.write_text(json.dumps(record), encoding="utf-8")
         return path
 
+    def recovery(self, workspace: Path, target: str, *, existed: bool = False, backup: str = "") -> None:
+        record = {
+            "schema": "ai-sdlc-change-recovery/v1", "change_id": "add-audit", "status": "in_progress",
+            "preview_fingerprint": "a" * 64, "created_at": "2026-07-19T00:00:00Z", "updated_at": "2026-07-19T00:00:00Z",
+            "targets": [{"target": target, "existed": existed, "backup": backup, "staging": f"_ai_sdlc/staging/{target}", "before_sha256": "b" * 64, "after_sha256": "c" * 64}],
+            "applied": [target], "rollback_errors": [],
+        }
+        path = workspace / "_ai_sdlc/recovery-manifest.json"
+        path.write_text(json.dumps(record), encoding="utf-8")
+
     def test_approved_apply_and_archive_preserve_evidence(self) -> None:
         """Ready approved change applies once and archives complete evidence."""
         with tempfile.TemporaryDirectory() as temp:
@@ -73,6 +83,10 @@ class ChangeApplyTests(unittest.TestCase):
             approval = self.approval(repository)
             result = self.cli(APPLY, repository, "--change-id", "add-audit", "--apply", "--approval", str(approval), "--format", "json")
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual(
+                json.loads(result.stdout)["approval_record_status"],
+                "structurally_valid_identity_not_authenticated",
+            )
             self.assertIn("FR-010", target.read_text(encoding="utf-8"))
             record = json.loads((workspace / "_ai_sdlc/change-set.json").read_text(encoding="utf-8"))
             self.assertEqual(record["status"], "applied")
@@ -150,6 +164,48 @@ class ChangeApplyTests(unittest.TestCase):
             self.assertEqual(second.returncode, 1)
             self.assertIn("status must be draft", second.stdout)
             self.assertEqual(target.read_bytes(), after_first)
+
+    def test_tampered_recovery_traversal_cannot_delete_external_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            parent = Path(temp)
+            repository = parent / "repo"
+            repository.mkdir()
+            outside = parent / "outside.txt"
+            outside.write_text("sentinel", encoding="utf-8")
+            workspace = self.create_workspace(repository, ["docs/new.md"])
+            self.recovery(workspace, "../outside.txt")
+            result = self.cli(APPLY, repository, "--change-id", "add-audit", "--apply", "--approval", str(repository / "missing.json"))
+            self.assertEqual(result.returncode, 1)
+            self.assertEqual(outside.read_text(encoding="utf-8"), "sentinel")
+            self.assertIn("not a canonical target", result.stdout)
+
+    def test_symlinked_target_parent_is_rejected_before_recovery_mutation(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            parent = Path(temp)
+            repository = parent / "repo"
+            repository.mkdir()
+            outside = parent / "outside"
+            outside.mkdir()
+            workspace = self.create_workspace(repository, ["docs/new.md"])
+            (repository / "docs").symlink_to(outside, target_is_directory=True)
+            self.recovery(workspace, "docs/new.md")
+            result = self.cli(APPLY, repository, "--change-id", "add-audit", "--apply", "--approval", str(repository / "missing.json"))
+            self.assertEqual(result.returncode, 1)
+            self.assertFalse((outside / "new.md").exists())
+            self.assertIn("symlink", result.stdout)
+
+    def test_tampered_backup_path_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            repository = Path(temp)
+            target = repository / "docs/existing.md"
+            target.parent.mkdir(parents=True)
+            target.write_text("original", encoding="utf-8")
+            workspace = self.create_workspace(repository, ["docs/existing.md"])
+            self.recovery(workspace, "docs/existing.md", existed=True, backup="../outside.txt")
+            result = self.cli(APPLY, repository, "--change-id", "add-audit", "--apply", "--approval", str(repository / "missing.json"))
+            self.assertEqual(result.returncode, 1)
+            self.assertEqual(target.read_text(encoding="utf-8"), "original")
+            self.assertIn("backup path is invalid", result.stdout)
 
 
 if __name__ == "__main__":

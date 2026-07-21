@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/mikegorelikoff/ai-sdlc-harness/main/config/ai-sdlc-install-record.schema.json",
+  "title": "AI SDLC harness install record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "revision", "skills_cli", "agent", "selection", "inventory"],
+  "properties": {
+    "schema": {"const": "ai-sdlc-install-record/v1"},
+    "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "skills_cli": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "agent": {"type": "string", "minLength": 1},
+    "selection": {"enum": ["all-skills", "explicit-skills"]},
+    "inventory": {"const": ".ai-sdlc/harness-managed-skills.txt"}
+  }
+}

@@ -1,16 +1,18 @@
 # FAQ
 
-## What is this library?
+## What is this harness?
 
-AI SDLC Skill Library is a lifecycle harness for traceable AI-assisted delivery
-across PM, BA, QA, Delivery, and Dev. It preserves state, decisions, evidence,
+AI Software Development Lifecycle (AI SDLC) Harness is a lifecycle harness for
+traceable artificial-intelligence-assisted delivery across product management
+(PM), business analysis (BA), quality assurance (QA), delivery, and software
+development (Dev). It preserves state, decisions, evidence,
 and workflow handoffs as repository artifacts that different AI assistants and
 team members can continue safely.
 
 
 ## Is this domain-specific?
 
-No. The library is domain-agnostic. It focuses on software delivery workflow
+No. The harness is domain-agnostic. It focuses on software delivery workflow
 structure: discovery, refinement, QA, implementation, validation, review, and
 commit preparation. Domain-specific rules can be added through project artifacts
 and skill inputs.
@@ -29,7 +31,8 @@ questions, validation evidence, or handoff confidence.
 
 ## What does TOON do?
 
-TOON files provide compact machine-readable continuity for AI. They let the
+Token-Oriented Object Notation (TOON) files provide compact machine-readable
+continuity for artificial intelligence (AI). They let the
 assistant inspect state, feature indexes, and execution plans before opening
 larger Markdown artifacts.
 
@@ -51,7 +54,8 @@ smallest source sections and line ranges the assistant should inspect next.
 Use `specs-refiniment/` for upstream PM, BA, QA, Delivery, discovery,
 refinement, readiness, and handoff artifacts.
 
-Use `specs/` for developer implementation SDD artifacts.
+Use `specs/` for developer implementation Specification-driven development
+(SDD) artifacts.
 
 This separation keeps product/refinement context useful as upstream evidence
 without mixing it into implementation-owned specs.
@@ -76,12 +80,12 @@ indexes.
 Start with:
 
 - [README.md](README.md) for installation and overview.
-- [guides/workflow.md](guides/workflow.md) for the end-to-end lifecycle.
-- The role guide that matches the current work:
-  - [PM](guides/pm.md)
-  - [BA](guides/ba.md)
-  - [QA](guides/qa.md)
-  - [Dev](guides/dev.md)
+- [Start here](docs/start.md) for the progressive learning path.
+- [Foundations](docs/foundations/index.md) when AI-assisted delivery or SDD is
+  new.
+- [Skills by role](docs/reference/skills-by-role.md) for current role and task
+  routing.
+- [Tutorials](docs/tutorials/index.md) for runnable delivery journeys.
 
-Use [concepts/README.md](concepts/README.md) when you want to understand the
-system design behind the harness.
+The tracked `guides/` and `concepts/` trees are historical context, not the
+canonical public learning path. Current behavior is documented under `docs/`.

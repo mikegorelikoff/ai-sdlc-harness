@@ -24,6 +24,7 @@ HEADER_RE = re.compile(
     r"^(feat|fix|docs|test|refactor|chore|ci|build|perf|revert)"
     r"(\([a-z0-9][a-z0-9-]*\))?!?: .+"
 )
+TASK_TRAILER_RE = re.compile(r"(?m)^Task: T\d{3}(?:, T\d{3})*$")
 
 
 def read_message(path: str | None, inline: str | None) -> str:
@@ -60,10 +61,12 @@ def validate(message: str, require_traceability: bool) -> list[str]:
 
     body = "\n".join(lines[2:]) if len(lines) > 2 else ""
     if require_traceability:
-        # Full flow requires evidence that the commit maps back to a spec and a
-        # validation command/result.
+        # Full flow requires evidence that the commit maps back to a spec, one
+        # or more completed SDD tasks, and a validation command/result.
         if "Spec:" not in body:
             errors.append("body must include Spec traceability")
+        if not TASK_TRAILER_RE.search(body):
+            errors.append("body must include Task traceability as Task: TNNN")
         if "Validation:" not in body:
             errors.append("body must include Validation summary")
 

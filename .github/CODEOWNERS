@@ -1,0 +1,9 @@
+# Default review owner. Repository settings must still require CODEOWNERS review.
+* @mikegorelikoff
+
+# High-impact surfaces are listed explicitly for discoverability.
+/skills/ @mikegorelikoff
+/.github/workflows/ @mikegorelikoff
+/compatibility/ @mikegorelikoff
+/docs/ @mikegorelikoff
+/SECURITY.md @mikegorelikoff

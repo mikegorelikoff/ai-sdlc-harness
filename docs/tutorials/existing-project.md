@@ -5,6 +5,10 @@ description: Introduce the harness without overwriting established conventions, 
 
 # Adopt an existing project
 
+This tutorial uses continuous integration (CI) and an artificial
+intelligence-assisted software development lifecycle (AI SDLC), including
+Specification-driven development (SDD).
+
 An established repository already has a delivery system: Git conventions, CI,
 owners, release habits, architecture rules, and undocumented assumptions.
 Adoption begins by observing that system, not replacing it with generic defaults.

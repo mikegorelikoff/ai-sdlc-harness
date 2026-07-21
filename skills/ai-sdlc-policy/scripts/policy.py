@@ -19,6 +19,7 @@ if not _SHARED.is_dir():
     _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_toon import encode_toon
+from ai_sdlc_safe_io import atomic_write_text
 
 
 LAYER_SCHEMA = "ai-sdlc-policy-layer/v1"
@@ -44,17 +45,9 @@ def digest(value: Any) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
-def atomic_write(path: Path, content: str) -> None:
+def atomic_write(root: Path, path: Path, content: str) -> None:
     """Atomically replace one generated policy output."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
-            handle.write(content)
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
+    atomic_write_text(root, path, content)
 
 
 def timestamp(value: Any, field: str) -> tuple[datetime | None, str | None]:
@@ -437,13 +430,13 @@ def main() -> int:
         value = evaluate(resolution, action, context, waiver_values, as_of)
         if args.write:
             decision_path = repository / f"_ai_sdlc/policy-decisions/{value['fingerprint']}.json"
-            atomic_write(decision_path, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
-            atomic_write(decision_path.with_suffix(".toon"), encode_toon(value))
+            atomic_write(repository, decision_path, json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+            atomic_write(repository, decision_path.with_suffix(".toon"), encode_toon(value))
     else:
         value = resolution
         if args.write:
-            atomic_write(repository / "_ai_sdlc/policy-resolution.json", json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
-            atomic_write(repository / "_ai_sdlc/policy-resolution.toon", encode_toon(value))
+            atomic_write(repository, repository / "_ai_sdlc/policy-resolution.json", json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+            atomic_write(repository, repository / "_ai_sdlc/policy-resolution.toon", encode_toon(value))
     if args.format == "json":
         print(json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False))
     elif args.format == "toon":

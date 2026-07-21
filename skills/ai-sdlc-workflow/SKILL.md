@@ -41,7 +41,7 @@ description: AI SDLC declarative workflow planning. Use when an AI assistant nee
 
 - Default to complete TOON with workflow fingerprint, step decisions, waves,
   gates, hooks, fallbacks, host capabilities, and plan fingerprint.
-- Return validation and handoff summaries directly in the Codex response.
+- Return validation and handoff summaries directly in the active agent response.
 - Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
   `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
@@ -51,6 +51,10 @@ description: AI SDLC declarative workflow planning. Use when an AI assistant nee
 - Write generated plans only below `_ai_sdlc/workflows/<workflow-id>/`.
 - Keep authored workflow definitions in visible repository-owned paths.
 - Never execute or rewrite the authored workflow during planning.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 

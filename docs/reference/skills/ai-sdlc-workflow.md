@@ -119,7 +119,7 @@ On a blocker, preserve failed/stale evidence, name the accountable owner and exa
 
 - Default to complete TOON with workflow fingerprint, step decisions, waves,
   gates, hooks, fallbacks, host capabilities, and plan fingerprint.
-- Return validation and handoff summaries directly in the Codex response.
+- Return validation and handoff summaries directly in the active agent response.
 - Emit `ai-sdlc-handoff/v1` with `result`, `blockers`, `next_required`, and
   `next_optional`; actions include `reason`, `command`, and `expected_artifact`.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.

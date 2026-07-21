@@ -52,7 +52,7 @@ description: AI SDLC controlled change-workspace and specification-delta workflo
   structurally valid workspace to delta authoring and validation. Include
   `next_required` and `next_optional` actions with reasons, commands, and
   expected artifacts.
-- Return progress, validation, and handoff summaries directly in the Codex response.
+- Return progress, validation, and handoff summaries directly in the active agent response.
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file.
 - Do not create ad hoc summaries outside the canonical workspace files.
 
@@ -65,6 +65,10 @@ description: AI SDLC controlled change-workspace and specification-delta workflo
   delta set, apply preview, approval, and recovery records.
 - Never store a change workspace inside `specs/`, `specs-refiniment/`, or a
   canonical target directory.
+
+## 0.4.1 Runtime Path Resolution
+
+- Treat `skills/` in commands as a logical skill root. In a harness source checkout, use `skills/`; in a project-scoped consumer installation, resolve it to `.agents/skills/`. Before running a helper, verify that the selected root contains both this skill and `ai-sdlc-shared-runtime`; block with the missing path if neither layout exists.
 
 ## 0.5 Feature State Machine
 
@@ -152,8 +156,10 @@ canonical mutation is possible.
    evidence, then run `spec_delta.py --validate`.
 8. Compile preview and resolve every conflict, stale reference, reopen action,
    and required gate.
-9. Obtain explicit approval tied to the current preview fingerprint and every
-   required gate.
+9. Obtain approval through an independently enforced repository or
+   organizational control, then record its reference against the current
+   preview fingerprint and every required gate. The local record validator does
+   not authenticate the approver.
 10. Apply through `change_apply.py`, inspect the completed recovery manifest,
     then archive the evidence-preserving workspace.
 
@@ -171,8 +177,11 @@ diffs, conservative conflicts, stale references, reopen actions, gates, and a
 fingerprint that becomes invalid when any input drifts.
 
 The JSON schemas `ai-sdlc-change-approval/v1` and
-`ai-sdlc-change-recovery/v1` bind accountable approval to the current preview
-and preserve transaction, backup, apply, and rollback evidence.
+`ai-sdlc-change-recovery/v1` bind a structurally valid approval record to the
+current preview and preserve transaction, backup, apply, and rollback evidence.
+They do not authenticate the named owner or prove authorization. Branch
+protection, CODEOWNERS review, a signed attestation, or another independently
+enforced control must establish that authority before apply.
 
 Quality gate:
 
@@ -207,9 +216,11 @@ must remain repository-relative and cannot traverse outside the repository.
 ## Scope Boundary
 
 - Do not treat valid requirement delta semantics as approval or compatibility.
-- Never mutate a target outside the controlled apply command or without an
-  accepted, current, all-gates approval record.
+- Never mutate a target outside the controlled apply command or without both an
+  accepted, current, all-gates record and independently enforced human
+  authorization.
 - Do not compute downstream impact; use `$ai-sdlc-change-impact` and preview.
 - Do not mutate canonical artifacts, policy, feature state, or specs indexes.
 - This skill does not grant approval and does not merge, commit, or release a
-  change. It may apply and archive only after validating external approval.
+  change. It validates record consistency, not external identity or authority;
+  it may apply and archive only after the host organization enforces approval.

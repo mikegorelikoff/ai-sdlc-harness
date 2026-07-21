@@ -348,6 +348,29 @@ def _kind_priority(line: str, identifiers: list[str], keywords: list[str]) -> tu
     return None
 
 
+EVIDENCE_TERM_ALIASES: dict[str, set[str]] = {
+    "metric": {"metric", "metrics", "measure", "measures", "signal", "signals"},
+    "metrics": {"metric", "metrics", "measure", "measures", "signal", "signals"},
+    "proposition": {"proposition", "benefit", "benefits", "outcome", "outcomes"},
+    "risk": {"risk", "risks", "hazard", "hazards", "threat", "threats"},
+    "risks": {"risk", "risks", "hazard", "hazards", "threat", "threats"},
+}
+
+
+def required_evidence_present(required: str, observed_sections: set[str], observed_tokens: set[str]) -> bool:
+    """Match semantic source evidence without requiring output-template headings."""
+    normalized = re.sub(r"[^a-z0-9]+", " ", required.lower()).strip()
+    if not normalized:
+        return True
+    if any(
+        normalized == observed or normalized in observed or observed in normalized
+        for observed in observed_sections if observed
+    ):
+        return True
+    terms = [term for term in normalized.split() if term not in {"and", "or", "the", "of"}]
+    return all(bool(EVIDENCE_TERM_ALIASES.get(term, {term}) & observed_tokens) for term in terms)
+
+
 def extract_context(
     sources: list[SourceDocument], *, required_sections: list[str], keywords: list[str]
 ) -> tuple[list[Evidence], list[Gap], list[str]]:
@@ -357,11 +380,18 @@ def extract_context(
     all_ids: set[str] = set()
     seen_evidence: set[tuple[str, int, str]] = set()
     seen_signal_text: set[str] = set()
+    observed_sections: set[str] = set()
+    observed_tokens: set[str] = set()
     for source in sources:
         if source.status != "current":
             gaps.append(Gap("missing_source", source.display_path, "document", "yes", "source file is missing"))
             continue
         rows = _line_sections(source.text)
+        observed_tokens.update(re.findall(r"[a-z0-9]+", source.text.lower()))
+        for raw in source.text.splitlines():
+            heading = HEADING_RE.match(raw)
+            if heading:
+                observed_sections.add(re.sub(r"[^a-z0-9]+", " ", heading.group(2).lower()).strip())
         for number, section, line in rows:
             identifiers = sorted({match.group(0).upper() for match in ID_RE.finditer(line)})
             all_ids.update(identifiers)
@@ -417,6 +447,19 @@ def extract_context(
                 evidence.append(
                     Evidence("section_context", "/".join(ids), source.display_path, section, chunk_start, 5, chunk)
                 )
+
+    for section in required_sections:
+        normalized = re.sub(r"[^a-z0-9]+", " ", section.lower()).strip()
+        if normalized and not required_evidence_present(section, observed_sections, observed_tokens):
+            gaps.append(
+                Gap(
+                    "missing_required_evidence",
+                    "all-current-sources",
+                    section,
+                    "yes",
+                    f"no current source contains a matching Markdown section for {section}",
+                )
+            )
 
     # Round-robin sources inside each priority tier. This prevents a long first
     # artifact from consuming the whole budget before another source appears.
@@ -685,10 +728,10 @@ def emit_context_pack(
     *, files: list[Path], feature: str, skill: str, workspace: str,
     flow_mode: str, budget_tokens: int, required_sections: list[str],
     keywords: list[str], cache: bool = False, refresh: bool = False,
-    root: Path | None = None, persist_dossier: bool = True,
+    root: Path | None = None, persist_dossier: bool = False,
     exclude_paths: list[Path] | None = None,
 ) -> str:
-    """Return a context pack, reusing a fresh explicit cache when requested."""
+    """Return a context pack; write derived context only when explicitly requested."""
     root = (root or Path.cwd()).resolve()
     text, fingerprint, sources = build_context_pack(
         files=files, feature=feature, skill=skill, workspace=workspace,

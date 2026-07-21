@@ -1,0 +1,11 @@
+{
+  "schema": "ai-sdlc-validation-command-plan/v1",
+  "commands": [
+    {"id": "V001", "argv": ["python3", "skills/_shared/test_all_skill_scripts.py"], "trace_ids": ["TC-009", "TC-012"]},
+    {"id": "V002", "argv": ["python3", "skills/_shared/test_each_skill_tests.py"], "trace_ids": ["TC-009", "TC-012"]},
+    {"id": "V003", "argv": ["python3", "docs/scripts/validate_docs.py"], "trace_ids": ["TC-006", "TC-007", "TC-008", "TC-011"]},
+    {"id": "V004", "argv": ["python3", "-m", "unittest", "docs.tests.test_docs"], "trace_ids": ["TC-006", "TC-007", "TC-008"]},
+    {"id": "V005", "argv": ["python3", "skills/_shared/ai_sdlc_install_smoke.py", "--mode", "emulated"], "trace_ids": ["TC-002", "TC-003"]},
+    {"id": "V006", "argv": ["git", "diff", "--check"], "trace_ids": ["TC-015"]}
+  ]
+}

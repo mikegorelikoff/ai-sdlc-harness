@@ -15,6 +15,9 @@ from ai_sdlc_toon import encode_toon
 
 
 SCHEMA = "ai-sdlc-compatibility-baseline/v1"
+CONTRACT_ALIASES = {
+    "directly in the Codex response": "directly in the active agent response",
+}
 
 
 def load_baseline(path: Path) -> tuple[dict[str, Any], list[str]]:
@@ -50,7 +53,7 @@ def validate_skills(root: Path, baseline: dict[str, Any]) -> list[str]:
         if frontmatter_name(text) != skill:
             errors.append(f"skill frontmatter name mismatch: {skill}")
         for contract in baseline.get("skill_doc_contract", []):
-            if contract not in text:
+            if contract not in text and CONTRACT_ALIASES.get(contract, "") not in text:
                 errors.append(f"skill {skill} missing compatibility contract: {contract}")
         scripts = [] if skill == "ai-sdlc-shared-runtime" else sorted((doc.parent / "scripts").glob("*.py"))
         for script in scripts:
@@ -128,7 +131,13 @@ def validate_modules(root: Path, baseline: dict[str, Any]) -> list[str]:
 def validate_routes_and_docs(root: Path, baseline: dict[str, Any]) -> list[str]:
     """Validate public route and install/update documentation."""
     errors: list[str] = []
-    docs = [root / "README.md", root / "concepts/artifact-routing.md", root / str(baseline.get("install_update_guide", ""))]
+    docs = [
+        root / "README.md",
+        root / "docs/reference/artifact-routing.md",
+        root / "docs/how-to/install.md",
+        root / "docs/how-to/update.md",
+        root / str(baseline.get("install_update_guide", "")),
+    ]
     for path in docs:
         if not path.is_file():
             errors.append(f"missing compatibility documentation: {path.relative_to(root)}")
@@ -136,7 +145,9 @@ def validate_routes_and_docs(root: Path, baseline: dict[str, Any]) -> list[str]:
     for name, route in baseline.get("routes", {}).items():
         if route not in combined:
             errors.append(f"documented route missing ({name}): {route}")
-    for phrase in ("npx skills add", "compatibility", "update", "rollback"):
+    if not re.search(r"\bnpx\s+(?:-y\s+)?skills(?:@[0-9.]+)?\s+add\b", combined, re.IGNORECASE):
+        errors.append("install/update documentation missing: versioned npx skills add")
+    for phrase in ("compatibility", "update", "rollback"):
         if phrase.lower() not in combined.lower():
             errors.append(f"install/update documentation missing: {phrase}")
     return errors
@@ -146,12 +157,15 @@ def audit_subjects(
     actual: list[str], expected: list[str], allowed_prelude: list[str] | None = None,
     allow_pending_last: bool = False,
 ) -> bool:
-    """Require the release sequence to occupy the complete audited range."""
+    """Require one exact ordered release sequence, allowing later maintenance."""
     prefix = allowed_prelude or []
     candidates = [expected]
     if allow_pending_last and expected:
         candidates.append(expected[:-1])
-    return any(actual == prefix + candidate for candidate in candidates)
+    return any(
+        actual == prefix if not candidate else actual[: len(prefix + candidate)] == prefix + candidate
+        for candidate in candidates
+    )
 
 
 def validate_git_audit(root: Path, baseline: dict[str, Any], base: str, allow_pending_last: bool) -> list[str]:

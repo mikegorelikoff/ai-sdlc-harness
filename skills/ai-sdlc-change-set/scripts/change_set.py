@@ -20,6 +20,7 @@ if not _SHARED.is_dir():
     _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_toon import encode_toon
+from ai_sdlc_safe_io import bounded_path, ensure_directory
 
 
 SCHEMA = "ai-sdlc-change-set/v1"
@@ -256,16 +257,17 @@ locator, freshness, credibility, and trace targets.
     }
 
 
-def atomic_create(destination: Path, files: dict[str, str]) -> None:
+def atomic_create(repository: Path, destination: Path, files: dict[str, str]) -> None:
     """Create a complete workspace without exposing partial output."""
+    destination = bounded_path(repository, destination)
     if destination.exists():
         raise FileExistsError(f"workspace already exists: {destination}")
-    destination.parent.mkdir(parents=True, exist_ok=True)
+    ensure_directory(repository, destination.parent)
     temp = Path(tempfile.mkdtemp(prefix=f".{destination.name}.", dir=destination.parent))
     try:
         for relative, content in files.items():
             path = temp / relative
-            path.parent.mkdir(parents=True, exist_ok=True)
+            ensure_directory(temp, path.parent)
             path.write_text(content, encoding="utf-8")
         os.replace(temp, destination)
     except Exception:
@@ -464,8 +466,8 @@ def main() -> int:
         return 1
     if args.create:
         try:
-            atomic_create(workspace, render_files(record))
-        except (FileExistsError, OSError) as exc:
+            atomic_create(repository, workspace, render_files(record))
+        except (FileExistsError, OSError, ValueError) as exc:
             print(f"ERROR: {exc}")
             return 1
         validated, workspace_errors = validate_workspace(workspace, args.change_id)

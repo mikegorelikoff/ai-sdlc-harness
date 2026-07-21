@@ -1,24 +1,33 @@
 ---
 title: Start here
-description: Choose the shortest guided path from first principles to a safe first AI SDLC workflow.
+description: Choose the shortest guided path from first principles to a safe first artificial-intelligence-assisted software delivery workflow.
 ---
 
 # Start here
 
-You do not need to understand all 44 currently installed capabilities before
+You do not need to understand all 44 packaged capabilities before
 using the harness. You do
 need a clear mental model, a working installation, and one bounded request.
 
-## If AI SDLC or SDD is new
+## If the AI-assisted lifecycle or specifications are new
+
+**Artificial intelligence (AI) software development lifecycle (SDLC)** is the
+use of AI within an accountable delivery lifecycle. **Specification-driven
+development (SDD)** is this repository's method for making requirements,
+design, tests, tasks, and validation explicit before implementation expands.
 
 Read these pages in order. They take you from ordinary software delivery to the
 repository evidence loop used by the harness:
 
-1. [What is AI SDLC?](foundations/ai-sdlc.md)
-2. [What is SDD?](foundations/sdd.md)
-3. [Why use a harness?](foundations/why-harness.md)
-4. [Mental model](foundations/mental-model.md)
-5. [Human and agent responsibilities](foundations/responsibilities.md)
+1. [Git and terminal primer](foundations/git-and-terminal-primer.md)
+2. [Software delivery foundations](foundations/software-delivery.md)
+3. [Artificial intelligence foundations](foundations/ai-foundations.md)
+4. [Agents, sub-agents, and skills](foundations/agents-and-skills.md)
+5. [What is AI SDLC?](foundations/ai-sdlc.md)
+6. [What is SDD?](foundations/sdd.md)
+7. [Why use a harness?](foundations/why-harness.md)
+8. [Mental model](foundations/mental-model.md)
+9. [Human and agent responsibilities](foundations/responsibilities.md)
 
 You are ready to install when you can explain why an AI-generated code diff is
 not, by itself, evidence that the right thing was built safely.
@@ -28,7 +37,13 @@ not, by itself, evidence that the right thing was built safely.
 1. Check the [prerequisites and installation scope](how-to/install.md).
 2. Install into a disposable or low-risk consumer repository.
 3. Complete [your first 30 minutes](onboarding/first-30-minutes.md).
-4. Follow [Ship a first feature](tutorials/first-feature.md).
+4. Follow the maintainer-preview [Ship a first feature](tutorials/first-feature.md).
+
+The command blocks use a POSIX-compatible shell: the standard command
+interpreter on Linux/macOS and the form available through Windows Subsystem for
+Linux (WSL) or Git Bash. `npm` is the Node.js package manager; `npx` runs a
+specific package without installing that package globally. Read the primer and
+install prerequisites before copying either form.
 
 ## If you are evaluating it for a team
 

@@ -5,6 +5,10 @@ description: Combine focused change checks with compatibility, documentation, an
 
 ## Start from changed risk
 
+This maintainer procedure requires a clone of the harness source repository;
+the `skills/_shared` and `docs/scripts` paths do not exist in an installed-only
+consumer project.
+
 Use `ai-sdlc-validation` to select deterministic checks for the changed packages, contracts, schemas, workflows, and documentation. Run focused tests before broad suites so failures remain attributable.
 
 ## Protect public contracts
@@ -16,15 +20,21 @@ python3 skills/_shared/ai_sdlc_compatibility.py --git-base v1.1.0 --format toon
 python3 docs/scripts/build_catalog.py --check
 python3 docs/scripts/validate_docs.py
 python3 docs/tests/test_docs.py
-UV_CACHE_DIR=/tmp/ai-sdlc-uv-cache uv run --offline --with-requirements requirements-docs.txt mkdocs build --strict
-python3 docs/scripts/validate_rendered.py
+UV_CACHE_DIR=/tmp/ai-sdlc-uv-cache uv run --with-requirements requirements-docs.lock mkdocs build --strict
+python3 docs/scripts/validate_rendered.py site
 ```
 
-Before the T007 release commit exists, add `--allow-pending-last` to the
-compatibility command. Remove it after committing so the exact T001–T007
-sequence occupies the complete `v1.1.0..HEAD` range; an extra, missing, or
-duplicate task commit fails the audit. The baseline explicitly permits no
-unreviewed prelude commits.
+Before the final roadmap commit exists, add `--allow-pending-last` to the
+compatibility command. Remove it after committing. The exact ordered roadmap
+sequence must begin at the configured base after any explicitly allowed
+prelude; missing, duplicate, reordered, or interleaved task commits fail.
+Later maintenance commits are allowed because the release sequence is a
+bounded historical contract, not a claim that no work can follow the release.
+Use a newer base/baseline for the next release rather than reinterpreting the
+old sequence.
+
+The first dependency resolution needs network access. After the uv cache is
+populated, repeat with `--offline` to prove the cached build path.
 
 ## Verify delivery evidence
 

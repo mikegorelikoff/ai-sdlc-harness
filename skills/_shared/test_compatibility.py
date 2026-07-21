@@ -61,8 +61,8 @@ class CompatibilityTests(unittest.TestCase):
         result = self.run_check("--allow-pending-last", "--format", "toon")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
-    def test_roadmap_audit_rejects_extra_terminal_commit(self) -> None:
-        """A matching sequence in the middle must not pass as a release audit."""
+    def test_roadmap_audit_allows_post_release_maintenance_only_after_sequence(self) -> None:
+        """Later maintenance is valid but cannot replace or interrupt the sequence."""
         import importlib.util
 
         spec = importlib.util.spec_from_file_location("compatibility_audit", SCRIPT)
@@ -70,7 +70,9 @@ class CompatibilityTests(unittest.TestCase):
         assert spec and spec.loader
         spec.loader.exec_module(module)
         self.assertTrue(module.audit_subjects(["one", "two"], ["one", "two"]))
-        self.assertFalse(module.audit_subjects(["one", "two", "extra"], ["one", "two"]))
+        self.assertTrue(module.audit_subjects(["one", "two", "maintenance"], ["one", "two"]))
+        self.assertFalse(module.audit_subjects(["one", "maintenance", "two"], ["one", "two"]))
+        self.assertFalse(module.audit_subjects(["one", "one", "two"], ["one", "two"]))
         self.assertTrue(module.audit_subjects(["one"], ["one", "two"], allow_pending_last=True))
         self.assertFalse(module.audit_subjects(["prefix", "one"], ["one"], allow_pending_last=True))
 
