@@ -11,14 +11,12 @@ create delivery artifacts until you ask an agent to use a workflow.
 
 ## Before you begin
 
-!!! warning "Current release candidate"
+!!! note "Current release"
 
-    These consumer commands install `v2.0.0-rc.1`. It fixes the confirmed
-    consumer-root defect in `v1.2.0` and has locally passed complete Codex
-    project/global installation and workflow validation. It remains a
-    prerelease because no owner-selected `LICENSE` exists and protected remote
-    CI evidence must still be verified. Resolve the annotated tag to an exact
-    commit, review the release notes, and apply your organization's trust policy.
+    These consumer commands install `v2.1.0`. Resolve the annotated tag to an
+    exact commit, review the release notes, and apply your organization's trust
+    policy. The harness supports multiple agent hosts; use the host-specific
+    install scope documented below.
 
 You need:
 

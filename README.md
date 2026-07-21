@@ -183,10 +183,11 @@ and the [security review guidance](docs/reference/validation.md).
 
 ## License and release status
 
-The current release is `v2.1.0`. Check the repository for the applicable
-license before redistributing or adopting it; do not infer usage rights from
-the code alone. Release history and compatibility notes are in
-[docs/reference](docs/reference/index.md).
+The repository is licensed under [Apache License 2.0](LICENSE). Preserve the
+license and attribution notices when redistributing it, and review third-party
+source terms listed in the [source registry](docs/_data/content_sources.yml).
+The current release is `v2.1.0`; release history and compatibility notes are
+in [docs/reference](docs/reference/index.md).
 
 The previous `v2.0.0-rc.1` tag remains the documented compatibility baseline
 for older validation scripts; new installs should use `v2.1.0`.

@@ -7,7 +7,8 @@ description: Release, harness API, compatibility, and migration support matrix.
 
 | Release | Harness API | Status | Migration |
 | --- | --- | --- | --- |
-| [`v2.0.0-rc.1`](https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v2.0.0-rc.1) | `2.0.0` | Current prerelease; locally validated Codex installation/workflow; license and protected remote CI remain blockers | [Migrate to 2.0](../how-to/migrate-2.0.md); evaluate in a bounded pilot |
+| [`v2.1.0`](https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v2.1.0) | `2.0.0` | Current release; Apache-2.0 licensed; learning curriculum and community guides included | Use the current install and validation guidance |
+| [`v2.0.0-rc.1`](https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v2.0.0-rc.1) | `2.0.0` | Historical prerelease; superseded by `v2.1.0` | [Migrate to 2.0](../how-to/migrate-2.0.md) |
 | [`v1.2.0`](https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0) | `1.0.0` | Published Git tag; known installed consumer-root defect blocks complete SDD/commit use | Historical comparison only; wait for a corrected reviewed release |
 | [`v1.1.0`](https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.1.0) | `1.0.0` | Compatible prior tag | Remain on an accepted pin or wait for a corrected reviewed release; do not upgrade to blocked `v1.2.0` |
 | [`v1.0.0`](https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.0.0) | `1.0.0` | Historical compatible tag | Evaluate `v1.1.0` under local policy, or wait for the corrected release |

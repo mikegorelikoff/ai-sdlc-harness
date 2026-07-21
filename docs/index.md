@@ -5,13 +5,12 @@ hide:
   - navigation
 ---
 
-!!! warning "Release candidate"
+!!! note "Current release"
 
-    This site documents `v2.0.0-rc.1`, which fixes the installed workflow defect
-    in `v1.2.0` and introduces Harness API `2.0.0`. It remains a prerelease
-    because the repository has no owner-selected license and protected remote
-    CI evidence must still be verified. Evaluate it in a bounded pilot; the tag
-    does not grant permissions absent a license.
+    This site documents `v2.1.0`, which includes the structured learning
+    curriculum, community health files, and Apache License 2.0. Protected
+    remote CI settings remain an infrastructure concern; evaluate changes in
+    a bounded pilot and keep human review gates enabled.
 
 ## The problem in one minute
 
