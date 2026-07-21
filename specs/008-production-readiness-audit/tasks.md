@@ -88,3 +88,19 @@ artifact_metadata:
   Output: Rereview evidence, adversarial findings, final signoff, and accurate readiness state.
   Refs: AC-004, AC-005, AC-015
   Depends on: T007, T008
+- [x] T010. Reconcile every live Skills.sh security audit with the current source revision and publish the 44-skill provider matrix.
+  Output: Marketplace audit report with finding classification, source links, affected paths, and disposition.
+  Refs: AC-009, AC-012, AC-016
+  Depends on: T009
+- [x] T011. Add credential-redaction and indirect prompt-injection boundaries to affected skills and normalize reviewer evidence handling.
+  Output: Independently usable skill instructions that treat external content as data and never record raw secrets.
+  Refs: AC-012, AC-016
+  Depends on: T010
+- [x] T012. Replace target-root Python execution in compatibility validation with static inspection and trusted executable resolution.
+  Output: Read-only compatibility validator that cannot execute a discovered repository script.
+  Refs: AC-011, AC-012, AC-016
+  Depends on: T010
+- [x] T013. Run focused security contracts, all shared and per-skill tests, compatibility, documentation, mirror, and diff checks; record residual external rescan lag.
+  Output: Regression evidence and current marketplace-security disposition.
+  Refs: AC-005, AC-011, AC-015, AC-016
+  Depends on: T011, T012

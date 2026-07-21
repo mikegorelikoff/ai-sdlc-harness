@@ -6,11 +6,26 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-# Resolve the shared helper relative to this skill directory so the script stays
-# portable when called from any working directory.
-_SHARED = Path(__file__).resolve().parents[2] / "_shared"
-if not _SHARED.is_dir():
-    _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
+# Resolve only one of the two packaged sibling locations. Resolving and
+# bounding the directory first prevents environment input, the current working
+# directory, or a symlink from redirecting the import outside the skills root.
+_SKILLS_ROOT = Path(__file__).resolve().parents[2]
+_CANDIDATES = (
+    _SKILLS_ROOT / "_shared",
+    _SKILLS_ROOT / "ai-sdlc-shared-runtime" / "scripts",
+)
+_SHARED = next(
+    (
+        candidate.resolve()
+        for candidate in _CANDIDATES
+        if candidate.is_dir()
+        and candidate.resolve().is_relative_to(_SKILLS_ROOT)
+        and (candidate / "ai_sdlc_artifact_helper.py").is_file()
+    ),
+    None,
+)
+if _SHARED is None:
+    raise ImportError("trusted AI SDLC shared runtime was not found under the installed skills root")
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_artifact_helper import build_parser, emit_profile_report, flow_mode
 

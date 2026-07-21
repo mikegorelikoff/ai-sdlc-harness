@@ -23,7 +23,9 @@ New skills, optional modules, fields, and documentation may be added when old co
 ## Mechanical gate
 
 ```bash
-python3 skills/_shared/ai_sdlc_compatibility.py --format toon
+command -v git
+python3 skills/_shared/ai_sdlc_compatibility.py \
+  --git-executable /absolute/reviewed/path/to/git --format toon
 ```
 
 A compatible result reports the release, harness API version, complete protected
@@ -31,3 +33,8 @@ skill, flag, and route inventories, skill/module counts, and
 `result: compatible`. The gate also audits the exact contiguous T001–T007
 sequence from `v1.1.0`; an extra or missing task commit fails. Release notes must still explain meaningful additive
 behavior; passing structure alone does not replace human review.
+
+The Git history audit has no implicit executable lookup. Review the path printed
+by `command -v git` and pass that absolute system path. Use
+`--skip-git-audit` for structure-only checks that intentionally do not inspect
+release history.

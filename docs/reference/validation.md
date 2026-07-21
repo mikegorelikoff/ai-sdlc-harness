@@ -16,7 +16,7 @@ python3 -m unittest discover -s skills/_shared -p 'test*.py' -v
 python3 skills/_shared/test_each_skill_tests.py
 
 # Release compatibility
-python3 skills/_shared/ai_sdlc_compatibility.py --format toon
+python3 skills/_shared/ai_sdlc_compatibility.py --skip-git-audit --format toon
 
 # Active SDD structure and links
 python3 skills/ai-sdlc-sdd/scripts/validate_spec.py specs/NNN-feature --quick-flow

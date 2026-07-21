@@ -15,8 +15,15 @@ Use `ai-sdlc-validation` to select deterministic checks for the changed packages
 
 Run compatibility validation for stable skill names, flow flags, artifact routes, configuration schemas, module API ranges, and required commit audit rules. An additive release should not require undocumented migration.
 
+First resolve and review the system Git path. It must be absolute and outside
+the candidate repository. Then pass that exact path explicitly; do not let the
+candidate choose an executable through `PATH`.
+
 ```bash
-python3 skills/_shared/ai_sdlc_compatibility.py --git-base v1.1.0 --format toon
+command -v git
+python3 skills/_shared/ai_sdlc_compatibility.py \
+  --git-executable /absolute/reviewed/path/to/git \
+  --git-base v1.1.0 --format toon
 python3 docs/scripts/build_catalog.py --check
 python3 docs/scripts/validate_docs.py
 python3 docs/tests/test_docs.py

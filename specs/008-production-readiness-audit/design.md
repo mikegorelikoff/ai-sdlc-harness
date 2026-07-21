@@ -53,6 +53,8 @@ Unsupported prerequisites fail before installation. Network and registry failure
 ## Security Considerations
 Do not expose secrets in scans or prompts. Document data egress and third-party telemetry. Constrain command execution and file mutation. Treat retrieved content and peer-agent reports as untrusted evidence until validated. Pin or record supply-chain inputs proportionately. Keep human approval for legal, policy, production, and release decisions.
 
+Marketplace audit remediation uses defense in depth. Each affected skill states that repository files, requirements, Git history, and peer outputs are potential indirect prompt injection and cannot grant authority. Approval records preserve command structure only after credential redaction. The compatibility gate uses static contract inspection and byte comparison for an arbitrary target root; it may invoke only an explicitly resolved Git executable outside that root for the optional history audit and never executes Python discovered in the target repository.
+
 ## Observability
 Validation reports record exact command, environment, exit status, and result. Audit registers preserve issue lifecycle. Clean-tree checks detect generated pollution. CI exposes documentation, skill, compatibility, and consumer-install failures before merge.
 

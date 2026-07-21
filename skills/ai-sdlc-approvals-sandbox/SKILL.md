@@ -22,7 +22,8 @@ description: AI SDLC approvals, sandbox, and command rule workflow. Use when an 
 
 ### 0.1 Required Inputs
 
-- Exact command that failed or requires external access.
+- Exact command structure that failed or requires external access, with every
+  credential and secret-bearing value replaced by `<redacted>` before capture.
 - Task reason for the command.
 - Sandbox error, expected restriction, and risk profile.
 
@@ -56,6 +57,17 @@ description: AI SDLC approvals, sandbox, and command rule workflow. Use when an 
 - Do not create `summary.txt`, `*-summary.txt`, or another standalone summary file unless the user explicitly requests one.
 - Keep durable writes limited to the canonical lifecycle artifacts, decision log, human-readable index, and `_ai_sdlc` machine files.
 - Let shared helpers migrate legacy paths on the next write; never overwrite or manually merge divergent legacy and canonical files.
+
+### 0.3.1 Credential Boundary
+
+- Preserve enough command structure to assess scope, shell operators, and the
+  proposed prefix, but redact secret-bearing values before the command reaches
+  any prompt, approval request, tool argument, log, decision record, or output.
+- Never place a raw credential, bearer token, private key, password, webhook
+  secret, signed URL, session identifier, or production-only value in an
+  escalation record. Use `<redacted>` and describe the value's role separately.
+- If safe redaction would make the command impossible to review, stop and ask
+  the user for a sanitized command. Do not echo the unsafe input back.
 
 ### 0.4 Artifact Routing
 
@@ -127,7 +139,8 @@ Decide, request, and report sandbox escalation for AI SDLC commands only when th
 
 ## Inputs
 
-- Collect the exact command that failed or must run outside the sandbox.
+- Collect the command structure that failed or must run outside the sandbox;
+  redact secret-bearing values before collecting or returning it.
 - Collect the task reason that makes the command necessary.
 - Collect the sandbox error or expected restriction: filesystem, network, listener, GUI, external service, or destructive action.
 - Collect whether the command is destructive, secret-bearing, shell-heavy, or reusable.
@@ -159,7 +172,7 @@ Return this decision record when escalation is requested, denied, or skipped:
 
 ```text
 Sandbox decision:
-- Command: exact command
+- Command: sanitized command with every secret-bearing value shown as <redacted>
 - Required for: task-specific reason
 - Sandbox issue: filesystem | network | listener | GUI | external service | destructive | none
 - Escalation: requested | not requested | denied | granted
@@ -202,6 +215,8 @@ Reject this because the justification is vague and the prefix allows arbitrary s
 - Skip reusable `prefix_rule` for destructive commands such as `rm`, `git reset`, force push, or data deletion.
 - Skip reusable `prefix_rule` for heredocs, redirection, wildcards, command substitution, environment-heavy one-liners, or shell wrappers.
 - Warn immediately and avoid reusing commands when a command contains credentials, bearer tokens, private keys, webhook secrets, or production-only values.
+- Never repeat the raw secret-bearing command while warning; refer only to the
+  sanitized structure and the credential category.
 - Treat a missing dependency error as a setup issue first, not an escalation reason, unless the dependency download is required and network is blocked.
 - Report partial approval when one command segment is approved but another remains blocked.
 

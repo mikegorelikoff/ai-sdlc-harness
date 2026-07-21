@@ -242,6 +242,7 @@ nav:
           - Contradiction register: audits/2026-07-21-production-readiness/contradiction-register.md
           - Installation validation: audits/2026-07-21-production-readiness/installation-validation.md
           - Skills audit: audits/2026-07-21-production-readiness/skills-audit.md
+          - Skills.sh security: audits/2026-07-21-production-readiness/skills-sh-security.md
           - Documentation coverage: audits/2026-07-21-production-readiness/documentation-coverage.md
           - Research sources: audits/2026-07-21-production-readiness/research-sources.md
           - Test and validation: audits/2026-07-21-production-readiness/validation-report.md

@@ -31,7 +31,8 @@ The summary table above names the primary and supporting human roles for this ca
 
 ## Before you start
 
-- Exact command that failed or requires external access.
+- Exact command structure that failed or requires external access, with every
+  credential and secret-bearing value replaced by `<redacted>` before capture.
 - Task reason for the command.
 - Sandbox error, expected restriction, and risk profile.
 
@@ -50,7 +51,8 @@ This is an agent instruction, not a shell command. Terminal commands belong in t
 
 ## What the agent reads
 
-- Collect the exact command that failed or must run outside the sandbox.
+- Collect the command structure that failed or must run outside the sandbox;
+  redact secret-bearing values before collecting or returning it.
 - Collect the task reason that makes the command necessary.
 - Collect the sandbox error or expected restriction: filesystem, network, listener, GUI, external service, or destructive action.
 - Collect whether the command is destructive, secret-bearing, shell-heavy, or reusable.
@@ -120,7 +122,7 @@ Return this decision record when escalation is requested, denied, or skipped:
 
 ```text
 Sandbox decision:
-- Command: exact command
+- Command: sanitized command with every secret-bearing value shown as <redacted>
 - Required for: task-specific reason
 - Sandbox issue: filesystem | network | listener | GUI | external service | destructive | none
 - Escalation: requested | not requested | denied | granted
@@ -139,6 +141,8 @@ Quality gate:
 - Skip reusable `prefix_rule` for destructive commands such as `rm`, `git reset`, force push, or data deletion.
 - Skip reusable `prefix_rule` for heredocs, redirection, wildcards, command substitution, environment-heavy one-liners, or shell wrappers.
 - Warn immediately and avoid reusing commands when a command contains credentials, bearer tokens, private keys, webhook secrets, or production-only values.
+- Never repeat the raw secret-bearing command while warning; refer only to the
+  sanitized structure and the credential category.
 - Treat a missing dependency error as a setup issue first, not an escalation reason, unless the dependency download is required and network is blocked.
 - Report partial approval when one command segment is approved but another remains blocked.
 

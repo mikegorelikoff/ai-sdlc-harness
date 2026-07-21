@@ -13,9 +13,23 @@ import re
 import sys
 from pathlib import Path
 
-_SHARED = Path(__file__).resolve().parents[2] / "_shared"
-if not _SHARED.is_dir():
-    _SHARED = _SHARED.parent / "ai-sdlc-shared-runtime" / "scripts"
+_SKILLS_ROOT = Path(__file__).resolve().parents[2]
+_CANDIDATES = (
+    _SKILLS_ROOT / "_shared",
+    _SKILLS_ROOT / "ai-sdlc-shared-runtime" / "scripts",
+)
+_SHARED = next(
+    (
+        candidate.resolve()
+        for candidate in _CANDIDATES
+        if candidate.is_dir()
+        and candidate.resolve().is_relative_to(_SKILLS_ROOT)
+        and (candidate / "ai_sdlc_state_machine.py").is_file()
+    ),
+    None,
+)
+if _SHARED is None:
+    raise ImportError("trusted AI SDLC shared runtime was not found under the installed skills root")
 sys.path.insert(0, str(_SHARED))
 from ai_sdlc_state_machine import add_state_arguments, run_state_action
 

@@ -40,6 +40,7 @@ stable site is built from the same revision.
 - [Contradiction register](contradiction-register.md)
 - [Installation validation](installation-validation.md)
 - [Skills audit](skills-audit.md)
+- [Skills.sh security reconciliation](skills-sh-security.md)
 - [Documentation coverage](documentation-coverage.md)
 - [Research sources](research-sources.md)
 - [Test and validation report](validation-report.md)

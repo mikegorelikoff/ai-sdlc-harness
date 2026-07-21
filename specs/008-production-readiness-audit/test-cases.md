@@ -44,6 +44,7 @@ artifact_metadata:
     - "TC-013"
     - "TC-014"
     - "TC-015"
+    - "TC-016"
   related_artifacts:
     - "specs/008-production-readiness-audit/decision-log.md"
     - "specs/008-production-readiness-audit/design.md"
@@ -76,13 +77,14 @@ Cover repository inventory, clean installation, consumer command execution, work
 | TC-006 | AC-006 | Trainee with Git/terminal prerequisites only. | Follow the beginner path without assumed AI or SDLC knowledge. | Concepts precede use and glossary/links resolve terms; trainee walkthrough evidence recorded. | Reader diversity; Technical Writer owns, pilot feedback remains. |
 | TC-007 | AC-007 | Each named role reviewer at its role route. | Inspect every required role guide and checklist. | Thirteen guides include care, participation, inputs, outputs, decisions, mistakes, workflow, and checklist evidence. | Role variation; role owner accountable. |
 | TC-008 | AC-008 | Developer/QA pair with tutorial index. | Inspect every requested tutorial pattern. | Ten patterns contain request, discovery, spec, plan, tasks, skills, sequence, validation, artifacts, failures, and evidence. | Patterns are illustrative; Lead and QA own applicability review. |
-| TC-009 | AC-009 | Maintainer with source and installed layouts. | Enumerate and test every skill. | Catalog closes over 44 skills/115 scripts, 20 mirrors sync, and deterministic suites pass. | Dynamic host behavior; Maintainer owns, installed smoke supplements unit tests. |
+| TC-009 | AC-009 | Maintainer with source and installed layouts. | Enumerate and test every skill. | Catalog closes over 44 skills/116 scripts, 20 mirrors sync, and deterministic suites pass. | Dynamic host behavior; Maintainer owns, installed smoke supplements unit tests. |
 | TC-010 | AC-010 | Product Owner with all registers and graph. | Trace issues, assumptions, requirements, tasks, tests, reviews, and commits. | Registers agree; 100 declared AC have task/test coverage; historical gaps remain explicitly bounded. | Historical commit gaps; Product Owner accepts limitation, future Task trailer enforced. |
 | TC-011 | AC-011 | QA in exact candidate snapshot. | Run the full deterministic regression suite and receipt verifier. | All planned commands exit zero and receipt revision/workspace/trace checks pass; validation report records digests/outcomes. | Local receipt unauthenticated; QA owns local proof, CI owner owns protected proof. |
 | TC-012 | AC-012 | Security reviewer with exact diff and security guide. | Review privacy, permissions, prompt injection, secrets, dependency, and supply-chain boundaries. | Threat boundaries, human controls, findings, and residual risks are explicit in security review/audit. | Novel leakage/injection; Security owns adversarial review. |
 | TC-013 | AC-013 | CTO/release owner with remote tag/release evidence. | Compare public main documentation with pinned v1.2.0. | Main is labeled preview; stable defect is reproduced; readiness remains blocked until corrected immutable publication. | Version drift; release owner accountable. |
 | TC-014 | AC-014 | Repository owner/legal authority, repository root. | Check legal reuse grant. | Authorized license exists or final readiness stays blocked with the absence recorded. | Legal authority unavailable; repository owner accountable. |
 | TC-015 | AC-015 | All eleven reviewers after correction sign-off. | Run separate adversarial review prompts against the final candidate. | No new local material issue remains; likely failures/confusion/claim/beginner/enterprise/scenario answers are recorded. | Sampling cannot prove absence; Orchestrator owns disposition and rerun. |
+| TC-016 | AC-016 | Security reviewer with all 44 live Skills.sh audit records and the current source tree. | Reconcile provider findings, test secret-bearing approval input, inspect untrusted-content skill boundaries, and run compatibility against a target containing an executable trap script. | Every marketplace record has a disposition; secret values are forbidden from records; affected skills reject embedded authority; the trap script is never executed; security-contract and compatibility suites pass. | External provider rescans can lag the repository revision; Maintainer owns rescan after publication. |
 
 ## Layer Mapping
 Unit and contract tests cover helpers and skill metadata. Integration tests cover installed-only consumer paths and generated mirrors. Documentation tests cover navigation, glossary, coverage, commands, links, release labels, and stale root surfaces. Manual persona reviews cover comprehension and governance. External checks cover registry, GitHub tag, and authoritative sources.

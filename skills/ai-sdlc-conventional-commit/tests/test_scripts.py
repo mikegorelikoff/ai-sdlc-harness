@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-import importlib.util
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -14,22 +14,20 @@ SKILL_DIR = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "skills" / "_shared" / "skill_script_contract.py"
 
 
-def load_contract():
-    """Load the shared per-skill contract without relying on package imports."""
-    spec = importlib.util.spec_from_file_location("skill_script_contract", CONTRACT)
-    module = importlib.util.module_from_spec(spec)
-    assert spec is not None and spec.loader is not None
-    sys.modules["skill_script_contract"] = module
-    spec.loader.exec_module(module)
-    return module
-
-
 class SkillScriptContractTests(unittest.TestCase):
     """Per-skill wrapper around the shared script contract."""
 
     def test_skill_scripts_follow_contract(self) -> None:
         """Verify this skill's runtime scripts follow the repository contract."""
-        load_contract().run_skill_script_contract(SKILL_DIR)
+        result = subprocess.run(
+            [sys.executable, str(CONTRACT), str(SKILL_DIR)],
+            cwd=ROOT,
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

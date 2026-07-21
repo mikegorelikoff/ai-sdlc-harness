@@ -1,6 +1,6 @@
 schema: ai-sdlc-documentation-coverage/v1
 skill_count: 44
-script_count: 115
+script_count: 116
 documentation_root: docs
 
 skills[44]{skill,source,page,module,package_scripts}:
@@ -49,7 +49,7 @@ skills[44]{skill,source,page,module,package_scripts}:
   ai-sdlc-workflow,skills/ai-sdlc-workflow/SKILL.md,reference/skills/ai-sdlc-workflow.md,core,1
   ai-sdlc-working-backwards-discovery,skills/ai-sdlc-working-backwards-discovery/SKILL.md,reference/skills/ai-sdlc-working-backwards-discovery.md,core,1
 
-scripts[115]{path,owner,classification,documentation}:
+scripts[116]{path,owner,classification,documentation}:
   skills/ai-sdlc-approvals-sandbox/scripts/approval_plan.py,ai-sdlc-approvals-sandbox,skill package helper,reference/scripts.md
   skills/ai-sdlc-architecture/scripts/architecture.py,ai-sdlc-architecture,skill package helper,reference/scripts.md
   skills/ai-sdlc-ba/scripts/ba_context_scaffold.py,ai-sdlc-ba,skill package helper,reference/scripts.md
@@ -159,6 +159,7 @@ scripts[115]{path,owner,classification,documentation}:
   skills/_shared/test_each_skill_tests.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_handoff.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_install_record.py,shared runtime,repository validation runner,reference/scripts.md
+  skills/_shared/test_marketplace_security.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_migration.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_modules.py,shared runtime,repository validation runner,reference/scripts.md
   skills/_shared/test_rigor.py,shared runtime,repository validation runner,reference/scripts.md

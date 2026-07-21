@@ -8,6 +8,7 @@ without copying a large test body into 26 directories.
 
 from __future__ import annotations
 
+import argparse
 import os
 import py_compile
 import subprocess
@@ -131,3 +132,31 @@ def run_skill_script_contract(skill_dir: Path) -> None:
                     raise AssertionError(f"{script.relative_to(ROOT)} --write failed:\n{result.stderr}")
                 if "## Written Files" not in result.stdout or "decision-log.md" not in result.stdout:
                     raise AssertionError(f"{script.relative_to(ROOT)} --write did not report written files")
+
+
+def main() -> int:
+    """Run one per-skill contract without dynamically importing test code."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("skill_dir", type=Path)
+    args = parser.parse_args()
+    requested = args.skill_dir
+    if requested.is_symlink():
+        parser.error("skill_dir must not be a symlink")
+    try:
+        skill_dir = requested.resolve(strict=True)
+    except OSError as exc:
+        parser.error(str(exc))
+    skills_root = (ROOT / "skills").resolve()
+    if skill_dir.parent != skills_root:
+        parser.error("skill_dir must be one direct, non-symlinked child of the repository skills directory")
+    try:
+        run_skill_script_contract(skill_dir)
+    except AssertionError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
+    print(f"Skill script contract passed: {skill_dir.name}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

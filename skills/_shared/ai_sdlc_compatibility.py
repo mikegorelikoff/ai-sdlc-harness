@@ -5,9 +5,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +18,8 @@ SCHEMA = "ai-sdlc-compatibility-baseline/v1"
 CONTRACT_ALIASES = {
     "directly in the Codex response": "directly in the active agent response",
 }
+RUNTIME_EXCLUDED = {"ai_sdlc_install_smoke.py", "sync_installed_runtime.py"}
+STATE_FLAGS = {"--state-check", "--begin-state", "--complete-state"}
 
 
 def load_baseline(path: Path) -> tuple[dict[str, Any], list[str]]:
@@ -35,6 +37,16 @@ def frontmatter_name(text: str) -> str:
     """Extract the simple skill frontmatter name."""
     match = re.search(r"(?m)^name:\s*([^\s]+)\s*$", text[:1000])
     return match.group(1) if match else ""
+
+
+def source_declares_flag(source: str, flag: str) -> bool:
+    """Recognize a CLI flag without executing code from the target root."""
+    if flag in source:
+        return True
+    # State flags are added by the shared helper. The call site is the stable
+    # static contract; importing the target module merely to inspect --help
+    # would execute arbitrary top-level Python from an untrusted repository.
+    return flag in STATE_FLAGS and "add_state_arguments(" in source
 
 
 def validate_skills(root: Path, baseline: dict[str, Any]) -> list[str]:
@@ -57,40 +69,41 @@ def validate_skills(root: Path, baseline: dict[str, Any]) -> list[str]:
                 errors.append(f"skill {skill} missing compatibility contract: {contract}")
         scripts = [] if skill == "ai-sdlc-shared-runtime" else sorted((doc.parent / "scripts").glob("*.py"))
         for script in scripts:
+            if script.is_symlink():
+                errors.append(f"skill script must not be a symlink: {script.relative_to(root)}")
+                continue
             source = script.read_text(encoding="utf-8")
             if "ArgumentParser" not in source:
                 continue
-            help_result = subprocess.run([sys.executable, str(script), "--help"], cwd=root, check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            if help_result.returncode:
-                errors.append(f"script {script.relative_to(root)} --help failed: {help_result.stderr.strip()}")
-                continue
             for flag in baseline.get("required_cli_flags", []):
-                if flag not in help_result.stdout:
+                if not source_declares_flag(source, flag):
                     errors.append(f"script {script.relative_to(root)} missing stable flag {flag}")
     return errors
 
 
 def validate_installed_runtime(root: Path) -> list[str]:
-    """Verify generated runtime bytes and a skill-only SDD execution."""
-    commands = (
-        [sys.executable, str(root / "skills/_shared/sync_installed_runtime.py"), "--check"],
-        [sys.executable, str(root / "skills/ai-sdlc-shared-runtime/tests/test_runtime.py")],
-    )
+    """Verify generated runtime bytes without executing target-root Python."""
     errors: list[str] = []
-    for command in commands:
-        result = subprocess.run(
-            command,
-            cwd=root,
-            check=False,
-            text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-        if result.returncode:
-            errors.append(
-                "installed shared runtime validation failed: "
-                + (result.stdout.strip() or result.stderr.strip())
-            )
+    source_root = root / "skills" / "_shared"
+    target_root = root / "skills" / "ai-sdlc-shared-runtime" / "scripts"
+    if not source_root.is_dir() or not target_root.is_dir():
+        return ["installed shared runtime source or mirror directory is missing"]
+    source = {
+        path.name: path
+        for path in source_root.glob("*.py")
+        if not path.name.startswith("test_") and path.name not in RUNTIME_EXCLUDED
+    }
+    target = {path.name: path for path in target_root.glob("*.py")}
+    for name, source_path in sorted(source.items()):
+        target_path = target.get(name)
+        if source_path.is_symlink() or (target_path is not None and target_path.is_symlink()):
+            errors.append(f"runtime mirror entry must not be a symlink: {name}")
+        elif target_path is None:
+            errors.append(f"missing runtime mirror: {name}")
+        elif source_path.read_bytes() != target_path.read_bytes():
+            errors.append(f"stale runtime mirror: {name}")
+    for name in sorted(set(target) - set(source)):
+        errors.append(f"unexpected runtime mirror: {name}")
     return errors
 
 
@@ -106,25 +119,42 @@ def validate_config(root: Path, baseline: dict[str, Any]) -> list[str]:
 
 
 def validate_modules(root: Path, baseline: dict[str, Any]) -> list[str]:
-    """Validate module IDs, schema, and discovery closure."""
+    """Validate module IDs, schema, dependencies, and skill paths statically."""
     errors: list[str] = []
     expected = baseline.get("modules", {}).get("ids", [])
     manifests = sorted((root / "modules").glob("*/module.json"))
     actual: list[str] = []
+    modules: dict[str, dict[str, Any]] = {}
     for path in manifests:
         try:
             value = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             errors.append(f"cannot read module {path.relative_to(root)}: {exc}")
             continue
-        actual.append(str(value.get("id", "")))
+        module_id = str(value.get("id", ""))
+        actual.append(module_id)
+        if module_id in modules:
+            errors.append(f"duplicate module ID: {module_id}")
+        modules[module_id] = value
         if value.get("schema") != baseline.get("modules", {}).get("schema"):
             errors.append(f"module schema changed: {path.relative_to(root)}")
     if sorted(actual) != expected:
         errors.append(f"module IDs changed: expected {expected}; got {sorted(actual)}")
-    result = subprocess.run(["python3", str(root / "skills/_shared/ai_sdlc_modules.py"), "--root", str(root), "--harness-version", str(baseline.get("harness_api_version")), "--format", "toon"], cwd=root, check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if result.returncode:
-        errors.append("module discovery failed: " + (result.stdout.strip() or result.stderr.strip()))
+    for module_id, value in sorted(modules.items()):
+        for dependency in value.get("requires", []):
+            if dependency not in modules:
+                errors.append(f"module {module_id} requires missing module: {dependency}")
+        for skill in value.get("skills", []):
+            if not isinstance(skill, dict):
+                errors.append(f"module {module_id} has invalid skill entry")
+                continue
+            name = str(skill.get("name", ""))
+            relative = Path(str(skill.get("path", "")))
+            expected_path = Path("skills") / name
+            if relative != expected_path or relative.is_absolute() or ".." in relative.parts:
+                errors.append(f"module {module_id} has unsafe skill path for {name}: {relative}")
+            elif not (root / relative / "SKILL.md").is_file():
+                errors.append(f"module {module_id} references missing skill: {name}")
     return errors
 
 
@@ -168,9 +198,36 @@ def audit_subjects(
     )
 
 
-def validate_git_audit(root: Path, baseline: dict[str, Any], base: str, allow_pending_last: bool) -> list[str]:
+def trusted_git_executable(root: Path, configured: str | None = None) -> tuple[Path | None, str | None]:
+    """Resolve Git to an absolute executable outside the inspected target root."""
+    if not configured:
+        return None, "Git history audit requires --git-executable with a reviewed absolute path"
+    path = Path(configured).expanduser()
+    if not path.is_absolute():
+        return None, "Git executable must be an absolute path"
+    try:
+        resolved = path.resolve(strict=True)
+    except OSError as exc:
+        return None, f"cannot resolve Git executable: {exc}"
+    if resolved.is_relative_to(root):
+        return None, "Git executable must not be inside the inspected target root"
+    if not resolved.is_file() or not os.access(resolved, os.X_OK):
+        return None, f"Git executable is not runnable: {resolved}"
+    return resolved, None
+
+
+def validate_git_audit(
+    root: Path,
+    baseline: dict[str, Any],
+    base: str,
+    allow_pending_last: bool,
+    git_executable: str | None = None,
+) -> list[str]:
     """Validate the released roadmap as one ordered historical sequence."""
-    result = subprocess.run(["git", "log", "--reverse", "--format=%s", f"{base}..HEAD"], cwd=root, check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    git_path, error = trusted_git_executable(root, git_executable)
+    if error or git_path is None:
+        return [error or "Git executable is unavailable"]
+    result = subprocess.run([str(git_path), "log", "--reverse", "--format=%s", f"{base}..HEAD"], cwd=root, check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode:
         return ["cannot audit roadmap commits: " + result.stderr.strip()]
     actual = result.stdout.splitlines()
@@ -190,6 +247,7 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--baseline", type=Path, default=Path("compatibility/baseline-v1.json"))
     parser.add_argument("--git-base")
+    parser.add_argument("--git-executable", help="absolute trusted Git executable used only for the optional history audit")
     parser.add_argument("--skip-git-audit", action="store_true")
     parser.add_argument("--allow-pending-last", action="store_true")
     parser.add_argument("--format", choices=("markdown", "toon"), default="toon")
@@ -216,7 +274,7 @@ def main() -> int:
         errors.extend(validate_modules(root, baseline))
         errors.extend(validate_routes_and_docs(root, baseline))
         if not args.skip_git_audit:
-            errors.extend(validate_git_audit(root, baseline, args.git_base or str(baseline.get("roadmap_git_base", "main")), args.allow_pending_last))
+            errors.extend(validate_git_audit(root, baseline, args.git_base or str(baseline.get("roadmap_git_base", "main")), args.allow_pending_last, args.git_executable))
     if errors:
         for error in errors:
             print(f"ERROR: {error}")

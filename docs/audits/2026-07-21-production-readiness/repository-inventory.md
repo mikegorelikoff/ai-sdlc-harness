@@ -6,9 +6,9 @@ description: Structured inventory, ownership, dependencies, suspicious-content d
 # Repository inventory
 
 Baseline inventory contained 562 tracked files (about 3.69 MB). The audited
-candidate contains 633 versionable files (about 3.95 MiB): 319 under `skills/`,
-172 under `docs/`, 83 under `specs/`, 44 skill packages, 5 modules, and 115
-cataloged helper/test scripts. The 71-file increase is the documented audit,
+candidate contains 637 versionable files (about 4.04 MiB): 320 under `skills/`,
+173 under `docs/`, 85 under `specs/`, 44 skill packages, 5 modules, and 116
+cataloged helper/test scripts. The 75-file increase is the documented audit,
 foundation, role, tutorial, policy, configuration, and validation material—not
 an unexplained generated tree.
 

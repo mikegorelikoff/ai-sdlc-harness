@@ -59,7 +59,7 @@ These commands define the final local gate and must all pass on the final diff:
 PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-pyc python3 -m compileall -q skills docs/scripts
 PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-pyc python3 -m unittest discover -s skills/_shared -p 'test*.py' -v
 PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-pyc python3 skills/_shared/test_each_skill_tests.py
-PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-pyc python3 skills/_shared/ai_sdlc_compatibility.py --git-base v1.1.0 --format toon
+PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-pyc python3 skills/_shared/ai_sdlc_compatibility.py --git-executable /usr/bin/git --git-base v1.1.0 --format toon
 PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-pyc python3 docs/scripts/build_catalog.py --check
 PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-pyc python3 docs/scripts/validate_docs.py
 PYTHONPYCACHEPREFIX=/tmp/ai-sdlc-pyc python3 -m unittest discover -s docs/tests -v
@@ -77,15 +77,15 @@ branch protection, and Pages deployment.
 All commands in the final gate passed on the corrected tree on 2026-07-21:
 
 - aggregate skill contract suite: 29 passed;
-- complete shared discovery: 97 passed after its two detected compatibility and
+- complete shared discovery: 105 passed after its two earlier compatibility and
   receipt-fixture regressions were corrected, then rerun successfully;
 - every per-skill test file: passed, including 10 validation-runner, 7
   controlled-apply, 13 runtime, 6 policy, and 3 package-trust cases;
-- documentation unit suite: 18 passed;
-- generated catalog/source validation: 166 public pages, 44 skills, 5 modules,
-  115 scripts;
+- documentation unit suite: 19 passed;
+- generated catalog/source validation: 167 public pages, 44 skills, 5 modules,
+  116 scripts;
 - installed-runtime synchronization: 20 canonical helpers;
-- strict MkDocs/rendered validation: 167 HTML pages and 31,172 local targets;
+- strict MkDocs/rendered validation: 168 HTML pages and 31,525 local targets;
 - emulated installed workflow: passed;
 - clean synthetic candidate, real Skills CLI 1.5.19, `--agent codex`: passed the
   complete installed SDD and commit-readiness workflow;
@@ -105,3 +105,22 @@ targets. Critical primary-source URLs were reviewed during research, but
 continuous external-link availability is an accepted documentation-owner
 limitation because remote availability, authentication, and rate limits are not
 deterministic repository properties.
+
+## Skills.sh security follow-up
+
+The 2026-07-21 live marketplace reconciliation reviewed all 44 skill records and
+132 provider results. Thirty-three skills had only passing results; eleven had
+at least one warning or failure. Focused corrections and evidence:
+
+- `python3 skills/_shared/test_marketplace_security.py` — 5 passed;
+- `python3 skills/_shared/test_compatibility.py` — 8 passed, including an
+  attacker-controlled target script that was inspected but not executed;
+- BA and conventional-commit fixed-path script contracts — 2 passed;
+- all shared discovery — 105 passed;
+- every per-skill test file — passed;
+- compatibility, catalog, source docs, 19 documentation tests, strict build,
+  rendered validation, runtime mirror sync, and `git diff --check` — passed.
+
+Provider rescan status remains pending until this candidate is committed and
+published. The prior Skills.sh verdicts are not represented as cleared by local
+tests; see [Skills.sh security reconciliation](skills-sh-security.md).

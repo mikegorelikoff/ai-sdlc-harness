@@ -9,23 +9,24 @@ source_artifacts[6]{artifact,path}:
   qa,qa.md
   tasks,tasks.md
   decisions,decision-log.md
-trace[15]{acceptance_id,test_cases,tasks}:
+trace[16]{acceptance_id,test_cases,tasks}:
   AC-001,TC-001,T001/T008
   AC-002,TC-002,T001/T002
   AC-003,TC-003,T001/T002/T007
   AC-004,TC-004,T001/T008/T009
-  AC-005,TC-005,T002/T005/T006/T008/T009
+  AC-005,TC-005,T002/T005/T006/T008/T009/T013
   AC-006,TC-006,T003
   AC-007,TC-007,T004
   AC-008,TC-008,T004
-  AC-009,TC-009,T006/T007
+  AC-009,TC-009,T006/T007/T010
   AC-010,TC-010,T001/T008
-  AC-011,TC-011,T002/T005/T006/T007
-  AC-012,TC-012,T003/T005/T007
+  AC-011,TC-011,T002/T005/T006/T007/T012/T013
+  AC-012,TC-012,T003/T005/T007/T010/T011/T012
   AC-013,TC-013,T005/T006
   AC-014,TC-014,T005/T008
-  AC-015,TC-015,T007/T009
-tasks[9]{id,status,refs,tests,depends_on,artifact,decision_ref}:
+  AC-015,TC-015,T007/T009/T013
+  AC-016,TC-016,T010/T011/T012/T013
+tasks[13]{id,status,refs,tests,depends_on,artifact,decision_ref}:
   T001,done,AC-001/AC-002/AC-003/AC-004/AC-010,TC-001/TC-002/TC-003/TC-004/TC-010,none,Baseline evidence and initial consolidated registers.,TBD
   T002,done,AC-002/AC-003/AC-005/AC-011,TC-002/TC-003/TC-005/TC-011,T001,Executable consumer guidance and installed-layout tests.,TBD
   T003,done,AC-006/AC-012,TC-006/TC-012,T001,Progressive beginner-to-advanced foundations and glossary.,TBD
@@ -35,6 +36,10 @@ tasks[9]{id,status,refs,tests,depends_on,artifact,decision_ref}:
   T007,done,AC-003/AC-009/AC-011/AC-012/AC-015,TC-003/TC-009/TC-011/TC-012/TC-015,T006,Command-by-command validation report with clean-tree result.,TBD
   T008,done,AC-001/AC-004/AC-005/AC-010/AC-014,TC-001/TC-004/TC-005/TC-010/TC-014,T001,docs/audits/2026-07-21-production-readiness package and navigation links.,TBD
   T009,done,AC-004/AC-005/AC-015,TC-004/TC-005/TC-015,T007/T008,Rereview evidence; adversarial findings; final signoff; and accurate readiness state.,TBD
+  T010,done,AC-009/AC-012/AC-016,TC-009/TC-012/TC-016,T009,Marketplace audit report with finding classification; source links; affected paths; and disposition.,TBD
+  T011,done,AC-012/AC-016,TC-012/TC-016,T010,Independently usable skill instructions that treat external content as data and never record raw secrets.,TBD
+  T012,done,AC-011/AC-012/AC-016,TC-011/TC-012/TC-016,T010,Read-only compatibility validator that cannot execute a discovered repository script.,TBD
+  T013,done,AC-005/AC-011/AC-015/AC-016,TC-005/TC-011/TC-015/TC-016,T011/T012,Regression evidence and current marketplace-security disposition.,TBD
 validation_sequence[5]{step,command}:
   1,check_refinement_context.py --full-flow
   2,check_clarify.py --full-flow

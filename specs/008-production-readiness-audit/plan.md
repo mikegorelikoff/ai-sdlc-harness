@@ -47,17 +47,18 @@ artifact_metadata:
 - AC-002: requirements.md -> test-cases.md (TC-002) -> tasks.md (T001, T002) -> qa.md -> decision-log.md
 - AC-003: requirements.md -> test-cases.md (TC-003) -> tasks.md (T001, T002, T007) -> qa.md -> decision-log.md
 - AC-004: requirements.md -> test-cases.md (TC-004) -> tasks.md (T001, T008, T009) -> qa.md -> decision-log.md
-- AC-005: requirements.md -> test-cases.md (TC-005) -> tasks.md (T002, T005, T006, T008, T009) -> qa.md -> decision-log.md
+- AC-005: requirements.md -> test-cases.md (TC-005) -> tasks.md (T002, T005, T006, T008, T009, T013) -> qa.md -> decision-log.md
 - AC-006: requirements.md -> test-cases.md (TC-006) -> tasks.md (T003) -> qa.md -> decision-log.md
 - AC-007: requirements.md -> test-cases.md (TC-007) -> tasks.md (T004) -> qa.md -> decision-log.md
 - AC-008: requirements.md -> test-cases.md (TC-008) -> tasks.md (T004) -> qa.md -> decision-log.md
-- AC-009: requirements.md -> test-cases.md (TC-009) -> tasks.md (T006, T007) -> qa.md -> decision-log.md
+- AC-009: requirements.md -> test-cases.md (TC-009) -> tasks.md (T006, T007, T010) -> qa.md -> decision-log.md
 - AC-010: requirements.md -> test-cases.md (TC-010) -> tasks.md (T001, T008) -> qa.md -> decision-log.md
-- AC-011: requirements.md -> test-cases.md (TC-011) -> tasks.md (T002, T005, T006, T007) -> qa.md -> decision-log.md
-- AC-012: requirements.md -> test-cases.md (TC-012) -> tasks.md (T003, T005, T007) -> qa.md -> decision-log.md
+- AC-011: requirements.md -> test-cases.md (TC-011) -> tasks.md (T002, T005, T006, T007, T012, T013) -> qa.md -> decision-log.md
+- AC-012: requirements.md -> test-cases.md (TC-012) -> tasks.md (T003, T005, T007, T010, T011, T012) -> qa.md -> decision-log.md
 - AC-013: requirements.md -> test-cases.md (TC-013) -> tasks.md (T005, T006) -> qa.md -> decision-log.md
 - AC-014: requirements.md -> test-cases.md (TC-014) -> tasks.md (T005, T008) -> qa.md -> decision-log.md
-- AC-015: requirements.md -> test-cases.md (TC-015) -> tasks.md (T007, T009) -> qa.md -> decision-log.md
+- AC-015: requirements.md -> test-cases.md (TC-015) -> tasks.md (T007, T009, T013) -> qa.md -> decision-log.md
+- AC-016: requirements.md -> test-cases.md (TC-016) -> tasks.md (T010, T011, T012, T013) -> qa.md -> decision-log.md
 
 ## Task Execution Plan
 - [x] T001: - [x] T001. Complete repository inventory, baseline execution, clean installation, and initial independent reviews.; refs: AC-001, AC-002, AC-003, AC-004, AC-010; output: Baseline evidence and initial consolidated registers.
@@ -69,6 +70,10 @@ artifact_metadata:
 - [x] T007: - [x] T007. Run focused checks after each correction group and the complete final regression suite.; refs: AC-003, AC-009, AC-011, AC-012, AC-015; output: Command-by-command validation report with clean-tree result.
 - [x] T008: - [x] T008. Publish the inventory, issue, contradiction, assumption, installation, skills, coverage, research, validation, reviewer, limitation, and readiness reports.; refs: AC-001, AC-004, AC-005, AC-010, AC-014; output: docs/audits/2026-07-21-production-readiness package and navigation links.
 - [x] T009: - [x] T009. Run every reviewer again, perform adversarial review, close new material findings, and finalize readiness.; refs: AC-004, AC-005, AC-015; output: Rereview evidence, adversarial findings, final signoff, and accurate readiness state.
+- [x] T010: - [x] T010. Reconcile every live Skills.sh security audit with the current source revision and publish the 44-skill provider matrix.; refs: AC-009, AC-012, AC-016; output: Marketplace audit report with finding classification, source links, affected paths, and disposition.
+- [x] T011: - [x] T011. Add credential-redaction and indirect prompt-injection boundaries to affected skills and normalize reviewer evidence handling.; refs: AC-012, AC-016; output: Independently usable skill instructions that treat external content as data and never record raw secrets.
+- [x] T012: - [x] T012. Replace target-root Python execution in compatibility validation with static inspection and trusted executable resolution.; refs: AC-011, AC-012, AC-016; output: Read-only compatibility validator that cannot execute a discovered repository script.
+- [x] T013: - [x] T013. Run focused security contracts, all shared and per-skill tests, compatibility, documentation, mirror, and diff checks; record residual external rescan lag.; refs: AC-005, AC-011, AC-015, AC-016; output: Regression evidence and current marketplace-security disposition.
 
 ## Task Dependencies
 - T001: depends on previous applicable task / none
@@ -80,6 +85,10 @@ artifact_metadata:
 - T007: depends on T006
 - T008: depends on T001
 - T009: depends on T007, T008
+- T010: depends on T009
+- T011: depends on T010
+- T012: depends on T010
+- T013: depends on T011, T012
 
 ## Validation Sequence
 - 1. `python3 skills/ai-sdlc-sdd/scripts/check_clarify.py <spec-dir> --full-flow`
