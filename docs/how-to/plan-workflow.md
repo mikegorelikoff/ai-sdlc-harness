@@ -37,3 +37,8 @@ not be evaluated from explicit input.
 Validation success is a zero exit. Planning success writes reviewed projections
 below `_ai_sdlc/workflows/<workflow-id>/`; invalid dependencies, undeclared
 capabilities, or unevaluable conditions must be fixed in source input.
+
+The planner does not execute a post-specification lifecycle. For readiness,
+implementation, validation, review, and commit, use [Continue after a
+specification](after-specification.md). Do not plan parallel writes to a shared
+working directory unless the host enforces isolated workspaces.

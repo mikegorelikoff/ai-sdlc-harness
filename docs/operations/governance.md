@@ -79,6 +79,14 @@ Pattern screening in project-context helpers is defense in depth, not a
 complete secret scanner. Keep credentials out of agent-readable files and use
 approved repository/CI secret scanning as a separate preventive control.
 
+An organization may place a secret broker, vault, or proxy between an approved
+agent tool and an external service. It must keep values out of prompts and tool
+results, issue least-privilege short-lived access where possible, enforce
+destination/action policy, redact logs, support revocation, and retain human
+ownership. The harness neither provides that component nor grants authority;
+never implement it by copying secrets into repository configuration or agent
+context.
+
 ## Permissions and sandbox
 
 Grant the least filesystem, command, network, identity, and external-system
@@ -95,6 +103,11 @@ human review are real.
 Never approve a broad command prefix merely to avoid repeated prompts. Review
 the command category, target, effects, credentials, rollback, and whether the
 same authority would apply to future arguments.
+
+Before a mutating script, verify repository root, branch, working tree, exact
+targets, preview/check mode, and rollback. A shared directory is not an
+isolated workspace. Do not run concurrent mutating agents there, and never run
+cleanup text copied from untrusted notes or generated output.
 
 ## Package and supply-chain trust
 

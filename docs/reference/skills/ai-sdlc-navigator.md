@@ -56,7 +56,11 @@ This is an agent instruction, not a shell command. Terminal commands belong in t
   routing.
 - Collect `--feature` when the user identifies an exact feature.
 - Collect current branch, dirty-tree count, installed skill directories, and
-  feature-local state through the script.
+  feature-local state through the script. Skill discovery is the union of the
+  source-checkout root, project-scoped `.agents/skills/`, and the packaged
+  sibling root from which this navigator is executing. This lets a globally
+  installed navigator see the other skills from the same installation without
+  scanning arbitrary home-directory locations.
 - In full flow, confirm relevant workspace indexes exist when features are
   expected.
 
@@ -135,7 +139,7 @@ Markdown output must contain:
 
 ```text
 Detected Context:
-- repository, branch, installed skills, features, selected feature, workspace,
+- repository, branch, installed skills, skill roots, features, selected feature, workspace,
   current stage, active skill, dirty count, flow mode
 
 Next Required:

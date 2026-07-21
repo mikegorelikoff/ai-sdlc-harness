@@ -33,10 +33,10 @@ def install_project_skill(root: Path, name: str) -> None:
 class NavigateTests(unittest.TestCase):
     """Navigator routing contract tests."""
 
-    def run_nav(self, root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    def run_nav(self, root: Path, *args: str, script: Path = SCRIPT) -> subprocess.CompletedProcess[str]:
         """Run the navigator against a fixture repository."""
         return subprocess.run(
-            ["python3", str(SCRIPT), "--root", str(root), *args],
+            ["python3", str(script), "--root", str(root), *args],
             check=False, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         )
 
@@ -66,7 +66,29 @@ class NavigateTests(unittest.TestCase):
                 "toon",
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertIn("installed_skill_count: 1", result.stdout)
+            self.assertIn("skill_roots:", result.stdout)
+            self.assertNotIn("recommended skill is not installed", result.stdout)
+
+    def test_packaged_skill_root_is_discovered_outside_target_repository(self) -> None:
+        """A global/package navigator must discover installed sibling skills."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp = Path(temp_dir)
+            root = temp / "consumer"
+            root.mkdir()
+            subprocess.run(["git", "init"], cwd=root, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            packaged = temp / "global" / "skills"
+            navigator = packaged / "ai-sdlc-navigator"
+            script = navigator / "scripts" / "navigate.py"
+            script.parent.mkdir(parents=True)
+            script.write_text(SCRIPT.read_text(encoding="utf-8"), encoding="utf-8")
+            write(navigator / "SKILL.md", "---\nname: ai-sdlc-navigator\ndescription: fixture\n---")
+            write(packaged / "ai-sdlc-working-backwards-discovery" / "SKILL.md", "---\nname: ai-sdlc-working-backwards-discovery\ndescription: fixture\n---")
+
+            result = self.run_nav(root, "--format", "toon", script=script)
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("installed_skill_count: 2", result.stdout)
+            self.assertIn(packaged.as_posix(), result.stdout)
             self.assertNotIn("recommended skill is not installed", result.stdout)
 
     def test_implementation_on_shared_base_routes_to_branching_first(self) -> None:

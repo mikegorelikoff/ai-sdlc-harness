@@ -1,0 +1,49 @@
+feature: 009-operational-feedback-hardening
+workspace: implementation
+current_stage: conventional_commit
+active_skill:
+flow_mode: quick
+updated_at: 2026-07-21
+decision_log: specs/009-operational-feedback-hardening/decision-log.md
+upstream_state: specs-refiniment/009-operational-feedback-hardening/_ai_sdlc/state.toon
+
+stages[26]{id,skill,status,workspace,artifacts,decision_ref}:
+  discovery,ai-sdlc-working-backwards-discovery,not_started,refinement,discovery.md,
+  prfaq,ai-sdlc-prfaq-package-synthesis,not_started,refinement,prfaq.md,
+  delivery_package_gap_review,ai-sdlc-delivery-package-gap-review,not_started,refinement,delivery-gap-review.md,
+  requirements_readiness,ai-sdlc-requirements-readiness-review,not_started,refinement,requirements-readiness.md,
+  goal_epic_mapping,ai-sdlc-goal-capability-and-epic-mapping,not_started,refinement,goal-capability-map.md,
+  backlog_gap_review,ai-sdlc-backlog-requirements-gap-review,not_started,refinement,backlog-gap-review.md,
+  backlog_decomposition,ai-sdlc-backlog-decomposition-and-task-planning,not_started,refinement,backlog.md,
+  story_decomposition,ai-sdlc-user-story-decomposition,not_started,refinement,user-stories.md,
+  release_slicing,ai-sdlc-release-slicing-and-backlog-readiness-review,not_started,refinement,release-slicing.md,
+  ba_context,ai-sdlc-ba,not_started,refinement,business-context.md,
+  delivery_spec,ai-sdlc-delivery-spec-synthesis,not_started,refinement,delivery-spec.md,
+  qa_plan,ai-sdlc-qa,not_started,refinement,qa.md,
+  qa_gap_review,ai-sdlc-qa-requirements-gap-review,not_started,refinement,qa-gap-review.md,
+  test_strategy,ai-sdlc-test-scope-and-strategy-design,not_started,refinement,qa-strategy.md,
+  test_cases,ai-sdlc-test-cases,not_started,refinement,test-cases.md,
+  test_suite,ai-sdlc-test-case-and-suite-synthesis,not_started,refinement,test-suite.md,
+  qa_traceability,ai-sdlc-qa-traceability-and-readiness-review,not_started,refinement,qa-readiness.md,
+  delivery_handoff,ai-sdlc-delivery-handoff-review,not_started,refinement,delivery-handoff-review.md,
+  branching,ai-sdlc-branching,not_started,implementation,branch-plan.md,
+  sdd,ai-sdlc-sdd,done,implementation,specs/009-operational-feedback-hardening,
+  validation,ai-sdlc-validation,done,implementation,specs/009-operational-feedback-hardening/validation.md,
+  code_review,ai-sdlc-code-review,done,implementation,specs/009-operational-feedback-hardening/code-review.md,
+  security_testing,ai-sdlc-security-testing,done,implementation,specs/009-operational-feedback-hardening/security-review.md,
+  commit_prep,ai-sdlc-commit-prep,done,implementation,specs/009-operational-feedback-hardening/commit-readiness.md,DEC-003
+  conventional_commit,ai-sdlc-conventional-commit,done,implementation,specs/009-operational-feedback-hardening/commit-message.md,
+  approvals_sandbox,ai-sdlc-approvals-sandbox,not_applicable,utility,approval-plan.md,
+
+skips[11]{stage,reason,decision_ref,flow_mode}:
+  sdd,The meeting notes are accepted field feedback; repository fixes are local and reversible; while editor-specific and organizational choices remain documented boundaries.,,quick
+  sdd,The meeting notes are accepted field feedback; repository fixes are local and reversible; while editor-specific and organizational choices remain documented boundaries.,,quick
+  validation,Validation evidence is recorded in validation.md; externally unavailable host conformance remains an explicit limitation.,,quick
+  validation,Validation evidence is recorded in validation.md; externally unavailable host conformance remains an explicit limitation.,,quick
+  code_review,The current working-tree diff and current validation receipt are the explicit review target and evidence.,,quick
+  code_review,The current working-tree diff and current validation receipt are the explicit review target and evidence.,,quick
+  security_testing,The security scope is local filesystem and untrusted-content handling; no external service attack or standards mapping is claimed.,,quick
+  security_testing,The security scope is local filesystem and untrusted-content handling; no external service attack or standards mapping is claimed.,,quick
+  commit_prep,All tasks are complete; validation is current; and code/security reviews report no material findings.,,quick
+  conventional_commit,The message summarizes the reviewed diff and current validation evidence without claiming external host support.,,quick
+  conventional_commit,The message summarizes the reviewed diff and current validation evidence without claiming external host support.,,quick

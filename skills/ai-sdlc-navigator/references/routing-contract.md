@@ -18,7 +18,8 @@
 ## Detected context fields
 
 - repository root and branch;
-- installed skill count;
+- installed skill count and the source, project, or executing packaged roots
+  that supplied it;
 - discovered feature slugs;
 - selected feature and workspace;
 - current and active lifecycle stage;
@@ -29,3 +30,9 @@
 The navigator is read-only. Missing explicit features, blocked stages, corrupt
 state, and missing recommended skills are blockers. Optional actions never
 override a required lifecycle predecessor.
+
+Skill discovery is a de-duplicated union of `<repository>/skills`,
+`<repository>/.agents/skills`, and the sibling skill root inferred from the
+executing navigator script. It does not scan arbitrary home directories. This
+supports a packaged/global installation while keeping discovery bounded to the
+package that was explicitly executed.

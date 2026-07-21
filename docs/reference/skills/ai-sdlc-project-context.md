@@ -92,6 +92,7 @@ Paths beginning with `skills/` below are canonical **source-checkout** forms for
 | Helper | Purpose | Direct starting point | Repository effect |
 | --- | --- | --- | --- |
 | [`context_engine.py`](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-project-context/scripts/context_engine.py) | Build repository topology and bounded freshness-aware context packs. | `python3 skills/ai-sdlc-project-context/scripts/context_engine.py --help` | May write only through an explicit mutation mode; start with `--help`, check, preview, or emit. |
+| [`external_spec_snapshot.py`](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-project-context/scripts/external_spec_snapshot.py) | Import or verify explicit external Markdown specifications as safe local snapshots. | `python3 skills/ai-sdlc-project-context/scripts/external_spec_snapshot.py --help` | May write only through an explicit mutation mode; start with `--help`, check, preview, or emit. |
 | [`project_context.py`](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/skills/ai-sdlc-project-context/scripts/project_context.py) | Generate and check evidence-backed AI SDLC project context. | `python3 skills/ai-sdlc-project-context/scripts/project_context.py --help` | May write only through an explicit mutation mode; start with `--help`, check, preview, or emit. |
 
 The owning agent normally runs these helpers. A human uses the direct starting point for diagnosis or reproduction after inspecting `--help` and repository policy.
@@ -104,6 +105,8 @@ python3 skills/ai-sdlc-project-context/scripts/project_context.py --write --full
 python3 skills/ai-sdlc-project-context/scripts/project_context.py --check --format toon
 python3 skills/ai-sdlc-project-context/scripts/context_engine.py --topology --write --format toon
 python3 skills/ai-sdlc-project-context/scripts/context_engine.py --build-pack --task T009 --goal "Build bounded context" --path specs/example/tasks.md --tag implementation --budget 2000 --write --format toon
+python3 skills/ai-sdlc-project-context/scripts/external_spec_snapshot.py --root . --source-root ../product-specs --source-id product-specs@reviewed-commit --feature payments --source requirements/payments.md --write
+python3 skills/ai-sdlc-project-context/scripts/external_spec_snapshot.py --root . --source-root ../product-specs --source-id product-specs@reviewed-commit --feature payments --check
 ```
 
 `--check` exits non-zero when revision or evidence fingerprint drifted.

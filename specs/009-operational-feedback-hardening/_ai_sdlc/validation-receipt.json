@@ -1,0 +1,165 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "skills.ai-sdlc-navigator.tests.test_navigate",
+        "skills.ai-sdlc-project-context.tests.test_external_spec_snapshot",
+        "skills.ai-sdlc-project-context.tests.test_project_context",
+        "skills.ai-sdlc-project-context.tests.test_context_engine",
+        "skills.ai-sdlc-project-context.tests.test_scripts"
+      ],
+      "duration_ms": 4665,
+      "exit_code": 0,
+      "id": "V001",
+      "output_limited": false,
+      "stderr_bytes": 129,
+      "stderr_sha256": "1c9c902bcb29fcb05896d856923eeeb9d89f95bff880e98e1c10170c39d8b5a5",
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_ids": [
+        "AC-001",
+        "AC-002",
+        "AC-005",
+        "TC-001",
+        "TC-002",
+        "TC-003",
+        "TC-004",
+        "TC-005",
+        "TC-007"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "skills/_shared/test_all_skill_scripts.py"
+      ],
+      "duration_ms": 11989,
+      "exit_code": 0,
+      "id": "V002",
+      "output_limited": false,
+      "stderr_bytes": 129,
+      "stderr_sha256": "0ee81e601a4501450b6dcd527437389ac985538373366c0469ad0226b4a05dc8",
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_ids": [
+        "AC-007",
+        "TC-008"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "skills/_shared/test_each_skill_tests.py"
+      ],
+      "duration_ms": 52435,
+      "exit_code": 0,
+      "id": "V003",
+      "output_limited": false,
+      "stderr_bytes": 99,
+      "stderr_sha256": "3f78bea390ffa572299d1ab65ca3d4b3fed2a8b95d9a2c3a6278cc9f988b12dd",
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_ids": [
+        "AC-007",
+        "TC-008"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "docs/scripts/validate_docs.py"
+      ],
+      "duration_ms": 827,
+      "exit_code": 0,
+      "id": "V004",
+      "output_limited": false,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 109,
+      "stdout_sha256": "64faf32253f58b29d58c769fc4af32803fa8745ed49d6a1e49a9596c613c695f",
+      "trace_ids": [
+        "AC-003",
+        "AC-004",
+        "AC-006",
+        "AC-007",
+        "TC-006",
+        "TC-010"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "skills/_shared/ai_sdlc_compatibility.py",
+        "--skip-git-audit",
+        "--format",
+        "toon"
+      ],
+      "duration_ms": 77,
+      "exit_code": 0,
+      "id": "V005",
+      "output_limited": false,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 1592,
+      "stdout_sha256": "25550b624cb5d16e993391ef35a230cf833273d0dd488fe55b16068b039500b7",
+      "trace_ids": [
+        "AC-007",
+        "TC-008"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "skills/ai-sdlc-sdd/scripts/validate_spec.py",
+        "specs/009-operational-feedback-hardening",
+        "--quick-flow"
+      ],
+      "duration_ms": 72,
+      "exit_code": 0,
+      "id": "V006",
+      "output_limited": false,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 60,
+      "stdout_sha256": "04897b488ee48e9fed11436bb61bf1432f32421c8cab2e89e3a5e322fea791ab",
+      "trace_ids": [
+        "AC-007",
+        "TC-008"
+      ]
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "duration_ms": 19,
+      "exit_code": 0,
+      "id": "V007",
+      "output_limited": false,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "trace_ids": [
+        "AC-007",
+        "TC-008"
+      ]
+    }
+  ],
+  "environment": {
+    "platform": "macOS-26.3.1-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "evidence_trust": "local-structural-not-authenticated",
+  "executed_at": "2026-07-21T15:04:27.506106Z",
+  "plan_path": "specs/009-operational-feedback-hardening/_ai_sdlc/validation-plan.json",
+  "plan_sha256": "4fd9e35edf57c6303ac8fc22bb297fa435b0b5b61739ba0d405b424d6135059b",
+  "receipt_fingerprint": "2dea744b8e75363a0366e554e13e2ca7f1a08f4b72308489f0df2ab62127f48e",
+  "revision": "7c8499cf989d3accabf9049598183d4e64a2275a",
+  "schema": "ai-sdlc-validation-receipt/v1",
+  "workspace_fingerprint": "07b1dae9f2d98d243402db35638a36a5bb326a42b640b21e0f807a47a713e7d0"
+}

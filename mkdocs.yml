@@ -205,7 +205,9 @@ nav:
           - Choose a flow mode: how-to/choose-flow.md
           - Navigate a new request: how-to/navigate-request.md
           - Build project context: how-to/project-context.md
+          - Use external specifications: how-to/external-specifications.md
           - Build a task context pack: how-to/build-context-pack.md
+          - Continue after a specification: how-to/after-specification.md
           - Resume a delivery run: how-to/resume-runtime.md
           - Plan a declarative workflow: how-to/plan-workflow.md
           - Negotiate a host adapter: how-to/negotiate-host-adapter.md
@@ -234,6 +236,7 @@ nav:
           - Operating model and RACI: operations/operating-model.md
           - Governance and trust: operations/governance.md
           - Troubleshooting and recovery: operations/troubleshooting.md
+          - Field feedback disposition: operations/field-feedback.md
   - About:
       - Production-readiness audit:
           - Executive summary: audits/2026-07-21-production-readiness/index.md

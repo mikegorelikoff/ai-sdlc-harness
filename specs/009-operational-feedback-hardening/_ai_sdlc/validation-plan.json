@@ -1,0 +1,40 @@
+{
+  "schema": "ai-sdlc-validation-command-plan/v1",
+  "commands": [
+    {
+      "id": "V001",
+      "argv": ["python3", "-m", "unittest", "skills.ai-sdlc-navigator.tests.test_navigate", "skills.ai-sdlc-project-context.tests.test_external_spec_snapshot", "skills.ai-sdlc-project-context.tests.test_project_context", "skills.ai-sdlc-project-context.tests.test_context_engine", "skills.ai-sdlc-project-context.tests.test_scripts"],
+      "trace_ids": ["AC-001", "AC-002", "AC-005", "TC-001", "TC-002", "TC-003", "TC-004", "TC-005", "TC-007"]
+    },
+    {
+      "id": "V002",
+      "argv": ["python3", "skills/_shared/test_all_skill_scripts.py"],
+      "trace_ids": ["AC-007", "TC-008"]
+    },
+    {
+      "id": "V003",
+      "argv": ["python3", "skills/_shared/test_each_skill_tests.py"],
+      "trace_ids": ["AC-007", "TC-008"]
+    },
+    {
+      "id": "V004",
+      "argv": ["python3", "docs/scripts/validate_docs.py"],
+      "trace_ids": ["AC-003", "AC-004", "AC-006", "AC-007", "TC-006", "TC-010"]
+    },
+    {
+      "id": "V005",
+      "argv": ["python3", "skills/_shared/ai_sdlc_compatibility.py", "--skip-git-audit", "--format", "toon"],
+      "trace_ids": ["AC-007", "TC-008"]
+    },
+    {
+      "id": "V006",
+      "argv": ["python3", "skills/ai-sdlc-sdd/scripts/validate_spec.py", "specs/009-operational-feedback-hardening", "--quick-flow"],
+      "trace_ids": ["AC-007", "TC-008"]
+    },
+    {
+      "id": "V007",
+      "argv": ["git", "diff", "--check"],
+      "trace_ids": ["AC-007", "TC-008"]
+    }
+  ]
+}

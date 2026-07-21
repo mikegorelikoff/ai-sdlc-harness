@@ -14,6 +14,7 @@ Use these three operating contracts:
 - [Operating model and RACI](operating-model.md): who owns each gate, what the agent may do, and how small teams collapse roles.
 - [Governance and trust](governance.md): data, secrets, permissions, packages, policy, retention, exceptions, and incidents.
 - [Troubleshooting and recovery](troubleshooting.md): diagnose failures without deleting authoritative evidence.
+- [Field feedback disposition](field-feedback.md): map reported installation, navigation, specification, quality, security, automation, and tooling problems to controls or boundaries.
 
 ## Minimum service ownership
 

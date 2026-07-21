@@ -18,3 +18,10 @@ The Markdown context is for people and detailed reasoning. The bounded TOON proj
 ## Detect drift
 
 Regenerate after architecture, build, test, or policy changes. Compare generation identity and evidence hashes. Stale context must be labelled stale rather than silently reused as current truth.
+
+## Specifications governed elsewhere
+
+Project context is repository-bounded by design. Do not add arbitrary home or
+neighboring directories to automatic discovery. Use [external specification
+snapshots](external-specifications.md) for explicit reviewed Markdown with
+portable provenance, integrity hashes, and drift checks.

@@ -77,18 +77,41 @@ def git_output(root: Path, *args: str) -> str:
     return result.stdout.strip()
 
 
-def discover_skills(root: Path) -> set[str]:
-    """Return source-checkout and project-scoped installed skill names."""
+def display_root(path: Path, root: Path) -> str:
+    """Return a useful repository-relative or explicit external root label."""
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix() or "."
+    except ValueError:
+        return path.resolve().as_posix()
+
+
+def discover_skills(root: Path) -> tuple[set[str], list[str]]:
+    """Return skills and roots visible to this packaged navigator process."""
     discovered: set[str] = set()
-    for skills in (root / "skills", root / ".agents" / "skills"):
+    roots: list[str] = []
+    candidates = (
+        ("source", root / "skills"),
+        ("project", root / ".agents" / "skills"),
+        ("packaged", Path(__file__).resolve().parents[2]),
+    )
+    seen_roots: set[str] = set()
+    for label, skills in candidates:
+        key = skills.resolve().as_posix()
+        if key in seen_roots:
+            continue
+        seen_roots.add(key)
         if not skills.is_dir():
             continue
-        discovered.update(
+        names = {
             path.name
             for path in skills.iterdir()
             if path.is_dir() and (path / "SKILL.md").is_file()
-        )
-    return discovered
+        }
+        if not names:
+            continue
+        discovered.update(names)
+        roots.append(f"{label}={display_root(skills, root)}")
+    return discovered, roots
 
 
 def discover_states(root: Path) -> tuple[list[FeatureState], list[str]]:
@@ -224,7 +247,7 @@ def main() -> int:
     args = parser.parse_args()
 
     root = args.root.resolve()
-    installed = discover_skills(root)
+    installed, skill_roots = discover_skills(root)
     states, state_errors = discover_states(root)
     branch = git_output(root, "rev-parse", "--abbrev-ref", "HEAD") or "not-a-git-repository"
     selected, blockers = select_feature(states, args.feature, branch)
@@ -260,6 +283,7 @@ def main() -> int:
         "repository": root.as_posix(),
         "branch": branch,
         "installed_skill_count": len(installed),
+        "skill_roots": ";".join(skill_roots) or "none",
         "features": "/".join(sorted({record.feature for record in states})) or "none",
         "selected_feature": selected.feature if selected else "none",
         "workspace": selected.workspace if selected else "none",

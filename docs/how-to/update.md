@@ -111,6 +111,23 @@ Re-run the inventory and portable helper checks. Commit the accepted update
 alone so it can be audited, reverted, or bisected independently from product
 behavior.
 
+## Promote the same revision across environments
+
+Use the project-scoped installation commit,
+`.ai-sdlc/harness-install.json`, and
+`.ai-sdlc/harness-managed-skills.txt` as the team baseline. In each
+environment, fetch the recorded harness revision, use the same pinned Skills
+CLI and explicit host, reinstall the recorded selection, validate the install
+record, and compare the Git diff with the accepted baseline. Promote a new
+revision through a dedicated update commit; do not let each workstation choose
+“latest” independently.
+
+Global installations are separate workstation state. Update them per host,
+start a new host session, and verify with the global list command. They cannot
+replace repository provenance or Continuous Integration (CI). When both scopes
+exist, the committed project inventory is the repository's reviewed authority,
+even if a host defines its own resolution precedence.
+
 ## Source checkout: release validation
 
 Maintainers validate the full repository only from a clone of this source:
@@ -150,3 +167,8 @@ both portable record files, no unrelated path, and no empty installer-created
 directory that the project does not own. Retain a reviewed copy of the managed
 inventory with the removal commit or ticket so the ownership decision remains
 auditable after the live record is removed.
+
+Manual review is intentional. An installer cannot safely infer whether a
+same-named directory is harness-owned, locally modified, linked for another
+host, or project-owned. Automation may produce retired names and hashes; it
+must not recursively delete paths without that ownership decision.

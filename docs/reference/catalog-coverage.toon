@@ -1,6 +1,6 @@
 schema: ai-sdlc-documentation-coverage/v1
 skill_count: 44
-script_count: 116
+script_count: 117
 documentation_root: docs
 
 skills[44]{skill,source,page,module,package_scripts}:
@@ -27,7 +27,7 @@ skills[44]{skill,source,page,module,package_scripts}:
   ai-sdlc-package-trust,skills/ai-sdlc-package-trust/SKILL.md,reference/skills/ai-sdlc-package-trust.md,core,2
   ai-sdlc-policy,skills/ai-sdlc-policy/SKILL.md,reference/skills/ai-sdlc-policy.md,core,1
   ai-sdlc-prfaq-package-synthesis,skills/ai-sdlc-prfaq-package-synthesis/SKILL.md,reference/skills/ai-sdlc-prfaq-package-synthesis.md,core,1
-  ai-sdlc-project-context,skills/ai-sdlc-project-context/SKILL.md,reference/skills/ai-sdlc-project-context.md,core,2
+  ai-sdlc-project-context,skills/ai-sdlc-project-context/SKILL.md,reference/skills/ai-sdlc-project-context.md,core,3
   ai-sdlc-qa,skills/ai-sdlc-qa/SKILL.md,reference/skills/ai-sdlc-qa.md,core,1
   ai-sdlc-qa-requirements-gap-review,skills/ai-sdlc-qa-requirements-gap-review/SKILL.md,reference/skills/ai-sdlc-qa-requirements-gap-review.md,core,1
   ai-sdlc-qa-traceability-and-readiness-review,skills/ai-sdlc-qa-traceability-and-readiness-review/SKILL.md,reference/skills/ai-sdlc-qa-traceability-and-readiness-review.md,core,1
@@ -49,7 +49,7 @@ skills[44]{skill,source,page,module,package_scripts}:
   ai-sdlc-workflow,skills/ai-sdlc-workflow/SKILL.md,reference/skills/ai-sdlc-workflow.md,core,1
   ai-sdlc-working-backwards-discovery,skills/ai-sdlc-working-backwards-discovery/SKILL.md,reference/skills/ai-sdlc-working-backwards-discovery.md,core,1
 
-scripts[116]{path,owner,classification,documentation}:
+scripts[117]{path,owner,classification,documentation}:
   skills/ai-sdlc-approvals-sandbox/scripts/approval_plan.py,ai-sdlc-approvals-sandbox,skill package helper,reference/scripts.md
   skills/ai-sdlc-architecture/scripts/architecture.py,ai-sdlc-architecture,skill package helper,reference/scripts.md
   skills/ai-sdlc-ba/scripts/ba_context_scaffold.py,ai-sdlc-ba,skill package helper,reference/scripts.md
@@ -79,6 +79,7 @@ scripts[116]{path,owner,classification,documentation}:
   skills/ai-sdlc-policy/scripts/policy.py,ai-sdlc-policy,skill package helper,reference/scripts.md
   skills/ai-sdlc-prfaq-package-synthesis/scripts/prfaq_outline.py,ai-sdlc-prfaq-package-synthesis,skill package helper,reference/scripts.md
   skills/ai-sdlc-project-context/scripts/context_engine.py,ai-sdlc-project-context,skill package helper,reference/scripts.md
+  skills/ai-sdlc-project-context/scripts/external_spec_snapshot.py,ai-sdlc-project-context,skill package helper,reference/scripts.md
   skills/ai-sdlc-project-context/scripts/project_context.py,ai-sdlc-project-context,skill package helper,reference/scripts.md
   skills/ai-sdlc-qa/scripts/qa_plan_scaffold.py,ai-sdlc-qa,skill package helper,reference/scripts.md
   skills/ai-sdlc-qa-requirements-gap-review/scripts/qa_gap_scan.py,ai-sdlc-qa-requirements-gap-review,skill package helper,reference/scripts.md

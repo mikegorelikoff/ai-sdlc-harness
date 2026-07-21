@@ -139,6 +139,23 @@ baseline test of CLI
 pilot path. Because `-g` is absent, installation remains project-scoped. Stop
 if the CLI summary names unexpected locations.
 
+### Understand the created directories
+
+For this project-scoped path, `.agents/skills/` is the canonical universal
+skill store, not an accidental duplicate. A host or installer may also create
+a host-specific directory or symlink. Inspect before deciding:
+
+```bash
+DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
+git status --short
+find . -maxdepth 3 -type l -print
+```
+
+Do not delete `.agents/` merely because another folder shows the same skill
+names; host links can depend on it. An unexpected regular copy, unclear owner,
+or unrelated pre-existing directory is a blocker for manual comparison, not
+permission for recursive cleanup.
+
 For a smaller installation, create the reviewed inventory first and use it as
 the exact installer input; do not copy the 44-name full inventory afterward:
 
@@ -208,6 +225,21 @@ below does not describe it. Record the CLI version, harness revision, selected
 agent, installation method, and verification output in your workstation or
 organizational inventory. Use project scope when repository-level provenance
 and peer review are required.
+
+After changing a global inventory, start a fresh agent-host session. A host may
+cache its skill registry for one conversation. This refreshes host discovery;
+it does not replace filesystem verification. For a direct POSIX diagnostic,
+run the packaged navigator and inspect `skill_roots`:
+
+```bash
+python3 "$HOME/.agents/skills/ai-sdlc-navigator/scripts/navigate.py" \
+  --root /path/to/consumer --intent "<request>" --quick-flow --format toon
+```
+
+The navigator discovers siblings from the package it is executing. If that
+report is correct but the host cannot invoke a skill after a new session,
+record host, version, target, scope, and `skills list` evidence as a host
+conformance issue. Do not install every recognized agent as a workaround.
 
 ## Verify the result
 
@@ -335,6 +367,8 @@ HTTPS credential with read access. Never paste tokens into an agent prompt.
 | `list --json` requires network | This CLI behavior is expected; use an approved registry/cache or record the offline limitation. |
 | Skill helper path missing | Confirm `.agents/skills/ai-sdlc-shared-runtime` and the selected skill both exist; reinstall the pair if either is absent. |
 | Unexpected agent directories | Do not commit or use the generic CLI remover. If the repository is disposable, delete that whole verified fixture from its parent. Otherwise follow the ownership-safe [uninstall procedure](update.md#remove-and-verify-cleanup), review every managed path, inspect status, and reinstall with an explicit `--agent`. |
+| Navigator says a global sibling skill is missing | Start a fresh host session, run the packaged navigator diagnostic above, and inspect `skill_roots`. Repair the explicit Codex-scoped install only when the root or sibling `SKILL.md` is absent; otherwise record a host-conformance issue. |
+| Project and global installations both exist | Treat the committed project inventory as repository authority. Compare revisions and update workstation state separately; do not assume host precedence or mix evidence from two revisions. |
 | Authentication or certificate failure | Stop and ask the repository/network owner. Never disable TLS verification or paste a token into chat. |
 
 After any failed attempt, inspect `git status --short`. Remove only files that

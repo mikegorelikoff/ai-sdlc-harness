@@ -16,7 +16,9 @@ Choose the result you need now. Each guide is task-oriented and assumes basic Gi
 - [**Choose a flow mode**](choose-flow.md) — select quick, full, or adaptive rigor.
 - [**Navigate a request**](navigate-request.md) — find the smallest safe next action.
 - [**Build project context**](project-context.md) — capture evidence without invention.
+- [**Use external specifications**](external-specifications.md) — snapshot reviewed Markdown from another repository with provenance and drift checks.
 - [**Build a task context pack**](build-context-pack.md) — bound sources and token budget for one task.
+- [**Continue after a specification**](after-specification.md) — move through one ready task, validation, review, and commit.
 - [**Resume a delivery run**](resume-runtime.md) — continue safely from the durable journal and TOON state.
 - [**Plan a workflow**](plan-workflow.md) — validate gates, hooks, dependencies, and execution waves.
 - [**Negotiate a host adapter**](negotiate-host-adapter.md) — select a supported host capability or safe fallback.
