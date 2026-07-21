@@ -1,0 +1,38 @@
+name: Feature request
+description: Propose a focused improvement to the harness or its documentation.
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Requests should describe a user outcome and a bounded problem. Please search existing issues first.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and users affected
+      description: Who is blocked, what are they trying to accomplish, and why are current workflows insufficient?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed outcome
+      description: Describe observable behaviour, not only an implementation idea.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives and trade-offs
+      description: Include workarounds, scope boundaries, and risks.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or example workflow
+      description: Link relevant documentation or show a concrete before-and-after example.
+    validations:
+      required: false

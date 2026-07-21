@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/mikegorelikov/ai-sdlc-harness/security/advisories/new
+    about: Report vulnerabilities privately. Do not include secrets or exploit details in a public issue.
+  - name: Documentation and support
+    url: https://github.com/mikegorelikov/ai-sdlc-harness/blob/main/SUPPORT.md
+    about: Read troubleshooting guidance and collect the details needed for a useful issue.
