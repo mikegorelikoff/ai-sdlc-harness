@@ -1,9 +1,9 @@
 {
   "schema": "ai-sdlc-module/v1",
   "id": "ux",
-  "version": "1.0.0",
+  "version": "2.0.0-rc.1",
   "kind": "optional",
-  "harness_api": {"min": "1.0.0", "max_exclusive": "2.0.0"},
+  "harness_api": {"min": "2.0.0", "max_exclusive": "3.0.0"},
   "requires": ["core"],
   "description": "Traceable actors, journeys, interaction states, accessibility, and UX acceptance.",
   "skills": [{"name": "ai-sdlc-ux", "path": "skills/ai-sdlc-ux"}]

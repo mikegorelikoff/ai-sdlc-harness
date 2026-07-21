@@ -34,9 +34,9 @@ files without proving that their Python helpers will run.
 
 | Environment | Evidence | Status |
 | --- | --- | --- |
-| Ubuntu 24.04, Python 3.10 and 3.13 | Repository continuous-integration configuration; no current candidate run exported in this audit | Configured candidate; support pending a passing remote run |
-| macOS, POSIX shell | Local corrected-candidate installation and complete consumer workflow | Candidate tested locally; no released combination is approved |
-| Codex CLI 0.144.1 on macOS, Skills CLI target `codex` | Corrected-candidate host-scoped clean install and complete installed SDD/commit workflow on 2026-07-21 | Candidate manually validated; immutable `v1.2.0` remains blocked |
+| Ubuntu 24.04, Python 3.10 and 3.13 | Repository continuous-integration configuration; release-candidate run pending after publication | Configured candidate; support pending passing remote runs |
+| macOS, POSIX shell | `v2.0.0-rc.1` source candidate installation and complete consumer workflow | Release candidate tested locally |
+| Codex CLI 0.144.1 on macOS, Skills CLI target `codex` | Project/global clean install and complete installed SDD/commit workflow on 2026-07-21 | `v2.0.0-rc.1` candidate manually validated |
 | Windows Subsystem for Linux (WSL) | POSIX-compatible documented route; no recorded candidate run | Recommended candidate route for Windows; not yet verified |
 | Native PowerShell | Installation command only | Limited; end-to-end tutorials use WSL |
 | Offline clean machine | No cached npm or Python packages | Not supported for first bootstrap; use approved mirrors |
@@ -57,22 +57,22 @@ model host. The maintainers' behavioral examples use Codex-style agents.
 The exact manually validated host-scoped install used:
 
 ```bash
-HARNESS_REV=7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2
+HARNESS_TAG=v2.0.0-rc.1
 HARNESS_TMP="$(mktemp -d)"
 HARNESS_SRC="$HARNESS_TMP/ai-sdlc-harness"
 git init "$HARNESS_SRC"
 git -C "$HARNESS_SRC" remote add origin https://github.com/mikegorelikoff/ai-sdlc-harness.git
-git -C "$HARNESS_SRC" fetch --depth 1 origin "$HARNESS_REV"
-git -C "$HARNESS_SRC" checkout --detach FETCH_HEAD
-test "$(git -C "$HARNESS_SRC" rev-parse HEAD)" = "$HARNESS_REV"
+git -C "$HARNESS_SRC" fetch --depth 1 origin "refs/tags/$HARNESS_TAG:refs/tags/$HARNESS_TAG"
+git -C "$HARNESS_SRC" checkout --detach "$HARNESS_TAG^{commit}"
+HARNESS_REV="$(git -C "$HARNESS_SRC" rev-parse HEAD)"
+test "$(git -C "$HARNESS_SRC" rev-list -n 1 "$HARNESS_TAG")" = "$HARNESS_REV"
 DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill '*' --agent codex -y
 rm -rf "$HARNESS_TMP"
 ```
 
 It produced the canonical `.agents/skills/` inventory and 44 installed skills;
-navigator routing and a single requirements scaffold passed. The stronger
-complete installed workflow then failed when stable SDD helpers looked for the
-consumer spec beneath `.agents/specs`. For organizational rollout, select
+navigator routing, global packaged discovery, and the complete installed
+SDD/validation/commit workflow passed. For organizational rollout, select
 an explicit target with `--agent`, run the
 [first feature tutorial](../tutorials/first-feature.md), and record the exact
 host/version in pilot evidence. Treat all other hosts as **candidate** until
@@ -101,21 +101,14 @@ command and require `skills list --global --agent codex --json` to report
 `Codex` in every item's `agents` array. CLI `1.5.19` can otherwise copy all 44
 skills into the canonical global store while leaving them unlinked from Codex.
 
-## Maintainer preview versus stable release
+## Release candidate versus stable support
 
-The `main` branch and its documentation can describe unreleased behavior.
-Consumer installation instructions pin Skills CLI `1.5.19` and the immutable
-commit `7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2` to which `v1.2.0` currently
-points; use the documentation at the `v1.2.0` tag only to reproduce matching
-historical behavior. A future
-release must re-run the installation, workflow, compatibility, and
-documentation gates before it can make a newer support claim. Until then,
-`v1.2.0` is a reproducible historical baseline, not an approved production
-workflow.
-
-Installation is the exception: use the current exact-fetch sequence above.
-The older tagged page's GitHub `/tree/<SHA>` form does not work with Skills CLI
-`1.5.19` and is retained only as historical release evidence.
+Consumer installation instructions pin Skills CLI `1.5.19`, resolve annotated
+tag `v2.0.0-rc.1`, and record its exact commit. The release candidate passed
+the local installation and workflow gates, but it is not a stable support
+promise: the missing owner-selected license and pending protected remote CI
+remain explicit blockers. The older `v1.2.0` tag is reproducible historical
+evidence and retains its installed consumer-root defect.
 
 ## Evidence checklist
 

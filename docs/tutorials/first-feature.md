@@ -24,26 +24,23 @@ supported AI agent. The commands are written for Linux/macOS/WSL or Git Bash;
 PowerShell users should use WSL for this end-to-end fixture. Every repository
 created here is disposable.
 
-## 0. Open the candidate source checkout
+## 0. Open the release-candidate source checkout
 
-This tutorial validates the current source candidate, including documentation,
-security, and workflow fixes that are not present in `v1.2.0`. The stable release passed the
-historical shallow copy/help smoke, but it fails the current complete installed
-SDD/commit smoke and cannot demonstrate these unreleased acceptance criteria.
-If you are reading the public site rather than a source checkout, acquire the
-unreleased maintainer preview explicitly:
+This tutorial validates `v2.0.0-rc.1`, including the documentation, security,
+and workflow fixes that are not present in `v1.2.0`. Acquire the annotated tag
+explicitly:
 
 ```bash
 CANDIDATE_PARENT="$(mktemp -d)"
 git clone https://github.com/mikegorelikoff/ai-sdlc-harness.git "$CANDIDATE_PARENT/ai-sdlc-harness"
 cd "$CANDIDATE_PARENT/ai-sdlc-harness"
 test "$(git remote get-url origin)" = "https://github.com/mikegorelikoff/ai-sdlc-harness.git"
-git checkout --detach origin/main
+git fetch --depth 1 origin refs/tags/v2.0.0-rc.1:refs/tags/v2.0.0-rc.1
+git checkout --detach 'v2.0.0-rc.1^{commit}'
 ```
 
-This mutable `main` acquisition is suitable only for the tutorial preview; the
-captured commit below is evidence for the bytes exercised, not a production
-release or signature. A contributor may instead open an already reviewed,
+The captured commit below is evidence for the bytes exercised, not a signature
+or permission grant. A contributor may instead open an already reviewed,
 committed source checkout containing this page.
 Capture the exact candidate revision only from a clean committed checkout so
 the recorded revision identifies every installed byte. The Git checks below

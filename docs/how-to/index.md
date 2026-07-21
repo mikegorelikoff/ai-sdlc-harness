@@ -13,6 +13,7 @@ Choose the result you need now. Each guide is task-oriented and assumes basic Gi
 - [**Set up Codex CLI**](setup-codex.md) — install, authenticate, launch, and verify the documented pilot host.
 - [**Update safely**](update.md) — preview, merge, and validate upstream changes.
 - [**Migrate to 1.1**](migrate-1.1.md) — adopt the additive control plane without rewriting existing work.
+- [**Migrate to 2.0**](migrate-2.0.md) — update context readers and module API ranges for the v3 contract.
 - [**Choose a flow mode**](choose-flow.md) — select quick, full, or adaptive rigor.
 - [**Navigate a request**](navigate-request.md) — find the smallest safe next action.
 - [**Build project context**](project-context.md) — capture evidence without invention.

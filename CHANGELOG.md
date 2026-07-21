@@ -1,11 +1,8 @@
 # Changelog
 
-## v1.2.0 - 2026-07-19
-
-- Added guided onboarding, complete skill/script reference, adoption governance,
-  and tagged install/runtime validation.
-
 ## Unreleased
+
+## v2.0.0-rc.1 - 2026-07-21
 
 ### Added
 
@@ -14,12 +11,46 @@
   preferences.
 - Added an opt-in typed interaction profile for preferred name, language,
   response style, technical depth, and status-update cadence.
+- Added complete beginner foundations, role guides, practical tutorials,
+  adoption governance, operations guidance, and evidence-backed audit reports.
+- Added safe external-specification snapshots and field-tested post-specification
+  workflow guidance.
 
 ### Changed
 
 - Upgraded shared context snapshots and task packs to v3 with goal-relevant
   range selection, repository-instruction authority labels, explicit context
   sufficiency, and targeted next reads.
+- Changed the harness API to `2.0.0`; bundled modules now declare the matching
+  `>=2.0.0,<3.0.0` range.
+- Made project-scoped installation the default and documented an explicit
+  Codex-only global installation that avoids unsupported Eve and PromptScript
+  targets.
+- Made navigator discovery combine source, project, and packaged/global skill
+  roots without recommending absent optional skills.
+
+### Fixed
+
+- Corrected installed consumer-root resolution across SDD and commit workflows.
+- Hardened validation receipts, state transitions, repository-bounded writes,
+  credential redaction, prompt-injection boundaries, recovery manifests, and
+  compatibility inspection of untrusted target roots.
+- Corrected documentation, generated catalogs, version links, installation
+  ownership, and release-regression coverage identified by the production audit.
+
+### Security and release status
+
+- This is a release candidate because the repository owner has not yet selected
+  a license and protected remote CI evidence is not available at tag-creation
+  time. The tag does not grant permissions absent a license.
+- Codex project/global installation and a complete installed workflow were
+  validated locally; other agent hosts remain unverified unless listed in the
+  supported-environments matrix.
+
+## v1.2.0 - 2026-07-19
+
+- Added guided onboarding, complete skill/script reference, adoption governance,
+  and tagged install/runtime validation.
 
 ## v1.1.0 - 2026-07-19
 

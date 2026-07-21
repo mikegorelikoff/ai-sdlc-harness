@@ -11,16 +11,14 @@ create delivery artifacts until you ask an agent to use a workflow.
 
 ## Before you begin
 
-!!! note "Published tag and maintainer preview"
+!!! warning "Current release candidate"
 
-    These consumer commands install Git tag `v1.2.0`, whose immutable commit is
-    `7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2`. Documentation on `main` can
-    describe unreleased changes. The release tag is not cryptographically
-    signed; verify the commit and your organization's trust policy before use.
-    No corresponding GitHub Release object exists. The tag copies successfully and supports the read-only navigator,
-    but the full installed SDD/commit path has a confirmed consumer-root defect.
-    Do not approve it for a production pilot. The candidate tutorial exercises
-    the correction; a matching reviewed release is still required.
+    These consumer commands install `v2.0.0-rc.1`. It fixes the confirmed
+    consumer-root defect in `v1.2.0` and has locally passed complete Codex
+    project/global installation and workflow validation. It remains a
+    prerelease because no owner-selected `LICENSE` exists and protected remote
+    CI evidence must still be verified. Resolve the annotated tag to an exact
+    commit, review the release notes, and apply your organization's trust policy.
 
 You need:
 
@@ -48,14 +46,15 @@ and run the same pinned CLI:
 
 ```powershell
 $env:DISABLE_TELEMETRY = "1"
-$HarnessRevision = "7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2"
+$HarnessTag = "v2.0.0-rc.1"
 $HarnessSource = Join-Path ([System.IO.Path]::GetTempPath()) ("ai-sdlc-harness-" + [guid]::NewGuid())
 node --version  # expected: v22.20.0 or newer
 git init $HarnessSource
 git -C $HarnessSource remote add origin https://github.com/mikegorelikoff/ai-sdlc-harness.git
-git -C $HarnessSource fetch --depth 1 origin $HarnessRevision
-git -C $HarnessSource checkout --detach FETCH_HEAD
-if ((git -C $HarnessSource rev-parse HEAD) -ne $HarnessRevision) { throw "Harness revision mismatch" }
+git -C $HarnessSource fetch --depth 1 origin ("refs/tags/{0}:refs/tags/{0}" -f $HarnessTag)
+git -C $HarnessSource checkout --detach ($HarnessTag + "^{commit}")
+$HarnessRevision = git -C $HarnessSource rev-parse HEAD
+if ((git -C $HarnessSource rev-list -n 1 $HarnessTag) -ne $HarnessRevision) { throw "Harness revision mismatch" }
 npx -y skills@1.5.19 add $HarnessSource --skill '*' --agent codex -y
 npx -y skills@1.5.19 list --json
 New-Item -ItemType Directory -Force .ai-sdlc | Out-Null
@@ -94,7 +93,7 @@ your approved npm provenance before invoking it.
 !!! terminal "Run in terminal — from the consumer repository"
 
     ```bash
-    HARNESS_REV=7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2
+    HARNESS_TAG=v2.0.0-rc.1
     HARNESS_TMP="$(mktemp -d)"
     HARNESS_SRC="$HARNESS_TMP/ai-sdlc-harness"
     git --version
@@ -105,9 +104,10 @@ your approved npm provenance before invoking it.
     npm view skills@1.5.19 dist.integrity repository engines --json
     git init "$HARNESS_SRC"
     git -C "$HARNESS_SRC" remote add origin https://github.com/mikegorelikoff/ai-sdlc-harness.git
-    git -C "$HARNESS_SRC" fetch --depth 1 origin "$HARNESS_REV"
-    git -C "$HARNESS_SRC" checkout --detach FETCH_HEAD
-    test "$(git -C "$HARNESS_SRC" rev-parse HEAD)" = "$HARNESS_REV"
+    git -C "$HARNESS_SRC" fetch --depth 1 origin "refs/tags/$HARNESS_TAG:refs/tags/$HARNESS_TAG"
+    git -C "$HARNESS_SRC" checkout --detach "$HARNESS_TAG^{commit}"
+    HARNESS_REV="$(git -C "$HARNESS_SRC" rev-parse HEAD)"
+    test "$(git -C "$HARNESS_SRC" rev-list -n 1 "$HARNESS_TAG")" = "$HARNESS_REV"
     DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --list
     ```
 
@@ -117,10 +117,10 @@ skills@1.5.19 engines --json` is the recovery check when a pinned CLI invocation
 reports an engine mismatch.
 
 This lists available skills without installing them. Review the repository
-origin and selected package names. Release `v1.2.0` currently maps to the exact
-revision checked above. Skills CLI `1.5.19` treats the final segment of a
-GitHub `/tree/...` URL as a branch, so a raw commit SHA in that URL fails; the
-detached local checkout is intentional.
+origin and selected package names. The annotated `v2.0.0-rc.1` tag is resolved
+to the exact revision checked above. Skills CLI `1.5.19` treats the final
+segment of a GitHub `/tree/...` URL as a branch, so installation uses the
+verified detached local checkout instead.
 
 ## Install project-scoped skills
 

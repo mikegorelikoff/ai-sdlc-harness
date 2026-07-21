@@ -60,7 +60,7 @@ BEGINNER_TERMS = (
     "handoff",
 )
 CANONICAL_INSTALL = 'DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill \'*\' --agent codex -y'
-CANONICAL_REVISION = "7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2"
+CANONICAL_RELEASE_TAG = "v2.0.0-rc.1"
 FLOW_PAGES = {
     "flows/index.md",
     "flows/refinement.md",
@@ -353,9 +353,15 @@ def validate_onboarding(root: Path = ROOT) -> list[str]:
         text = path.read_text(encoding="utf-8") if path.is_file() else ""
         if CANONICAL_INSTALL not in text:
             errors.append(f"{relative}: missing canonical project-scoped install command")
-        for token in (CANONICAL_REVISION, "fetch --depth 1 origin", "checkout --detach FETCH_HEAD", "rev-parse HEAD"):
+        for token in (
+            f"HARNESS_TAG={CANONICAL_RELEASE_TAG}",
+            "fetch --depth 1 origin",
+            'checkout --detach "$HARNESS_TAG^{commit}"',
+            'HARNESS_REV="$(git -C "$HARNESS_SRC" rev-parse HEAD)"',
+            'rev-list -n 1 "$HARNESS_TAG"',
+        ):
             if token not in text:
-                errors.append(f"{relative}: missing exact-revision install step {token}")
+                errors.append(f"{relative}: missing release-tag resolution step {token}")
 
     foundations = "\n".join(
         (docs / relative).read_text(encoding="utf-8")

@@ -8,18 +8,13 @@ survive a chat, agent, or team change.
 
 **[Read the guided documentation](https://mikegorelikoff.github.io/ai-sdlc-harness/)**
 
-> **Release status:** this `main` branch documents unreleased work beyond
-> `v1.2.0`, including context-contract changes. The installation commands below
-> intentionally install the historical `v1.2.0` Git tag. Use the current install
-> guide's exact-fetch sequence; the tagged page's older `/tree/<SHA>` form is a
-> known Skills command-line interface (CLI) `1.5.19` incompatibility. A clean regression also confirms
-> that the stable installed specification-driven development (SDD) helpers resolve relative specs below
-> `.agents/specs`, so `v1.2.0` is suitable only for historical comparison—not a
-> complete consumer workflow. Use the
-> [v1.2.0 source documentation](https://github.com/mikegorelikoff/ai-sdlc-harness/tree/v1.2.0/docs)
-> for runtime behavior after applying that installation erratum. Do not treat
-> other `main` contracts as installed until a matching release is published.
-> No GitHub Release object exists for the current version tags.
+> **Release status:** `v2.0.0-rc.1` is the current release candidate. It fixes
+> the installed consumer-root defect in `v1.2.0`, hardens skill/runtime trust
+> boundaries, and introduces context contract v3 plus Harness API `2.0.0`.
+> It remains a prerelease because this repository has no owner-selected license
+> and protected remote CI must still be verified. The tag does not grant rights
+> absent a license; evaluate it in a bounded pilot and review the
+> [release notes](docs/reference/release-2.0.md) before adoption.
 
 ## Why this exists
 
@@ -107,23 +102,24 @@ choosing a different policy. This installer boundary is separate from the
 harness's content-free local metrics.
 
 ```bash
-HARNESS_REV=7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2
+HARNESS_TAG=v2.0.0-rc.1
 HARNESS_TMP="$(mktemp -d)"
 HARNESS_SRC="$HARNESS_TMP/ai-sdlc-harness"
 git init "$HARNESS_SRC"
 git -C "$HARNESS_SRC" remote add origin https://github.com/mikegorelikoff/ai-sdlc-harness.git
-git -C "$HARNESS_SRC" fetch --depth 1 origin "$HARNESS_REV"
-git -C "$HARNESS_SRC" checkout --detach FETCH_HEAD
-test "$(git -C "$HARNESS_SRC" rev-parse HEAD)" = "$HARNESS_REV"
+git -C "$HARNESS_SRC" fetch --depth 1 origin "refs/tags/$HARNESS_TAG:refs/tags/$HARNESS_TAG"
+git -C "$HARNESS_SRC" checkout --detach "$HARNESS_TAG^{commit}"
+HARNESS_REV="$(git -C "$HARNESS_SRC" rev-parse HEAD)"
+test "$(git -C "$HARNESS_SRC" rev-list -n 1 "$HARNESS_TAG")" = "$HARNESS_REV"
 DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --list
 DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill '*' --agent codex -y
 ```
 
-The fetch checks out one exact commit because Skills CLI `1.5.19` cannot use a
-commit SHA as the branch portion of a GitHub `/tree/...` URL. The install is
-project-scoped because `-g` is absent and host-scoped to the manually validated
-`codex` target. Review the files reported by the CLI, then verify the installed
-inventory:
+The fetch resolves the annotated release tag to one exact commit before the
+local checkout is passed to Skills CLI `1.5.19`; the resolved commit is stored
+in the portable install record. The install is project-scoped because `-g` is
+absent and host-scoped to the manually validated `codex` target. Review the
+files reported by the CLI, then verify the installed inventory:
 
 ```bash
 DISABLE_TELEMETRY=1 npx -y skills@1.5.19 list --json
@@ -134,7 +130,7 @@ PYTHON_BIN="${PYTHON_BIN:-python3}"
 "$PYTHON_BIN" .agents/skills/ai-sdlc-sdd/scripts/sdd_artifact_scaffold.py --help
 mkdir -p .ai-sdlc
 cp "$HARNESS_SRC/config/ai-sdlc-managed-skills.txt" .ai-sdlc/harness-managed-skills.txt
-printf '%s\n' '{"schema":"ai-sdlc-install-record/v1","revision":"7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2","skills_cli":"1.5.19","agent":"codex","selection":"all-skills","inventory":".ai-sdlc/harness-managed-skills.txt"}' > .ai-sdlc/harness-install.json
+printf '{"schema":"ai-sdlc-install-record/v1","revision":"%s","skills_cli":"1.5.19","agent":"codex","selection":"all-skills","inventory":".ai-sdlc/harness-managed-skills.txt"}\n' "$HARNESS_REV" > .ai-sdlc/harness-install.json
 "$PYTHON_BIN" .agents/skills/ai-sdlc-shared-runtime/scripts/ai_sdlc_install_record.py
 rm skills-lock.json
 rm -rf "$HARNESS_TMP"
@@ -257,7 +253,9 @@ the named cache, add `--offline` for repeatable offline previews. Starting with
 `--offline` in a clean cache fails because the pinned documentation dependency
 has not been downloaded yet.
 
-Validate a source checkout against the current release `1.2.0` compatibility baseline (this command skips the Git commit audit; the full `v1.1.0..HEAD` audit is documented in `docs/how-to/validate-release.md`):
+Validate a source checkout against the current `2.0.0-rc.1` compatibility
+baseline (this command skips the Git commit audit; the full `v1.2.0..HEAD`
+audit is documented in `docs/how-to/validate-release.md`):
 
 ```bash
 python3 skills/_shared/ai_sdlc_compatibility.py \

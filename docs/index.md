@@ -5,15 +5,13 @@ hide:
   - navigation
 ---
 
-!!! warning "Main is a maintainer preview"
+!!! warning "Release candidate"
 
-    This site is built from unreleased `main`. Stable consumer instructions
-    install the immutable commit for `v1.2.0`. Use this site's exact-fetch
-    installation erratum. The stable release installs, but its installed SDD
-    helpers fail the complete consumer-relative workflow by resolving specs
-    beneath `.agents/specs`. Use it only for historical comparison; evaluate
-    the current candidate from a reviewed source checkout until a corrected
-    release and versioned site exist.
+    This site documents `v2.0.0-rc.1`, which fixes the installed workflow defect
+    in `v1.2.0` and introduces Harness API `2.0.0`. It remains a prerelease
+    because the repository has no owner-selected license and protected remote
+    CI evidence must still be verified. Evaluate it in a bounded pilot; the tag
+    does not grant permissions absent a license.
 
 ## The problem in one minute
 
@@ -97,15 +95,16 @@ for an exact contract without replaying onboarding.
 The canonical project- and host-scoped installation sequence is:
 
 ```bash
-HARNESS_REV=7f36bdbad73e1d73dd8ea2185f8b88c88c8f2dc2
+HARNESS_TAG=v2.0.0-rc.1
 HARNESS_TMP="$(mktemp -d)"
 HARNESS_SRC="$HARNESS_TMP/ai-sdlc-harness"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 git init "$HARNESS_SRC"
 git -C "$HARNESS_SRC" remote add origin https://github.com/mikegorelikoff/ai-sdlc-harness.git
-git -C "$HARNESS_SRC" fetch --depth 1 origin "$HARNESS_REV"
-git -C "$HARNESS_SRC" checkout --detach FETCH_HEAD
-test "$(git -C "$HARNESS_SRC" rev-parse HEAD)" = "$HARNESS_REV"
+git -C "$HARNESS_SRC" fetch --depth 1 origin "refs/tags/$HARNESS_TAG:refs/tags/$HARNESS_TAG"
+git -C "$HARNESS_SRC" checkout --detach "$HARNESS_TAG^{commit}"
+HARNESS_REV="$(git -C "$HARNESS_SRC" rev-parse HEAD)"
+test "$(git -C "$HARNESS_SRC" rev-list -n 1 "$HARNESS_TAG")" = "$HARNESS_REV"
 DISABLE_TELEMETRY=1 npx -y skills@1.5.19 add "$HARNESS_SRC" --skill '*' --agent codex -y
 mkdir -p .ai-sdlc
 cp "$HARNESS_SRC/config/ai-sdlc-managed-skills.txt" .ai-sdlc/harness-managed-skills.txt

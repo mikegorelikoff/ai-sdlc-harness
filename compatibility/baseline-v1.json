@@ -1,7 +1,7 @@
 {
   "schema": "ai-sdlc-compatibility-baseline/v1",
-  "release": "1.2.0",
-  "harness_api_version": "1.0.0",
+  "release": "2.0.0-rc.1",
+  "harness_api_version": "2.0.0",
   "python": {"min": "3.10", "ci": ["3.10", "3.13"]},
   "required_skill_names": [
     "ai-sdlc-approvals-sandbox",
@@ -78,15 +78,18 @@
     "ids": ["architecture", "core", "evidence-council", "research", "ux"]
   },
   "install_update_guide": "guides/install-and-update.md",
-  "roadmap_git_base": "v1.1.0",
+  "roadmap_git_base": "v1.2.0",
   "roadmap_allowed_prelude_subjects": [],
   "roadmap_commit_subjects": [
-    "docs(roadmap): define guided onboarding program",
-    "docs(onboarding): add beginner foundations and install path",
-    "fix(install): package portable shared runtime",
-    "docs(workflows): add runnable lifecycle journeys",
-    "docs(reference): document every skill and script",
-    "docs(operations): add adoption and governance guides",
-    "docs(release): close guided onboarding validation"
+    "fix(docs): hide hero permalink artifact",
+    "fix(docs): remove homepage hero block",
+    "fix(docs): align rendered validation with homepage",
+    "docs(navigation): simplify role-based reference discovery",
+    "feat(context)!: add sufficient context and interaction profiles",
+    "feat(harness): harden production readiness",
+    "docs(install): fix global Codex skill setup",
+    "fix(skills): harden marketplace security boundaries",
+    "feat(harness): harden field operations",
+    "chore(release)!: publish v2.0.0-rc.1"
   ]
 }

@@ -187,6 +187,7 @@ nav:
       - Compatibility contract: reference/compatibility.md
       - Supported environments: reference/supported-environments.md
       - Supported versions: reference/versions.md
+      - Release 2.0 candidate: reference/release-2.0.md
       - Release 1.2 audit: reference/release-1.2.md
       - Release 1.1 audit: reference/release-1.1.md
   - Use:
@@ -201,6 +202,7 @@ nav:
           - Install the harness: how-to/install.md
           - Set up Codex CLI: how-to/setup-codex.md
           - Update safely: how-to/update.md
+          - Migrate to 2.0: how-to/migrate-2.0.md
           - Migrate to 1.1: how-to/migrate-1.1.md
           - Choose a flow mode: how-to/choose-flow.md
           - Navigate a new request: how-to/navigate-request.md

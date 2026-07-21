@@ -2,9 +2,10 @@
 
 ## Supported versions
 
-Security fixes are considered for the latest published release. The current
-published release is `v1.2.0`; the `main` branch is an unreleased preview and
-may contain breaking contract changes.
+Security fixes are considered for the latest published release candidate. The
+current candidate is `v2.0.0-rc.1` on Harness API `2.0.0`; `v1.2.0` is retained
+only as a historical tag because its installed SDD workflow is defective.
+Prerelease status does not reduce the need to report security issues privately.
 
 ## Report a vulnerability
 

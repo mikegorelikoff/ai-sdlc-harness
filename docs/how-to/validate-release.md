@@ -23,7 +23,7 @@ candidate choose an executable through `PATH`.
 command -v git
 python3 skills/_shared/ai_sdlc_compatibility.py \
   --git-executable /absolute/reviewed/path/to/git \
-  --git-base v1.1.0 --format toon
+  --git-base v1.2.0 --format toon
 python3 docs/scripts/build_catalog.py --check
 python3 docs/scripts/validate_docs.py
 python3 docs/tests/test_docs.py

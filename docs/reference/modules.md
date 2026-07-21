@@ -7,11 +7,11 @@ description: Installed capability modules, compatibility ranges, dependencies, a
 
 <div class="grid cards" markdown>
 
--   **Architecture** · `optional` · `v1.0.0`
+-   **Architecture** · `optional` · `v2.0.0-rc.1`
 
     Traceable system architecture decisions, interfaces, risks, and validation.
 
-    **Harness API:** ≥ 1.0.0 and < 2.0.0
+    **Harness API:** ≥ 2.0.0 and < 3.0.0
 
     **Requires:** core
 
@@ -19,11 +19,11 @@ description: Installed capability modules, compatibility ranges, dependencies, a
 
     [Open manifest →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/modules/architecture/module.json)
 
--   **Core** · `core` · `v1.11.0`
+-   **Core** · `core` · `v2.0.0-rc.1`
 
     Core AI SDLC lifecycle, control-plane, and delivery skills.
 
-    **Harness API:** ≥ 1.0.0 and < 2.0.0
+    **Harness API:** ≥ 2.0.0 and < 3.0.0
 
     **Requires:** none
 
@@ -31,11 +31,11 @@ description: Installed capability modules, compatibility ranges, dependencies, a
 
     [Open manifest →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/modules/core/module.json)
 
--   **Evidence Council** · `optional` · `v1.0.0`
+-   **Evidence Council** · `optional` · `v2.0.0-rc.1`
 
     Authority-safe simulated and independent evidence review orchestration.
 
-    **Harness API:** ≥ 1.0.0 and < 2.0.0
+    **Harness API:** ≥ 2.0.0 and < 3.0.0
 
     **Requires:** core
 
@@ -43,11 +43,11 @@ description: Installed capability modules, compatibility ranges, dependencies, a
 
     [Open manifest →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/modules/evidence-council/module.json)
 
--   **Research** · `optional` · `v1.0.0`
+-   **Research** · `optional` · `v2.0.0-rc.1`
 
     Sourced research questions, evidence inventory, confidence, limitations, and delivery traces.
 
-    **Harness API:** ≥ 1.0.0 and < 2.0.0
+    **Harness API:** ≥ 2.0.0 and < 3.0.0
 
     **Requires:** core
 
@@ -55,11 +55,11 @@ description: Installed capability modules, compatibility ranges, dependencies, a
 
     [Open manifest →](https://github.com/mikegorelikoff/ai-sdlc-harness/blob/main/modules/research/module.json)
 
--   **Ux** · `optional` · `v1.0.0`
+-   **Ux** · `optional` · `v2.0.0-rc.1`
 
     Traceable actors, journeys, interaction states, accessibility, and UX acceptance.
 
-    **Harness API:** ≥ 1.0.0 and < 2.0.0
+    **Harness API:** ≥ 2.0.0 and < 3.0.0
 
     **Requires:** core
 
