@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+### Added
+
+- Added an Apache License 2.0 `LICENSE` file so GitHub Community Standards and
+  downstream adoption have explicit redistribution terms.
+- Added GitHub community health files: Code of Conduct, issue forms, issue
+  configuration, and pull request template.
+
+### Changed
+
+- Simplified the README into a beginner-friendly quick start and made agent
+  host guidance tool-agnostic, with Codex shown only as an example.
+- Updated release and installation documentation to describe `v2.1.0` and the
+  Apache-2.0 licensing status.
+
+### Fixed
+
+- Pinned the remote installation smoke test in Pages CI to the exact `v2.1.0`
+  commit SHA. The installer smoke helper requires a 40-character commit and
+  no longer accepts the annotated release tag directly.
+
 ## v2.0.0-rc.1 - 2026-07-21
 
 ### Added
