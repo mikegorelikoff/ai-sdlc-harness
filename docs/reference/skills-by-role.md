@@ -1,6 +1,6 @@
 ---
 title: Skills by role
-description: Choose AI SDLC capabilities by QA, BA, PM, PO, Dev, VP, or Head of AI Practice responsibility.
+description: Choose AI SDLC capabilities by Software Engineer, PM, PO, QA, or BA responsibility.
 ---
 
 # Skills by role
@@ -15,9 +15,7 @@ Role labels are discovery aids, not an authority model. Local policy and named d
 | BA | [BA skills](#ba) |
 | PM | [PM skills](#pm) |
 | PO | [PO skills](#po) |
-| Dev | [Dev skills](#dev) |
-| VP | [VP skills](#vp) |
-| Head of AI Practice | [Head of AI Practice skills](#head-of-ai-practice) |
+| Software Engineer | [Software Engineer skills](#software-engineer) |
 
 ## QA
 
@@ -159,7 +157,7 @@ Own day-to-day backlog readiness, acceptance clarity, sequencing, and product ha
 
 [Return to all roles](#skills-by-role)
 
-## Dev
+## Software Engineer
 
 Own technical design, implementation correctness, testable task boundaries, review resolution, and engineering risk recommendations.
 
@@ -202,83 +200,6 @@ Own technical design, implementation correctness, testable task boundaries, revi
 | Review and assurance | Contribute risk or review evidence | [`ai-sdlc-evidence-council`](skills/ai-sdlc-evidence-council.md) |
 | Review and assurance | Contribute risk or review evidence | [`ai-sdlc-quality-lenses`](skills/ai-sdlc-quality-lenses.md) |
 | Review and assurance | Contribute risk or review evidence | [`ai-sdlc-security-testing`](skills/ai-sdlc-security-testing.md) |
-
-[Return to all roles](#skills-by-role)
-
-## VP
-
-Own fit, accountable operating model, investment and risk tolerance, pilot scope, and stop, hold, or scale decisions.
-
-### Choose by task
-
-| Choose when… | Role relationship | Start with | Required input | Next handoff |
-| --- | --- | --- | --- | --- |
-| Find the smallest safe next action | Review evidence and decide | [`ai-sdlc-navigator`](skills/ai-sdlc-navigator.md) | Request plus current repository control records | One owning skill |
-| Inspect lifecycle coverage and dependencies | Review evidence and decide | [`ai-sdlc-delivery-graph`](skills/ai-sdlc-delivery-graph.md) | Current indexed lifecycle artifacts | Missing producer or governance review |
-| Combine independent high-impact reviews | Review evidence and decide | [`ai-sdlc-evidence-council`](skills/ai-sdlc-evidence-council.md) | Named question and complete source evidence | Accountable human decision |
-| Review package trust or local metrics | Review evidence and decide | [`ai-sdlc-package-trust`](skills/ai-sdlc-package-trust.md) | One explicitly selected branch and its inputs | Trust or privacy reviewer |
-| Evaluate an action against layered policy | Review evidence and decide | [`ai-sdlc-policy`](skills/ai-sdlc-policy.md) | Action, resolved policy layers, and provenance | Allow/deny/waiver owner |
-| Learn from a completed delivery run | Review evidence and decide | [`ai-sdlc-retrospective`](skills/ai-sdlc-retrospective.md) | Complete run evidence and outcomes | Improvement proposal or policy/change set |
-
-### Shared and handoff skills
-
-| Group | Role relationship | Skill |
-| --- | --- | --- |
-| Entry and context | Supply intent or evidence | [`ai-sdlc-research`](skills/ai-sdlc-research.md) |
-| Entry and context | Supply intent or evidence | [`ai-sdlc-working-backwards-discovery`](skills/ai-sdlc-working-backwards-discovery.md) |
-| Governance and operations | Consult or apply within role authority | [`ai-sdlc-doctor`](skills/ai-sdlc-doctor.md) |
-| Governance and operations | Consult or apply within role authority | [`ai-sdlc-host-adapter`](skills/ai-sdlc-host-adapter.md) |
-| Governance and operations | Consult or apply within role authority | [`ai-sdlc-workflow`](skills/ai-sdlc-workflow.md) |
-| Handoff and recovery | Produce, consume, or reopen evidence | [`ai-sdlc-change-impact`](skills/ai-sdlc-change-impact.md) |
-| Handoff and recovery | Produce, consume, or reopen evidence | [`ai-sdlc-delivery-handoff-review`](skills/ai-sdlc-delivery-handoff-review.md) |
-| Planning and delivery | Collaborate or resolve inputs | [`ai-sdlc-goal-capability-and-epic-mapping`](skills/ai-sdlc-goal-capability-and-epic-mapping.md) |
-| Planning and delivery | Collaborate or resolve inputs | [`ai-sdlc-prfaq-package-synthesis`](skills/ai-sdlc-prfaq-package-synthesis.md) |
-| Planning and delivery | Collaborate or resolve inputs | [`ai-sdlc-release-slicing-and-backlog-readiness-review`](skills/ai-sdlc-release-slicing-and-backlog-readiness-review.md) |
-| Review and assurance | Contribute risk or review evidence | [`ai-sdlc-quality-lenses`](skills/ai-sdlc-quality-lenses.md) |
-
-### Leadership scope
-
-Review fit, ownership, governance, cost and capacity, pilot evidence, support boundaries, rollout thresholds, and rollback before a scale decision.
-
-[Return to all roles](#skills-by-role)
-
-## Head of AI Practice
-
-Own the enablement system: approved capability portfolio, host/package standards, governance implementation, support model, measurement, and lifecycle stewardship.
-
-### Choose by task
-
-| Choose when… | Role relationship | Start with | Required input | Next handoff |
-| --- | --- | --- | --- | --- |
-| Review package trust or local metrics | Govern or enable | [`ai-sdlc-package-trust`](skills/ai-sdlc-package-trust.md) | One explicitly selected branch and its inputs | Trust or privacy reviewer |
-| Evaluate an action against layered policy | Govern or enable | [`ai-sdlc-policy`](skills/ai-sdlc-policy.md) | Action, resolved policy layers, and provenance | Allow/deny/waiver owner |
-| Verify workflow portability to a host | Govern or enable | [`ai-sdlc-host-adapter`](skills/ai-sdlc-host-adapter.md) | Validated workflow capability requirements | Host approval or safe fallback |
-| Diagnose install or upgrade health | Govern or enable | [`ai-sdlc-doctor`](skills/ai-sdlc-doctor.md) | Installed package and repository state | Authorized update or support owner |
-| Plan a reusable controlled execution | Govern or enable | [`ai-sdlc-workflow`](skills/ai-sdlc-workflow.md) | Declared tasks, gates, dependencies, and hooks | Runtime execution |
-| Inspect lifecycle coverage and dependencies | Govern or enable | [`ai-sdlc-delivery-graph`](skills/ai-sdlc-delivery-graph.md) | Current indexed lifecycle artifacts | Missing producer or governance review |
-| Combine independent high-impact reviews | Govern or enable | [`ai-sdlc-evidence-council`](skills/ai-sdlc-evidence-council.md) | Named question and complete source evidence | Accountable human decision |
-| Apply a focused cross-lifecycle review | Govern or enable | [`ai-sdlc-quality-lenses`](skills/ai-sdlc-quality-lenses.md) | Existing authoritative artifact and selected lens | Artifact owner or accountable gate |
-| Learn from a completed delivery run | Govern or enable | [`ai-sdlc-retrospective`](skills/ai-sdlc-retrospective.md) | Complete run evidence and outcomes | Improvement proposal or policy/change set |
-
-### Shared and handoff skills
-
-| Group | Role relationship | Skill |
-| --- | --- | --- |
-| Entry and context | Supply intent or evidence | [`ai-sdlc-navigator`](skills/ai-sdlc-navigator.md) |
-| Entry and context | Supply intent or evidence | [`ai-sdlc-project-context`](skills/ai-sdlc-project-context.md) |
-| Entry and context | Supply intent or evidence | [`ai-sdlc-research`](skills/ai-sdlc-research.md) |
-| Governance and operations | Consult or apply within role authority | [`ai-sdlc-approvals-sandbox`](skills/ai-sdlc-approvals-sandbox.md) |
-| Governance and operations | Consult or apply within role authority | [`ai-sdlc-runtime`](skills/ai-sdlc-runtime.md) |
-| Governance and operations | Consult or apply within role authority | [`ai-sdlc-shared-runtime`](skills/ai-sdlc-shared-runtime.md) |
-| Handoff and recovery | Produce, consume, or reopen evidence | [`ai-sdlc-change-impact`](skills/ai-sdlc-change-impact.md) |
-| Handoff and recovery | Produce, consume, or reopen evidence | [`ai-sdlc-change-set`](skills/ai-sdlc-change-set.md) |
-| Planning and delivery | Collaborate or resolve inputs | [`ai-sdlc-architecture`](skills/ai-sdlc-architecture.md) |
-| Review and assurance | Contribute risk or review evidence | [`ai-sdlc-security-testing`](skills/ai-sdlc-security-testing.md) |
-| Review and assurance | Contribute risk or review evidence | [`ai-sdlc-validation`](skills/ai-sdlc-validation.md) |
-
-### Leadership scope
-
-Manage capability inventory and bundles, host and package trust, policy and waivers, enablement and support, metrics, rollout cohorts, compatibility, upgrades, and deprecation.
 
 [Return to all roles](#skills-by-role)
 

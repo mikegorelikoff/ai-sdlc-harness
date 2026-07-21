@@ -105,19 +105,11 @@ nav:
       - Glossary: foundations/glossary.md
       - Role guides:
           - Choose your role: roles/index.md
-          - Trainee developer: roles/trainee-developer.md
           - Software engineer: roles/software-engineer.md
-          - Lead developer: roles/lead-developer.md
-          - QA engineer: roles/qa-engineer.md
-          - Business analyst: roles/business-analyst.md
-          - Product owner: roles/product-owner.md
           - Product manager: roles/product-manager.md
-          - Delivery manager: roles/delivery-manager.md
-          - Engineering manager: roles/engineering-manager.md
-          - VP of Engineering: roles/vp-engineering.md
-          - CTO: roles/cto.md
-          - DevOps engineer: roles/devops-engineer.md
-          - Security reviewer: roles/security-reviewer.md
+          - Product owner: roles/product-owner.md
+          - Business analyst: roles/business-analyst.md
+          - QA engineer: roles/qa-engineer.md
       - Workflow map: reference/workflow-map.md
       - Skill catalog: reference/skills.md
       - Skill guides:
@@ -249,20 +241,6 @@ nav:
           - Mental model: foundations/mental-model.md
           - Human and agent responsibilities: foundations/responsibilities.md
           - Context, prompts, and personalization: foundations/context-prompt-personalization.md
-      - Production-readiness audit:
-          - Executive summary: audits/2026-07-21-production-readiness/index.md
-          - Repository inventory: audits/2026-07-21-production-readiness/repository-inventory.md
-          - Issue register: audits/2026-07-21-production-readiness/issue-register.md
-          - Contradiction register: audits/2026-07-21-production-readiness/contradiction-register.md
-          - Installation validation: audits/2026-07-21-production-readiness/installation-validation.md
-          - Skills audit: audits/2026-07-21-production-readiness/skills-audit.md
-          - Skills.sh security: audits/2026-07-21-production-readiness/skills-sh-security.md
-          - Documentation coverage: audits/2026-07-21-production-readiness/documentation-coverage.md
-          - Research sources: audits/2026-07-21-production-readiness/research-sources.md
-          - Test and validation: audits/2026-07-21-production-readiness/validation-report.md
-          - Sub-agent reviews: audits/2026-07-21-production-readiness/sub-agent-reviews.md
-          - Assumptions and limitations: audits/2026-07-21-production-readiness/assumptions-and-limitations.md
-          - Final readiness: audits/2026-07-21-production-readiness/final-readiness.md
       - Explanation:
           - Overview: explanation/index.md
           - System model: explanation/system-model.md
@@ -287,4 +265,18 @@ nav:
           - Learn curriculum governance: about/maintainers/curriculum-governance.md
           - Source reuse and adaptation: about/maintainers/source-reuse-and-adaptation.md
           - Learn review record (2026-07-21): about/maintainers/learn-review-2026-07-21.md
+      - Audit archive:
+          - Executive summary: audits/2026-07-21-production-readiness/index.md
+          - Repository inventory: audits/2026-07-21-production-readiness/repository-inventory.md
+          - Issue register: audits/2026-07-21-production-readiness/issue-register.md
+          - Contradiction register: audits/2026-07-21-production-readiness/contradiction-register.md
+          - Installation validation: audits/2026-07-21-production-readiness/installation-validation.md
+          - Skills audit: audits/2026-07-21-production-readiness/skills-audit.md
+          - Skills.sh security: audits/2026-07-21-production-readiness/skills-sh-security.md
+          - Documentation coverage: audits/2026-07-21-production-readiness/documentation-coverage.md
+          - Research sources: audits/2026-07-21-production-readiness/research-sources.md
+          - Test and validation: audits/2026-07-21-production-readiness/validation-report.md
+          - Sub-agent reviews: audits/2026-07-21-production-readiness/sub-agent-reviews.md
+          - Assumptions and limitations: audits/2026-07-21-production-readiness/assumptions-and-limitations.md
+          - Final readiness: audits/2026-07-21-production-readiness/final-readiness.md
       - Roadmap: roadmap.md

@@ -112,6 +112,17 @@ By the end of this hub:
 
 ## Core concepts
 
+## What is …?
+
+Use these short foundation pages when a term is unfamiliar:
+
+- [What is software delivery?](foundations/software-delivery.md)
+- [What is artificial intelligence?](foundations/ai-foundations.md)
+- [What is an AI-assisted SDLC?](foundations/ai-sdlc.md)
+- [What is specification-driven development?](foundations/sdd.md)
+- [What is an agent or skill?](foundations/agents-and-skills.md)
+- [What do the terms mean?](foundations/glossary.md)
+
 ### Learning is an evidence-producing workflow
 
 Reading is an input, not completion. Each chapter asks you to create something:

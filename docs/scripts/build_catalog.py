@@ -276,7 +276,7 @@ ROLE_SKILL_GROUPS: dict[str, dict[str, object]] = {
             "ai-sdlc-quality-lenses",
         ),
     },
-    "Dev": {
+    "Software Engineer": {
         "boundary": "Own technical design, implementation correctness, testable task boundaries, review resolution, and engineering risk recommendations.",
         "start": (
             "ai-sdlc-navigator", "ai-sdlc-project-context", "ai-sdlc-branching",
@@ -294,41 +294,6 @@ ROLE_SKILL_GROUPS: dict[str, dict[str, object]] = {
             "ai-sdlc-research", "ai-sdlc-ux", "ai-sdlc-qa",
             "ai-sdlc-delivery-spec-synthesis", "ai-sdlc-delivery-handoff-review",
         ),
-    },
-    "VP": {
-        "boundary": "Own fit, accountable operating model, investment and risk tolerance, pilot scope, and stop, hold, or scale decisions.",
-        "start": (
-            "ai-sdlc-navigator", "ai-sdlc-delivery-graph",
-            "ai-sdlc-evidence-council", "ai-sdlc-package-trust",
-            "ai-sdlc-policy", "ai-sdlc-retrospective",
-        ),
-        "shared": (
-            "ai-sdlc-working-backwards-discovery",
-            "ai-sdlc-prfaq-package-synthesis",
-            "ai-sdlc-goal-capability-and-epic-mapping",
-            "ai-sdlc-release-slicing-and-backlog-readiness-review",
-            "ai-sdlc-delivery-handoff-review", "ai-sdlc-quality-lenses",
-            "ai-sdlc-doctor", "ai-sdlc-workflow", "ai-sdlc-research",
-            "ai-sdlc-change-impact", "ai-sdlc-host-adapter",
-        ),
-        "leadership": "Review fit, ownership, governance, cost and capacity, pilot evidence, support boundaries, rollout thresholds, and rollback before a scale decision.",
-    },
-    "Head of AI Practice": {
-        "boundary": "Own the enablement system: approved capability portfolio, host/package standards, governance implementation, support model, measurement, and lifecycle stewardship.",
-        "start": (
-            "ai-sdlc-package-trust", "ai-sdlc-policy", "ai-sdlc-host-adapter",
-            "ai-sdlc-doctor", "ai-sdlc-workflow", "ai-sdlc-delivery-graph",
-            "ai-sdlc-evidence-council", "ai-sdlc-quality-lenses",
-            "ai-sdlc-retrospective",
-        ),
-        "shared": (
-            "ai-sdlc-approvals-sandbox", "ai-sdlc-architecture",
-            "ai-sdlc-change-set", "ai-sdlc-change-impact", "ai-sdlc-navigator",
-            "ai-sdlc-project-context", "ai-sdlc-research", "ai-sdlc-runtime",
-            "ai-sdlc-shared-runtime", "ai-sdlc-security-testing",
-            "ai-sdlc-validation",
-        ),
-        "leadership": "Manage capability inventory and bundles, host and package trust, policy and waivers, enablement and support, metrics, rollout cohorts, compatibility, upgrades, and deprecation.",
     },
 }
 
@@ -391,9 +356,7 @@ def start_relationship(role: str, skill_id: str) -> str:
         "QA": "Own or run QA work",
         "BA": "Own or produce analysis",
         "PM": "Own product decision inputs",
-        "Dev": "Own or execute engineering work",
-        "VP": "Review evidence and decide",
-        "Head of AI Practice": "Govern or enable",
+        "Software Engineer": "Own or execute engineering work",
     }[role]
 
 
@@ -1229,12 +1192,12 @@ def roles_for_skill(skill_id: str) -> list[str]:
 
 def validate_role_skill_groups(paths: list[Path]) -> list[str]:
     """Close the many-to-many role mapping over the installed inventory."""
-    required_roles = {"QA", "BA", "PM", "PO", "Dev", "VP", "Head of AI Practice"}
+    required_roles = {"QA", "BA", "PM", "PO", "Software Engineer"}
     actual_skills = {skill_frontmatter(path)["name"] for path in paths}
     mapped_skills: set[str] = set()
     errors: list[str] = []
     if set(ROLE_SKILL_GROUPS) != required_roles:
-        errors.append("role discovery must define exactly QA, BA, PM, PO, Dev, VP, and Head of AI Practice")
+        errors.append("role discovery must define exactly QA, BA, PM, PO, and Software Engineer")
     for role, group in ROLE_SKILL_GROUPS.items():
         start = tuple(group.get("start", ()))
         shared = tuple(group.get("shared", ()))
@@ -1248,8 +1211,6 @@ def validate_role_skill_groups(paths: list[Path]) -> list[str]:
         for skill_id in start:
             if skill_id not in TASK_SELECTION_HINTS:
                 errors.append(f"role discovery has no task-selection hint for {skill_id}")
-        if role in {"VP", "Head of AI Practice"} and not group.get("leadership"):
-            errors.append(f"role discovery must define leadership scope for {role}")
     errors.extend(
         f"role discovery leaves installed skill unmapped: {skill_id}"
         for skill_id in sorted(actual_skills - mapped_skills)
@@ -1262,7 +1223,7 @@ def render_skills_by_role() -> str:
     lines = [
         "---",
         "title: Skills by role",
-        "description: Choose AI SDLC capabilities by QA, BA, PM, PO, Dev, VP, or Head of AI Practice responsibility.",
+        "description: Choose AI SDLC capabilities by Software Engineer, PM, PO, QA, or BA responsibility.",
         "---",
         "",
         "# Skills by role",

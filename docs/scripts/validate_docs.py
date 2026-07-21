@@ -122,9 +122,18 @@ T006_PAGES = {
     "maintainers/release.md",
 }
 ROLLOUT_STAGES = ("Pilot", "Limited cohort", "Broader cohort", "Standard or hold")
-DELIVERY_ROLES = ("QA", "BA", "PM", "PO", "Dev")
-LEADERSHIP_ROLES = ("VP", "Head of AI Practice")
-ROLE_PATHS = DELIVERY_ROLES + LEADERSHIP_ROLES
+ROLE_PATHS = ("QA", "BA", "PM", "PO", "Software Engineer")
+LEADERSHIP_ROLES = ()
+NON_CANONICAL_ROLE_PAGES = {
+    "roles/cto.md",
+    "roles/delivery-manager.md",
+    "roles/devops-engineer.md",
+    "roles/engineering-manager.md",
+    "roles/lead-developer.md",
+    "roles/security-reviewer.md",
+    "roles/trainee-developer.md",
+    "roles/vp-engineering.md",
+}
 RACI_GATES = (
     "Problem/value accepted",
     "Requirements ready",
@@ -283,7 +292,7 @@ def validate_navigation(pages: list[Page], docs: Path = DOCS, config: Optional[P
     public = [page.path.relative_to(docs).as_posix() for page in pages]
     if len(public) < 43:
         errors.append(f"public documentation depth is {len(public)} pages; expected at least 43")
-    missing = sorted(set(public) - set(nav_paths))
+    missing = sorted((set(public) - set(nav_paths)) - NON_CANONICAL_ROLE_PAGES)
     unknown = sorted(set(nav_paths) - set(public))
     if missing:
         errors.append("public pages missing from navigation: " + ", ".join(missing))

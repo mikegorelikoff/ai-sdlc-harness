@@ -36,20 +36,22 @@ source_usage:
 
 Role paths are discovery aids for entry tasks, inputs, outputs, and handoffs. They do not grant permission or approval. Organizational and repository policy assigns each decision.
 
+Harness roles: **Software Engineer**, **Product Manager
+(PM)**, **Product Owner (PO)**, **Quality Assurance (QA)**, and **Business
+Analyst (BA)**. Architecture, security, delivery, leadership, and maintenance
+are shared responsibilities.
+
 Use the [canonical skills-by-role map](../reference/skills-by-role.md) to select skills. When a skill reference and this lesson differ, follow Reference and report the drift.
 
 ## On this page
 
 - [At a glance](#at-a-glance)
 - [Shared operating foundation](#shared-operating-foundation)
-- [PM or PO](#pm-or-po)
+- [Product Manager and Product Owner](#pm-or-po)
 - [Business Analyst](#business-analyst)
 - [QA](#qa)
-- [Developer](#developer)
-- [Architecture and Security](#architecture-and-security)
-- [Delivery and VP](#delivery-and-vp)
-- [Head of AI Practice](#head-of-ai-practice)
-- [Harness Maintainer](#harness-maintainer)
+- [Software Engineer](#developer)
+- [Cross-cutting responsibilities](#architecture-and-security)
 - [Cross-role worked example](#cross-role-worked-example)
 - [Practice exercise](#practice-exercise)
 - [Check your understanding](#check-your-understanding)
@@ -58,7 +60,8 @@ Use the [canonical skills-by-role map](../reference/skills-by-role.md) to select
 
 **Level:** 6 — role-specific paths and independent use
 
-**Audience:** Product Manager (PM) or Product Owner (PO), Business Analyst (BA), Quality Assurance (QA) practitioner, Developer, Architecture and Security reviewer, Delivery leader or Vice President (VP), Head of AI Practice, and Harness Maintainer.
+**Audience:** Software Engineer, Product Manager (PM), Product Owner (PO),
+Business Analyst (BA), and Quality Assurance (QA) practitioner.
 
 **Estimated time:** 90–150 minutes for the foundation and one path.
 
